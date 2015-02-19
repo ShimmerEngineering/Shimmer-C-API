@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ShimmerPPGtoHR_Rev_0_5</name>
+    </assembly>
+    <members>
+        <member name="T:ShimmerLibrary.PPGtoHRAlgorithm">
+            <summary>
+            This class calculates the heart rate from PPG data. 
+            For best results, data should be filtered prior to the implementation of this algorithm.
+            </summary>
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.#ctor(System.Double)">
+            Constructor
+            @param rate: Sampling Rate (Hz)
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.#ctor(System.Double,System.Int32)">
+            Constructor
+            @param rate: Sampling Rate (Hz)
+            @param numberOfBeatsToAve: Number of beats to average
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.#ctor(System.Double,System.Int32,System.Int32)">
+            Constructor
+            @param rate: Sampling Rate (Hz)
+            @param numberOfBeatsToAve: Number of beats to average
+            @param trainingInterval: Training period (seconds)
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.setParameters(System.Double,System.Int32,System.Int32)">
+            Initializes parameters
+            @param samplingRate: Sampling Rate (Hz)
+            @param numberOfBeatsToAve: number of beats to average
+            @param trainingInterval: Training period (seconds)
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.resetParameters">
+            Reset parameters.
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.ppgToHrConversion(System.Double,System.Double)">
+            ppgToHrConverion
+            Buffers first ten seconds of data.
+            Returns -1 until buffer data has been collected.
+            @param ppgData - PPG data to be converted into heart rate (sample by sample)
+            @param ppgTimeStamp - Time stamp of the PPG Data
+            @return (double) average heart rate calculated from PPG data.
+        </member>
+        <member name="M:ShimmerLibrary.PPGtoHRAlgorithm.ppgToHrConversion(System.Double[],System.Double[])">
+            ppgToHrConversion
+            Buffers first ten seconds of data.
+            Returns -1 until buffer data has been collected
+            @param ppgData - PPG data to be converted into heart rate (array)
+            @param ppgTimeStap - Time stap of the PPG data (array)
+            @return (double) array of calculated heart rates.
+        </member>
+    </members>
+</doc>
