@@ -859,6 +859,10 @@ namespace ShimmerAPI
                                             SDBT_switch(c);
                                         }
                                     }
+                                    else
+                                    {
+                                        System.Console.WriteLine("ACK for Command while Streaming Received");
+                                    }
                                 }
                                 else
                                 {
@@ -3820,6 +3824,11 @@ namespace ShimmerAPI
             MagGain = range;
         }
 
+        public int GetBlinkLED()
+        {
+            return CurrentLEDStatus;
+        }
+
         public int GetAccelHRBit()
         {
             return AccelHRBit;
@@ -4490,6 +4499,13 @@ namespace ShimmerAPI
             System.Threading.Thread.Sleep(250);
             AccelRange = range;
         }
+
+        public void WriteBlinkLED(int value)
+        {
+            WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)value }, 0, 2);
+            CurrentLEDStatus = value;
+        }
+
         /// <summary>
         /// This is to set the pressure resolution of the BMP180 Pressure sensor on the Shimmer3. There are four different settings 0,1,2,3 with 0 being the lowest resolution and 3 the highest.
         /// </summary>

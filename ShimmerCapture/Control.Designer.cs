@@ -162,6 +162,7 @@
             this.labelLeadOffStatus4 = new System.Windows.Forms.Label();
             this.labelExGLeadOffDetection = new System.Windows.Forms.Label();
             this.buttonReadDirectory = new System.Windows.Forms.Button();
+            this.buttonSetBlinkLED = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -537,7 +538,7 @@
             this.toolStripSplitButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1405, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1422, 25);
             this.toolStrip1.TabIndex = 38;
             this.toolStrip1.Text = "Check For Updates";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
@@ -1399,7 +1400,7 @@
             this.tsStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 1053);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1405, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1422, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -1545,12 +1546,23 @@
             this.buttonReadDirectory.UseVisualStyleBackColor = true;
             this.buttonReadDirectory.Click += new System.EventHandler(this.buttonReadDirectory_Click);
             // 
+            // button1
+            // 
+            this.buttonSetBlinkLED.Location = new System.Drawing.Point(188, 37);
+            this.buttonSetBlinkLED.Name = "button1";
+            this.buttonSetBlinkLED.Size = new System.Drawing.Size(124, 24);
+            this.buttonSetBlinkLED.TabIndex = 148;
+            this.buttonSetBlinkLED.Text = "Set Blink LED";
+            this.buttonSetBlinkLED.UseVisualStyleBackColor = true;
+            this.buttonSetBlinkLED.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Control
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1422, 596);
+            this.ClientSize = new System.Drawing.Size(1439, 596);
+            this.Controls.Add(this.buttonSetBlinkLED);
             this.Controls.Add(this.buttonReadDirectory);
             this.Controls.Add(this.labelExGLeadOffDetection);
             this.Controls.Add(this.labelLeadOffStatus4);
@@ -1818,6 +1830,7 @@
         private System.Windows.Forms.ToolStripMenuItem checkForUpdatesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Button buttonReadDirectory;
+        private System.Windows.Forms.Button buttonSetBlinkLED;
 
     }
 }

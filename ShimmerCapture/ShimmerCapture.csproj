@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShimmerAPI</RootNamespace>
-    <AssemblyName>ShimmerCapture v0.3.0</AssemblyName>
+    <AssemblyName>ShimmerCapture v0.2.2</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -93,12 +93,8 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ShimmerECGtoHR_Rev_0_7, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\ShimmerECGtoHR_Rev_0_7.dll</HintPath>
-    </Reference>
-    <Reference Include="ShimmerPPGtoHR_Rev_0_5">
-      <HintPath>libs\ShimmerPPGtoHR_Rev_0_5.dll</HintPath>
+    <Reference Include="ShimmerLibrary">
+      <HintPath>libs\ShimmerLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

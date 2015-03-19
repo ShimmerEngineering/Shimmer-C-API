@@ -173,6 +173,7 @@ namespace ShimmerAPI
     
         private void ControlForm_Load(object sender, EventArgs e)
         {
+            //buttonSetBlinkLED.Visible = false;
             buttonStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
             labelPRR.Visible = false;
@@ -2717,6 +2718,16 @@ namespace ShimmerAPI
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            System.Console.WriteLine("Set Blink LED");
+            if(ShimmerDevice.GetBlinkLED()==0){
+                ShimmerDevice.WriteBlinkLED(2);
+            } else if(ShimmerDevice.GetBlinkLED()==2){
+                ShimmerDevice.WriteBlinkLED(0);
+            }
         }
 
     }
