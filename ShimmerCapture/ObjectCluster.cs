@@ -7,6 +7,7 @@ namespace ShimmerAPI
 {
     public class ObjectCluster
     {
+        public int RawTimeStamp;
         private readonly String COMPort;
         private readonly String ShimmerID;
         private readonly List<String> SignalNames = new List<String>();

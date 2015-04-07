@@ -415,7 +415,8 @@ namespace ShimmerAPI
                         if (GetFirmwareIdentifier() == 3)
                         {
                             System.Console.WriteLine("ShimmerLOG: Send START SDBT CMD");
-                            SetState(SHIMMER_STATE_STREAMING);
+                            //SetState(SHIMMER_STATE_STREAMING);
+                            mWaitingForStartStreamingACK = true;
                             System.Threading.Thread.Sleep(300);
                             WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.START_SDBT_COMMAND }, 0, 1);
                             //System.Threading.Thread.Sleep(1500);
@@ -443,6 +444,7 @@ namespace ShimmerAPI
                         }
                         else
                         {
+                            mWaitingForStartStreamingACK = true;
                             WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.START_STREAMING_COMMAND }, 0, 1);
                         }
 
