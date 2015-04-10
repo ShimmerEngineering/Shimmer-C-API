@@ -2496,7 +2496,7 @@ namespace ShimmerAPI
                         }
                     }
                     objectCluster.Add("VSenseBatt", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("VSenseBatt", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("VSenseBatt", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A7) > 0))
                 {
@@ -2504,7 +2504,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("External ADC A7", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("External ADC A7", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("External ADC A7", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A6) > 0))
                 {
@@ -2512,7 +2512,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("External ADC A6", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("External ADC A6", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("External ADC A6", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A15) > 0))
                 {
@@ -2520,7 +2520,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("External ADC A15", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("External ADC A15", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("External ADC A15", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A1) > 0))
                 {
@@ -2528,7 +2528,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("Internal ADC A1", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A1", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("Internal ADC A1", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A12) > 0))
                 {
@@ -2536,7 +2536,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("Internal ADC A12", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A12", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("Internal ADC A12", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A13) > 0))
                 {
@@ -2544,7 +2544,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("Internal ADC A13", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A13", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("Internal ADC A13", "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A14) > 0))
                 {
@@ -2552,7 +2552,7 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
                     objectCluster.Add("Internal ADC A14", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A14", "CAL", "mVolts*", datatemp);
+                    objectCluster.Add("Internal ADC A14", "CAL", "mVolts", datatemp);
                 }
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE) > 0))
@@ -2567,7 +2567,7 @@ namespace ShimmerAPI
 
 
                     objectCluster.Add("Pressure", "RAW", "no units", UP);
-                    objectCluster.Add("Pressure", "CAL", "kPa*", bmp180caldata[0] / 1000);
+                    objectCluster.Add("Pressure", "CAL", "kPa", bmp180caldata[0] / 1000);
                     objectCluster.Add("Temperature", "RAW", "no units", newPacket[iUT]);
                     objectCluster.Add("Temperature", "CAL", "Celcius*", bmp180caldata[1]);
                 }
@@ -2604,7 +2604,7 @@ namespace ShimmerAPI
                     }
                     datatemp = CalibrateGsrData(datatemp, p1, p2);
                     objectCluster.Add("GSR", "RAW", "no units", newPacket[iGSR]);
-                    objectCluster.Add("GSR", "CAL", "kOhms*", datatemp);
+                    objectCluster.Add("GSR", "CAL", "kOhms", datatemp);
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0)
                 {
@@ -2620,23 +2620,23 @@ namespace ShimmerAPI
                     if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add("ECG LL-RA", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("ECG LL-RA", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("ECG LL-RA", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("ECG LA-RA", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG LA-RA", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("ECG LA-RA", "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
                         objectCluster.Add("EMG CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EMG CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EMG CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EMG CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EMG CH2", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EMG CH2", "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
                         objectCluster.Add("EXG1 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG1 CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG1 CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EXG1 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG1 CH2", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EXG1 CH2", "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
@@ -2653,23 +2653,23 @@ namespace ShimmerAPI
                     if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("ECG Vx-RL", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG Vx-RL", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("ECG Vx-RL", "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
                         objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EXG2 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
                         objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EXG2 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0)
@@ -2686,23 +2686,23 @@ namespace ShimmerAPI
                     if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add("ECG LL-RA", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("ECG LL-RA", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("ECG LL-RA", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("ECG LA-RA", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG LA-RA", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("ECG LA-RA", "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
                         objectCluster.Add("EMG CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EMG CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EMG CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EMG CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EMG CH2", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EMG CH2", "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
                         objectCluster.Add("EXG1 CH1 16Bit", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG1 CH1 16Bit", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG1 CH1 16Bit", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EXG1 CH2 16Bit", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG1 CH2 16Bit", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EXG1 CH2 16Bit", "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)
@@ -2719,23 +2719,23 @@ namespace ShimmerAPI
                     if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("ECG Vx-RL", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG Vx-RL", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("ECG Vx-RL", "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
                         objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EXG2 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
                         objectCluster.Add("EXG2 CH1 16Bit", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1 16Bit", "CAL", "mVolts*", datatemp[1]);
+                        objectCluster.Add("EXG2 CH1 16Bit", "CAL", "mVolts", datatemp[1]);
                         objectCluster.Add("EXG2 CH2 16Bit", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2 16Bit", "CAL", "mVolts*", datatemp[2]);
+                        objectCluster.Add("EXG2 CH2 16Bit", "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BRIDGE_AMP) > 0)
@@ -2746,9 +2746,9 @@ namespace ShimmerAPI
                     datatemp[0] = CalibrateU12AdcValue(datatemp[0], OffsetSGHigh, VRef, GainSGHigh);
                     datatemp[1] = CalibrateU12AdcValue(datatemp[1], OffsetSGLow, VRef, GainSGLow);
                     objectCluster.Add("Bridge Amplifier High", "RAW", "no units", newPacket[iSGHigh]);
-                    objectCluster.Add("Bridge Amplifier High", "CAL", "mVolts*", datatemp[0]);
+                    objectCluster.Add("Bridge Amplifier High", "CAL", "mVolts", datatemp[0]);
                     objectCluster.Add("Bridge Amplifier Low", "RAW", "no units", newPacket[iSGLow]);
-                    objectCluster.Add("Bridge Amplifier Low", "CAL", "mVolts*", datatemp[1]);
+                    objectCluster.Add("Bridge Amplifier Low", "CAL", "mVolts", datatemp[1]);
                 }
                 if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
                     && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
