@@ -247,6 +247,10 @@
     <Content Include="Resources\Shimmer Programming Dock Not Connected_68x55.png" />
     <Content Include="Resources\Shimmer Programming Dock_68x55.png" />
     <Content Include="Resources\Shimmer_Logo.jpg" />
+    <None Include="Resources\Shimmer_Programming_Dock_68x55.png" />
+    <None Include="Resources\Shimmer_Programming_Dock_Connected_68x55.png" />
+    <None Include="Resources\Shimmer_Programming_Dock_Connected_68x551.png" />
+    <None Include="Resources\Shimmer_Programming_Dock_Not_Connected_68x55.png" />
     <Content Include="Resources\Tick_green.png" />
     <Content Include="Resources\Tick_red.png" />
     <Content Include="ShimmerIcon32x32.ico" />
