@@ -92,7 +92,7 @@ namespace ShimmerAPI
         public const int GSR_RANGE_AUTO = 4;
         protected int ShimmerState = SHIMMER_STATE_NONE;
         public EventHandler UICallback; //this is to be used by other classes to communicate with the c# API
-
+        protected bool mWaitingForStartStreamingACK = false;
         private int StreamTimeOutCount = 0;
         protected bool StreamingACKReceived = false;
         protected String DeviceName;
@@ -813,6 +813,10 @@ namespace ShimmerAPI
                     byte b = (byte)ReadByte();
                     if (ShimmerState == SHIMMER_STATE_STREAMING)
                     {
+                        
+                        
+                        
+                        
                         switch (b)
                         {
                             case (byte)PacketTypeShimmer2.DATA_PACKET: //Shimmer3 has the same value
@@ -834,11 +838,28 @@ namespace ShimmerAPI
                                     // check if there was a previously received packet, if there is send that, as it is a packet without error (zero-zero test), each packet starts with zero
                                     if (KeepObjectCluster != null)
                                     {
+                                        //Check the time stamp
+                                        
+                                          if (packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp)) { 
                                         CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
                                         OnNewEvent(newEventArgs);
+                                          }
+                                          else
+                                          {
+                                              KeepObjectCluster = null;
+                                              ReadByte();
+                                          }
 
+                                      
+                                        //
+                                        //packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp);
+                                        //CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
+                                        //OnNewEvent(newEventArgs);
+                                     
                                     }
                                     KeepObjectCluster = objectCluster;
+                                       
+                                        
                                     buffer.Clear();
                                 }
                                 break;
@@ -992,7 +1013,11 @@ namespace ShimmerAPI
                                 SetInternalExpPower(ReadByte());
                                 break;
                             case (byte)PacketTypeShimmer2.ACK_COMMAND:
-
+                                if (mWaitingForStartStreamingACK)
+                                {
+                                    SetState(SHIMMER_STATE_STREAMING);
+                                    mWaitingForStartStreamingACK = false;
+                                }
                                 break;
                             case (byte)PacketTypeShimmer2.ACCEL_CALIBRATION_RESPONSE:
                                 // size is 21 bytes
@@ -2317,6 +2342,7 @@ namespace ShimmerAPI
             long[] newPacket = ParseData(newPacketByte, SignalDataTypeArray);
 
             int iTimeStamp = getSignalIndex("TimeStamp"); //find index
+            objectCluster.RawTimeStamp = (int)newPacket[iTimeStamp];
             objectCluster.Add("Timestamp", "RAW", "no units", newPacket[iTimeStamp]);
             objectCluster.Add("Timestamp", "CAL", "mSecs", CalibrateTimeStamp(newPacket[iTimeStamp]));
 
@@ -3736,7 +3762,7 @@ namespace ShimmerAPI
                     PacketReceptionRate = 100;
                     KeepObjectCluster = null; //This is important and is required!
                     OrientationAlgo = null;
-                    SetState(SHIMMER_STATE_STREAMING);
+                    mWaitingForStartStreamingACK = true;
                     WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.START_STREAMING_COMMAND }, 0, 1);
                 }
             }
@@ -4695,6 +4721,32 @@ namespace ShimmerAPI
             }
         }
         /// <summary>
+        /// This checks whether the time stamp has increased correctly
+        /// </summary>
+        /// <param name="timeStamp2"> This is the most recent timestamp</param>
+        /// <param name="timeStamp1"> this is the previously received timestamp</param>
+        /// <returns></returns>
+             public bool packetTimeStampChecker(int timeStamp2, int timeStamp1)
+        {
+            int upperLimit = ADCRawSamplingRateValue + (int)(ADCRawSamplingRateValue * 0.05);
+            int lowerLimit = ADCRawSamplingRateValue - (int)(ADCRawSamplingRateValue * 0.05);
+            if ((timeStamp2 - timeStamp1) < 0)
+            {
+                timeStamp2 = timeStamp2 + 65536;
+                
+                }
+            int difference = timeStamp2 - timeStamp1;
+                if ((difference) > lowerLimit && (difference) < upperLimit)
+                {
+                    return true;
+            }
+            
+                return false;
+        }
+
+
+
+        /// <summary>
         /// This sets the Gyroscope on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the Gyroscope is reduced to 31.25Hz
         /// </summary>
         /// <param name="enable">Set to true to enable</param>
@@ -5198,7 +5250,9 @@ namespace ShimmerAPI
             return MinorEventIdentifier;
         }
 
+   
     }
+
 
 
 
