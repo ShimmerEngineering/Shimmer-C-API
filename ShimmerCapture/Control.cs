@@ -2315,7 +2315,7 @@ namespace ShimmerAPI
                             double ecgData = -1;
                             ecgData = data[index];
                             double calTimestamp = objectCluster.GetData("Timestamp", "CAL").GetData();
-                            hr = ECGtoHR.ECGToHRConversion(ecgData, (long)calTimestamp);
+                            hr = (int)ECGtoHR.ECGToHRConversion(ecgData, calTimestamp);
                             names.Add("Heart Rate ECG");
                             formats.Add("");
                             units.Add("Beats/min");
