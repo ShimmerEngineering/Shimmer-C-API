@@ -3,6 +3,9 @@
 # REV0_3
 - Major update to ecgtohr algorithm and filtering algorithm, user should see major improvements in both ecgtohr and ppgtohr algorithms.
 - Currently uses ShimmerClosedLibraryRev0_2
+- updated bytestream sync method , now checks timestamps as well
+- update readbytes method, now looks out for ack when start streaming command is sent, avoids rare occasions this is missed
+
 
 BUILDING NOTES
 - If new release create a branch with the release number
