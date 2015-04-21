@@ -81,7 +81,7 @@ namespace ShimmerAPI
         public const int SHIMMER_STATE_CONNECTED = 2;
         public const int SHIMMER_STATE_CONNECTING = 1;
         public const int SHIMMER_STATE_NONE = 0;
-
+        public bool mEnableTimeStampAlignmentCheck = true;
         public const int FW_IDENTIFIER_BTSTREAM = 1;
         public const int FW_IDENTIFIER_LOGANDSTREAM = 3;
 
@@ -839,18 +839,25 @@ namespace ShimmerAPI
                                     if (KeepObjectCluster != null)
                                     {
                                         //Check the time stamp
-                                        
-                                          if (packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp)) { 
-                                        CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
-                                        OnNewEvent(newEventArgs);
-                                          }
-                                          else
-                                          {
-                                              KeepObjectCluster = null;
-                                              ReadByte();
-                                          }
+                                        if (mEnableTimeStampAlignmentCheck)
+                                        {
+                                            if (packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp))
+                                            {
+                                                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
+                                                OnNewEvent(newEventArgs);
+                                            }
+                                            else
+                                            {
+                                                KeepObjectCluster = null;
+                                                ReadByte();
+                                            }
 
-                                      
+                                        }
+                                        else
+                                        {
+                                            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
+                                            OnNewEvent(newEventArgs);
+                                        }
                                         //
                                         //packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp);
                                         //CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);

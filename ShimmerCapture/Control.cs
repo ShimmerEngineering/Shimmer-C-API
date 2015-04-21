@@ -174,6 +174,7 @@ namespace ShimmerAPI
         private void ControlForm_Load(object sender, EventArgs e)
         {
             //buttonSetBlinkLED.Visible = false;
+            checkBoxTSACheck.Visible = false;
             buttonStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
             labelPRR.Visible = false;
@@ -1462,6 +1463,8 @@ namespace ShimmerAPI
             if (state == (int)Shimmer.SHIMMER_STATE_CONNECTED)
             {
                 buttonConnect.Enabled = false;
+                checkBoxTSACheck.Visible = true;
+                checkBoxTSACheck.Checked = ShimmerDevice.mEnableTimeStampAlignmentCheck;
                 buttonDisconnect.Enabled = true;
                 if (ShimmerDevice.GetFirmwareIdentifier() == 3)
                 {
@@ -2728,6 +2731,12 @@ namespace ShimmerAPI
             } else if(ShimmerDevice.GetBlinkLED()==2){
                 ShimmerDevice.WriteBlinkLED(0);
             }
+        }
+
+        private void checkBoxTSACheck_CheckedChanged(object sender, EventArgs e)
+        {
+            ShimmerDevice.mEnableTimeStampAlignmentCheck = checkBoxTSACheck.Checked;
+            
         }
 
     }
