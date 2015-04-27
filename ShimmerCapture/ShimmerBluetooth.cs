@@ -81,7 +81,7 @@ namespace ShimmerAPI
         public const int SHIMMER_STATE_CONNECTED = 2;
         public const int SHIMMER_STATE_CONNECTING = 1;
         public const int SHIMMER_STATE_NONE = 0;
-        public bool mEnableTimeStampAlignmentCheck = true;
+        public bool mEnableTimeStampAlignmentCheck = false;
         public const int FW_IDENTIFIER_BTSTREAM = 1;
         public const int FW_IDENTIFIER_LOGANDSTREAM = 3;
 
@@ -848,6 +848,7 @@ namespace ShimmerAPI
                                             }
                                             else
                                             {
+                                                System.Console.WriteLine("Throwing Packet");
                                                 KeepObjectCluster = null;
                                                 ReadByte();
                                             }
@@ -4743,11 +4744,14 @@ namespace ShimmerAPI
                 
                 }
             int difference = timeStamp2 - timeStamp1;
-                if ((difference) > lowerLimit && (difference) < upperLimit)
-                {
-                    return true;
+            if ((difference) > lowerLimit && (difference) < upperLimit)
+            {
+                return true;
             }
-            
+            else
+            {
+                System.Console.WriteLine(difference);
+            }
                 return false;
         }
 

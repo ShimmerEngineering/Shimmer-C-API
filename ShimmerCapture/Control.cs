@@ -113,7 +113,7 @@ namespace ShimmerAPI
         private Boolean SetOrientation = false;
         private Boolean Is3DCubeOpen = false;
         //PPG-HR
-        private PPGtoHRAlgorithm PPGtoHeartRateCalculation;
+        private PPGToHRAlgorithm PPGtoHeartRateCalculation;
         private Boolean EnablePPGtoHRConversion = false;
         private int NumberOfHeartBeatsToAverage = 5;
         private int TrainingPeriodPPG = 10; //5 second buffer
@@ -173,7 +173,7 @@ namespace ShimmerAPI
     
         private void ControlForm_Load(object sender, EventArgs e)
         {
-            //buttonSetBlinkLED.Visible = false;
+            buttonSetBlinkLED.Visible = false;
             checkBoxTSACheck.Visible = false;
             buttonStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
@@ -1463,7 +1463,7 @@ namespace ShimmerAPI
             if (state == (int)Shimmer.SHIMMER_STATE_CONNECTED)
             {
                 buttonConnect.Enabled = false;
-                checkBoxTSACheck.Visible = true;
+                //checkBoxTSACheck.Visible = true;
                 checkBoxTSACheck.Checked = ShimmerDevice.mEnableTimeStampAlignmentCheck;
                 buttonDisconnect.Enabled = true;
                 if (ShimmerDevice.GetFirmwareIdentifier() == 3)
@@ -2635,7 +2635,7 @@ namespace ShimmerAPI
             //PPG-HR Conversion
             if (EnablePPGtoHRConversion)
             {
-                PPGtoHeartRateCalculation = new PPGtoHRAlgorithm(ShimmerDevice.GetSamplingRate(), NumberOfHeartBeatsToAverage, TrainingPeriodPPG);
+                PPGtoHeartRateCalculation = new PPGToHRAlgorithm(ShimmerDevice.GetSamplingRate(), NumberOfHeartBeatsToAverage, TrainingPeriodPPG);
                 LPF_PPG = new Filter(Filter.LOW_PASS, ShimmerDevice.GetSamplingRate(), new double[] { 5 });
                 HPF_PPG = new Filter(Filter.HIGH_PASS, ShimmerDevice.GetSamplingRate(), new double[] { 0.5 });
             }

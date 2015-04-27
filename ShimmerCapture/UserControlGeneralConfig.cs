@@ -1324,10 +1324,21 @@ namespace ShimmerAPI
                     checkBoxEnableECGtoHR.Checked = false;
                     //Disable ExG tab
                     PConfiguration.tabControl1.TabPages[1].Enabled = false;
+                    if (checkBoxIntExpPower.Checked)
+                    {
+                        groupBoxPPGtoHR.Enabled = true;
+                    }
                 }
                 else
                 {
-
+                    if ((!checkBoxSensor12.Checked && !checkBoxSensor11.Checked && !checkBoxSensor10.Checked && !checkBoxSensor9.Checked))
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
+                    if (checkBoxIntExpPower.Checked == false)
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
                 }
             }
             else
@@ -1358,10 +1369,22 @@ namespace ShimmerAPI
                     checkBoxEnableECGtoHR.Checked = false;
                     //Disable ExG tab
                     PConfiguration.tabControl1.TabPages[1].Enabled = false;
+
+                    if (checkBoxIntExpPower.Checked)
+                    {
+                        groupBoxPPGtoHR.Enabled = true;
+                    }
                 }
                 else
                 {
-
+                    if ((!checkBoxSensor12.Checked && !checkBoxSensor11.Checked && !checkBoxSensor10.Checked && !checkBoxSensor9.Checked))
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
+                    if (checkBoxIntExpPower.Checked == false)
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
                 }
             }
             else
@@ -1406,7 +1429,14 @@ namespace ShimmerAPI
                 }
                 else
                 {
-
+                    if ((!checkBoxSensor12.Checked && !checkBoxSensor11.Checked && !checkBoxSensor10.Checked && !checkBoxSensor9.Checked))
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
+                    if (checkBoxIntExpPower.Checked == false)
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
                 }
             }
             else
@@ -1437,9 +1467,21 @@ namespace ShimmerAPI
                     checkBoxEnableECGtoHR.Checked = false;
                     //Disable ExG tab
                     PConfiguration.tabControl1.TabPages[1].Enabled = false;
+                    if (checkBoxIntExpPower.Checked)
+                    {
+                        groupBoxPPGtoHR.Enabled = true;
+                    }
                 }
                 else
                 {
+                    if ((!checkBoxSensor12.Checked && !checkBoxSensor11.Checked && !checkBoxSensor10.Checked && !checkBoxSensor9.Checked))
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
+                    if (checkBoxIntExpPower.Checked == false)
+                    {
+                        groupBoxPPGtoHR.Enabled = false;
+                    }
 
                 }
             }
@@ -1768,15 +1810,7 @@ namespace ShimmerAPI
         {
             if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
             {
-                if (checkBoxIntExpPower.Checked)
-                {
-                    groupBoxPPGtoHR.Enabled = true;
-                }
-                else
-                {
-                    groupBoxPPGtoHR.Enabled = false;
-                    checkBoxEnablePPGtoHR.Checked = false;
-                }
+                
             }
         }
 
@@ -2686,6 +2720,18 @@ namespace ShimmerAPI
             {
                 MessageBox.Show("Internal Exp Power is enabled but no internal ADC has been enabled. Disable Internal Exp Power to conserve battery.", Control.ApplicationName,
                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                if (checkBoxIntExpPower.Checked)
+                {
+                    groupBoxPPGtoHR.Enabled = true;
+                }
+                else
+                {
+                    groupBoxPPGtoHR.Enabled = false;
+                    checkBoxEnablePPGtoHR.Checked = false;
+                }
             }
         }
 

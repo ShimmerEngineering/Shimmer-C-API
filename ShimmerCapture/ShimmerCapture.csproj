@@ -93,8 +93,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ShimmerClosedLibraryRev0_2">
-      <HintPath>libs\ShimmerClosedLibraryRev0_2.dll</HintPath>
+    <Reference Include="ShimmerClosedLibraryRev0_3, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\ShimmerClosedLibraryRev0_3.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -237,6 +238,7 @@
   <ItemGroup>
     <Content Include="%24this.Icon.ico" />
     <Content Include="ic_shimmercapture.ico" />
+    <Content Include="libs\ShimmerClosedLibraryRev0_3.dll" />
     <Content Include="Resources\%24this.Icon.ico" />
     <Content Include="Resources\Green_Plus_20x20.png" />
     <Content Include="Resources\icon.ico" />
