@@ -201,6 +201,13 @@ namespace ShimmerAPI
 
             this.Resize += new System.EventHandler(this.FormResize);
 
+            if (usingLinux)
+            {
+                ZedGraphControl1.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl1.Size.Height);
+                ZedGraphControl2.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl2.Size.Height);
+                ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl3.Size.Height);
+            }
+
             CheckBoxArrayGroup1 = new CheckBox[30] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
             checkBox7, checkBox8, checkBox9, checkBox10, checkBox11, checkBox12, checkBox13, checkBox14, 
             checkBox15, checkBox16, checkBox17, checkBox18, checkBox19, checkBox20, checkBox21, 
@@ -348,11 +355,13 @@ namespace ShimmerAPI
             int scale3 = 400;
             if (usingLinux)
             {
+                System.Console.WriteLine("Using Linux");
                 scale1 = 400;
                 scale2 = 195;
                 scale3 = 450;
             }
 
+            System.Console.WriteLine("FORM RESIZE");
             /*
             for (int i = 0; i < 30; i++)
             {
@@ -369,10 +378,10 @@ namespace ShimmerAPI
                     CheckBoxArrayGroup3[i].Location = new System.Drawing.Point(this.Size.Width - scale2, CheckBoxArrayGroup3[i].Location.Y);
                 }
             }
-            */
-            //ZedGraphControl1.Size = new System.Drawing.Size(this.Size.Width - scale3, ZedGraphControl1.Size.Height);
-            //ZedGraphControl2.Size = new System.Drawing.Size(this.Size.Width - scale3, ZedGraphControl2.Size.Height);
-            //ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - scale3, ZedGraphControl3.Size.Height);
+            
+            ZedGraphControl1.Size = new System.Drawing.Size(this.Size.Width - scale3, ZedGraphControl1.Size.Height);
+            ZedGraphControl2.Size = new System.Drawing.Size(this.Size.Width - scale3, ZedGraphControl2.Size.Height);
+            ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - scale3, ZedGraphControl3.Size.Height);*/
         }
 
         private void CheckBoxArrayGroup1_CheckedChanged(object sender, EventArgs e)
@@ -1004,6 +1013,7 @@ namespace ShimmerAPI
 
                 if (usingLinux)
                 {
+                    System.Console.WriteLine("Using Linux");
                     factor = 500;
                 }
 
@@ -1035,6 +1045,7 @@ namespace ShimmerAPI
                 }
                 if (usingLinux)
                 {
+                    System.Console.WriteLine("Using Linux");
                     factor = 250;
                 }
                 if (CountXAxisDataPoints % factor == 0)
@@ -1065,6 +1076,7 @@ namespace ShimmerAPI
                 }
                 if (usingLinux)
                 {
+                    System.Console.WriteLine("Using Linux");
                     factor = 100;
                 }
                 if (CountXAxisDataPoints % factor == 0)
@@ -1095,6 +1107,7 @@ namespace ShimmerAPI
                 }
                 if (usingLinux)
                 {
+                    System.Console.WriteLine("Using Linux");
                     factor = 50;
                 }
                 if (CountXAxisDataPoints % factor == 0)
