@@ -59,7 +59,7 @@ namespace ShimmerAPI
         public static readonly string ApplicationName = Application.ProductName.ToString().Replace("_", " ");
         //        private string versionNumber = Application.ProductVersion.ToString().Substring(0, Application.ProductVersion.ToString().LastIndexOf(".")).ToLower();
         private string versionNumber = Application.ProductVersion.ToString().ToLower();
- 
+
         private delegate void ShowChannelTextBoxesCallback(int i);
         private delegate void ShowChannelLabelsCallback(List<String> s);
         private delegate void UpdateChannelsCallback(List<Double> d);
@@ -68,7 +68,7 @@ namespace ShimmerAPI
         List<TextBox> ListofTextBox = new List<TextBox>();
         List<System.Windows.Forms.Label> ListofLabels = new List<System.Windows.Forms.Label>();
         List<String> ListofSignals = new List<String>();
-        
+
         //public string status_text = "";
         private Configuration Configure;
         private Logging WriteToFile;
@@ -116,10 +116,12 @@ namespace ShimmerAPI
         private PPGToHRAlgorithm PPGtoHeartRateCalculation;
         private Boolean EnablePPGtoHRConversion = false;
         private int NumberOfHeartBeatsToAverage = 5;
+        private int NumberOfHeartBeatsToAverageECG = 1;
         private int TrainingPeriodPPG = 10; //5 second buffer
         //ECG-HR
         private ECGToHR ECGtoHR;
         private Boolean EnableECGtoHRConversion = false;
+        private int TrainingPeriodECG = 10; //5 second buffer
         //Filters
         Filter NQF_Exg1Ch1;
         Filter NQF_Exg1Ch2;
@@ -146,7 +148,7 @@ namespace ShimmerAPI
         public String ECGSignalName = "ECG LL-RA"; //This is used to identify which signal to feed into the ECG to HR algorithm
         private int ExGLeadOffCounter = 0;
         private int ExGLeadOffCounterSize = 0;
-        
+
         private Color[] TraceColours = new Color[30]{Color.Blue, Color.Red, Color.Green, Color.Black, Color.Orange, Color.Gray,
         Color.Purple, Color.Brown, Color.Yellow, Color.Aqua, Color.Pink, Color.DarkBlue, Color.DarkRed, Color.DarkOrange, 
         Color.LightBlue, Color.Navy, Color.Cyan, Color.LightGreen, Color.Maroon, Color.Teal, Color.DarkGray, Color.Indigo,
@@ -170,7 +172,7 @@ namespace ShimmerAPI
             Application.ThreadException += new ExceptionEventHandler().ApplicationThreadException;
             AppDomain.CurrentDomain.UnhandledException += new ExceptionEventHandler().CurrentDomainUnhandledException;
         }
-    
+
         private void ControlForm_Load(object sender, EventArgs e)
         {
             buttonSetBlinkLED.Visible = false;
@@ -196,7 +198,7 @@ namespace ShimmerAPI
             }
             comboBoxComPorts.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
             comboBoxComPorts.AutoCompleteSource = AutoCompleteSource.ListItems;
-            
+
             this.Resize += new System.EventHandler(this.FormResize);
 
             CheckBoxArrayGroup1 = new CheckBox[30] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
@@ -247,7 +249,7 @@ namespace ShimmerAPI
         {
             return tsStatusLabel.Text;
         }
-        
+
         private void initializeExGLeadOff()
         {
             textBoxLeadOffStatus1.Text += "";
@@ -350,7 +352,7 @@ namespace ShimmerAPI
                 scale2 = 195;
                 scale3 = 450;
             }
-            
+
             /*
             for (int i = 0; i < 30; i++)
             {
@@ -384,14 +386,14 @@ namespace ShimmerAPI
                     {
                         SelectedSignalNameGroup1.Add(CheckBoxArrayGroup1[i].Name);
                         //Create new textbox
-                        
+
                     }
                 }
             }
             catch (ArgumentOutOfRangeException)
-                {
+            {
 
-                }
+            }
         }
 
         public void ShowChannelLabels(List<String> names)
@@ -407,7 +409,7 @@ namespace ShimmerAPI
                 {
                     System.Windows.Forms.Label lbl = new System.Windows.Forms.Label();
                     lbl.Text = names[i];
-                    lbl.Size = new Size(250, 17); 
+                    lbl.Size = new Size(250, 17);
                     lbl.Location = new Point(900, 150 + ((ListofLabels.Count - 1) * 22));
                     ListofLabels.Add(lbl);
                     this.Controls.Add(lbl);
@@ -418,21 +420,22 @@ namespace ShimmerAPI
 
         public void ShowChannelTextBoxes(int count)
         {
-            if(this.buttonConnect.InvokeRequired)  // will be in the same thread as the controls to be added
+            if (this.buttonConnect.InvokeRequired)  // will be in the same thread as the controls to be added
             {
                 ShowChannelTextBoxesCallback d = new ShowChannelTextBoxesCallback(ShowChannelTextBoxes);
-                this.Invoke(d,count);
+                this.Invoke(d, count);
             }
             else
             {
-            for(int i=0;i<count;i++){
-                TextBox txtBX = new TextBox();
-                txtBX.Text = ListofTextBox.Count.ToString();
-                txtBX.Location = new Point(1150, 150 + ((ListofTextBox.Count - 1) * 22));
-                ListofTextBox.Add(txtBX);
-                this.Controls.Add(txtBX);
-            }
+                for (int i = 0; i < count; i++)
+                {
+                    TextBox txtBX = new TextBox();
+                    txtBX.Text = ListofTextBox.Count.ToString();
+                    txtBX.Location = new Point(1150, 150 + ((ListofTextBox.Count - 1) * 22));
+                    ListofTextBox.Add(txtBX);
+                    this.Controls.Add(txtBX);
                 }
+            }
         }
 
         public void UpdateChannelTextBoxes(List<Double> listofdata)
@@ -448,7 +451,7 @@ namespace ShimmerAPI
                 {
                     for (int i = 0; i < listofdata.Count; i++)
                     {
-                        ListofTextBox[i].Text = (Math.Truncate(listofdata[i]*100)/100).ToString();
+                        ListofTextBox[i].Text = (Math.Truncate(listofdata[i] * 100) / 100).ToString();
                     }
                 }
             }
@@ -473,7 +476,8 @@ namespace ShimmerAPI
 
         private void RemoveAllTextBox()
         {
-            foreach (TextBox tx in ListofTextBox){
+            foreach (TextBox tx in ListofTextBox)
+            {
                 this.Controls.Remove(tx);
             }
             foreach (System.Windows.Forms.Label l in ListofLabels)
@@ -484,7 +488,7 @@ namespace ShimmerAPI
             ListofSignals.Clear();
             ListofLabels.Clear();
             UserControlGeneralConfig.ExpansionBoard = "";
-            
+
         }
 
         private void CheckBoxArrayGroup2_CheckedChanged(object sender, EventArgs e)
@@ -652,7 +656,7 @@ namespace ShimmerAPI
                 String signalNameNoFormat = namesRaw[j].Substring(0, l - 4);
                 String signalNameCalFormat = signalNameNoFormat + " CAL";
                 //If same signal name with CAL format exists, add it to next checkbox. Otherwise skip next checkbox.
-                if (namesCal.Contains(signalNameCalFormat)) 
+                if (namesCal.Contains(signalNameCalFormat))
                 {
                     CheckBoxArrayGroup1[count + 1].Visible = true;
                     CheckBoxArrayGroup1[count + 1].Text = "CAL";
@@ -1138,7 +1142,7 @@ namespace ShimmerAPI
                 IsGraph3Visible = true;
                 ZedGraphControl3.Visible = true;
                 SetupCheckboxesGroup3(ShimmerDevice.GetDeviceName(), StreamingSignalNamesRaw.ToArray(), StreamingSignalNamesCal.ToArray());
-                
+
                 if (!usingLinux)
                 {
                     int w = this.Size.Width;
@@ -1208,7 +1212,7 @@ namespace ShimmerAPI
             {
                 if (connect)
                 {
-                    ShimmerDevice.StartConnectThread(); 
+                    ShimmerDevice.StartConnectThread();
                     connect = false;
                 }
             }
@@ -1231,7 +1235,7 @@ namespace ShimmerAPI
                 {
                     if (ShimmerDevice.GetFirmwareIdentifier() == 3)
                     {
-                        
+
                     }
                     else
                     {
@@ -1247,7 +1251,7 @@ namespace ShimmerAPI
             ShimmerIdSetup.Clear();
             StreamingSignalNamesRaw.Clear();
             StreamingSignalNamesCal.Clear();
-            
+
             // clear all plot checkboxes
             foreach (CheckBox cb in CheckBoxArrayGroup1)
             {
@@ -1283,9 +1287,19 @@ namespace ShimmerAPI
             NumberOfHeartBeatsToAverage = number;
         }
 
+        public void SetNumberOfBeatsToAveECG(int number)
+        {
+            NumberOfHeartBeatsToAverageECG = number;
+        }
+
         public int GetNumberOfBeatsToAve()
         {
             return NumberOfHeartBeatsToAverage;
+        }
+
+        public int GetNumberOfBeatsToAveECG()
+        {
+            return NumberOfHeartBeatsToAverageECG;
         }
 
         public void EnableECGtoHR(bool enable)
@@ -1314,7 +1328,7 @@ namespace ShimmerAPI
             //ECG-HR Conversion
             if (EnableECGtoHRConversion)
             {
-                ECGtoHR = new ECGToHR(ShimmerDevice.GetSamplingRate());
+                ECGtoHR = new ECGToHR(ShimmerDevice.GetSamplingRate(), TrainingPeriodECG, NumberOfHeartBeatsToAverageECG);
             }
 
             CountXAxisDataPoints = 0;
@@ -1508,7 +1522,7 @@ namespace ShimmerAPI
                 ToolStripMenuItemShow3DOrientation.Enabled = false;
             }
             else if (state == (int)Shimmer.SHIMMER_STATE_STREAMING)
-            {   
+            {
                 buttonConnect.Enabled = false;
                 buttonDisconnect.Enabled = true;
                 buttonStreamandLog.Enabled = false;
@@ -1567,7 +1581,7 @@ namespace ShimmerAPI
             switch (indicator)
             {
                 case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE:
-                    
+
                     System.Diagnostics.Debug.Write(((Shimmer)sender).GetDeviceName() + " State = " + ((Shimmer)sender).GetStateString() + System.Environment.NewLine);
                     int state = (int)eventArgs.getObject();
                     if (state == (int)Shimmer.SHIMMER_STATE_CONNECTED)
@@ -1620,7 +1634,8 @@ namespace ShimmerAPI
                     {
                         MessageBox.Show(message, Control.ApplicationName, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else if (message.Equals("Connection lost")){
+                    else if (message.Equals("Connection lost"))
+                    {
                         MessageBox.Show("Connection with device lost while streaming", Control.ApplicationName,
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -1628,7 +1643,7 @@ namespace ShimmerAPI
                     {
                         ChangeStatusLabel(message);
                     }
-                 
+
                     break;
                 case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
                     // this is essential to ensure the object is not a reference
@@ -1646,8 +1661,8 @@ namespace ShimmerAPI
                         {
                             double dataFilteredLP = LPF_PPG.filterData(data[index]);
                             double dataFilteredHP = HPF_PPG.filterData(dataFilteredLP);
-                            double[] dataTS = new double[] { data[indexts]};
-                            int heartRate = (int)Math.Round(PPGtoHeartRateCalculation.ppgToHrConversion(dataFilteredHP,dataTS[0]));
+                            double[] dataTS = new double[] { data[indexts] };
+                            int heartRate = (int)Math.Round(PPGtoHeartRateCalculation.ppgToHrConversion(dataFilteredHP, dataTS[0]));
                             names.Add("Heart Rate PPG");
                             formats.Add("");
                             units.Add("Beats/min");
@@ -1881,7 +1896,7 @@ namespace ShimmerAPI
                                     }
                                     catch
                                     {
-                                    
+
                                     }
                                 }
                                 else
@@ -2359,7 +2374,7 @@ namespace ShimmerAPI
                             }
                         }
                     }
-                    
+
                     //Set up checkboxes and graph first time
                     /*
                     if (!ShimmerIdSetup.Contains(objectCluster.GetShimmerID()))
@@ -2439,7 +2454,7 @@ namespace ShimmerAPI
                     //Plot
                     DrawingData(names.ToArray(), formats.ToArray(), data.ToArray());
                     ShowTBcount++;
-                    if (ShowTBcount % Math.Truncate(ShimmerDevice.GetSamplingRate() / 5)==0)
+                    if (ShowTBcount % Math.Truncate(ShimmerDevice.GetSamplingRate() / 5) == 0)
                     {
                         UpdateChannelTextBoxes(data);
                     }
@@ -2456,7 +2471,7 @@ namespace ShimmerAPI
                     count++;
                     if (count % Math.Truncate(ShimmerDevice.GetSamplingRate()) == 0)
                     {
-                        SetLabelText("Packet Reception Rate: " + Math.Truncate(prr).ToString() +"%");
+                        SetLabelText("Packet Reception Rate: " + Math.Truncate(prr).ToString() + "%");
                     }
                     break;
             }
@@ -2654,7 +2669,7 @@ namespace ShimmerAPI
             //ECG-HR Conversion
             if (EnableECGtoHRConversion)
             {
-                ECGtoHR = new ECGToHR(ShimmerDevice.GetSamplingRate());
+                ECGtoHR = new ECGToHR(ShimmerDevice.GetSamplingRate(), TrainingPeriodECG, NumberOfHeartBeatsToAverageECG);
             }
             ExGLeadOffCounter = 0;
             ExGLeadOffCounterSize = (int)ShimmerDevice.GetSamplingRate();
@@ -2726,9 +2741,12 @@ namespace ShimmerAPI
         private void button1_Click(object sender, EventArgs e)
         {
             System.Console.WriteLine("Set Blink LED");
-            if(ShimmerDevice.GetBlinkLED()==0){
+            if (ShimmerDevice.GetBlinkLED() == 0)
+            {
                 ShimmerDevice.WriteBlinkLED(2);
-            } else if(ShimmerDevice.GetBlinkLED()==2){
+            }
+            else if (ShimmerDevice.GetBlinkLED() == 2)
+            {
                 ShimmerDevice.WriteBlinkLED(0);
             }
         }
@@ -2736,7 +2754,7 @@ namespace ShimmerAPI
         private void checkBoxTSACheck_CheckedChanged(object sender, EventArgs e)
         {
             ShimmerDevice.mEnableTimeStampAlignmentCheck = checkBoxTSACheck.Checked;
-            
+
         }
 
     }

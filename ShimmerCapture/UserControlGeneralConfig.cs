@@ -441,6 +441,7 @@ namespace ShimmerAPI
                 comboBoxExGResolution.SelectedIndex = 0;
 
                 numericUpDownBeatsToAve.Value = PConfiguration.PControlForm.GetNumberOfBeatsToAve();
+                numericUpDownBeatsToAveECG.Value = PConfiguration.PControlForm.GetNumberOfBeatsToAveECG();
                 
             }
             else
@@ -1900,6 +1901,7 @@ namespace ShimmerAPI
                     PConfiguration.PControlForm.PPGSignalName = comboBoxPPGAdcChannel.Text;
                     PConfiguration.PControlForm.EnablePPGtoHR(checkBoxEnablePPGtoHR.Checked);
                     PConfiguration.PControlForm.SetNumberOfBeatsToAve((int)numericUpDownBeatsToAve.Value);
+                    PConfiguration.PControlForm.SetNumberOfBeatsToAveECG((int)numericUpDownBeatsToAveECG.Value);
                 }
                 else
                 {
