@@ -1,5 +1,9 @@
 # Shimmer-C-API
 
+# REV0_3_1
+- Minor fix to ppgtohr reset
+- Currently uses ShimmerClosedLibraryRev0_4
+
 # REV0_3
 - Major update to ecgtohr algorithm and filtering algorithm, minor update to ppgtohr algorithm, user should see major improvements in both ecgtohr and ppgtohr algorithms.
 - Currently uses ShimmerClosedLibraryRev0_3
