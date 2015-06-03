@@ -11,9 +11,13 @@ using System.IO;
  copyright ©1997-1998 by Steven W. Smith. 
  For more information visit the book's website at: www.DSPguide.com.
  *
+ * Rev0.4
+ * - Updated to coefficients[(nTaps/2)] = coefficients[(nTaps/2)] +1; 
+ * 
+ * Rev0.3
+ *  
  * Rev 0.2
- * 
- * 
+ *  
  * Changes since 0.1
  * - Handle an error case - when array of data to filter (number of samples) is bigger than the array of data to filter from the previous iteration
  * - Added resetBuffers() function 
@@ -147,7 +151,8 @@ namespace ShimmerAPI
                 }
                 
                 if(LoHi == BAND_PASS){
-                	coefficients[(nTaps/2)+1] = coefficients[(nTaps/2)+1] +1;
+                	//coefficients[(nTaps/2)+1] = coefficients[(nTaps/2)+1] +1;
+                    coefficients[(nTaps / 2)] = coefficients[(nTaps / 2)] + 1;
                 }
                 
                 this.validparameters = true;
