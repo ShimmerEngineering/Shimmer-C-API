@@ -41,6 +41,8 @@ namespace ShimmerAPI
             }
             try
             {
+                
+
                 PConfiguration = (Configuration)this.Parent.Parent.Parent;
 
                 comboBoxExGReferenceElectrode.Items.AddRange(Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES);
@@ -673,8 +675,15 @@ namespace ShimmerAPI
             string subsr = sr.Substring(0, sr.Length - 2);
             double samplingRate = Double.Parse(subsr);
             int oversamplingRatio = 2;
-            int gain = (int)Double.Parse(PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedItem.ToString());
+            int gain = 0;
             int gainSetting = ConvertEXGGainValuetoSetting(gain);
+            if (PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedItem.ToString().Equals("Custom")){
+            
+
+            } else {
+                gain = (int)Double.Parse(PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedItem.ToString());
+                gainSetting = ConvertEXGGainValuetoSetting(gain);
+            }
             int referenceElectrode = (int)PConfiguration.userControlExgConfig1.comboBoxExGReferenceElectrode.SelectedIndex;
             
             String ExGMode;
