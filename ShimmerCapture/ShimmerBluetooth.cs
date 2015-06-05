@@ -2618,23 +2618,31 @@ namespace ShimmerAPI
                     if (GSRRange == 0 || newGSRRange == 0)
                     { //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
                         // the polynomial function used for calibration has been deprecated, it is replaced with a linear function
-                        p1 = 0.0363;
-                        p2 = -24.8617;
+                        //p1 = 0.0363;
+                        //p2 = -24.8617;
+                        p1 = 0.0373;
+                        p2 = -24.9915;
                     }
                     else if (GSRRange == 1 || newGSRRange == 1)
                     {
-                        p1 = 0.0051;
-                        p2 = -3.8357;
+                        //p1 = 0.0051;
+                        //p2 = -3.8357;
+                        p1 = 0.0054;
+                        p2 = -3.5194;
                     }
                     else if (GSRRange == 2 || newGSRRange == 2)
                     {
+                        //p1 = 0.0015;
+                        //p2 = -1.0067;
                         p1 = 0.0015;
-                        p2 = -1.0067;
+                        p2 = -1.0163;
                     }
                     else if (GSRRange == 3 || newGSRRange == 3)
                     {
-                        p1 = 4.4513e-04;
-                        p2 = -0.3193;
+                        //p1 = 4.4513e-04;
+                        //p2 = -0.3193;
+                        p1 = 4.5580e-04;
+                        p2 = -0.3014;
                     }
                     datatemp = CalibrateGsrData(datatemp, p1, p2);
                     objectCluster.Add("GSR", "RAW", "no units", newPacket[iGSR]);
