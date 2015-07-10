@@ -4488,6 +4488,44 @@ namespace ShimmerAPI
                 int samplingByteValue = (int)(32768 / rate);
                 WriteBytes(new byte[3] { (byte)PacketTypeShimmer2.SET_SAMPLING_RATE_COMMAND, (byte)(samplingByteValue & 0xFF), (byte)((samplingByteValue >> 8) & 0xFF) }, 0, 3);
             }
+
+            //now check to see that the internal sensor rates are close to the sampling rate value
+            
+            SetLowPowerMag(LowPowerMagEnabled);
+            if ((HardwareVersion == (int)ShimmerVersion.SHIMMER3))
+            {
+                SetLowPowerGyro(LowPowerGyroEnabled);
+                SetLowPowerAccel(LowPowerAccelEnabled);
+                if (SamplingRate <= 125)
+                {
+                    WriteEXGRate(0);
+                }
+                else if (SamplingRate <= 250)
+                {
+                    WriteEXGRate(1);
+                }
+                else if (SamplingRate <= 500)
+                {
+                    WriteEXGRate(2);
+                }
+                else if (SamplingRate <= 1000)
+                {
+                    WriteEXGRate(3);
+                }
+                else if (SamplingRate <= 2000)
+                {
+                    WriteEXGRate(4);
+                }
+                else if (SamplingRate <= 4000)
+                {
+                    WriteEXGRate(5);
+                }
+                else
+                {
+                    WriteEXGRate(6);
+                }
+
+            }
             System.Threading.Thread.Sleep(200);
         }
 
@@ -4570,6 +4608,7 @@ namespace ShimmerAPI
             else
             {
                 mTempIntValue = rate;
+                magSamplingRate = rate;
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer2.SET_MAG_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
                 System.Threading.Thread.Sleep(200);
             }
@@ -4579,6 +4618,7 @@ namespace ShimmerAPI
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
             {
+                AccelSamplingRate = rate;
                 mTempIntValue = rate;
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_ACCEL_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
                 System.Threading.Thread.Sleep(200);
@@ -4589,6 +4629,7 @@ namespace ShimmerAPI
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
             {
+                Mpu9150SamplingRate = rate;
                 mTempIntValue = rate;
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_MPU9150_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
                 System.Threading.Thread.Sleep(200);
@@ -5008,6 +5049,39 @@ namespace ShimmerAPI
             }
         }
 
+        public void WriteEXGRate(byte exgRate)
+        {
+            if (IsConnectionOpen())
+            {
+                if (CompatibilityCode >= 3)
+                {
+
+                    byte exg1ar1 = (byte)(Exg1RegArray[0] & 0xF8); //248
+                    exg1ar1 = (byte)(exg1ar1 | exgRate);
+                    
+                    byte exg2ar1 = (byte)(Exg2RegArray[0] & 0xF8); //248
+                    exg2ar1 = (byte)(exg2ar1 | exgRate);
+
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.SET_EXG_REGS_COMMAND }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1); //CHIPID1
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)1 }, 0, 1);
+                    WriteBytes(new byte[1] { exg1ar1 }, 0, 1);
+                    Exg1RegArray[0] = exg1ar1;
+
+                    System.Threading.Thread.Sleep(500);
+
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.SET_EXG_REGS_COMMAND }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)1 }, 0, 1); //CHIPID2
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)1 }, 0, 1);
+                    WriteBytes(new byte[1] { exg2ar1 }, 0, 1);
+                    Exg2RegArray[0] = exg2ar1;
+                    System.Threading.Thread.Sleep(500);
+                }
+            }
+        }
+
         protected double CalibrateTimeStamp(double timeStamp)
         {
             //first convert to continuous time stamp
@@ -5037,7 +5111,11 @@ namespace ShimmerAPI
                     clockConstant = 32768;
                 }
 
-                if (timeDifference > (1 / ((clockConstant / ADCRawSamplingRateValue) - 1)) * 1000)
+                double expectedTimeDifference = (1 / SamplingRate) * 1000; //in ms
+                double adjustedETD = expectedTimeDifference + (expectedTimeDifference * 0.1);
+
+                //if (timeDifference > (1 / ((clockConstant / ADCRawSamplingRateValue) - 1)) * 1000)
+                if (timeDifference > adjustedETD)
                 {
                     PacketLossCount = PacketLossCount + 1;
                     long mTotalNumberofPackets = (long)((calibratedTimeStamp - CalTimeStart) / (1 / (clockConstant / ADCRawSamplingRateValue) * 1000));

@@ -1,5 +1,9 @@
 # Shimmer-C-API
 
+# REV0_4
+- minor update to packet loss detection, increasing the limit to 10%
+- update to writesamplingrate makes sure internal sensor rates are approximately close/higher than shimmer sampling rate
+
 # REV0_3_2
 - Fix to filter, fix to to exg, gui failing when custom gain is used 
 - Currently uses ShimmerClosedLibraryRev0_4

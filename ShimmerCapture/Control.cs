@@ -179,6 +179,7 @@ namespace ShimmerAPI
             checkBoxTSACheck.Visible = false;
             buttonStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
+            button1.Visible = false;
             labelPRR.Visible = false;
             if (!usingLinux)
             {
