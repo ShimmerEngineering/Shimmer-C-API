@@ -5117,7 +5117,10 @@ namespace ShimmerAPI
                 //if (timeDifference > (1 / ((clockConstant / ADCRawSamplingRateValue) - 1)) * 1000)
                 if (timeDifference > adjustedETD)
                 {
-                    PacketLossCount = PacketLossCount + 1;
+                    //calculate the estimated packet loss within that time period
+                    int numberOfLostPackets = (int)Math.Ceiling(timeDifference / adjustedETD);
+                    PacketLossCount = PacketLossCount + numberOfLostPackets;
+                    //PacketLossCount = PacketLossCount + 1;
                     long mTotalNumberofPackets = (long)((calibratedTimeStamp - CalTimeStart) / (1 / (clockConstant / ADCRawSamplingRateValue) * 1000));
                     PacketReceptionRate = (double)((mTotalNumberofPackets - PacketLossCount) / (double)mTotalNumberofPackets) * 100;
 
