@@ -204,9 +204,13 @@ namespace ShimmerAPI
 
             if (usingLinux)
             {
-                ZedGraphControl1.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl1.Size.Height);
-                ZedGraphControl2.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl2.Size.Height);
-                ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl3.Size.Height);
+                ZedGraphControl1.Size = new System.Drawing.Size(this.Size.Width - 1150, ZedGraphControl1.Size.Height);
+                label1.Visible = false;
+                buttonAddGraph.Visible = false;
+                label2.Visible = false;
+                buttonRemoveGraph.Visible = false;
+                //ZedGraphControl2.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl2.Size.Height);
+                //ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl3.Size.Height);
             }
 
             CheckBoxArrayGroup1 = new CheckBox[30] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
@@ -280,38 +284,40 @@ namespace ShimmerAPI
 
         private void InitializeGraphs()
         {
-            this.ZedGraphControl2.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ZedGraphControl2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ZedGraphControl2.Location = new System.Drawing.Point(31, 443);
-            this.ZedGraphControl2.Name = "ZedGraphControl2";
-            this.ZedGraphControl2.ScrollGrace = 0D;
-            this.ZedGraphControl2.ScrollMaxX = 0D;
-            this.ZedGraphControl2.ScrollMaxY = 0D;
-            this.ZedGraphControl2.ScrollMaxY2 = 0D;
-            this.ZedGraphControl2.ScrollMinX = 0D;
-            this.ZedGraphControl2.ScrollMinY = 0D;
-            this.ZedGraphControl2.ScrollMinY2 = 0D;
-            this.ZedGraphControl2.Size = new System.Drawing.Size(490, 297);
-            this.ZedGraphControl2.TabIndex = 45;
-            this.ZedGraphControl2.Visible = false;
-            this.Controls.Add(this.ZedGraphControl2);
+            if (!usingLinux)
+            {
+                this.ZedGraphControl2.BackColor = System.Drawing.SystemColors.AppWorkspace;
+                this.ZedGraphControl2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+                this.ZedGraphControl2.Location = new System.Drawing.Point(31, 443);
+                this.ZedGraphControl2.Name = "ZedGraphControl2";
+                this.ZedGraphControl2.ScrollGrace = 0D;
+                this.ZedGraphControl2.ScrollMaxX = 0D;
+                this.ZedGraphControl2.ScrollMaxY = 0D;
+                this.ZedGraphControl2.ScrollMaxY2 = 0D;
+                this.ZedGraphControl2.ScrollMinX = 0D;
+                this.ZedGraphControl2.ScrollMinY = 0D;
+                this.ZedGraphControl2.ScrollMinY2 = 0D;
+                this.ZedGraphControl2.Size = new System.Drawing.Size(490, 297);
+                this.ZedGraphControl2.TabIndex = 45;
+                this.ZedGraphControl2.Visible = false;
+                this.Controls.Add(this.ZedGraphControl2);
 
-            this.ZedGraphControl3.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.ZedGraphControl3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ZedGraphControl3.Location = new System.Drawing.Point(31, 756);
-            this.ZedGraphControl3.Name = "ZedGraphControl3";
-            this.ZedGraphControl3.ScrollGrace = 0D;
-            this.ZedGraphControl3.ScrollMaxX = 0D;
-            this.ZedGraphControl3.ScrollMaxY = 0D;
-            this.ZedGraphControl3.ScrollMaxY2 = 0D;
-            this.ZedGraphControl3.ScrollMinX = 0D;
-            this.ZedGraphControl3.ScrollMinY = 0D;
-            this.ZedGraphControl3.ScrollMinY2 = 0D;
-            this.ZedGraphControl3.Size = new System.Drawing.Size(490, 297);
-            this.ZedGraphControl3.TabIndex = 80;
-            this.ZedGraphControl3.Visible = false;
-            this.Controls.Add(this.ZedGraphControl3);
-
+                this.ZedGraphControl3.BackColor = System.Drawing.SystemColors.AppWorkspace;
+                this.ZedGraphControl3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+                this.ZedGraphControl3.Location = new System.Drawing.Point(31, 756);
+                this.ZedGraphControl3.Name = "ZedGraphControl3";
+                this.ZedGraphControl3.ScrollGrace = 0D;
+                this.ZedGraphControl3.ScrollMaxX = 0D;
+                this.ZedGraphControl3.ScrollMaxY = 0D;
+                this.ZedGraphControl3.ScrollMaxY2 = 0D;
+                this.ZedGraphControl3.ScrollMinX = 0D;
+                this.ZedGraphControl3.ScrollMinY = 0D;
+                this.ZedGraphControl3.ScrollMinY2 = 0D;
+                this.ZedGraphControl3.Size = new System.Drawing.Size(490, 297);
+                this.ZedGraphControl3.TabIndex = 80;
+                this.ZedGraphControl3.Visible = false;
+                this.Controls.Add(this.ZedGraphControl3);
+            }
             ZedGraphControl1.GraphPane.CurveList.Clear();
             MyPaneGraph1 = ZedGraphControl1.GraphPane;
             ZedGraphControl1.IsShowPointValues = false;
