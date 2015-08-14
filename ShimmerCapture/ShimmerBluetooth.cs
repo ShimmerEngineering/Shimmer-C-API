@@ -215,6 +215,9 @@ namespace ShimmerAPI
         protected List<double> GyroZRawList = new List<double>();
 
         protected GradDes3DOrientation OrientationAlgo;
+        protected TimeSync TimeSync;
+        protected int BufferSyncSizeInSeconds = 30;
+        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         public enum ShimmerVersion
         {
@@ -970,6 +973,8 @@ namespace ShimmerAPI
                                     ADCRawSamplingRateValue = ReadByte();
                                     SamplingRate = (double)1024 / ADCRawSamplingRateValue;
                                 }
+                                TimeSync = new TimeSync((int)SamplingRate * BufferSyncSizeInSeconds);
+
                                 break;
                             case (byte)PacketTypeShimmer2.ACCEL_RANGE_RESPONSE:
                                 SetAccelRange(ReadByte());
@@ -2352,7 +2357,12 @@ namespace ShimmerAPI
             int iTimeStamp = getSignalIndex("TimeStamp"); //find index
             objectCluster.RawTimeStamp = (int)newPacket[iTimeStamp];
             objectCluster.Add("Timestamp", "RAW", "no units", newPacket[iTimeStamp]);
-            objectCluster.Add("Timestamp", "CAL", "mSecs", CalibrateTimeStamp(newPacket[iTimeStamp]));
+            double calibratedTS = CalibrateTimeStamp(newPacket[iTimeStamp]);
+            objectCluster.Add("Timestamp", "CAL", "mSecs", calibratedTS);
+            double time = (DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
+            double timeSyncValue = TimeSync.CalculateTimeSync(calibratedTS,time);
+            objectCluster.Add("TimestampSync", "CAL", "mSecs", timeSyncValue);
+
 
             double[] accelerometer = new double[3];
             double[] gyroscope = new double[3];

@@ -112,6 +112,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TimeSync.cs" />
     <Compile Include="Filter.cs" />
     <Compile Include="FormAbout.cs">
       <SubType>Form</SubType>
