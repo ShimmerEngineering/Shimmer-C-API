@@ -138,7 +138,9 @@ namespace ShimmerAPI
         protected int BaudRate;
         protected byte[] ExpansionDetectArray;//Expansion board detect for Shimmer3
         protected string ExpansionBoard;
-        
+
+        protected int TimeStampPacketByteSize = 2;
+        protected int TimeStampPacketRawMaxValue = 65536;// 16777216 or 65536 
 
         List<double> HRMovingAVGWindow = new List<double>(4);
         String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
@@ -1180,6 +1182,7 @@ namespace ShimmerAPI
                                 string temp = fw_id + FirmwareVersion.ToString("0.0") + "." + FirmwareInternal.ToString();
                                 FirmwareVersionFullName = temp;
                                 SetCompatibilityCode();
+                                UpdateBasedOnCompatibilityCode();
                                 break;
                             case (byte)PacketTypeShimmer2.GET_SHIMMER_VERSION_RESPONSE:
                                 bufferbyte = new byte[1];
@@ -1187,6 +1190,7 @@ namespace ShimmerAPI
                                 HardwareVersion = bufferbyte[0];
                                 // set default calibration parameters
                                 SetCompatibilityCode();
+                                UpdateBasedOnCompatibilityCode();
                                 break;
                             case (byte)PacketTypeShimmer3.EXG_REGS_RESPONSE:
                                 System.Console.WriteLine("EXG r r" + ChipID);
@@ -1832,6 +1836,11 @@ namespace ShimmerAPI
             signalNameArray[0] = "TimeStamp";
             signalDataTypeArray[0] = "u16";
             int packetSize = 2; // Time stamp
+            if (CompatibilityCode >= 6)
+            {
+                signalDataTypeArray[0] = "u24";
+                packetSize = TimeStampPacketByteSize; // Time stamp
+            }
             int enabledSensors = 0x00;
             for (int i = 0; i < nC; i++)
             {
@@ -3185,6 +3194,14 @@ namespace ShimmerAPI
                     //formattedData[i]=ByteBuffer.wrap(arrayb).order(ByteOrder.LITTLE_ENDIAN).getShort();
                     iData = iData + 2;
                 }
+                else if (dataType[i] == "u24")
+                {
+                    long xmsb = ((long)(data[iData + 2] & 0xFF) << 16);
+                    long msb = ((long)(data[iData + 1] & 0xFF) << 8);
+                    long lsb = ((long)(data[iData + 0] & 0xFF));
+                    formattedData[i] = xmsb + msb + lsb;
+                    iData = iData + 3;
+                }
                 else if (dataType[i] == "u24r")
                 {
                     long xmsb = ((long)(data[iData + 0] & 0xFF) << 16);
@@ -4132,6 +4149,20 @@ namespace ShimmerAPI
             return CompatibilityCode;
         }
 
+        protected void UpdateBasedOnCompatibilityCode()
+        {
+            if (CompatibilityCode < 6)
+            {
+                TimeStampPacketByteSize = 2;
+                TimeStampPacketRawMaxValue = 65536;// 16777216 or 65536 
+            }
+            else if (CompatibilityCode >= 6)
+            {
+                TimeStampPacketByteSize = 3;
+                TimeStampPacketRawMaxValue = 16777216;// 16777216 or 65536 
+            }
+        }
+
         protected void SetCompatibilityCode()
         {
             CompatibilityCode = 0;
@@ -4155,9 +4186,13 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 4;
                     }
-                    else if (FirmwareVersion >= 0.5)
+                    else if (FirmwareVersion >= 0.5 && FirmwareVersion < 0.8)
                     {
                         CompatibilityCode = 5;
+                    }
+                    else if (FirmwareVersion >= 0.8)
+                    {
+                        CompatibilityCode = 6;
                     }
                 }
                 else if (FirmwareIdentifier == 3)   //LogAndStream
@@ -4170,9 +4205,13 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 4;
                     }
-                    else if (FirmwareVersion >= 0.3)
+                    else if (FirmwareVersion >= 0.3 && FirmwareVersion<0.5)
                     {
                         CompatibilityCode = 5;
+                    }
+                    else if (FirmwareVersion >= 0.5 && FirmwareInternal >= 4)
+                    {
+                        CompatibilityCode = 6;
                     }
                 }
             }
