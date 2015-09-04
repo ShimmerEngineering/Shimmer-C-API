@@ -187,7 +187,7 @@ namespace ShimmerAPI
         private string shimmername = null;
         private string SdDir = "";
         private string experimentid = null;
-        private int configtime = 0;
+        private long configtime = 0;
         public byte[] storedConfig = new byte[118];
 
         // btsd changes
@@ -285,8 +285,8 @@ namespace ShimmerAPI
         public override string GetSdDir() { return SdDir; }
         public override void SetExperimentID(string val) { experimentid = val; }
         public override string GetExperimentID() { return experimentid; }
-        public override void SetConfigTime(int val) { configtime = val; }
-        public override int GetConfigTime() { return configtime; }
+        public override void SetConfigTime(long val) { configtime = val; }
+        public override long GetConfigTime() { return configtime; }
 
         public override string SystemTime2Config()
         {
@@ -303,12 +303,12 @@ namespace ShimmerAPI
             return Convert.ToString(lTotalSecondsElapsed);
         }
 
-        public override string ConfigTimeToShowString(int cfgtime_in)
+        public override string ConfigTimeToShowString(long cfgtime_in)
         {
             string configtime_text = null;
             if (cfgtime_in > 0)
             {
-                int dif_secs = cfgtime_in % 60;
+                int dif_secs = (int)(cfgtime_in % 60);
                 int dif_mins = ((int)(cfgtime_in / 60)) % 60;
                 int dif_hours = ((int)(cfgtime_in / (60 * 60))) % 24;
                 int dif_days = (int)(cfgtime_in / (24 * 60 * 60));

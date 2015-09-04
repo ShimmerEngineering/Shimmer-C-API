@@ -664,7 +664,7 @@ namespace ShimmerAPI
             InitializeShimmer3();
         }
 
-        public virtual void SetConfigTime(int value){
+        public virtual void SetConfigTime(long value){
 
         }
 
@@ -766,7 +766,7 @@ namespace ShimmerAPI
         public virtual string GetSdDir() { return ""; }
         public virtual void SetExperimentID(string val) {}
         public virtual string GetExperimentID() { return ""; }
-        public virtual int GetConfigTime() { return -1; }
+        public virtual long GetConfigTime() { return -1; }
         public virtual void WriteCenter() { }
         public virtual void WriteShimmerName() { }
         public virtual void WriteTrial(){    }
@@ -776,7 +776,7 @@ namespace ShimmerAPI
 
         public virtual void SetInterval(int val) { }
 
-        public virtual string ConfigTimeToShowString(int cfgtime_in) { return ""; }
+        public virtual string ConfigTimeToShowString(long cfgtime_in) { return ""; }
 
         public virtual void WriteNshimmer()
         {
