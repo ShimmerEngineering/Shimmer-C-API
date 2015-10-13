@@ -378,6 +378,9 @@ namespace ShimmerAPI
             GET_BAUD_RATE_COMMAND = 0X6C,
             DETECT_EXPANSION_BOARD_RESPONSE = 0X65,
             GET_EXPANSION_BOARD_COMMAND = 0x66,
+            SET_VBATT_FREQ_COMMAND = 0x98,
+            VBATT_FREQ_RESPONSE = 0x99,
+            GET_VBATT_FREQ_COMMAND = 0x9A,
             ACK_PROCESSED = 0xFF
         };
 
@@ -1454,6 +1457,7 @@ namespace ShimmerAPI
                 SetLowPowerMag(LowPowerMagEnabled);
                 SetLowPowerGyro(LowPowerGyroEnabled);
             }
+            WriteBatteryFrequency(0);
             ReadAccelRange();
             ReadSamplingRate();
             ReadMagRange();
@@ -4209,7 +4213,11 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 5;
                     }
-                    else if (FirmwareVersion >= 0.5 && FirmwareInternal >= 4)
+                    else if (FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
+                    {
+                        CompatibilityCode = 6;
+                    }
+                    else
                     {
                         CompatibilityCode = 6;
                     }
@@ -4752,6 +4760,20 @@ namespace ShimmerAPI
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_BAUD_RATE_COMMAND, (byte)baud }, 0, 2);
                 System.Threading.Thread.Sleep(200);
                 BaudRate = baud;
+            }
+        }
+
+        /// <summary>
+        /// This is used to set the battery frequency to send the battery status on the Shimmer3. It takes a 4 byte argument (little endian), that tells the shimmer to sample the battery after that many data packets
+        /// Baud Rate change only supported in BtStream v0.8.0 or later and LogAndStream v0.7.0 or later but it is not still handled by the API so we set it to 0
+        /// </summary>
+        /// <param name="freq">Frequency</param>
+        public void WriteBatteryFrequency(int freq)
+        {
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && CompatibilityCode >= 7)
+            {
+                WriteBytes(new byte[5] { (byte)PacketTypeShimmer3.SET_VBATT_FREQ_COMMAND, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 }, 0, 5);
+                System.Threading.Thread.Sleep(200);
             }
         }
 
