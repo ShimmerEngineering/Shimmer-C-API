@@ -4190,13 +4190,13 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 4;
                     }
-                    else if (FirmwareVersion >= 0.5 && FirmwareVersion < 0.8)
+                    else if (FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
                     {
                         CompatibilityCode = 5;
                     }
-                    else if (FirmwareVersion >= 0.8)
+                    else if (FirmwareVersion >= 0.7 && FirmwareInternal>2)
                     {
-                        CompatibilityCode = 6;
+                        CompatibilityCode = 7; //skip CompatibilityCode = 6 since functionality of code 6 and 7 was introduced at the same time 
                     }
                 }
                 else if (FirmwareIdentifier == 3)   //LogAndStream
@@ -4770,7 +4770,7 @@ namespace ShimmerAPI
         /// <param name="freq">Frequency</param>
         public void WriteBatteryFrequency(int freq)
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && CompatibilityCode >= 7)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && ((FirmwareIdentifier == 3 && CompatibilityCode >= 6) || (FirmwareIdentifier == 1 && CompatibilityCode >= 7)))
             {
                 WriteBytes(new byte[5] { (byte)PacketTypeShimmer3.SET_VBATT_FREQ_COMMAND, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 }, 0, 5);
                 System.Threading.Thread.Sleep(200);
