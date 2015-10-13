@@ -622,11 +622,12 @@ namespace ShimmerAPI
                         {
                             if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                             {
-
+                                WriteBatteryFrequency(0);
                                 InitializeShimmer3SDBT();
                             }
                             else if (GetFirmwareIdentifier() == FW_IDENTIFIER_BTSTREAM)
                             {
+                                WriteBatteryFrequency(0);
                                 InitializeShimmer3();
                             }
                         }
@@ -1457,7 +1458,7 @@ namespace ShimmerAPI
                 SetLowPowerMag(LowPowerMagEnabled);
                 SetLowPowerGyro(LowPowerGyroEnabled);
             }
-            WriteBatteryFrequency(0);
+          
             ReadAccelRange();
             ReadSamplingRate();
             ReadMagRange();
@@ -4770,7 +4771,7 @@ namespace ShimmerAPI
         /// <param name="freq">Frequency</param>
         public void WriteBatteryFrequency(int freq)
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && ((FirmwareIdentifier == 3 && CompatibilityCode >= 6) || (FirmwareIdentifier == 1 && CompatibilityCode >= 7)))
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && ((FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 6) || (FirmwareIdentifier == FW_IDENTIFIER_BTSTREAM && CompatibilityCode >= 7)))
             {
                 WriteBytes(new byte[5] { (byte)PacketTypeShimmer3.SET_VBATT_FREQ_COMMAND, (byte)0x00, (byte)0x00, (byte)0x00, (byte)0x00 }, 0, 5);
                 System.Threading.Thread.Sleep(200);
