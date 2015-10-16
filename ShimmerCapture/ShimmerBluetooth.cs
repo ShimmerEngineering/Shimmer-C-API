@@ -221,6 +221,8 @@ namespace ShimmerAPI
         protected int BufferSyncSizeInSeconds = 30;
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
+        protected long ShimmerRealWorldClock = 0;
+
         public enum ShimmerVersion
         {
             SHIMMER1 = 0,
@@ -414,7 +416,10 @@ namespace ShimmerAPI
             GET_CONFIGTIME_COMMAND = 0x87,
             DIR_RESPONSE = 0x88,
             GET_DIR_COMMAND = 0x89,
-            INSTREAM_CMD_RESPONSE = 0x8A
+            INSTREAM_CMD_RESPONSE = 0x8A,
+            SET_RWC_COMMAND = 0x8F,
+            RWC_RESPONSE = 0x90,
+            GET_RWC_COMMAND = 0x91
         };
 
         public enum ConfigSetupByte0Bitmap : byte
@@ -1228,6 +1233,7 @@ namespace ShimmerAPI
                                 }
 
                                 break;
+                            
                             default:
                                 // This is to extend log and stream functionality
                                 if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
@@ -4765,8 +4771,8 @@ namespace ShimmerAPI
         }
 
         /// <summary>
-        /// This is used to set the battery frequency to send the battery status on the Shimmer3. It takes a 4 byte argument (little endian), that tells the shimmer to sample the battery after that many data packets
-        /// Baud Rate change only supported in BtStream v0.8.0 or later and LogAndStream v0.7.0 or later but it is not still handled by the API so we set it to 0
+        /// This is used to set the battery frequency on the Shimmer3. It takes a 4 byte argument (little endian), that tells the shimmer to sample the battery after that many data packets
+        /// Battery frequency change only supported in BtStream v0.8.0 or later and LogAndStream v0.7.0 or later but it is not still handled by the API so we set it to 0
         /// </summary>
         /// <param name="freq">Frequency</param>
         public void WriteBatteryFrequency(int freq)
@@ -4777,6 +4783,11 @@ namespace ShimmerAPI
                 System.Threading.Thread.Sleep(200);
             }
         }
+
+        /// <summary>
+        /// This is used to get pc time and writes the 8 byte value to shimmer device. 
+        /// </summary>
+        public virtual void writeRealWorldClock() { }
 
         /// <summary>
         /// This is used to set the Magnetometer (Shimmer2R and Shimmer3) to low power mode, where the internal sampling rate of the Magnetometer chip is reduced to 10 Hz for Shimmer2r and 15Hz for Shimmer3

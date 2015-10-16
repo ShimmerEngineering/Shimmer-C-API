@@ -525,6 +525,12 @@ namespace ShimmerAPI
             
             ReadPressureCalibrationCoefficients();
 
+            //write the RWC
+            if (!isLogging)
+            {
+                writeRealWorldClock();
+            }
+
             if (CurrentSensingStatus)
             {
                 /*
@@ -698,6 +704,21 @@ namespace ShimmerAPI
             System.Threading.Thread.Sleep(200);
         }
 
+        public override void writeRealWorldClock()
+        {
+            //if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && ((FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 6)))
+            //{
+
+            if (!isLogging)
+            {
+                //Just fill empty bytes here for RWC, set them just before writing to Shimmer
+                byte[] array = ConvertSystemTimeToShimmerRwcDataBytes();
+                WriteBytes(new byte[9] { (byte)PacketTypeShimmer3SDBT.SET_RWC_COMMAND, array[0], array[1], array[2], array[3], array[4], array[5], array[6], array[7] }, 0, 9);
+                System.Threading.Thread.Sleep(200);
+            }
+            //}
+        }
+
         public override void WriteCenter()
         {
             byte[] center_byte = System.Text.Encoding.Default.GetBytes(GetCenter());
@@ -775,6 +796,24 @@ namespace ShimmerAPI
                 }
             }
         }
+
+
+        protected byte[] ConvertSystemTimeToShimmerRwcDataBytes()
+        {
+            long milliseconds = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+            long milisecondTicks = (long)(((double)milliseconds) * 32.768); // Convert miliseconds to clock ticks
+            ShimmerRealWorldClock = milisecondTicks;
+
+            byte[] rwcTimeArray = BitConverter.GetBytes(milisecondTicks);
+            //must be little endian, so reverse the array in case it is not
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(rwcTimeArray);
+            }
+
+            return rwcTimeArray;
+        }
+
 
 
 
@@ -1474,12 +1513,22 @@ namespace ShimmerAPI
                         System.Console.WriteLine("In Stream CMD Response");
                         if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
-                            //STATUS: 0|0|0|0|0|SELFCMD|SENSING|DOCKED
+                            //STATUS: 0|0|0|STREAMING|LOGGING|SELFCMD|SENSING|DOCKED
                             int bufferint = ReadByte();
                             bool docked = (bufferint & 0x01) == 1;
                             bool sensing = ((bufferint >> 1) & 0x01) == 1;
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
+                            bool logging = ((bufferint >> 3) & 0x01) == 1;
+                            bool streaming = ((bufferint >> 4) & 0x01) == 1;
                             System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
+
+                            //AS is this ok?
+                            isLogging = logging;
+                            if (streaming)
+                            {
+                                SetState(ShimmerBluetooth.SHIMMER_STATE_STREAMING);
+                            }
+
                             if (CurrentDockStatus != docked)
                             {
                                 CurrentDockStatus = docked;
