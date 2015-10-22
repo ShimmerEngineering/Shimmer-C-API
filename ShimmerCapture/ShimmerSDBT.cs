@@ -1737,6 +1737,8 @@ namespace ShimmerAPI
                             bool docked = (bufferint & 0x01) == 1;
                             bool sensing = ((bufferint >> 1) & 0x01) == 1;
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
+                            bool logging = ((bufferint >> 3) & 0x01) == 1;
+                            bool streaming = ((bufferint >> 4) & 0x01) == 1;
                             System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
                             if (CurrentDockStatus != docked)
                             {

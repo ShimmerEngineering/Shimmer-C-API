@@ -4244,6 +4244,11 @@ namespace ShimmerAPI
 
         public void SetState(int state)
         {
+            Boolean stateChanging=false;
+            if (ShimmerState!=state){
+                stateChanging=true;
+            }
+
             ShimmerState = state;
             /*EventHandler handler = UICallback;
             if (handler != null)
@@ -4252,8 +4257,11 @@ namespace ShimmerAPI
                 handler(this, newEventArgs);
             }
              */
-            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE, (object)state);
-            OnNewEvent(newEventArgs);
+            if (stateChanging)
+            {
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE, (object)state);
+                OnNewEvent(newEventArgs);
+            }
         }
 
         public int GetState()
