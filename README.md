@@ -1,4 +1,6 @@
 # Shimmer-C-API
+# REV0_5
+- major updates to allow API to work with LogAndStream 0.6 and BtStream 0.8, 3 byte raw timestamp
 
 # REV0_4
 - minor update to packet loss detection, increasing the limit to 10%
