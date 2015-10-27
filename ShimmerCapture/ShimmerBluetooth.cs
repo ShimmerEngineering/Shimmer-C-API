@@ -217,7 +217,7 @@ namespace ShimmerAPI
         protected List<double> GyroZRawList = new List<double>();
 
         protected GradDes3DOrientation OrientationAlgo;
-        protected TimeSync TimeSync;
+        
         protected int BufferSyncSizeInSeconds = 15;
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -984,7 +984,6 @@ namespace ShimmerAPI
                                     ADCRawSamplingRateValue = ReadByte();
                                     SamplingRate = (double)1024 / ADCRawSamplingRateValue;
                                 }
-                                TimeSync = new TimeSync((int)SamplingRate * BufferSyncSizeInSeconds);
 
                                 break;
                             case (byte)PacketTypeShimmer2.ACCEL_RANGE_RESPONSE:
@@ -2380,8 +2379,6 @@ namespace ShimmerAPI
             double calibratedTS = CalibrateTimeStamp(newPacket[iTimeStamp]);
             objectCluster.Add("Timestamp", "CAL", "mSecs", calibratedTS);
             double time = (DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
-            double timeSyncValue = TimeSync.CalculateTimeSync(calibratedTS,time);
-            objectCluster.Add("TimestampSync", "CAL", "mSecs", timeSyncValue);
 
 
             double[] accelerometer = new double[3];
@@ -4245,7 +4242,7 @@ namespace ShimmerAPI
         public void SetState(int state)
         {
             if (ShimmerState == SHIMMER_STATE_CONNECTED) {
-                TimeSync = new TimeSync((int)SamplingRate * BufferSyncSizeInSeconds);
+                
             }
 
             Boolean stateChanging=false;
