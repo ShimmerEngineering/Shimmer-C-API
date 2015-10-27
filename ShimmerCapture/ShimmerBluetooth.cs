@@ -218,7 +218,7 @@ namespace ShimmerAPI
 
         protected GradDes3DOrientation OrientationAlgo;
         protected TimeSync TimeSync;
-        protected int BufferSyncSizeInSeconds = 30;
+        protected int BufferSyncSizeInSeconds = 15;
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         protected long ShimmerRealWorldClock = 0;
@@ -4244,6 +4244,10 @@ namespace ShimmerAPI
 
         public void SetState(int state)
         {
+            if (ShimmerState == SHIMMER_STATE_CONNECTED) {
+                TimeSync = new TimeSync((int)SamplingRate * BufferSyncSizeInSeconds);
+            }
+
             Boolean stateChanging=false;
             if (ShimmerState!=state){
                 stateChanging=true;
