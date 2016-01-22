@@ -5178,12 +5178,12 @@ namespace ShimmerAPI
         {
             //first convert to continuous time stamp
             double calibratedTimeStamp = 0;
-            if (LastReceivedTimeStamp > (timeStamp + (65536 * CurrentTimeStampCycle)))
+            if (LastReceivedTimeStamp > (timeStamp + (TimeStampPacketRawMaxValue * CurrentTimeStampCycle)))
             {
                 CurrentTimeStampCycle = CurrentTimeStampCycle + 1;
             }
 
-            LastReceivedTimeStamp = (timeStamp + (65536 * CurrentTimeStampCycle));
+            LastReceivedTimeStamp = (timeStamp + (TimeStampPacketRawMaxValue * CurrentTimeStampCycle));
             calibratedTimeStamp = LastReceivedTimeStamp / 32768 * 1000;   // to convert into mS
             if (FirstTimeCalTime)
             {
