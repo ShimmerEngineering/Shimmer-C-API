@@ -1,4 +1,8 @@
 # Shimmer-C-API
+
+# REV0_6
+- fix to calibrated time stamp when using 3 byte raw time stamp (e.g. LogAndStream 0.6)
+
 # REV0_5
 - major updates to allow API to work with LogAndStream 0.6 and BtStream 0.8, 3 byte raw timestamp
 
