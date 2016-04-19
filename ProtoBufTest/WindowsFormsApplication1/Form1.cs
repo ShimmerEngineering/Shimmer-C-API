@@ -11,6 +11,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.IO;
 using com.shimmerresearch.datastructure;
+using System.Diagnostics;
 
 
 namespace WindowsFormsApplication1
@@ -40,17 +41,22 @@ namespace WindowsFormsApplication1
             int count = 0;
             int state = 0;
             int packetSize = 4;
+            int packetCount = 0;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             while (true)
             {
                 
                 
                 NetworkStream networkStream = clientSocket.GetStream();
                 byte[] arrayB = new byte[packetSize];
+                
                 int length = networkStream.Read(arrayB,count,packetSize-count);
                 memorys.Write(arrayB,count,length);
                 count = count + length;
                 if (state == 0)
                 {
+                    
                     if (memorys.Length >= packetSize)
                     {
                         arrayB = new byte[4];
@@ -71,12 +77,26 @@ namespace WindowsFormsApplication1
                         memorys.Position = 0;
                         memorys.Read(arrayB, 0, packetSize);
                         //Array.Reverse(arrayB);
-                        ObjectCluster ojc = ObjectCluster.Parser.ParseFrom(arrayB);
-                        Console.WriteLine(ojc.Name);
+                        ObjectCluster2 ojc = ObjectCluster2.Parser.ParseFrom(arrayB);
                         state = 0;
                         packetSize = 4;
                         count = 0;
                         memorys.SetLength(0);
+                        packetCount++;
+                        if (packetCount == 10000)
+                        {
+                            sw.Stop();
+                            // Get the elapsed time as a TimeSpan value.
+                            TimeSpan ts = sw.Elapsed;
+
+                            // Format and display the TimeSpan value.
+                            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                                ts.Hours, ts.Minutes, ts.Seconds,
+                                ts.Milliseconds / 10);
+                            Console.WriteLine(elapsedTime);
+                            Console.WriteLine(sw.ElapsedMilliseconds);
+                            
+                        }
                     }
                 }
                

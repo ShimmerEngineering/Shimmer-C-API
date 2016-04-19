@@ -23,22 +23,28 @@ namespace com.shimmerresearch.datastructure {
     static ObjectClusterReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChNPYmplY3RDbHVzdGVyLnByb3RvEgh0dXRvcmlhbCKCAwoNT2JqZWN0Q2x1",
-            "c3RlchIMCgRuYW1lGAEgASgJEgoKAmlkGAIgASgFEg0KBWVtYWlsGAMgASgJ",
-            "EkQKEWNvbW11bmljYXRpb25UeXBlGAQgASgOMikudHV0b3JpYWwuT2JqZWN0",
-            "Q2x1c3Rlci5Db21tdW5pY2F0aW9uVHlwZRI1CgdkYXRhTWFwGAUgAygLMiQu",
-            "dHV0b3JpYWwuT2JqZWN0Q2x1c3Rlci5EYXRhTWFwRW50cnkaNAoUU2hpbW1l",
-            "ckZvcm1hdENsdXN0ZXISDgoGZm9ybWF0GAEgASgJEgwKBHVuaXQYAiABKAka",
-            "XAoMRGF0YU1hcEVudHJ5EgsKA2tleRgBIAEoCRI7CgV2YWx1ZRgCIAEoCzIs",
-            "LnR1dG9yaWFsLk9iamVjdENsdXN0ZXIuU2hpbW1lckZvcm1hdENsdXN0ZXI6",
-            "AjgBIjcKEUNvbW11bmljYXRpb25UeXBlEgYKAkJUEAASBgoCU0QQARISCg5S",
-            "YWRpb184MDJfMTVfNBACQl0KIWNvbS5zaGltbWVycmVzZWFyY2guZGF0YXN0",
-            "cnVjdHVyZUIUU2hpbW1lck9iamVjdENsdXN0ZXKqAiFjb20uc2hpbW1lcnJl",
-            "c2VhcmNoLmRhdGFzdHJ1Y3R1cmViBnByb3RvMw=="));
+            "ChNPYmplY3RDbHVzdGVyLnByb3RvEgh0dXRvcmlhbCLPBAoOT2JqZWN0Q2x1",
+            "c3RlcjISDAoEbmFtZRgBIAEoCRIYChBibHVldG9vdGhBZGRyZXNzGAIgASgJ",
+            "EhIKCnN5c3RlbVRpbWUYAyABKAMSRQoRY29tbXVuaWNhdGlvblR5cGUYBCAB",
+            "KA4yKi50dXRvcmlhbC5PYmplY3RDbHVzdGVyMi5Db21tdW5pY2F0aW9uVHlw",
+            "ZRI2CgdkYXRhTWFwGAUgAygLMiUudHV0b3JpYWwuT2JqZWN0Q2x1c3RlcjIu",
+            "RGF0YU1hcEVudHJ5Gu8BCg5Gb3JtYXRDbHVzdGVyMhJJCglmb3JtYXRNYXAY",
+            "ASADKAsyNi50dXRvcmlhbC5PYmplY3RDbHVzdGVyMi5Gb3JtYXRDbHVzdGVy",
+            "Mi5Gb3JtYXRNYXBFbnRyeRoqCgxEYXRhQ2x1c3RlcjISDAoEdW5pdBgBIAEo",
+            "CRIMCgRkYXRhGAIgASgBGmYKDkZvcm1hdE1hcEVudHJ5EgsKA2tleRgBIAEo",
+            "CRJDCgV2YWx1ZRgCIAEoCzI0LnR1dG9yaWFsLk9iamVjdENsdXN0ZXIyLkZv",
+            "cm1hdENsdXN0ZXIyLkRhdGFDbHVzdGVyMjoCOAEaVwoMRGF0YU1hcEVudHJ5",
+            "EgsKA2tleRgBIAEoCRI2CgV2YWx1ZRgCIAEoCzInLnR1dG9yaWFsLk9iamVj",
+            "dENsdXN0ZXIyLkZvcm1hdENsdXN0ZXIyOgI4ASI3ChFDb21tdW5pY2F0aW9u",
+            "VHlwZRIGCgJCVBAAEgYKAlNEEAESEgoOUmFkaW9fODAyXzE1XzQQAkJdCiFj",
+            "b20uc2hpbW1lcnJlc2VhcmNoLmRhdGFzdHJ1Y3R1cmVCFFNoaW1tZXJPYmpl",
+            "Y3RDbHVzdGVyqgIhY29tLnNoaW1tZXJyZXNlYXJjaC5kYXRhc3RydWN0dXJl",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
-            new pbr::GeneratedCodeInfo(typeof(global::com.shimmerresearch.datastructure.ObjectCluster), global::com.shimmerresearch.datastructure.ObjectCluster.Parser, new[]{ "Name", "Id", "Email", "CommunicationType", "DataMap" }, null, new[]{ typeof(global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType) }, new pbr::GeneratedCodeInfo[] { new pbr::GeneratedCodeInfo(typeof(global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster), global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster.Parser, new[]{ "Format", "Unit" }, null, null, null),
+            new pbr::GeneratedCodeInfo(typeof(global::com.shimmerresearch.datastructure.ObjectCluster2), global::com.shimmerresearch.datastructure.ObjectCluster2.Parser, new[]{ "Name", "BluetoothAddress", "SystemTime", "CommunicationType", "DataMap" }, null, new[]{ typeof(global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType) }, new pbr::GeneratedCodeInfo[] { new pbr::GeneratedCodeInfo(typeof(global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2), global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Parser, new[]{ "FormatMap" }, null, null, new pbr::GeneratedCodeInfo[] { new pbr::GeneratedCodeInfo(typeof(global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2), global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2.Parser, new[]{ "Unit", "Data" }, null, null, null),
+            null, }),
             null, })
           }));
     }
@@ -47,9 +53,9 @@ namespace com.shimmerresearch.datastructure {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class ObjectCluster : pb::IMessage<ObjectCluster> {
-    private static readonly pb::MessageParser<ObjectCluster> _parser = new pb::MessageParser<ObjectCluster>(() => new ObjectCluster());
-    public static pb::MessageParser<ObjectCluster> Parser { get { return _parser; } }
+  public sealed partial class ObjectCluster2 : pb::IMessage<ObjectCluster2> {
+    private static readonly pb::MessageParser<ObjectCluster2> _parser = new pb::MessageParser<ObjectCluster2>(() => new ObjectCluster2());
+    public static pb::MessageParser<ObjectCluster2> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
       get { return global::com.shimmerresearch.datastructure.ObjectClusterReflection.Descriptor.MessageTypes[0]; }
@@ -59,22 +65,22 @@ namespace com.shimmerresearch.datastructure {
       get { return Descriptor; }
     }
 
-    public ObjectCluster() {
+    public ObjectCluster2() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
-    public ObjectCluster(ObjectCluster other) : this() {
+    public ObjectCluster2(ObjectCluster2 other) : this() {
       name_ = other.name_;
-      id_ = other.id_;
-      email_ = other.email_;
+      bluetoothAddress_ = other.bluetoothAddress_;
+      systemTime_ = other.systemTime_;
       communicationType_ = other.communicationType_;
       dataMap_ = other.dataMap_.Clone();
     }
 
-    public ObjectCluster Clone() {
-      return new ObjectCluster(this);
+    public ObjectCluster2 Clone() {
+      return new ObjectCluster2(this);
     }
 
     /// <summary>Field number for the "name" field.</summary>
@@ -87,30 +93,30 @@ namespace com.shimmerresearch.datastructure {
       }
     }
 
-    /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 2;
-    private int id_;
-    public int Id {
-      get { return id_; }
+    /// <summary>Field number for the "bluetoothAddress" field.</summary>
+    public const int BluetoothAddressFieldNumber = 2;
+    private string bluetoothAddress_ = "";
+    public string BluetoothAddress {
+      get { return bluetoothAddress_; }
       set {
-        id_ = value;
+        bluetoothAddress_ = pb::Preconditions.CheckNotNull(value, "value");
       }
     }
 
-    /// <summary>Field number for the "email" field.</summary>
-    public const int EmailFieldNumber = 3;
-    private string email_ = "";
-    public string Email {
-      get { return email_; }
+    /// <summary>Field number for the "systemTime" field.</summary>
+    public const int SystemTimeFieldNumber = 3;
+    private long systemTime_;
+    public long SystemTime {
+      get { return systemTime_; }
       set {
-        email_ = pb::Preconditions.CheckNotNull(value, "value");
+        systemTime_ = value;
       }
     }
 
     /// <summary>Field number for the "communicationType" field.</summary>
     public const int CommunicationTypeFieldNumber = 4;
-    private global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType communicationType_ = global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType.BT;
-    public global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType CommunicationType {
+    private global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType communicationType_ = global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType.BT;
+    public global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType CommunicationType {
       get { return communicationType_; }
       set {
         communicationType_ = value;
@@ -119,18 +125,18 @@ namespace com.shimmerresearch.datastructure {
 
     /// <summary>Field number for the "dataMap" field.</summary>
     public const int DataMapFieldNumber = 5;
-    private static readonly pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster>.Codec _map_dataMap_codec
-        = new pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForMessage(18, global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster.Parser), 42);
-    private readonly pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster> dataMap_ = new pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster>();
-    public pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster.Types.ShimmerFormatCluster> DataMap {
+    private static readonly pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2>.Codec _map_dataMap_codec
+        = new pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForMessage(18, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Parser), 42);
+    private readonly pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2> dataMap_ = new pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2>();
+    public pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2> DataMap {
       get { return dataMap_; }
     }
 
     public override bool Equals(object other) {
-      return Equals(other as ObjectCluster);
+      return Equals(other as ObjectCluster2);
     }
 
-    public bool Equals(ObjectCluster other) {
+    public bool Equals(ObjectCluster2 other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -138,8 +144,8 @@ namespace com.shimmerresearch.datastructure {
         return true;
       }
       if (Name != other.Name) return false;
-      if (Id != other.Id) return false;
-      if (Email != other.Email) return false;
+      if (BluetoothAddress != other.BluetoothAddress) return false;
+      if (SystemTime != other.SystemTime) return false;
       if (CommunicationType != other.CommunicationType) return false;
       if (!DataMap.Equals(other.DataMap)) return false;
       return true;
@@ -148,9 +154,9 @@ namespace com.shimmerresearch.datastructure {
     public override int GetHashCode() {
       int hash = 1;
       if (Name.Length != 0) hash ^= Name.GetHashCode();
-      if (Id != 0) hash ^= Id.GetHashCode();
-      if (Email.Length != 0) hash ^= Email.GetHashCode();
-      if (CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType.BT) hash ^= CommunicationType.GetHashCode();
+      if (BluetoothAddress.Length != 0) hash ^= BluetoothAddress.GetHashCode();
+      if (SystemTime != 0L) hash ^= SystemTime.GetHashCode();
+      if (CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType.BT) hash ^= CommunicationType.GetHashCode();
       hash ^= DataMap.GetHashCode();
       return hash;
     }
@@ -164,15 +170,15 @@ namespace com.shimmerresearch.datastructure {
         output.WriteRawTag(10);
         output.WriteString(Name);
       }
-      if (Id != 0) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Id);
+      if (BluetoothAddress.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(BluetoothAddress);
       }
-      if (Email.Length != 0) {
-        output.WriteRawTag(26);
-        output.WriteString(Email);
+      if (SystemTime != 0L) {
+        output.WriteRawTag(24);
+        output.WriteInt64(SystemTime);
       }
-      if (CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType.BT) {
+      if (CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType.BT) {
         output.WriteRawTag(32);
         output.WriteEnum((int) CommunicationType);
       }
@@ -184,33 +190,33 @@ namespace com.shimmerresearch.datastructure {
       if (Name.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
-      if (Id != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Id);
+      if (BluetoothAddress.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BluetoothAddress);
       }
-      if (Email.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Email);
+      if (SystemTime != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(SystemTime);
       }
-      if (CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType.BT) {
+      if (CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType.BT) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) CommunicationType);
       }
       size += dataMap_.CalculateSize(_map_dataMap_codec);
       return size;
     }
 
-    public void MergeFrom(ObjectCluster other) {
+    public void MergeFrom(ObjectCluster2 other) {
       if (other == null) {
         return;
       }
       if (other.Name.Length != 0) {
         Name = other.Name;
       }
-      if (other.Id != 0) {
-        Id = other.Id;
+      if (other.BluetoothAddress.Length != 0) {
+        BluetoothAddress = other.BluetoothAddress;
       }
-      if (other.Email.Length != 0) {
-        Email = other.Email;
+      if (other.SystemTime != 0L) {
+        SystemTime = other.SystemTime;
       }
-      if (other.CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType.BT) {
+      if (other.CommunicationType != global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType.BT) {
         CommunicationType = other.CommunicationType;
       }
       dataMap_.Add(other.dataMap_);
@@ -227,16 +233,16 @@ namespace com.shimmerresearch.datastructure {
             Name = input.ReadString();
             break;
           }
-          case 16: {
-            Id = input.ReadInt32();
+          case 18: {
+            BluetoothAddress = input.ReadString();
             break;
           }
-          case 26: {
-            Email = input.ReadString();
+          case 24: {
+            SystemTime = input.ReadInt64();
             break;
           }
           case 32: {
-            communicationType_ = (global::com.shimmerresearch.datastructure.ObjectCluster.Types.CommunicationType) input.ReadEnum();
+            communicationType_ = (global::com.shimmerresearch.datastructure.ObjectCluster2.Types.CommunicationType) input.ReadEnum();
             break;
           }
           case 42: {
@@ -248,7 +254,7 @@ namespace com.shimmerresearch.datastructure {
     }
 
     #region Nested types
-    /// <summary>Container for nested types declared in the ObjectCluster message type.</summary>
+    /// <summary>Container for nested types declared in the ObjectCluster2 message type.</summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     public static partial class Types {
       public enum CommunicationType {
@@ -258,73 +264,59 @@ namespace com.shimmerresearch.datastructure {
       }
 
       [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-      public sealed partial class ShimmerFormatCluster : pb::IMessage<ShimmerFormatCluster> {
-        private static readonly pb::MessageParser<ShimmerFormatCluster> _parser = new pb::MessageParser<ShimmerFormatCluster>(() => new ShimmerFormatCluster());
-        public static pb::MessageParser<ShimmerFormatCluster> Parser { get { return _parser; } }
+      public sealed partial class FormatCluster2 : pb::IMessage<FormatCluster2> {
+        private static readonly pb::MessageParser<FormatCluster2> _parser = new pb::MessageParser<FormatCluster2>(() => new FormatCluster2());
+        public static pb::MessageParser<FormatCluster2> Parser { get { return _parser; } }
 
         public static pbr::MessageDescriptor Descriptor {
-          get { return global::com.shimmerresearch.datastructure.ObjectCluster.Descriptor.NestedTypes[0]; }
+          get { return global::com.shimmerresearch.datastructure.ObjectCluster2.Descriptor.NestedTypes[0]; }
         }
 
         pbr::MessageDescriptor pb::IMessage.Descriptor {
           get { return Descriptor; }
         }
 
-        public ShimmerFormatCluster() {
+        public FormatCluster2() {
           OnConstruction();
         }
 
         partial void OnConstruction();
 
-        public ShimmerFormatCluster(ShimmerFormatCluster other) : this() {
-          format_ = other.format_;
-          unit_ = other.unit_;
+        public FormatCluster2(FormatCluster2 other) : this() {
+          formatMap_ = other.formatMap_.Clone();
         }
 
-        public ShimmerFormatCluster Clone() {
-          return new ShimmerFormatCluster(this);
+        public FormatCluster2 Clone() {
+          return new FormatCluster2(this);
         }
 
-        /// <summary>Field number for the "format" field.</summary>
-        public const int FormatFieldNumber = 1;
-        private string format_ = "";
-        public string Format {
-          get { return format_; }
-          set {
-            format_ = pb::Preconditions.CheckNotNull(value, "value");
-          }
-        }
-
-        /// <summary>Field number for the "unit" field.</summary>
-        public const int UnitFieldNumber = 2;
-        private string unit_ = "";
-        public string Unit {
-          get { return unit_; }
-          set {
-            unit_ = pb::Preconditions.CheckNotNull(value, "value");
-          }
+        /// <summary>Field number for the "formatMap" field.</summary>
+        public const int FormatMapFieldNumber = 1;
+        private static readonly pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2>.Codec _map_formatMap_codec
+            = new pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2>.Codec(pb::FieldCodec.ForString(10), pb::FieldCodec.ForMessage(18, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2.Parser), 10);
+        private readonly pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2> formatMap_ = new pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2>();
+        public pbc::MapField<string, global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Types.DataCluster2> FormatMap {
+          get { return formatMap_; }
         }
 
         public override bool Equals(object other) {
-          return Equals(other as ShimmerFormatCluster);
+          return Equals(other as FormatCluster2);
         }
 
-        public bool Equals(ShimmerFormatCluster other) {
+        public bool Equals(FormatCluster2 other) {
           if (ReferenceEquals(other, null)) {
             return false;
           }
           if (ReferenceEquals(other, this)) {
             return true;
           }
-          if (Format != other.Format) return false;
-          if (Unit != other.Unit) return false;
+          if (!FormatMap.Equals(other.FormatMap)) return false;
           return true;
         }
 
         public override int GetHashCode() {
           int hash = 1;
-          if (Format.Length != 0) hash ^= Format.GetHashCode();
-          if (Unit.Length != 0) hash ^= Unit.GetHashCode();
+          hash ^= FormatMap.GetHashCode();
           return hash;
         }
 
@@ -333,37 +325,20 @@ namespace com.shimmerresearch.datastructure {
         }
 
         public void WriteTo(pb::CodedOutputStream output) {
-          if (Format.Length != 0) {
-            output.WriteRawTag(10);
-            output.WriteString(Format);
-          }
-          if (Unit.Length != 0) {
-            output.WriteRawTag(18);
-            output.WriteString(Unit);
-          }
+          formatMap_.WriteTo(output, _map_formatMap_codec);
         }
 
         public int CalculateSize() {
           int size = 0;
-          if (Format.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(Format);
-          }
-          if (Unit.Length != 0) {
-            size += 1 + pb::CodedOutputStream.ComputeStringSize(Unit);
-          }
+          size += formatMap_.CalculateSize(_map_formatMap_codec);
           return size;
         }
 
-        public void MergeFrom(ShimmerFormatCluster other) {
+        public void MergeFrom(FormatCluster2 other) {
           if (other == null) {
             return;
           }
-          if (other.Format.Length != 0) {
-            Format = other.Format;
-          }
-          if (other.Unit.Length != 0) {
-            Unit = other.Unit;
-          }
+          formatMap_.Add(other.formatMap_);
         }
 
         public void MergeFrom(pb::CodedInputStream input) {
@@ -374,16 +349,149 @@ namespace com.shimmerresearch.datastructure {
                 input.SkipLastField();
                 break;
               case 10: {
-                Format = input.ReadString();
-                break;
-              }
-              case 18: {
-                Unit = input.ReadString();
+                formatMap_.AddEntriesFrom(input, _map_formatMap_codec);
                 break;
               }
             }
           }
         }
+
+        #region Nested types
+        /// <summary>Container for nested types declared in the FormatCluster2 message type.</summary>
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public static partial class Types {
+          [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+          public sealed partial class DataCluster2 : pb::IMessage<DataCluster2> {
+            private static readonly pb::MessageParser<DataCluster2> _parser = new pb::MessageParser<DataCluster2>(() => new DataCluster2());
+            public static pb::MessageParser<DataCluster2> Parser { get { return _parser; } }
+
+            public static pbr::MessageDescriptor Descriptor {
+              get { return global::com.shimmerresearch.datastructure.ObjectCluster2.Types.FormatCluster2.Descriptor.NestedTypes[0]; }
+            }
+
+            pbr::MessageDescriptor pb::IMessage.Descriptor {
+              get { return Descriptor; }
+            }
+
+            public DataCluster2() {
+              OnConstruction();
+            }
+
+            partial void OnConstruction();
+
+            public DataCluster2(DataCluster2 other) : this() {
+              unit_ = other.unit_;
+              data_ = other.data_;
+            }
+
+            public DataCluster2 Clone() {
+              return new DataCluster2(this);
+            }
+
+            /// <summary>Field number for the "unit" field.</summary>
+            public const int UnitFieldNumber = 1;
+            private string unit_ = "";
+            public string Unit {
+              get { return unit_; }
+              set {
+                unit_ = pb::Preconditions.CheckNotNull(value, "value");
+              }
+            }
+
+            /// <summary>Field number for the "data" field.</summary>
+            public const int DataFieldNumber = 2;
+            private double data_;
+            public double Data {
+              get { return data_; }
+              set {
+                data_ = value;
+              }
+            }
+
+            public override bool Equals(object other) {
+              return Equals(other as DataCluster2);
+            }
+
+            public bool Equals(DataCluster2 other) {
+              if (ReferenceEquals(other, null)) {
+                return false;
+              }
+              if (ReferenceEquals(other, this)) {
+                return true;
+              }
+              if (Unit != other.Unit) return false;
+              if (Data != other.Data) return false;
+              return true;
+            }
+
+            public override int GetHashCode() {
+              int hash = 1;
+              if (Unit.Length != 0) hash ^= Unit.GetHashCode();
+              if (Data != 0D) hash ^= Data.GetHashCode();
+              return hash;
+            }
+
+            public override string ToString() {
+              return pb::JsonFormatter.ToDiagnosticString(this);
+            }
+
+            public void WriteTo(pb::CodedOutputStream output) {
+              if (Unit.Length != 0) {
+                output.WriteRawTag(10);
+                output.WriteString(Unit);
+              }
+              if (Data != 0D) {
+                output.WriteRawTag(17);
+                output.WriteDouble(Data);
+              }
+            }
+
+            public int CalculateSize() {
+              int size = 0;
+              if (Unit.Length != 0) {
+                size += 1 + pb::CodedOutputStream.ComputeStringSize(Unit);
+              }
+              if (Data != 0D) {
+                size += 1 + 8;
+              }
+              return size;
+            }
+
+            public void MergeFrom(DataCluster2 other) {
+              if (other == null) {
+                return;
+              }
+              if (other.Unit.Length != 0) {
+                Unit = other.Unit;
+              }
+              if (other.Data != 0D) {
+                Data = other.Data;
+              }
+            }
+
+            public void MergeFrom(pb::CodedInputStream input) {
+              uint tag;
+              while ((tag = input.ReadTag()) != 0) {
+                switch(tag) {
+                  default:
+                    input.SkipLastField();
+                    break;
+                  case 10: {
+                    Unit = input.ReadString();
+                    break;
+                  }
+                  case 17: {
+                    Data = input.ReadDouble();
+                    break;
+                  }
+                }
+              }
+            }
+
+          }
+
+        }
+        #endregion
 
       }
 
