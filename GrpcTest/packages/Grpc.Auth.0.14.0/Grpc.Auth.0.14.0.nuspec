@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Grpc.Auth</id>
+    <version>0.14.0</version>
+    <title>gRPC C# Auth</title>
+    <authors>Google Inc.</authors>
+    <owners>Google Inc.</owners>
+    <licenseUrl>https://github.com/grpc/grpc/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/grpc/grpc</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Auth library for C# implementation of gRPC - an RPC library and framework. See project site for more info.</description>
+    <summary>Auth library for C# implementation of gRPC - an RPC library and framework</summary>
+    <releaseNotes>Release 0.14.0 of gRPC C#</releaseNotes>
+    <copyright>Copyright 2015, Google Inc.</copyright>
+    <tags>gRPC RPC Protocol HTTP/2 Auth OAuth2</tags>
+    <dependencies>
+      <dependency id="Google.Apis.Auth" version="1.11.1" />
+      <dependency id="Grpc.Core" version="0.14.0" />
+    </dependencies>
+  </metadata>
+</package>
