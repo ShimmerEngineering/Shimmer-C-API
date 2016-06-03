@@ -275,6 +275,76 @@ namespace ShimmerAPI
             SENSOR_EXG2_16BIT = 0x080000,
             SENSOR_BRIDGE_AMP = 0x8000
         }
+
+
+        public enum ChannelContentsShimmer3
+        {
+            XLNAccel = 0x00,
+            YLNAccel = 0x01,
+            ZLNAccel = 0x02,
+            VBatt = 0x03,
+            XWRAccel = 0x04,
+            YWRAccel = 0x05,
+            ZWRAccel = 0x06,
+            XMag = 0x07,
+            YMag = 0x08,
+            ZMag = 0x09,
+            XGyro = 0x0A,
+            YGyro = 0x0B,
+            ZGyro = 0x0C,
+            ExternalAdc7 = 0x0D,
+            ExternalAdc6 = 0x0E,
+            ExternalAdc15 = 0x0F,
+            InternalAdc1 = 0x10,
+            InternalAdc12 = 0x11,
+            InternalAdc13 = 0x12,
+            InternalAdc14 = 0x13,
+            AlternativeXAccel = 0x14, //Unsupported
+            AlternativeYAccel = 0x15, //Unsupported
+            AlternativeZAccel = 0x16, //Unsupported
+            AlternativeXMag = 0x17, //Unsupported
+            AlternativeYMag = 0x18, //Unsupported
+            AlternativeZMag = 0x19, //Unsupported
+            Temperature = 0x1A,
+            Pressure = 0x1B,
+            Exg1_Status = 0x1D,
+            Exg1_CH1 = 0x1E,
+            Exg1_CH2 = 0x1F,
+            Exg2_Status = 0x20,
+            Exg2_CH1 = 0x21,
+            Exg2_CH2 = 0x22,
+            Exg1_CH1_16Bit = 0x23,
+            Exg1_CH2_16Bit = 0x24,
+            Exg2_CH1_16Bit = 0x25,
+            Exg2_CH2_16Bit = 0x26,
+            STRAIN_HIGH = 0x27,
+            STRAIN_LOW = 0x28,
+            GsrRaw = 0x1C
+        }
+
+        public enum ChannelContentsShimmer2
+        {
+            XAccel = 0x00,
+            YAccel = 0x01,
+            ZAccel = 0x02,
+            XGyro = 0x03,
+            YGyro = 0x04,
+            ZGyro = 0x05,
+            XMag = 0x06,
+            YMag = 0x07,
+            ZMag = 0x08,
+            EcgRaLl = 0x09,
+            EcgLaLl = 0x0A,
+            GsrRaw = 0x0B,
+            GsrRes = 0x0C,
+            Emg = 0x0D,
+            AnExA0 = 0x0E,
+            AnExA7 = 0x0F,
+            StrainHigh = 0x10,
+            StrainLow = 0x11,
+            HeartRate = 0x12
+
+        }
         
         public enum PacketTypeShimmer2 : byte //Note that most packet
         {
