@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Grpc.Tools</id>
+    <version>0.13.1</version>
+    <title>gRPC C# Tools</title>
+    <authors>Google Inc.</authors>
+    <owners>Google Inc.</owners>
+    <licenseUrl>https://github.com/grpc/grpc/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/grpc/grpc</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Precompiled protobuf compiler and gRPC protobuf compiler plugin for generating gRPC client/server C# code. Binaries are available for Windows, Linux and MacOS.</description>
+    <summary>Tools for C# implementation of gRPC - an RPC library and framework</summary>
+    <releaseNotes>Release 0.13.1</releaseNotes>
+    <copyright>Copyright 2015, Google Inc.</copyright>
+    <tags>gRPC RPC Protocol HTTP/2</tags>
+  </metadata>
+</package>
