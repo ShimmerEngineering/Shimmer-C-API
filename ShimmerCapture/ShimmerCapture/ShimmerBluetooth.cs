@@ -705,6 +705,11 @@ namespace ShimmerAPI
                                 WriteBatteryFrequency(0);
                                 InitializeShimmer3();
                             }
+                            else if (GetFirmwareIdentifier() == 13)
+                            {
+                                WriteBatteryFrequency(0);
+                                InitializeShimmer3();
+                            }
                         }
                     }
                 }

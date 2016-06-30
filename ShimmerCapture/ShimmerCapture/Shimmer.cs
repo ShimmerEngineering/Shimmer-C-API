@@ -104,7 +104,7 @@ namespace ShimmerAPI
         }
         protected override void OpenConnection()
         {
-                SerialPort.BaudRate = 2048;
+                SerialPort.BaudRate = 115200;
                 SerialPort.PortName = ComPort;
                 SerialPort.ReadTimeout = this.ReadTimeout;
                 SerialPort.WriteTimeout = this.WriteTimeout;
