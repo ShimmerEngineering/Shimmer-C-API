@@ -26,7 +26,7 @@ using System.IO;
 
 namespace ShimmerAPI
 {
-    class Filter
+    public class Filter
     {
 	
 	public static int LOW_PASS = 0;
