@@ -157,7 +157,6 @@ namespace ShimmerAPI
 
         public bool isLogging = false;
         // btsd changes 2
-        public Control PControlForm;
         public const string AppNameCapture = "ShimmerCapture";
 
         // btsd changes
