@@ -647,7 +647,7 @@ namespace ShimmerAPI
         protected abstract int ReadByte();
         
         
-        protected void Connect()
+        public void Connect()
         {
             if (!IsConnectionOpen())
             {
