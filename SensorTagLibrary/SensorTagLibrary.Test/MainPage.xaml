@@ -1,0 +1,103 @@
+﻿<Page
+    x:Name="pageRoot"
+    x:Class="SensorTagLibrary.Test.MainPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SensorTagLibrary.Test"
+    xmlns:common="using:SensorTagLibrary.Test.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="SensorTagItemTemplate">
+            <StackPanel>
+                <TextBlock Text="{Binding Id}" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="{Binding Name}" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            </StackPanel>
+        </DataTemplate>
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition/>
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Back button and page title -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Margin="39,59,39,0" Opacity="0" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+                        Style="{StaticResource NavigationBackButtonNormalStyle}"
+                        VerticalAlignment="Top"
+                        AutomationProperties.Name="Back"
+                        AutomationProperties.AutomationId="BackButton"
+                        AutomationProperties.ItemType="Navigation Button"/>
+            <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" Text="Simple Sensor Tag library Test"/>
+        </Grid>
+        <ProgressBar x:Name="pbar" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="100,0">
+            <StackPanel Width="200">
+                <TextBlock Text="Temperature" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbTemperature" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Target Temperature" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbTargetTemperature" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Pressure" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbPressure" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Humidity" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbHumidity" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Left Key" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbLeftKey" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Right Key" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbRightKey" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Accelerometer" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbAccelerometer" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Gyroscope" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbGyroscope" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <TextBlock Text="Magnetometer" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock x:Name="tbMagnetometer" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+            </StackPanel>
+            <StackPanel x:Name="spTestButtons" Visibility="Collapsed">
+                <Button x:Name="btnDisableNotifications" Content="Disable notifications" Click="btnDisableNotifications_Click" />
+                <Button x:Name="btnEnableNotifications" Content="Enable notifications" Click="btnEnableNotifications_Click" />
+                <Button x:Name="btnReadData" Content="Read some values" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btnReadData_Click"/>
+                <Button x:Name="btnAccelerometer" Content="Set Accelerometer and Magnetometer period to 255*10ms" Click="btnAccelerometer_Click" />
+                <Button x:Name="btnMagnetometer" Content="Set A and M scan period to 10*10ms" Click="btnMagnetometer_Click" />
+            </StackPanel>
+            <StackPanel>
+                <StackPanel x:Name="spSetup" Orientation="Horizontal">
+                    <Button x:Name="btnSetup" Content="SETUP!" Click="btnSetup_Click" />
+                    <Button x:Name="btnSetupParam" Content="SETUP with device as parameter!" Click="btnSetupWithParameter" />
+                </StackPanel>
+                <Button x:Name="btnShowSensorTags" Content="Show sensortags" Click="btnShowSensorTags_Click" />
+                <ListBox x:Name="lbTags" ItemTemplate="{StaticResource SensorTagItemTemplate}" SelectionMode="Single" MaxWidth="400" />
+                <TextBlock x:Name="tbNumberOfTags"  />
+                <Button x:Name="btnGetSysData" Content="Get System Data" Click="btnGetSysid_Click" />
+                <TextBlock x:Name="tbSystemId" />
+                <TextBlock x:Name="tbModelNr" />
+                <TextBlock x:Name="tbSerielNr" />
+                <TextBlock x:Name="tbFWRev" />
+                <TextBlock x:Name="tbHWRev" />
+                <TextBlock x:Name="tbSWRev" />
+                <TextBlock x:Name="tbManufacturerName" />
+                <TextBlock x:Name="tbCert" />
+                <TextBlock x:Name="tbPNP" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

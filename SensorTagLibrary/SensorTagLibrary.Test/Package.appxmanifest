@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
+  <Identity Name="c6162b0f-d4b5-48e1-af03-22fdb7ef918f" Publisher="CN=Sebastian" Version="1.0.0.0" />
+  <Properties>
+    <DisplayName>SensorTagLibrary.Test</DisplayName>
+    <PublisherDisplayName>Sebastian</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.3.0</OSMinVersion>
+    <OSMaxVersionTested>6.3.0</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SensorTagLibrary.Test.App">
+      <m2:VisualElements DisplayName="SensorTagLibrary.Test" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="SensorTagLibrary.Test" ForegroundText="light" BackgroundColor="#464646">
+        <m2:SplashScreen Image="Assets\SplashScreen.png" />
+      </m2:VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <m2:DeviceCapability Name="bluetooth.genericAttributeProfile">
+      <m2:Device Id="any">
+        <m2:Function Type="serviceId:0000180a-0000-1000-8000-00805f9b34fb" /> <!--Device Info Service-->
+        <m2:Function Type="serviceId:f000aa00-0451-4000-b000-000000000000" /> <!--Temperature Device Service-->
+        <m2:Function Type="serviceId:f000aa10-0451-4000-b000-000000000000" /> <!--Accelerometer Device Service-->
+        <m2:Function Type="serviceId:f000aa20-0451-4000-b000-000000000000" /> <!--Humidity Device Service-->
+        <m2:Function Type="serviceId:f000aa30-0451-4000-b000-000000000000" /> <!--Magnetometer Device Service-->
+        <m2:Function Type="serviceId:f000aa40-0451-4000-b000-000000000000" /> <!--Barometer Device Service-->
+        <m2:Function Type="serviceId:f000aa50-0451-4000-b000-000000000000" /> <!--Gyroscope Device Service-->
+        <m2:Function Type="serviceId:0000ffe0-0000-1000-8000-00805f9b34fb" /> <!--Key Device Service-->
+      </m2:Device>
+    </m2:DeviceCapability>
+  </Capabilities>
+</Package>
