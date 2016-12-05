@@ -48,7 +48,7 @@
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
             <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" Text="Simple Sensor Tag library Test"/>
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" Text="Shimmer BLE test"/>
         </Grid>
         <ProgressBar x:Name="pbar" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed"/>
         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="100,0">
@@ -81,22 +81,29 @@
             </StackPanel>
             <StackPanel>
                 <StackPanel x:Name="spSetup" Orientation="Horizontal">
+                    <TextBlock x:Name="spSetup_Space" Margin="0,20,0,20" Style="{StaticResource BaseTextBlockStyle}" />
                     <Button x:Name="btnSetup" Content="SETUP!" Click="btnSetup_Click" />
                     <Button x:Name="btnSetupParam" Content="SETUP with device as parameter!" Click="btnSetupWithParameter" />
+
                 </StackPanel>
-                <Button x:Name="btnShowSensorTags" Content="Show sensortags" Click="btnShowSensorTags_Click" />
+                <Button x:Name="btnShowSensorTags" Content="Show BLE devices" Click="btnShowSensorTags_Click" />
+                <TextBlock x:Name="tbShowSensorTags_Space" Margin="0,0,0,5" Style="{StaticResource BaseTextBlockStyle}" />
                 <ListBox x:Name="lbTags" ItemTemplate="{StaticResource SensorTagItemTemplate}" SelectionMode="Single" MaxWidth="400" />
-                <TextBlock x:Name="tbNumberOfTags"  />
+                <TextBlock x:Name="tbNumberOfTags"  FontSize="16"/>
+                <TextBlock x:Name="tbNumberOfTags_Space" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
                 <Button x:Name="btnGetSysData" Content="Get System Data" Click="btnGetSysid_Click" />
-                <TextBlock x:Name="tbSystemId" />
-                <TextBlock x:Name="tbModelNr" />
-                <TextBlock x:Name="tbSerielNr" />
-                <TextBlock x:Name="tbFWRev" />
-                <TextBlock x:Name="tbHWRev" />
-                <TextBlock x:Name="tbSWRev" />
-                <TextBlock x:Name="tbManufacturerName" />
-                <TextBlock x:Name="tbCert" />
-                <TextBlock x:Name="tbPNP" />
+                <TextBlock x:Name="btnGetSysData_Space" Margin="0,20,0,10" Style="{StaticResource BaseTextBlockStyle}" />
+                <Border Height="198" Width="400"  Background="Gray">
+                    <Grid>
+                        <TextBlock x:Name="tbSystemId" FontSize="18" Margin="0,0,0,176" />
+                        <TextBlock x:Name="tbModelNr" FontSize="18" Margin="0,22,0,154" />
+                        <TextBlock x:Name="tbFWRev" FontSize="18" Margin="0,66,0,110" />
+                        <TextBlock x:Name="tbHWRev" FontSize="18" Margin="0,88" />
+                        <TextBlock x:Name="tbSWRev" FontSize="18" Margin="0,110,0,66" />
+                        <TextBlock x:Name="tbSerielNr" FontSize="18" Margin="0,154,0,22"/>
+                        <TextBlock x:Name="tbManufacturerName" FontSize="18" Margin="0,176,0,0"/>
+                    </Grid>
+                </Border>
             </StackPanel>
         </StackPanel>
     </Grid>

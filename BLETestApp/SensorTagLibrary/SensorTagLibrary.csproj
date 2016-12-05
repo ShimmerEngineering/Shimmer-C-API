@@ -123,6 +123,7 @@
     <Compile Include="Sensors\Accelerometer.cs" />
     <Compile Include="Sensors\Gyroscope.cs" />
     <Compile Include="Sensors\HumiditySensor.cs" />
+    <Compile Include="Sensors\ShimmerTempService.cs" />
     <Compile Include="Sensors\IRTemperatureSensor.cs" />
     <Compile Include="Sensors\Magnetometer.cs" />
     <Compile Include="Sensors\PressureSensor.cs" />

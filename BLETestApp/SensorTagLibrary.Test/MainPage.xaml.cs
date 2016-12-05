@@ -31,6 +31,7 @@ namespace SensorTagLibrary.Test
         Magnetometer mg;
         PressureSensor ps;
         IRTemperatureSensor tempSen;
+        ShimmerTempService shimTemp;
 
         public MainPage()
         {
@@ -256,15 +257,32 @@ namespace SensorTagLibrary.Test
 
         private async void btnShowSensorTags_Click(object sender, RoutedEventArgs e)
         {
-            Accelerometer acc = new Accelerometer();
-            List<DeviceInformation> list = await GattUtils.GetDevicesOfService(acc.SensorServiceUuid);
-            lbTags.ItemsSource = list;
-            if (list != null)
+            Exception exc = null;
+
+            try
             {
-                tbNumberOfTags.Text = "Total: " + list.Count;
+                using (DeviceInfoService dis = new DeviceInfoService())
+                {
+                    //Accelerometer acc = new Accelerometer();
+                    //List<DeviceInformation> list = await GattUtils.GetDevicesOfService(acc.SensorServiceUuid);
+                    List<DeviceInformation> list = await GattUtils.GetDevicesOfService(dis.SensorServiceUuid);
+                    lbTags.ItemsSource = list;
+                    if (list != null)
+                    {
+                        tbNumberOfTags.Text = "Total: " + list.Count;
+                    }
+                    else
+                        tbNumberOfTags.Text = string.Empty;
+                }
             }
-            else
-                tbNumberOfTags.Text = string.Empty;
+
+            catch (Exception ex)
+            {
+                exc = ex;
+            }
+
+            if (exc != null)
+                await new MessageDialog(exc.Message).ShowAsync();
         }
 
         private void btnSetup_Click(object sender, RoutedEventArgs e)
@@ -281,19 +299,31 @@ namespace SensorTagLibrary.Test
         {
             Exception exc = null;
 
+            //shimTemp = new ShimmerTempService();
+            //shimTemp.SensorValueChanged += SensorValueChanged;
+            //await shimTemp.Initialize((await GattUtils.GetDevicesOfService(shimTemp.SensorServiceUuid))[0]);
+            //await shimTemp.EnableSensor();
+
             try
             {
                 using (DeviceInfoService dis = new DeviceInfoService())
                 {
                     await dis.Initialize();
                     tbSystemId.Text = "System ID: " + await dis.ReadSystemId();
-                    //tbModelNr.Text = "Model Nr: " + await dis.ReadModelNumber();
-                    //tbSerielNr.Text = "Serial Nr: " + await dis.ReadSerialNumber();
-                    //tbFWRev.Text = "Firmware Revision: " + await dis.ReadFirmwareRevision();
-                    //tbHWRev.Text = "Hardware Revision: " + await dis.ReadHardwareRevision();
-                    //tbSWRev.Text = "Sofware Revision: " + await dis.ReadSoftwareRevision();
-                    //tbManufacturerName.Text = "Manufacturer Name: " + await dis.ReadManufacturerName();
+                    tbModelNr.Text = "Model Nr: " + await dis.ReadModelNumber();
+                    tbSerielNr.Text = "Serial Nr: " + await dis.ReadSerialNumber();
+                    tbFWRev.Text = "Firmware Revision: " + await dis.ReadFirmwareRevision();
+                    tbHWRev.Text = "Hardware Revision: " + await dis.ReadHardwareRevision();
+                    tbSWRev.Text = "Sofware Revision: " + await dis.ReadSoftwareRevision();
+                    tbManufacturerName.Text = "Manufacturer Name: " + await dis.ReadManufacturerName();
+
+
                     //tbCert.Text = "Cert: " + await dis.ReadCert();
+                    //String separator = " - ";
+                    //byte[] temp = await shimTemp.ReadValue();
+                    //tbCert.Text = "Temp: " + temp[0].ToString("X2") + separator + temp[1].ToString("X2") + separator +
+                    //    temp[2].ToString("X2") + separator + temp[3].ToString("X2");
+
                     //tbPNP.Text = "PNP ID: " + await dis.ReadPnpId();
                 }
             }

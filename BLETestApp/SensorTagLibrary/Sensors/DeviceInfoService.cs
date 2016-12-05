@@ -76,7 +76,7 @@ namespace X2CodingLab.SensorTag.Sensors
         /// <exception cref="DeviceUnreachableException">Thrown if it wasn't possible to communicate with the device.</exception>
         public async Task<string> ReadSystemId()
         {
-            return await ReadSystemId(" - ");
+            return await ReadSystemId("-");
         }
 
         /// <summary>
@@ -264,7 +264,7 @@ namespace X2CodingLab.SensorTag.Sensors
         /// <returns>Raw sensor data as byte array</returns>
         /// <exception cref="DeviceNotInitializedException">Thrown if the object has not been successfully initialized using the initialize() method.</exception>
         /// <exception cref="DeviceUnreachableException">Thrown if it wasn't possible to communicate with the device.</exception>
-        private async Task<byte[]> ReadValue(string Uuid)
+        public async Task<byte[]> ReadValue(string Uuid)
         {
             Validator.Requires<DeviceNotInitializedException>(deviceService != null);
 
