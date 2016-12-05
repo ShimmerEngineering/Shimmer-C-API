@@ -76,7 +76,7 @@ namespace X2CodingLab.SensorTag.Sensors
         /// <exception cref="DeviceUnreachableException">Thrown if it wasn't possible to communicate with the device.</exception>
         public async Task<string> ReadSystemId()
         {
-            return await ReadSystemId(":");
+            return await ReadSystemId(" - ");
         }
 
         /// <summary>
@@ -96,6 +96,8 @@ namespace X2CodingLab.SensorTag.Sensors
                 sdata[2].ToString("X2") + separator + sdata[3].ToString("X2") + separator +
                 sdata[4].ToString("X2") + separator + sdata[5].ToString("X2") + separator +
                 sdata[6].ToString("X2") + separator + sdata[7].ToString("X2");
+
+            //return "00:00:00:00:00:00:00";
         }
 
         /// <summary>

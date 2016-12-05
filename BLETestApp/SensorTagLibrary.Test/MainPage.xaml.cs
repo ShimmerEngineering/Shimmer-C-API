@@ -287,14 +287,14 @@ namespace SensorTagLibrary.Test
                 {
                     await dis.Initialize();
                     tbSystemId.Text = "System ID: " + await dis.ReadSystemId();
-                    tbModelNr.Text = "Model Nr: " + await dis.ReadModelNumber();
-                    tbSerielNr.Text = "Serial Nr: " + await dis.ReadSerialNumber();
-                    tbFWRev.Text = "Firmware Revision: " + await dis.ReadFirmwareRevision();
-                    tbHWRev.Text = "Hardware Revision: " + await dis.ReadHardwareRevision();
-                    tbSWRev.Text = "Sofware Revision: " + await dis.ReadSoftwareRevision();
-                    tbManufacturerName.Text = "Manufacturer Name: " + await dis.ReadManufacturerName();
-                    tbCert.Text = "Cert: " + await dis.ReadCert();
-                    tbPNP.Text = "PNP ID: " + await dis.ReadPnpId();
+                    //tbModelNr.Text = "Model Nr: " + await dis.ReadModelNumber();
+                    //tbSerielNr.Text = "Serial Nr: " + await dis.ReadSerialNumber();
+                    //tbFWRev.Text = "Firmware Revision: " + await dis.ReadFirmwareRevision();
+                    //tbHWRev.Text = "Hardware Revision: " + await dis.ReadHardwareRevision();
+                    //tbSWRev.Text = "Sofware Revision: " + await dis.ReadSoftwareRevision();
+                    //tbManufacturerName.Text = "Manufacturer Name: " + await dis.ReadManufacturerName();
+                    //tbCert.Text = "Cert: " + await dis.ReadCert();
+                    //tbPNP.Text = "PNP ID: " + await dis.ReadPnpId();
                 }
             }
             catch (Exception ex)
