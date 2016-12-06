@@ -19,7 +19,7 @@ namespace X2CodingLab.SensorTag.Sensors
     public class ShimmerTempService : SensorBase
     {
         public ShimmerTempService()
-            : base(SensorName.TemperatureSensor, SensorTagUuid.UUID_TMP_SERV, SensorTagUuid.UUID_TMP_CONF, SensorTagUuid.UUID_TMP_DATA)
+            : base(SensorName.ShimmerTempSensor, SensorTagUuid.UUID_TMP_SERV, SensorTagUuid.UUID_TMP_CONF, SensorTagUuid.UUID_TMP_DATA)
         {
             
         }
@@ -33,10 +33,12 @@ namespace X2CodingLab.SensorTag.Sensors
         public static double CalculateAmbientTemperature(byte[] sensorData, TemperatureScale scale)
         {
             Validator.RequiresNotNull(sensorData);
+
+            Array.Reverse(sensorData);
             if (scale == TemperatureScale.Celsius)
-                return BitConverter.ToUInt16(sensorData, 2) / 128.0;
+                return 0.25 * BitConverter.ToUInt16(sensorData, 2) / 256.0;
             else
-                return (BitConverter.ToUInt16(sensorData, 2) / 128.0) * 1.8 + 32;
+                return (BitConverter.ToUInt16(sensorData, 2) / 256.0) * 1.8 + 32;
         }
 
         /// <summary>

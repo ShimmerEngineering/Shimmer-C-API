@@ -19,6 +19,7 @@ namespace X2CodingLab.SensorTag
         Gyroscope,
         HumiditySensor,
         TemperatureSensor,
+        ShimmerTempSensor,
         Magnetometer,
         PressureSensor,
         SimpleKeyService

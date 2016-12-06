@@ -42,9 +42,9 @@ namespace SensorTagLibrary.Test
         {
             pbar.Visibility = Windows.UI.Xaml.Visibility.Visible;
             ClearSensors();
-            btnSetup.IsEnabled = false;
-            btnSetupParam.IsEnabled = false;
-            spTestButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+            //btnSetup.IsEnabled = false;
+            //btnSetupParam.IsEnabled = false;
+            //spTestButtons.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
 
             Exception ex = null;
             try
@@ -86,7 +86,7 @@ namespace SensorTagLibrary.Test
                     await tempSen.Initialize((await GattUtils.GetDevicesOfService(tempSen.SensorServiceUuid))[0]);
                     await tempSen.EnableSensor();
 
-                    spTestButtons.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    //spTestButtons.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 }
                 else
                 {
@@ -125,7 +125,7 @@ namespace SensorTagLibrary.Test
                     await tempSen.Initialize();
                     await tempSen.EnableSensor();
 
-                    spTestButtons.Visibility = Windows.UI.Xaml.Visibility.Visible;
+                    //spTestButtons.Visibility = Windows.UI.Xaml.Visibility.Visible;
                 }
             }
             catch (Exception exc)
@@ -137,8 +137,8 @@ namespace SensorTagLibrary.Test
                 await new MessageDialog(ex.Message).ShowAsync();
 
             pbar.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
-            btnSetup.IsEnabled = true;
-            btnSetupParam.IsEnabled = true;
+            //btnSetup.IsEnabled = true;
+            //btnSetupParam.IsEnabled = true;
         }
 
         async void SensorValueChanged(object sender, X2CodingLab.SensorTag.SensorValueChangedEventArgs e)
@@ -187,11 +187,19 @@ namespace SensorTagLibrary.Test
                             }
                             break;
                         case SensorName.TemperatureSensor:
-                            double ambient = IRTemperatureSensor.CalculateAmbientTemperature(e.RawData, TemperatureScale.Celsius);
-                            double target = IRTemperatureSensor.CalculateTargetTemperature(e.RawData, ambient, TemperatureScale.Celsius);
+                            //double ambient = IRTemperatureSensor.CalculateAmbientTemperature(e.RawData, TemperatureScale.Celsius);
+                            //double target = IRTemperatureSensor.CalculateTargetTemperature(e.RawData, ambient, TemperatureScale.Celsius);
                             //tbTemperature.Text = ambient.ToString("0.00");
                             //tbTargetTemperature.Text = target.ToString("0.00");
                             break;
+
+                        case SensorName.ShimmerTempSensor:
+                            byte[] temp = await shimTemp.ReadValue();
+                            double ambient = ShimmerTempService.CalculateAmbientTemperature(temp, TemperatureScale.Celsius);
+                            //tbManufacturerName.Text = "Temp: " + temp[0].ToString("X2") + separator + temp[1].ToString("X2") + separator +
+                            //    temp[2].ToString("X2") + separator + temp[3].ToString("X2");
+                            tbBLETemp.Text = "Temp: " + string.Format("{0}°C", ambient);
+                            break; 
                     }
                 });
         }
@@ -319,10 +327,12 @@ namespace SensorTagLibrary.Test
 
 
                     //tbCert.Text = "Cert: " + await dis.ReadCert();
-                    //String separator = " - ";
                     //byte[] temp = await shimTemp.ReadValue();
-                    //tbCert.Text = "Temp: " + temp[0].ToString("X2") + separator + temp[1].ToString("X2") + separator +
+                    //double ambient = ShimmerTempService.CalculateAmbientTemperature(temp, TemperatureScale.Celsius);
+                    //tbManufacturerName.Text = "Temp: " + temp[0].ToString("X2") + separator + temp[1].ToString("X2") + separator +
                     //    temp[2].ToString("X2") + separator + temp[3].ToString("X2");
+
+                    //tbManufacturerName.Text = "Temp: " + string.Format("{0}°C", ambient);
 
                     //tbPNP.Text = "PNP ID: " + await dis.ReadPnpId();
                 }
@@ -336,9 +346,37 @@ namespace SensorTagLibrary.Test
                 await new MessageDialog(exc.Message).ShowAsync();
         }
 
+        private async void btnGetTemp_Click(object sender, RoutedEventArgs e)
+        {
+            Exception exc = null;
+
+            shimTemp = new ShimmerTempService();
+            shimTemp.SensorValueChanged += SensorValueChanged;
+            await shimTemp.Initialize((await GattUtils.GetDevicesOfService(shimTemp.SensorServiceUuid))[0]);
+            //await shimTemp.EnableSensor();
+
+            try
+            {
+                byte[] temp = await shimTemp.ReadValue();
+                double ambient = ShimmerTempService.CalculateAmbientTemperature(temp, TemperatureScale.Celsius);
+                //tbManufacturerName.Text = "Temp: " + temp[0].ToString("X2") + separator + temp[1].ToString("X2") + separator +
+                //    temp[2].ToString("X2") + separator + temp[3].ToString("X2");
+
+                tbBLETemp.Text = "Temp: " + string.Format("{0}°C", ambient);
+
+            }
+            catch (Exception ex)
+            {
+                exc = ex;
+            }
+
+            if (exc != null)
+                await new MessageDialog(exc.Message).ShowAsync();
+        }
+
         private void ClearSensors()
         {
-            if(acc != null)
+            if (acc != null)
                 acc.Dispose();
             if (gyro != null)
                 gyro.Dispose();

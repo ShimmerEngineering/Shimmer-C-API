@@ -51,25 +51,8 @@
                         IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="85,0,65,40" Text="Shimmer BLE test" Grid.ColumnSpan="2"/>
         </Grid>
         <ProgressBar x:Name="pbar" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="84,0,116,0">
-            <StackPanel x:Name="spTestButtons" Visibility="Collapsed">
-                <Button x:Name="btnDisableNotifications" Content="Disable notifications" Click="btnDisableNotifications_Click" />
-                <Button x:Name="btnEnableNotifications" Content="Enable notifications" Click="btnEnableNotifications_Click" />
-                <Button x:Name="btnReadData" Content="Read some values" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Click="btnReadData_Click"/>
-                <Button x:Name="btnAccelerometer" Content="Set Accelerometer and Magnetometer period to 255*10ms" Click="btnAccelerometer_Click" />
-                <Button x:Name="btnMagnetometer" Content="Set A and M scan period to 10*10ms" Click="btnMagnetometer_Click" />
-            </StackPanel>
-            <StackPanel>
-                <StackPanel x:Name="spSetup" Orientation="Horizontal">
-                    <TextBlock x:Name="spSetup_Space" Margin="0,20,0,20" Style="{StaticResource BaseTextBlockStyle}" />
-                    <Button x:Name="btnSetup" Content="SETUP!" Click="btnSetup_Click" />
-                    <Button x:Name="btnSetupParam" Content="SETUP with device as parameter!" Click="btnSetupWithParameter" >
-                        <Button.Flyout>
-                            <MenuFlyout/>
-                        </Button.Flyout>
-                    </Button>
-
-                </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="84,0,726,0">
+            <StackPanel Width="356">
                 <Button x:Name="btnShowSensorTags" Content="Show BLE devices" Click="btnShowSensorTags_Click" />
                 <TextBlock x:Name="tbShowSensorTags_Space" Margin="0,0,0,5" Style="{StaticResource BaseTextBlockStyle}" />
                 <ListBox x:Name="lbTags" ItemTemplate="{StaticResource SensorTagItemTemplate}" SelectionMode="Single" MaxWidth="400" />
@@ -77,7 +60,7 @@
                 <TextBlock x:Name="tbNumberOfTags_Space" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
                 <Button x:Name="btnGetSysData" Content="Get System Data" Click="btnGetSysid_Click" />
                 <TextBlock x:Name="btnGetSysData_Space" Margin="0,20,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <Border Height="198" Width="400"  Background="#FFE4813C">
+                <Border Height="198" Width="471"  Background="#FFE4813C">
                     <Grid>
                         <TextBlock x:Name="tbSystemId" FontSize="18" Margin="0,0,0,176" Foreground="#FF323030" FontWeight="Bold" />
                         <TextBlock x:Name="tbModelNr" FontSize="18" Margin="0,22,0,154" Foreground="#FF323030" FontWeight="Bold"/>
@@ -87,6 +70,15 @@
                         <TextBlock x:Name="tbSerielNr" FontSize="18" Margin="0,154,0,22" Foreground="#FF323030" FontWeight="Bold"/>
                         <TextBlock x:Name="tbManufacturerName" FontSize="18" Margin="0,176,0,0" Foreground="#FF323030" FontWeight="Bold"/>
                     </Grid>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="659,0,151,0">
+            <StackPanel Width="401" Margin="0,0,0,338">
+                <Button x:Name="btnGetTemp" Content="Get BLE temperature" Click="btnGetTemp_Click" />
+                <TextBlock x:Name="btnGetTemp_Space" Margin="0,20,0,15" Style="{StaticResource BaseTextBlockStyle}" />
+                <Border Height="30" Width="400"  Background="#FFE4813C">
+                    <TextBlock x:Name="tbBLETemp" FontSize="18" Foreground="#FF323030" FontWeight="Bold"/>
                 </Border>
             </StackPanel>
         </StackPanel>
