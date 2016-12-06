@@ -149,25 +149,25 @@ namespace SensorTagLibrary.Test
                     {
                         case SensorName.Accelerometer:
                             double[] accValues = Accelerometer.CalculateCoordinates(e.RawData, 1 / 64.0);
-                            tbAccelerometer.Text = "X: " + accValues[0].ToString("0.00") + " Y: " + accValues[1].ToString("0.00") + " Z: " + accValues[2].ToString("0.00");
+                            //tbAccelerometer.Text = "X: " + accValues[0].ToString("0.00") + " Y: " + accValues[1].ToString("0.00") + " Z: " + accValues[2].ToString("0.00");
                             break;
                         case SensorName.Gyroscope:
                             float[] axisValues = Gyroscope.CalculateAxisValue(e.RawData, GyroscopeAxis.XYZ);
-                            tbGyroscope.Text = "X: " + axisValues[0].ToString("0.00") + " Y: " + axisValues[1].ToString("0.00") + " Z: " + axisValues[2].ToString("0.00");
+                            //tbGyroscope.Text = "X: " + axisValues[0].ToString("0.00") + " Y: " + axisValues[1].ToString("0.00") + " Z: " + axisValues[2].ToString("0.00");
                             break;
                         case SensorName.HumiditySensor:
-                            tbHumidity.Text = HumiditySensor.CalculateHumidityInPercent(e.RawData).ToString("0.00") + "%";
+                            //tbHumidity.Text = HumiditySensor.CalculateHumidityInPercent(e.RawData).ToString("0.00") + "%";
                             break;
                         case SensorName.Magnetometer:
                             float[] magnetValues = Magnetometer.CalculateCoordinates(e.RawData);
-                            tbMagnetometer.Text = "X: " + magnetValues[0].ToString("0.00") + " Y: " + magnetValues[1].ToString("0.00") + " Z: " + magnetValues[2].ToString("0.00");
+                            //tbMagnetometer.Text = "X: " + magnetValues[0].ToString("0.00") + " Y: " + magnetValues[1].ToString("0.00") + " Z: " + magnetValues[2].ToString("0.00");
                             break;
                         case SensorName.PressureSensor:
                             try
                             {
-                            tbPressure.Text = (PressureSensor.CalculatePressure(e.RawData, ps.CalibrationData) / 100).ToString("0.00");
+                                //tbPressure.Text = (PressureSensor.CalculatePressure(e.RawData, ps.CalibrationData) / 100).ToString("0.00");
                             }
-                            catch(NullReferenceException)
+                            catch (NullReferenceException)
                             {
                                 // in case another(!) setup is executed, so ps is null
                             }
@@ -175,22 +175,22 @@ namespace SensorTagLibrary.Test
                         case SensorName.SimpleKeyService:
                             if (SimpleKeyService.LeftKeyHit(e.RawData))
                             {
-                                tbLeftKey.Text = "hit!";
+                                //tbLeftKey.Text = "hit!";
                                 await Task.Delay(200);
-                                tbLeftKey.Text = "";
+                                //tbLeftKey.Text = "";
                             }
                             else if (SimpleKeyService.RightKeyHit(e.RawData))
                             {
-                                tbRightKey.Text = "hit!";
+                                //tbRightKey.Text = "hit!";
                                 await Task.Delay(200);
-                                tbRightKey.Text = "";
+                                //tbRightKey.Text = "";
                             }
                             break;
                         case SensorName.TemperatureSensor:
                             double ambient = IRTemperatureSensor.CalculateAmbientTemperature(e.RawData, TemperatureScale.Celsius);
                             double target = IRTemperatureSensor.CalculateTargetTemperature(e.RawData, ambient, TemperatureScale.Celsius);
-                            tbTemperature.Text = ambient.ToString("0.00");
-                            tbTargetTemperature.Text = target.ToString("0.00");
+                            //tbTemperature.Text = ambient.ToString("0.00");
+                            //tbTargetTemperature.Text = target.ToString("0.00");
                             break;
                     }
                 });
@@ -225,21 +225,21 @@ namespace SensorTagLibrary.Test
             double targetTemp = IRTemperatureSensor.CalculateTargetTemperature(tempValue, ambientTemp, TemperatureScale.Celsius);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                tbTemperature.Text = ambientTemp.ToString("0.00");
-                tbTargetTemperature.Text = targetTemp.ToString("0.00");
+                //tbTemperature.Text = ambientTemp.ToString("0.00");
+                //tbTargetTemperature.Text = targetTemp.ToString("0.00");
             });
 
             byte[] accValue = await acc.ReadValue();
             double[] accAxis = Accelerometer.CalculateCoordinates(accValue, 1 / 64.0);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                tbAccelerometer.Text = "X: " + accAxis[0].ToString("0.00") + " Y: " + accAxis[1].ToString("0.00") + " Z: " + accAxis[2].ToString("0.00");
+                //tbAccelerometer.Text = "X: " + accAxis[0].ToString("0.00") + " Y: " + accAxis[1].ToString("0.00") + " Z: " + accAxis[2].ToString("0.00");
             });
 
             byte[] humValue = await hum.ReadValue();
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                tbHumidity.Text = HumiditySensor.CalculateHumidityInPercent(humValue).ToString("0.00") + "%";
+                //tbHumidity.Text = HumiditySensor.CalculateHumidityInPercent(humValue).ToString("0.00") + "%";
             });
         }
 

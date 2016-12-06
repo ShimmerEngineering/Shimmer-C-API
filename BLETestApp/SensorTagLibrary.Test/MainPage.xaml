@@ -47,31 +47,11 @@
                         AutomationProperties.Name="Back"
                         AutomationProperties.AutomationId="BackButton"
                         AutomationProperties.ItemType="Navigation Button"/>
-            <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="1" 
-                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="0,0,30,40" Text="Shimmer BLE test"/>
+            <TextBlock x:Name="pageTitle" Style="{StaticResource HeaderTextBlockStyle}" 
+                        IsHitTestVisible="false" TextWrapping="NoWrap" VerticalAlignment="Bottom" Margin="85,0,65,40" Text="Shimmer BLE test" Grid.ColumnSpan="2"/>
         </Grid>
         <ProgressBar x:Name="pbar" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="100,0">
-            <StackPanel Width="200">
-                <TextBlock Text="Temperature" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbTemperature" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Target Temperature" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbTargetTemperature" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Pressure" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbPressure" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Humidity" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbHumidity" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Left Key" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbLeftKey" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Right Key" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbRightKey" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Accelerometer" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbAccelerometer" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Gyroscope" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbGyroscope" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <TextBlock Text="Magnetometer" Style="{StaticResource TitleTextBlockStyle}" />
-                <TextBlock x:Name="tbMagnetometer" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="84,0,116,0">
             <StackPanel x:Name="spTestButtons" Visibility="Collapsed">
                 <Button x:Name="btnDisableNotifications" Content="Disable notifications" Click="btnDisableNotifications_Click" />
                 <Button x:Name="btnEnableNotifications" Content="Enable notifications" Click="btnEnableNotifications_Click" />
@@ -83,7 +63,11 @@
                 <StackPanel x:Name="spSetup" Orientation="Horizontal">
                     <TextBlock x:Name="spSetup_Space" Margin="0,20,0,20" Style="{StaticResource BaseTextBlockStyle}" />
                     <Button x:Name="btnSetup" Content="SETUP!" Click="btnSetup_Click" />
-                    <Button x:Name="btnSetupParam" Content="SETUP with device as parameter!" Click="btnSetupWithParameter" />
+                    <Button x:Name="btnSetupParam" Content="SETUP with device as parameter!" Click="btnSetupWithParameter" >
+                        <Button.Flyout>
+                            <MenuFlyout/>
+                        </Button.Flyout>
+                    </Button>
 
                 </StackPanel>
                 <Button x:Name="btnShowSensorTags" Content="Show BLE devices" Click="btnShowSensorTags_Click" />
@@ -93,15 +77,15 @@
                 <TextBlock x:Name="tbNumberOfTags_Space" Margin="0,5,0,10" Style="{StaticResource BaseTextBlockStyle}" />
                 <Button x:Name="btnGetSysData" Content="Get System Data" Click="btnGetSysid_Click" />
                 <TextBlock x:Name="btnGetSysData_Space" Margin="0,20,0,10" Style="{StaticResource BaseTextBlockStyle}" />
-                <Border Height="198" Width="400"  Background="Gray">
+                <Border Height="198" Width="400"  Background="#FFE4813C">
                     <Grid>
-                        <TextBlock x:Name="tbSystemId" FontSize="18" Margin="0,0,0,176" />
-                        <TextBlock x:Name="tbModelNr" FontSize="18" Margin="0,22,0,154" />
-                        <TextBlock x:Name="tbFWRev" FontSize="18" Margin="0,66,0,110" />
-                        <TextBlock x:Name="tbHWRev" FontSize="18" Margin="0,88" />
-                        <TextBlock x:Name="tbSWRev" FontSize="18" Margin="0,110,0,66" />
-                        <TextBlock x:Name="tbSerielNr" FontSize="18" Margin="0,154,0,22"/>
-                        <TextBlock x:Name="tbManufacturerName" FontSize="18" Margin="0,176,0,0"/>
+                        <TextBlock x:Name="tbSystemId" FontSize="18" Margin="0,0,0,176" Foreground="#FF323030" FontWeight="Bold" />
+                        <TextBlock x:Name="tbModelNr" FontSize="18" Margin="0,22,0,154" Foreground="#FF323030" FontWeight="Bold"/>
+                        <TextBlock x:Name="tbFWRev" FontSize="18" Margin="0,66,0,110" Foreground="#FF323030" FontWeight="Bold"/>
+                        <TextBlock x:Name="tbHWRev" FontSize="18" Margin="0,88" Foreground="#FF323030" FontWeight="Bold"/>
+                        <TextBlock x:Name="tbSWRev" FontSize="18" Margin="0,110,0,66" Foreground="#FF323030" FontWeight="Bold"/>
+                        <TextBlock x:Name="tbSerielNr" FontSize="18" Margin="0,154,0,22" Foreground="#FF323030" FontWeight="Bold"/>
+                        <TextBlock x:Name="tbManufacturerName" FontSize="18" Margin="0,176,0,0" Foreground="#FF323030" FontWeight="Bold"/>
                     </Grid>
                 </Border>
             </StackPanel>
