@@ -606,7 +606,7 @@ namespace ShimmerAPI
         }
 
         //Shimmer2 constructor, to set the Shimmer device according to specified settings upon connection
-        public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, int magGain)
+        public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int magGain, int setEnabledSensors)
         {
             DeviceName = devName;
             SamplingRate = samplingRate;
