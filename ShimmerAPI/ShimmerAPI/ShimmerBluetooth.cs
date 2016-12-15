@@ -1545,6 +1545,7 @@ namespace ShimmerAPI
                 WriteMagRange(MagGain);
                 WriteSamplingRate(SamplingRate);
                 WriteInternalExpPower(InternalExpPower);
+                WriteEXGConfigurations(Exg1RegArray, Exg2RegArray);
                 WriteSensors(SetEnabledSensors); //this should always be the last command
                 SetLowPowerAccel(LowPowerAccelEnabled);
                 SetLowPowerMag(LowPowerMagEnabled);
@@ -5542,13 +5543,12 @@ namespace ShimmerAPI
 
     public class Shimmer3Configuration
     {
-        public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP1 = new byte[] { 0, (byte)160, 16, 64, 64, 45, 0, 0, 2, 3 };
-        public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP2 = new byte[] { 0, (byte)160, 16, 64, 71, 0, 0, 0, 2, 1 };
-        public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP1 = new byte[] { 0, (byte)160, 16, 105, 96, 32, 0, 0, 2, 3 };
-        public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP2 = new byte[] { 0, (byte)160, 16, 225, 225, 0, 0, 0, 2, 1 };
-        public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP1 = new byte[] { 4, (byte)163, 16, 69, 69, 0, 0, 0, 2, 1 };
-        public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP2 = new byte[] { 4, (byte)163, 16, 69, 69, 0, 0, 0, 2, 1 };
-
+        public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP1 = new byte[] { 0x00, 0xA0, 0x10, 0x40, 0x40, 0x2D, 0x00, 0x00, 0x02, 0x03 };
+        public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP2 = new byte[] { 0x00, 0xA0, 0x10, 0x40, 0x47, 0x00, 0x00, 0x00, 0x02, 0x01 };
+        public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP1 = new byte[] { 0x00, 0xA0, 0x10, 0x69, 0x60, 0x20, 0x00, 0x00, 0x02, 0x03 };
+        public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP2 = new byte[] { 0x00, 0xA0, 0x10, 0xE1, 0xE1, 0x00, 0x00, 0x00, 0x02, 0x01 };
+        public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP1 = new byte[] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
+        public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP2 = new byte[] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
 
     }
 

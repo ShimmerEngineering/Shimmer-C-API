@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Filter.cs" />
     <Compile Include="GradDes3DOrientation.cs" />
     <Compile Include="ObjectCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
