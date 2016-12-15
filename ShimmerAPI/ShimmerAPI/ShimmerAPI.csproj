@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="InTheHand.Net.Personal">
+      <HintPath>..\..\..\..\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1\InTheHand.Net.Personal.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,8 +48,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorData.cs" />
     <Compile Include="Shimmer.cs" />
+    <Compile Include="Shimmer32Feet.cs" />
     <Compile Include="ShimmerBluetooth.cs" />
     <Compile Include="ShimmerSDBT.cs" />
+    <Compile Include="ShimmerSDBT32Feet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
