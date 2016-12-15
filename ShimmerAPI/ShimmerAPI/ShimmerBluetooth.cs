@@ -105,7 +105,7 @@ namespace ShimmerAPI
         public bool LowPowerMagEnabled = false;
         public bool LowPowerAccelEnabled = false;
         public bool LowPowerGyroEnabled = false;
-        public int internalExpPower = -1;
+        public int InternalExpPower = -1;
         protected int magSamplingRate;
         protected int ADCRawSamplingRateValue;
         protected double SamplingRate;
@@ -573,6 +573,9 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_5_6GA_SHIMMER3 = new double[3, 3] { { 330, 0, 0 }, { 0, 330, 0 }, { 0, 0, 295 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3 = new double[3, 3] { { 230, 0, 0 }, { 0, 230, 0 }, { 0, 0, 205 } };
 
+  
+        
+
         public int ReadTimeout = 1000; //ms
         public int WriteTimeout = 1000; //ms
 
@@ -588,7 +591,7 @@ namespace ShimmerAPI
         }
 
         //Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection
-        public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration)
+        public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalExpPower)
         {
             DeviceName = devName;
             SamplingRate = samplingRate;
@@ -603,6 +606,12 @@ namespace ShimmerAPI
             LowPowerGyroEnabled = enableLowPowerGyro;
             LowPowerMagEnabled = enableLowPowerMag;
             SetupDevice = true;
+            if (internalExpPower) { 
+                InternalExpPower = 1;
+            } else
+            {
+                InternalExpPower = 0;
+            }
         }
 
         //Shimmer2 constructor, to set the Shimmer device according to specified settings upon connection
@@ -1011,10 +1020,7 @@ namespace ShimmerAPI
                                 }
                                 break;
                             case (byte)PacketTypeShimmer2.INQUIRY_RESPONSE:
-                                if (ShimmerState != SHIMMER_STATE_CONNECTED)
-                                {
-                                    SetState(SHIMMER_STATE_CONNECTED);
-                                }
+                                
                                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2 || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R)
                                 {
                                     for (i = 0; i < 5; i++)
@@ -1042,6 +1048,11 @@ namespace ShimmerAPI
                                         buffer.Add((byte)ReadByte());
                                     }
                                     InterpretInquiryResponseShimmer3(buffer);
+                                }
+                                if (ShimmerState != SHIMMER_STATE_CONNECTED)
+                                {
+                                    SetupDevice = false; //device has been setup
+                                    SetState(SHIMMER_STATE_CONNECTED);
                                 }
                                 buffer.Clear();
                                 break;
@@ -1276,7 +1287,7 @@ namespace ShimmerAPI
                                 UpdateBasedOnCompatibilityCode();
                                 break;
                             case (byte)PacketTypeShimmer3.EXG_REGS_RESPONSE:
-                                System.Console.WriteLine("EXG r r" + ChipID);
+                                //System.Console.WriteLine("EXG r r" + ChipID);
                                 if (ChipID == 1)
                                 {
                                     ReadByte();
@@ -1533,6 +1544,7 @@ namespace ShimmerAPI
                 WriteGyroRange(GyroRange);
                 WriteMagRange(MagGain);
                 WriteSamplingRate(SamplingRate);
+                WriteInternalExpPower(InternalExpPower);
                 WriteSensors(SetEnabledSensors); //this should always be the last command
                 SetLowPowerAccel(LowPowerAccelEnabled);
                 SetLowPowerMag(LowPowerMagEnabled);
@@ -1571,7 +1583,7 @@ namespace ShimmerAPI
                 magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
                 GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
-                internalExpPower = (int)((ConfigSetupByte0 >> 24) & 0x01);
+                InternalExpPower = (int)((ConfigSetupByte0 >> 24) & 0x01);
                 Mpu9150AccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03);
 
                 if ((magSamplingRate == 4 && ADCRawSamplingRateValue < 3200)) //3200 us the raw ADC value and not in HZ
@@ -3342,8 +3354,10 @@ namespace ShimmerAPI
                     {
                         System.Threading.Thread.Sleep(500);
                     }
-
-                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.INQUIRY_COMMAND }, 0, 1);
+                    if (!SetupDevice) //the initialize method will already end with an inquiry
+                    {
+                        WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.INQUIRY_COMMAND }, 0, 1);
+                    }
                     // give the shimmer a chance to process the previous command (required?)
                     System.Threading.Thread.Sleep(500);
                     if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
@@ -3359,8 +3373,10 @@ namespace ShimmerAPI
                     byte thirdByte = (byte)(sensors >> 16 & 0xff);
                     WriteBytes(new byte[4] { (byte)PacketTypeShimmer2.SET_SENSORS_COMMAND, firstByte, secondByte, thirdByte }, 0, 4);
                     System.Threading.Thread.Sleep(1000);
-
-                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.INQUIRY_COMMAND }, 0, 1);
+                    if (!SetupDevice) //the initialize method will already end with an inquiry
+                    {
+                        WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.INQUIRY_COMMAND }, 0, 1);
+                    }
                     // give the shimmer a chance to process the previous command (required?)
                     System.Threading.Thread.Sleep(500);
                 }
@@ -4050,12 +4066,12 @@ namespace ShimmerAPI
 
         public int GetInternalExpPower()
         {
-            return internalExpPower;
+            return InternalExpPower;
         }
 
         public void SetInternalExpPower(int value)
         {
-            internalExpPower = value;
+            InternalExpPower = value;
         }
 
         public int GetPressureResolution()
@@ -4577,7 +4593,7 @@ namespace ShimmerAPI
         /// <param name="chipID">chipID = 1 or chipID = 2</param>
         public void ReadEXGConfigurations(int chipID)
         {
-            System.Console.WriteLine("EXG" + chipID);
+            //System.Console.WriteLine("EXG" + chipID);
             ChipID = chipID;
             //if ((FirmwareIdentifier == 1 && FirmwareVersion >= 0.3) || FirmwareIdentifier == 3)
             if (CompatibilityCode >= 3)
@@ -4791,7 +4807,7 @@ namespace ShimmerAPI
         {
             WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_INTERNAL_EXP_POWER_ENABLE_COMMAND, (byte)expPower }, 0, 2);
             System.Threading.Thread.Sleep(200);
-            internalExpPower = expPower;
+            InternalExpPower = expPower;
         }
 
         /// <summary>
@@ -5519,11 +5535,22 @@ namespace ShimmerAPI
             return MinorEventIdentifier;
         }
 
-   
+       
+
     }
 
 
+    public class Shimmer3Configuration
+    {
+        public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP1 = new byte[] { 0, (byte)160, 16, 64, 64, 45, 0, 0, 2, 3 };
+        public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP2 = new byte[] { 0, (byte)160, 16, 64, 71, 0, 0, 0, 2, 1 };
+        public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP1 = new byte[] { 0, (byte)160, 16, 105, 96, 32, 0, 0, 2, 3 };
+        public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP2 = new byte[] { 0, (byte)160, 16, 225, 225, 0, 0, 0, 2, 1 };
+        public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP1 = new byte[] { 4, (byte)163, 16, 69, 69, 0, 0, 0, 2, 1 };
+        public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP2 = new byte[] { 4, (byte)163, 16, 69, 69, 0, 0, 0, 2, 1 };
 
+
+    }
 
 
 }
