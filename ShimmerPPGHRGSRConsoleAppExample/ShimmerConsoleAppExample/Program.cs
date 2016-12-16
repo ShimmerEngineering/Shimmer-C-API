@@ -12,15 +12,15 @@ namespace ShimmerConsoleAppExample
     {
         Filter LPF_PPG;
         Filter HPF_PPG;
-        private PPGtoHRAlgorithm PPGtoHeartRateCalculation;
-        private int NumberOfHeartBeatsToAverage = 1;
-        private int TrainingPeriodPPG = 10; //10 second buffer
+        PPGtoHRAlgorithm PPGtoHeartRateCalculation;
+        int NumberOfHeartBeatsToAverage = 1;
+        int TrainingPeriodPPG = 10; //10 second buffer
         double LPF_CORNER_FREQ_HZ = 5;
         double HPF_CORNER_FREQ_HZ = 0.5;
         Shimmer Shimmer;
         double SamplingRate = 128;
         int Count = 0;
-        public bool FirstTime = true;
+        bool FirstTime = true;
 
         //The index of the signals originating from ShimmerBluetooth 
         int IndexAccelX;
