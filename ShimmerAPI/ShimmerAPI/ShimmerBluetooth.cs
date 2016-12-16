@@ -5540,7 +5540,66 @@ namespace ShimmerAPI
 
     }
 
+    /// <summary>
+    /// Contains Configurations specific to Shimmer devices (e.g. both Shimmer2 and Shimmer3)
+    /// </summary>
+    public class ShimmerConfiguration
+    {
+        public class SignalNames
+        {
+            public static readonly String TIMESTAMP = "Timestamp";
+        }
+        public class SignalFormats
+        {
+            public static readonly String CAL = "CAL";
+            public static readonly String RAW = "RAW";
+        }
+    }
 
+    /// <summary>
+    /// Contains Configurations specific to Shimmer2 devices
+    /// </summary>
+    public class Shimmer2Configuration
+    {
+        
+        public class SignalNames
+        {
+            public static readonly String ACCELEROMETER_X = "Accelerometer X";
+            public static readonly String ACCELEROMETER_Y = "Accelerometer Y";
+            public static readonly String ACCELEROMETER_Z = "Accelerometer Z";
+            public static readonly String V_SENSE_BATT = "VSenseBatt";
+            public static readonly String V_SENSE_REG = "VSenseReg";
+            public static readonly String MAGNETOMETER_X = "Magnetometer X";
+            public static readonly String MAGNETOMETER_Y = "Magnetometer Y";
+            public static readonly String MAGNETOMETER_Z = "Magnetometer Z";
+            public static readonly String GYROSCOPE_X = "Gyroscope X";
+            public static readonly String GYROSCOPE_Y = "Gyroscope Y";
+            public static readonly String GYROSCOPE_Z = "Gyroscope Z";
+            public static readonly String EXPBOARD_A0 = "ExpBoard A0";
+            public static readonly String EXPBOARD_A7 = "ExpBoard A7";
+            public static readonly String GSR = "GSR";
+            public static readonly String ECG_RA_LL = "ECG RA LL";
+            public static readonly String ECG_LA_LL = "ECG LA LL";
+            public static readonly String EMG = "EMG";
+            public static readonly String STRAIN_GAUGE_HIGH = "Strain Gauge High";
+            public static readonly String STRAIN_GAUGE_LOW = "Strain Gauge Low";
+            public static readonly String QUATERNION_0 = "Quaternion 0";
+            public static readonly String QUATERNION_1 = "Quaternion 1";
+            public static readonly String QUATERNION_2 = "Quaternion 2";
+            public static readonly String QUATERNION_3 = "Quaternion 3";
+            public static readonly String HEART_RATE = "Heart Rate";
+            public static readonly String ANGLE_AXIS_A = "Angle Axis A";
+            public static readonly String ANGLE_AXIS_X = "Angle Axis X";
+            public static readonly String ANGLE_AXIS_Y = "Angle Axis Y";
+            public static readonly String ANGLE_AXIS_Z = "Angle Axis Z";
+        }
+
+
+    }
+
+    /// <summary>
+    /// Contains Configurations specific to Shimmer3 devices
+    /// </summary>
     public class Shimmer3Configuration
     {
         public static readonly byte[] EXG_ECG_CONFIGURATION_CHIP1 = new byte[] { 0x00, 0xA0, 0x10, 0x40, 0x40, 0x2D, 0x00, 0x00, 0x02, 0x03 };
@@ -5549,6 +5608,59 @@ namespace ShimmerAPI
         public static readonly byte[] EXG_EMG_CONFIGURATION_CHIP2 = new byte[] { 0x00, 0xA0, 0x10, 0xE1, 0xE1, 0x00, 0x00, 0x00, 0x02, 0x01 };
         public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP1 = new byte[] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
         public static readonly byte[] EXG_TEST_SIGNAL_CONFIGURATION_CHIP2 = new byte[] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
+
+        public class SignalNames
+        {
+            public static readonly String LOW_NOISE_ACCELEROMETER_X = "Low Noise Accelerometer X";
+            public static readonly String LOW_NOISE_ACCELEROMETER_Y = "Low Noise Accelerometer Y";
+            public static readonly String LOW_NOISE_ACCELEROMETER_Z = "Low Noise Accelerometer Z";
+            public static readonly String V_SENSE_BATT = "VSenseBatt";
+            public static readonly String WIDE_RANGE_ACCELEROMETER_X = "Wide Range Accelerometer X";
+            public static readonly String WIDE_RANGE_ACCELEROMETER_Y = "Wide Range Accelerometer Y";
+            public static readonly String WIDE_RANGE_ACCELEROMETER_Z = "Wide Range Accelerometer Z";
+            public static readonly String MAGNETOMETER_X = "Magnetometer X";
+            public static readonly String MAGNETOMETER_Y = "Magnetometer Y";
+            public static readonly String MAGNETOMETER_Z = "Magnetometer Z";
+            public static readonly String GYROSCOPE_X = "Gyroscope X";
+            public static readonly String GYROSCOPE_Y = "Gyroscope Y";
+            public static readonly String GYROSCOPE_Z = "Gyroscope Z";
+            public static readonly String EXTERNAL_ADC_A7 = "External ADC A7";
+            public static readonly String EXTERNAL_ADC_A6 = "External ADC A6";
+            public static readonly String EXTERNAL_ADC_A15 = "External ADC A15";
+            public static readonly String INTERNAL_ADC_A1 = "Internal ADC A1";
+            public static readonly String INTERNAL_ADC_A12 = "Internal ADC A12";
+            public static readonly String INTERNAL_ADC_A13 = "Internal ADC A13";
+            public static readonly String INTERNAL_ADC_A14 = "Internal ADC A14";
+            public static readonly String PRESSURE = "Pressure";
+            public static readonly String TEMPERATURE = "Temperature";
+            public static readonly String GSR = "GSR";
+            public static readonly String EXG1_STATUS = "EXG1 Status";
+            public static readonly String EXG2_STATUS = "EXG2 Status";
+            public static readonly String ECG_LL_RA = "ECG LL-RA";
+            public static readonly String ECG_LA_RA = "ECG LA-RA";
+            public static readonly String ECG_VX_RL = "ECG Vx-RL";
+            public static readonly String EMG_CH1 = "EMG CH1";
+            public static readonly String EMG_CH2 = "EMG CH2";
+            public static readonly String EXG1_CH1 = "EXG1 CH1";
+            public static readonly String EXG1_CH2 = "EXG1 CH2";
+            public static readonly String EXG2_CH1 = "EXG2 CH1";
+            public static readonly String EXG2_CH2 = "EXG2 CH2";
+            public static readonly String EXG1_CH1_16BIT = "EXG1 CH1 16Bit";
+            public static readonly String EXG1_CH2_16BIT = "EXG1 CH2 16Bit";
+            public static readonly String EXG2_CH1_16BIT = "EXG2 CH1 16Bit";
+            public static readonly String EXG2_CH2_16BIT = "EXG2 CH2 16Bit";
+            public static readonly String BRIGE_AMPLIFIER_HIGH = "Bridge Amplifier High";
+            public static readonly String BRIGE_AMPLIFIER_LOW = "Bridge Amplifier Low";
+            public static readonly String QUATERNION_0 = "Quaternion 0";
+            public static readonly String QUATERNION_1 = "Quaternion 1";
+            public static readonly String QUATERNION_2 = "Quaternion 2";
+            public static readonly String QUATERNION_3 = "Quaternion 3";
+            public static readonly String ANGLE_AXIS_A = "Angle Axis A";
+            public static readonly String ANGLE_AXIS_X = "Angle Axis X";
+            public static readonly String ANGLE_AXIS_Y = "Angle Axis Y";
+            public static readonly String ANGLE_AXIS_Z = "Angle Axis Z";
+        }
+               
 
     }
 

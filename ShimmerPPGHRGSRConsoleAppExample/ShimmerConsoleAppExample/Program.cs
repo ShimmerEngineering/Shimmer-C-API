@@ -89,12 +89,12 @@ namespace ShimmerConsoleAppExample
                     ObjectCluster objectCluster = (ObjectCluster)eventArgs.getObject();
                     if (FirstTime)
                     {
-                        IndexAccelX = objectCluster.GetIndex("Low Noise Accelerometer X", "CAL");
-                        IndexAccelY = objectCluster.GetIndex("Low Noise Accelerometer Y", "CAL");
-                        IndexAccelZ = objectCluster.GetIndex("Low Noise Accelerometer Z", "CAL");
-                        IndexGSR = objectCluster.GetIndex("GSR", "CAL");
-                        IndexPPG = objectCluster.GetIndex("Internal ADC A13", "CAL");
-                        IndexTimeStamp = objectCluster.GetIndex("Timestamp", "CAL");
+                        IndexAccelX = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X, ShimmerConfiguration.SignalFormats.CAL);
+                        IndexAccelY = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y, ShimmerConfiguration.SignalFormats.CAL);
+                        IndexAccelZ = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z, ShimmerConfiguration.SignalFormats.CAL);
+                        IndexGSR = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL);
+                        IndexPPG = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, ShimmerConfiguration.SignalFormats.CAL);
+                        IndexTimeStamp = objectCluster.GetIndex(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL);
                         FirstTime = false;
                     }
                     SensorData datax = objectCluster.GetData(IndexAccelX);
