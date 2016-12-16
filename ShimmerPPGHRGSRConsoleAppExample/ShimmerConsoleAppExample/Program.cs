@@ -94,7 +94,7 @@ namespace ShimmerConsoleAppExample
                         IndexAccelZ = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z, ShimmerConfiguration.SignalFormats.CAL);
                         IndexGSR = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL);
                         IndexPPG = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, ShimmerConfiguration.SignalFormats.CAL);
-                        IndexTimeStamp = objectCluster.GetIndex(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL);
+                        IndexTimeStamp = objectCluster.GetIndex(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL);
                         FirstTime = false;
                     }
                     SensorData datax = objectCluster.GetData(IndexAccelX);
@@ -113,7 +113,7 @@ namespace ShimmerConsoleAppExample
                     if (Count % SamplingRate == 0) //only display data every second
                     {
                         System.Console.WriteLine("AccelX: " + datax.Data + " AccelY: " + datay.Data + " AccelZ: " + dataz.Data);
-                        System.Console.WriteLine("GSR: " + dataGSR.Data + " PPG: " + dataPPG.Data + " HR: " + heartRate);
+                        System.Console.WriteLine("Time Stamp: "+ dataTS.Data + " GSR: " + dataGSR.Data + " PPG: " + dataPPG.Data + " HR: " + heartRate);
                     }
                     Count++;
                     break;

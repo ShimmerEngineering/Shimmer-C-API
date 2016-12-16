@@ -194,6 +194,8 @@ namespace ShimmerAPI
         public double PacketReceptionRate = 100;
         public int LastKnownHeartRate = 0;
         public Boolean FirstTimeCalTime = true;
+        public bool FirstSystemTimestamp = true;
+        public double FirstSystemTimeStampValue;
         public bool DefaultAccelParams = true;
         public bool DefaultWRAccelParams = true;
         public bool DefaultGyroParams = true;
@@ -2457,6 +2459,7 @@ namespace ShimmerAPI
         protected abstract String GetShimmerAddress();
         protected ObjectCluster BuildMsg(List<byte> packet)
         {
+
             ObjectCluster objectCluster = new ObjectCluster(GetShimmerAddress(), GetDeviceName());
             byte[] newPacketByte = packet.ToArray();
             long[] newPacket = ParseData(newPacketByte, SignalDataTypeArray);
@@ -2467,7 +2470,13 @@ namespace ShimmerAPI
             double calibratedTS = CalibrateTimeStamp(newPacket[iTimeStamp]);
             objectCluster.Add("Timestamp", "CAL", "mSecs", calibratedTS);
             double time = (DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
-
+            if (FirstSystemTimestamp)
+            {
+                FirstSystemTimeStampValue = time;
+                FirstSystemTimestamp = false;
+            }
+            double shimmerPCTimeStamp = FirstSystemTimeStampValue + calibratedTS;
+            objectCluster.Add(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL, "mSecs", shimmerPCTimeStamp);
 
             double[] accelerometer = new double[3];
             double[] gyroscope = new double[3];
@@ -3901,6 +3910,7 @@ namespace ShimmerAPI
                     CurrentTimeStampCycle = 0;
                     LastReceivedCalibratedTimeStamp = -1;
                     FirstTimeCalTime = true;
+                    FirstSystemTimestamp = true;
                     PacketLossCount = 0;
                     PacketReceptionRate = 100;
                     KeepObjectCluster = null; //This is important and is required!
@@ -5548,6 +5558,7 @@ namespace ShimmerAPI
         public class SignalNames
         {
             public static readonly String TIMESTAMP = "Timestamp";
+            public static readonly String SYSTEM_TIMESTAMP = "System Timestamp";
         }
         public class SignalFormats
         {
