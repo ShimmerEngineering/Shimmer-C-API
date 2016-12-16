@@ -49,7 +49,7 @@ namespace ShimmerConsoleAppExample
             //int enabledSensors = ((int)Shimmer.SensorBitmapShimmer3.SENSOR_A_ACCEL | (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG1_24BIT | (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG2_24BIT); 
 
             //shimmer = new Shimmer("ShimmerID1", "COM17");
-            Shimmer = new Shimmer("ShimmerID1", "COM18", SamplingRate, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
+            Shimmer = new Shimmer("ShimmerID1", "COM12", SamplingRate, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
 
             Shimmer.UICallback += this.HandleEvent;
             Shimmer.Connect();
@@ -112,8 +112,8 @@ namespace ShimmerConsoleAppExample
 
                     if (Count % SamplingRate == 0) //only display data every second
                     {
-                        System.Console.WriteLine("AccelX: " + datax.Data + " AccelY: " + datay.Data + " AccelZ: " + dataz.Data);
-                        System.Console.WriteLine("Time Stamp: "+ dataTS.Data + " GSR: " + dataGSR.Data + " PPG: " + dataPPG.Data + " HR: " + heartRate);
+                        System.Console.WriteLine("AccelX: " + datax.Data + " " + datax.Unit + " AccelY: " + datay.Data + " " + datay.Unit+ " AccelZ: " + dataz.Data + " " + dataz.Unit);
+                        System.Console.WriteLine("Time Stamp: "+ dataTS.Data+ " " + dataTS.Unit + " GSR: " + dataGSR.Data + " "+ dataGSR.Unit + " PPG: " + dataPPG.Data + " " + dataPPG.Unit + " HR: " + heartRate +" BPM");
                     }
                     Count++;
                     break;
