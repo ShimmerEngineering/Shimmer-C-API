@@ -2007,7 +2007,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Gyroscope X";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.GYROSCOPE_X;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_GYRO);
@@ -2025,7 +2025,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Gyroscope Y";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.GYROSCOPE_Y;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_GYRO);
@@ -2042,7 +2042,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Gyroscope Z";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.GYROSCOPE_Z;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_GYRO);
@@ -2059,7 +2059,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Magnetometer X";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.MAGNETOMETER_X;
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_MAG);
@@ -2079,7 +2079,7 @@ namespace ShimmerAPI
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
-                        signalNameArray[i + 1] = "Magnetometer Y";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.MAGNETOMETER_Y;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_MAG);
                     }
 
@@ -2098,7 +2098,7 @@ namespace ShimmerAPI
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
-                        signalNameArray[i + 1] = "Magnetometer Z";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.MAGNETOMETER_Z;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_MAG);
                     }
 
@@ -2114,7 +2114,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "ECG RA LL";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.ECG_RA_LL;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_ECG);
@@ -2134,7 +2134,7 @@ namespace ShimmerAPI
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
 
-                        signalNameArray[i + 1] = "ECG LA LL";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.ECG_LA_LL;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_ECG);
@@ -2151,7 +2151,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "GSR Raw";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.GSR;
                         signalDataTypeArray[i + 1] = "u16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_GSR);
@@ -2168,7 +2168,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "GSR Res";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.GSR_RES;
                         signalDataTypeArray[i + 1] = "u16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_GSR);
@@ -2185,7 +2185,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "EMG";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.EMG;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_EMG);
@@ -2202,7 +2202,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Exp Board A0";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.EXPBOARD_A0;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_EXP_BOARD_A0);
@@ -2219,7 +2219,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Exp Board A7";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.EXPBOARD_A7;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_EXP_BOARD_A7);
@@ -2236,7 +2236,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Strain Gauge High";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.STRAIN_GAUGE_HIGH;
 
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
@@ -2254,7 +2254,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Strain Gauge Low";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.STRAIN_GAUGE_LOW;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_STRAIN_GAUGE);
@@ -2271,7 +2271,7 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
-                        signalNameArray[i + 1] = "Heart Rate";
+                        signalNameArray[i + 1] = Shimmer2Configuration.SignalNames.HEART_RATE;
                         if (CompatibilityCode == 1)
                         {
                             signalDataTypeArray[i + 1] = "u8";
@@ -2946,9 +2946,9 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_ACCEL) > 0))
                 {
-                    int iAccelX = getSignalIndex("Accelerometer X"); //find index
-                    int iAccelY = getSignalIndex("Accelerometer Y"); //find index
-                    int iAccelZ = getSignalIndex("Accelerometer Z"); //find index
+                    int iAccelX = getSignalIndex(Shimmer2Configuration.SignalNames.ACCELEROMETER_X); //find index
+                    int iAccelY = getSignalIndex(Shimmer2Configuration.SignalNames.ACCELEROMETER_Y); //find index
+                    int iAccelZ = getSignalIndex(Shimmer2Configuration.SignalNames.ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel);
                     string units;
@@ -2960,12 +2960,12 @@ namespace ShimmerAPI
                     {
                         units = "m/(sec^2)";
                     }
-                    objectCluster.Add("Accelerometer X", "RAW", "no units", newPacket[iAccelX]);
-                    objectCluster.Add("Accelerometer X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Accelerometer Y", "RAW", "no units", newPacket[iAccelY]);
-                    objectCluster.Add("Accelerometer Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Accelerometer Z", "RAW", "no units", newPacket[iAccelZ]);
-                    objectCluster.Add("Accelerometer Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ACCELEROMETER_X, "RAW", "no units", newPacket[iAccelX]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ACCELEROMETER_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ACCELEROMETER_Y, "RAW", "no units", newPacket[iAccelY]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ACCELEROMETER_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ACCELEROMETER_Z, "RAW", "no units", newPacket[iAccelZ]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ACCELEROMETER_Z, "CAL", units, datatemp[2]);
                     accelerometer[0] = datatemp[0];
                     accelerometer[1] = datatemp[1];
                     accelerometer[2] = datatemp[2];
@@ -2973,9 +2973,9 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_GYRO) > 0))
                 {
-                    int iGyroX = getSignalIndex("Gyroscope X");
-                    int iGyroY = getSignalIndex("Gyroscope Y");
-                    int iGyroZ = getSignalIndex("Gyroscope Z");
+                    int iGyroX = getSignalIndex(Shimmer2Configuration.SignalNames.GYROSCOPE_X);
+                    int iGyroY = getSignalIndex(Shimmer2Configuration.SignalNames.GYROSCOPE_Y);
+                    int iGyroZ = getSignalIndex(Shimmer2Configuration.SignalNames.GYROSCOPE_Z);
                     double[] datatemp = new double[3] { newPacket[iGyroX], newPacket[iGyroY], newPacket[iGyroZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixGyro, SensitivityMatrixGyro, OffsetVectorGyro);
                     string units;
@@ -2987,12 +2987,12 @@ namespace ShimmerAPI
                     {
                         units = "deg/sec";
                     }
-                    objectCluster.Add("Gyroscope X", "RAW", "no units", newPacket[iGyroX]);
-                    objectCluster.Add("Gyroscope X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Gyroscope Y", "RAW", "no units", newPacket[iGyroY]);
-                    objectCluster.Add("Gyroscope Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Gyroscope Z", "RAW", "no units", newPacket[iGyroZ]);
-                    objectCluster.Add("Gyroscope Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GYROSCOPE_X, "RAW", "no units", newPacket[iGyroX]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GYROSCOPE_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GYROSCOPE_Y, "RAW", "no units", newPacket[iGyroY]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GYROSCOPE_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GYROSCOPE_Z, "RAW", "no units", newPacket[iGyroZ]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GYROSCOPE_Z, "CAL", units, datatemp[2]);
 
                     gyroscope[0] = datatemp[0] * Math.PI / 180;
                     gyroscope[1] = datatemp[1] * Math.PI / 180;
@@ -3029,9 +3029,9 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_MAG) > 0))
                 {
-                    int iMagX = getSignalIndex("Magnetometer X");
-                    int iMagY = getSignalIndex("Magnetometer Y");
-                    int iMagZ = getSignalIndex("Magnetometer Z");
+                    int iMagX = getSignalIndex(Shimmer2Configuration.SignalNames.MAGNETOMETER_X);
+                    int iMagY = getSignalIndex(Shimmer2Configuration.SignalNames.MAGNETOMETER_Y);
+                    int iMagZ = getSignalIndex(Shimmer2Configuration.SignalNames.MAGNETOMETER_Z);
                     double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
                     string units;
@@ -3043,12 +3043,12 @@ namespace ShimmerAPI
                     {
                         units = "local";
                     }
-                    objectCluster.Add("Magnetometer X", "RAW", "no units", newPacket[iMagX]);
-                    objectCluster.Add("Magnetometer X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Magnetometer Y", "RAW", "no units", newPacket[iMagY]);
-                    objectCluster.Add("Magnetometer Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Magnetometer Z", "RAW", "no units", newPacket[iMagZ]);
-                    objectCluster.Add("Magnetometer Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.MAGNETOMETER_X, "RAW", "no units", newPacket[iMagX]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.MAGNETOMETER_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.MAGNETOMETER_Y, "RAW", "no units", newPacket[iMagY]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.MAGNETOMETER_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.MAGNETOMETER_Z, "RAW", "no units", newPacket[iMagZ]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.MAGNETOMETER_Z, "CAL", units, datatemp[2]);
 
                     magnetometer[0] = datatemp[0];
                     magnetometer[1] = datatemp[1];
@@ -3057,7 +3057,7 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_GSR) > 0))
                 {
-                    int iGSR = getSignalIndex("GSR Raw");
+                    int iGSR = getSignalIndex(Shimmer2Configuration.SignalNames.GSR);
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
                     double p1 = 0, p2 = 0;
@@ -3087,13 +3087,13 @@ namespace ShimmerAPI
                         p2 = -0.3014;
                     }
                     datatemp = CalibrateGsrData(datatemp, p1, p2);
-                    objectCluster.Add("GSR", "RAW", "no units", newPacket[iGSR]);
-                    objectCluster.Add("GSR", "CAL", "kOhms*", datatemp);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, "RAW", "no units", newPacket[iGSR]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, "CAL", "kOhms*", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_ECG) > 0))
                 {
-                    int iECGRALL = getSignalIndex("ECG RA LL");
-                    int iECGLALL = getSignalIndex("ECG LA LL");
+                    int iECGRALL = getSignalIndex(Shimmer2Configuration.SignalNames.ECG_RA_LL);
+                    int iECGLALL = getSignalIndex(Shimmer2Configuration.SignalNames.ECG_LA_LL);
                     double[] datatemp = new double[2] { newPacket[iECGRALL], newPacket[iECGLALL] };
                     datatemp[0] = CalibrateU12AdcValue(datatemp[0], OffsetECGRALL, 3, GainECGRALL);
                     datatemp[1] = CalibrateU12AdcValue(datatemp[1], OffsetECGLALL, 3, GainECGLALL);
@@ -3102,14 +3102,14 @@ namespace ShimmerAPI
                     {
                         units = "mVolts*";
                     }
-                    objectCluster.Add("ECG RA LL", "RAW", "no units", newPacket[iECGRALL]);
-                    objectCluster.Add("ECG RA LL", "CAL", units, datatemp[0]);
-                    objectCluster.Add("ECG LA LL", "RAW", "no units", newPacket[iECGLALL]);
-                    objectCluster.Add("ECG LA LL", "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ECG_RA_LL, "RAW", "no units", newPacket[iECGRALL]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ECG_RA_LL, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ECG_LA_LL, "RAW", "no units", newPacket[iECGLALL]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ECG_LA_LL, "CAL", units, datatemp[1]);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_EMG) > 0))
                 {
-                    int iEMG = getSignalIndex("EMG");
+                    int iEMG = getSignalIndex(Shimmer2Configuration.SignalNames.EMG);
                     double datatemp = newPacket[iEMG];
                     datatemp = CalibrateU12AdcValue(datatemp, OffsetEMG, 3, GainEMG);
                     string units = "mVolts";
@@ -3117,24 +3117,24 @@ namespace ShimmerAPI
                     {
                         units = "mVolts*";
                     }
-                    objectCluster.Add("EMG", "RAW", "no units", newPacket[iEMG]);
-                    objectCluster.Add("EMG", "CAL", units, datatemp);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.EMG, "RAW", "no units", newPacket[iEMG]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.EMG, "CAL", units, datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_STRAIN_GAUGE) > 0))
                 {
-                    int iSGHigh = getSignalIndex("Strain Gauge High");
-                    int iSGLow = getSignalIndex("Strain Gauge Low");
+                    int iSGHigh = getSignalIndex(Shimmer2Configuration.SignalNames.STRAIN_GAUGE_HIGH);
+                    int iSGLow = getSignalIndex(Shimmer2Configuration.SignalNames.STRAIN_GAUGE_LOW);
                     double[] datatemp = new double[2] { newPacket[iSGHigh], newPacket[iSGLow] };
                     datatemp[0] = CalibrateU12AdcValue(datatemp[0], OffsetSGHigh, VRef, GainSGHigh);
                     datatemp[1] = CalibrateU12AdcValue(datatemp[1], OffsetSGLow, VRef, GainSGLow);
-                    objectCluster.Add("Strain Gauge High", "RAW", "no units", newPacket[iSGHigh]);
-                    objectCluster.Add("Strain Gauge High", "CAL", "mVolts*", datatemp[0]);
-                    objectCluster.Add("Strain Gauge Low", "RAW", "no units", newPacket[iSGLow]);
-                    objectCluster.Add("Strain Gauge Low", "CAL", "mVolts*", datatemp[1]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.STRAIN_GAUGE_HIGH, "RAW", "no units", newPacket[iSGHigh]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.STRAIN_GAUGE_HIGH, "CAL", "mVolts*", datatemp[0]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.STRAIN_GAUGE_LOW, "RAW", "no units", newPacket[iSGLow]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.STRAIN_GAUGE_LOW, "CAL", "mVolts*", datatemp[1]);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_HEART) > 0))
                 {
-                    int iHeartRate = getSignalIndex("Heart Rate");
+                    int iHeartRate = getSignalIndex(Shimmer2Configuration.SignalNames.HEART_RATE);
                     double datatemp = newPacket[iHeartRate];
                     double cal = datatemp;
                     //if (FirmwareVersion == 0.1)
@@ -3154,34 +3154,34 @@ namespace ShimmerAPI
                             LastKnownHeartRate = (int)cal;
                         }
                     }
-                    objectCluster.Add("Heart Rate", "RAW", "no units", newPacket[iHeartRate]);
-                    objectCluster.Add("Heart Rate", "CAL", "mVolts*", cal);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.HEART_RATE, "RAW", "no units", newPacket[iHeartRate]);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.HEART_RATE, "CAL", "mVolts*", cal);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_EXP_BOARD_A0) > 0))
                 {
-                    int iA0 = getSignalIndex("Exp Board A0");
+                    int iA0 = getSignalIndex(Shimmer2Configuration.SignalNames.EXPBOARD_A0);
                     double datatemp = newPacket[iA0];
                     datatemp = CalibrateU12AdcValue(datatemp, 0, 3, 1) * 1.988;
                     if (GetPMux())
                     {
-                        objectCluster.Add("VSenseReg", "RAW", "no units", newPacket[iA0]);
-                        objectCluster.Add("VSenseReg", "CAL", "mVolts*", datatemp);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.V_SENSE_REG, "RAW", "no units", newPacket[iA0]);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.V_SENSE_REG, "CAL", "mVolts*", datatemp);
                     }
                     else
                     {
-                        objectCluster.Add("Exp Board A0", "RAW", "no units", newPacket[iA0]);
-                        objectCluster.Add("Exp Board A0", "CAL", "mVolts*", datatemp);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.EXPBOARD_A0, "RAW", "no units", newPacket[iA0]);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.EXPBOARD_A0, "CAL", "mVolts*", datatemp);
                     }
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_EXP_BOARD_A7) > 0))
                 {
-                    int iA7 = getSignalIndex("Exp Board A7");
+                    int iA7 = getSignalIndex(Shimmer2Configuration.SignalNames.EXPBOARD_A7);
                     double datatemp = newPacket[iA7];
                     datatemp = CalibrateU12AdcValue(datatemp, 0, 3, 1) * 2;
                     if (GetPMux())
                     {
-                        objectCluster.Add("VSenseBatt", "RAW", "no units", newPacket[iA7]);
-                        objectCluster.Add("VSenseBatt", "CAL", "mVolts*", datatemp);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.V_SENSE_BATT, "RAW", "no units", newPacket[iA7]);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.V_SENSE_BATT, "CAL", "mVolts*", datatemp);
                         if (datatemp < 3400)
                         {
                             //System.Threading.Thread.Sleep(500);
@@ -3205,8 +3205,8 @@ namespace ShimmerAPI
                     }
                     else
                     {
-                        objectCluster.Add("Exp Board A7", "RAW", "no units", newPacket[iA7]);
-                        objectCluster.Add("Exp Board A7", "CAL", "mVolts*", datatemp);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.EXPBOARD_A7, "RAW", "no units", newPacket[iA7]);
+                        objectCluster.Add(Shimmer2Configuration.SignalNames.EXPBOARD_A7, "CAL", "mVolts*", datatemp);
                     }
 
                 }
@@ -3223,14 +3223,14 @@ namespace ShimmerAPI
                     Rx = q.q2 / Math.Sin(rho);
                     Ry = q.q3 / Math.Sin(rho);
                     Rz = q.q4 / Math.Sin(rho);
-                    objectCluster.Add("Axis Angle A", "CAL", "local", theta);
-                    objectCluster.Add("Axis Angle X", "CAL", "local", Rx);
-                    objectCluster.Add("Axis Angle Y", "CAL", "local", Ry);
-                    objectCluster.Add("Axis Angle Z", "CAL", "local", Rz);
-                    objectCluster.Add("Quaternion 0", "CAL", "local", q.q1);
-                    objectCluster.Add("Quaternion 1", "CAL", "local", q.q2);
-                    objectCluster.Add("Quaternion 2", "CAL", "local", q.q3);
-                    objectCluster.Add("Quaternion 3", "CAL", "local", q.q4);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_A, "CAL", "local", theta);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_X, "CAL", "local", Rx);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_Y, "CAL", "local", Ry);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_Z, "CAL", "local", Rz);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_0, "CAL", "local", q.q1);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_1, "CAL", "local", q.q2);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_2, "CAL", "local", q.q3);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_3, "CAL", "local", q.q4);
                 }
             }
             return objectCluster;
@@ -5586,9 +5586,10 @@ namespace ShimmerAPI
             public static readonly String GYROSCOPE_X = "Gyroscope X";
             public static readonly String GYROSCOPE_Y = "Gyroscope Y";
             public static readonly String GYROSCOPE_Z = "Gyroscope Z";
-            public static readonly String EXPBOARD_A0 = "ExpBoard A0";
-            public static readonly String EXPBOARD_A7 = "ExpBoard A7";
+            public static readonly String EXPBOARD_A0 = "Exp Board A0";
+            public static readonly String EXPBOARD_A7 = "Exp Board A7";
             public static readonly String GSR = "GSR";
+            public static readonly String GSR_RES = "GSR Res";
             public static readonly String ECG_RA_LL = "ECG RA LL";
             public static readonly String ECG_LA_LL = "ECG LA LL";
             public static readonly String EMG = "EMG";
