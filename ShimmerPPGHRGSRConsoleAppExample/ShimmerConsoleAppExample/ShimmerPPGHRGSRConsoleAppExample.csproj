@@ -38,8 +38,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
     </Reference>
-    <Reference Include="ShimmerLibrary">
-      <HintPath>..\..\..\..\Visual Studio 2015\Projects\ConsoleApplication1\ConsoleApplication1\ShimmerLibrary.dll</HintPath>
+    <Reference Include="ShimmerLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ShimmerAPI\ShimmerAPI\Libraries\ShimmerLibrary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
