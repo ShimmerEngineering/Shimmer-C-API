@@ -66,9 +66,9 @@ namespace ShimmerConsoleAppExample
                     System.Diagnostics.Debug.Write(((Shimmer)sender).GetDeviceName() + " State = " + ((Shimmer)sender).GetStateString() + System.Environment.NewLine);
                     int state = (int)eventArgs.getObject();
                     if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
-                    {
-                        Shimmer.StartStreaming();
+                    {   
                         System.Console.WriteLine("Shimmer is Connected");
+                        Task ignoredAwaitableResult = this.delayedWork();
                     }
                     else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTING)
                     {
@@ -119,5 +119,12 @@ namespace ShimmerConsoleAppExample
                     break;
             }
         }
+
+        private async Task delayedWork()
+        {
+            await Task.Delay(1000);
+            Shimmer.StartStreaming();
+        }
+
     }
 }
