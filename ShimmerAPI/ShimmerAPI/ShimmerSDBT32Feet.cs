@@ -401,7 +401,7 @@ namespace ShimmerAPI
                         // btsd changes 2
                         if (GetFirmwareIdentifier() == 3)
                         {
-                            System.Console.WriteLine("ShimmerLOG: Send START SDBT CMD");
+                            //System.Console.WriteLine("ShimmerLOG: Send START SDBT CMD");
                             System.Threading.Thread.Sleep(300);
                             WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.START_SDBT_COMMAND }, 0, 1);
                             System.Threading.Thread.Sleep(1500);
@@ -1507,7 +1507,7 @@ namespace ShimmerAPI
                                 {
                                     // btsd changes 2
                                     //PControlForm.buttonStart_Click1(); 
-                                    System.Console.WriteLine("Shimmer Self CMD");
+                                    //System.Console.WriteLine("Shimmer Self CMD");
                                     //StartStreamingandLog();
                                 }
                                 else if (!CurrentSensingStatus && (GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING))// to stop sensing
@@ -1701,7 +1701,7 @@ namespace ShimmerAPI
                             {
                                 if (CurrentSensingStatus && (GetState() != ShimmerBluetooth.SHIMMER_STATE_STREAMING))// to start sensing
                                 {
-                                    System.Console.WriteLine("S Stream 2");
+                                    //System.Console.WriteLine("S Stream 2");
                                     //StartStreamingandLog();
                                 }
                                 else if (!CurrentSensingStatus && (GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING))// to stop sensing

@@ -364,7 +364,7 @@ namespace ShimmerAPI
                     if (i == 0)
                     {
                         // btsd changes 2
-                        System.Console.WriteLine("GetSdDir(): " + GetSdDir());
+                        //System.Console.WriteLine("GetSdDir(): " + GetSdDir());
                         message = "BTStream + SDLog, Current SDLog Directory : Could not read the directory name.";
                         //PControlForm.ChangeStatusLabel("BTStream + SDLog, Current SDLog Directory : Could not read the directory name.");
 
@@ -422,7 +422,7 @@ namespace ShimmerAPI
                         // btsd changes 2
                         if (GetFirmwareIdentifier() == 3)
                         {
-                            System.Console.WriteLine("ShimmerLOG: Send START SDBT CMD");
+                            //System.Console.WriteLine("ShimmerLOG: Send START SDBT CMD");
                             //SetState(SHIMMER_STATE_STREAMING);
                             mWaitingForStartStreamingACK = true;
                             System.Threading.Thread.Sleep(300);
@@ -1534,7 +1534,7 @@ namespace ShimmerAPI
                 switch (b)
                 {
                     case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE: int inStreamCMD = ReadByte();
-                        System.Console.WriteLine("In Stream CMD Response");
+                        //System.Console.WriteLine("In Stream CMD Response");
                         if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
                             //STATUS: 0|0|0|STREAMING|LOGGING|SELFCMD|SENSING|DOCKED
@@ -1544,7 +1544,7 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
+                            //System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
 
                             //AS is this ok?
                             isLogging = logging;
@@ -1579,7 +1579,7 @@ namespace ShimmerAPI
                                 {
                                     // btsd changes 2
                                     //PControlForm.buttonStart_Click1(); 
-                                    System.Console.WriteLine("Shimmer Self CMD");
+                                    //System.Console.WriteLine("Shimmer Self CMD");
                                     //StartStreamingandLog();
                                 }
                                 else if (!CurrentSensingStatus && (GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING))// to stop sensing
@@ -1630,8 +1630,8 @@ namespace ShimmerAPI
                             }
                             //buffer.Add((byte)'\0');
                             SetSdDir(System.Text.Encoding.Default.GetString(buffer.ToArray()));
-                            System.Console.WriteLine("SetSdDir2: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
-                            System.Console.WriteLine("GetSdDir2: " + GetSdDir());
+                            //System.Console.WriteLine("SetSdDir2: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
+                            //System.Console.WriteLine("GetSdDir2: " + GetSdDir());
                             if (GetSdDir().Contains("data") &&
                                 GetSdDir().Contains(GetShimmerName()) &&
                                 GetSdDir().Contains(GetExperimentID()) &&
@@ -1703,7 +1703,7 @@ namespace ShimmerAPI
                                 buffer.Add((byte)ReadByte());
                             }
                             //buffer.Add((byte)'\0');
-                            System.Console.WriteLine("ShimmerName: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
+                            //System.Console.WriteLine("ShimmerName: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
                             SetShimmerName(System.Text.Encoding.Default.GetString(buffer.ToArray()));
                             buffer.Clear();
                         }
@@ -1717,7 +1717,7 @@ namespace ShimmerAPI
                                 buffer.Add((byte)ReadByte());
                             }
                             //buffer.Add((byte)'\0');
-                            System.Console.WriteLine("ExpID: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
+                            //System.Console.WriteLine("ExpID: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
                             SetExperimentID(System.Text.Encoding.Default.GetString(buffer.ToArray()));
                             buffer.Clear();
                         }
@@ -1733,7 +1733,7 @@ namespace ShimmerAPI
                             //buffer.Add((byte)'\0');
                             try
                             {
-                                System.Console.WriteLine("Config Time: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
+                                //System.Console.WriteLine("Config Time: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
                                 SetConfigTime(Convert.ToInt64(System.Text.Encoding.Default.GetString(buffer.ToArray())));
                             }
                             catch (FormatException)
@@ -1753,7 +1753,7 @@ namespace ShimmerAPI
                         SetDataReceived(true);
                         break;
                     case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE: int inStreamCMD = ReadByte();
-                        System.Console.WriteLine("CMD Response");
+                        //System.Console.WriteLine("CMD Response");
                         if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
                             //STATUS: 0|0|0|0|0|SELFCMD|SENSING|DOCKED
@@ -1763,7 +1763,7 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
+                            //System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
                             if (CurrentDockStatus != docked)
                             {
                                 CurrentDockStatus = docked;
@@ -1783,7 +1783,7 @@ namespace ShimmerAPI
                             {
                                 if (CurrentSensingStatus && (GetState() != ShimmerBluetooth.SHIMMER_STATE_STREAMING))// to start sensing
                                 {
-                                    System.Console.WriteLine("S Stream 2");
+                                    //System.Console.WriteLine("S Stream 2");
                                     //StartStreamingandLog();
                                 }
                                 else if (!CurrentSensingStatus && (GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING))// to stop sensing
