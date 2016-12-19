@@ -1,5 +1,5 @@
 # Shimmer-C-API Rev0.7 (BETA)
-The C# APi is currently in a BETA development state, users are free to use and provide feedback, for users working on production code we recommend downloading the API from the Shimmer Website http://www.shimmersensing.com/support/wireless-sensor-networks-download/
+The C# APi is currently in a BETA development state, users are free to use and provide feedback. For users working on production code we recommend downloading the API from the Shimmer Website http://www.shimmersensing.com/support/wireless-sensor-networks-download/
 
 To use, build the ShimmerAPI project and make sure the examples (e.g. ShimmerCapture) references the build dll.
 
