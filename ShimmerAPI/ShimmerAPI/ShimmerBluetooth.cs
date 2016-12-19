@@ -1948,7 +1948,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Low Noise Accelerometer X";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_A_ACCEL);
@@ -1965,7 +1965,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Low Noise Accelerometer Y";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_A_ACCEL);
@@ -1982,7 +1982,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Low Noise Accelerometer Z";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer2.SENSOR_ACCEL);
@@ -2000,7 +2000,7 @@ namespace ShimmerAPI
 
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "VSenseBatt"; //should be the battery but this will do for now
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.V_SENSE_BATT; //should be the battery but this will do for now
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_VBATT);
@@ -2020,7 +2020,7 @@ namespace ShimmerAPI
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
-                        signalNameArray[i + 1] = "Wide Range Accelerometer X";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_X;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_D_ACCEL);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
@@ -2037,7 +2037,7 @@ namespace ShimmerAPI
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
-                        signalNameArray[i + 1] = "Wide Range Accelerometer Y";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_D_ACCEL);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
@@ -2054,7 +2054,7 @@ namespace ShimmerAPI
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
-                        signalNameArray[i + 1] = "Wide Range Accelerometer Z";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_D_ACCEL);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
@@ -2070,7 +2070,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Magnetometer X";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
@@ -2089,7 +2089,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Magnetometer Y";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
@@ -2107,7 +2107,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Magnetometer Z";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
@@ -2126,7 +2126,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Gyroscope X";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_X;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
@@ -2144,7 +2144,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Gyroscope Y";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Y;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
@@ -2161,7 +2161,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Gyroscope Z";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Z;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
@@ -2178,7 +2178,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "External ADC A7";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXT_A7);
@@ -2195,7 +2195,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "External ADC A6";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXT_A6);
@@ -2212,7 +2212,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "External ADC A15";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXT_A15);
@@ -2229,7 +2229,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Internal ADC A1";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_INT_A1);
@@ -2247,7 +2247,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Internal ADC A12";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_INT_A12);
@@ -2264,7 +2264,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Internal ADC A13";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_INT_A13);
@@ -2289,7 +2289,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Internal ADC A14";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_INT_A14);
@@ -2299,7 +2299,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Temperature";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.TEMPERATURE;
                         signalDataTypeArray[i + 1] = "u16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
@@ -2309,7 +2309,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Pressure";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.PRESSURE;
                         signalDataTypeArray[i + 1] = "u24r";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
@@ -2319,7 +2319,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "GSR Raw";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GSR;
                         signalDataTypeArray[i + 1] = "u16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GSR);
@@ -2329,7 +2329,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG1 Sta";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_STATUS;
                         signalDataTypeArray[i + 1] = "u8";
                         packetSize = packetSize + 1;
                     }
@@ -2338,7 +2338,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG1 CH1";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH1;
                         signalDataTypeArray[i + 1] = "i24r";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT);
@@ -2348,7 +2348,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG1 CH2";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH2;
                         signalDataTypeArray[i + 1] = "i24r";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT);
@@ -2358,7 +2358,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG2 Sta";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_STATUS;
                         signalDataTypeArray[i + 1] = "u8";
                         packetSize = packetSize + 1;
                     }
