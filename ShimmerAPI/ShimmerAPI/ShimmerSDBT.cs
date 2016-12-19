@@ -56,9 +56,18 @@ namespace ShimmerAPI
             
         }
 
+        //Shimmer3 Constructor
+        public ShimmerSDBT(String devName, String bComPort, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower)
+            :base(devName, bComPort, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
+        {
+            
+        }
+
+        //Shimmer2R Constructor
         public ShimmerSDBT(String devID, String bComPort, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
             : base(devID, bComPort, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)
         {
+
         }
         //===================================================================
         //===================================================================
@@ -467,6 +476,22 @@ namespace ShimmerAPI
         
         protected override void InitializeShimmer3SDBT()
         {
+            if (SetupDevice == true)
+            {
+                WriteAccelRange(AccelRange);
+                WriteGSRRange(GSRRange);
+                WriteGyroRange(GyroRange);
+                WriteMagRange(MagGain);
+                WriteSamplingRate(SamplingRate);
+                WriteInternalExpPower(InternalExpPower);
+                WriteEXGConfigurations(Exg1RegArray, Exg2RegArray);
+                WriteSensors(SetEnabledSensors); //this should always be the last command
+                SetLowPowerAccel(LowPowerAccelEnabled);
+                SetLowPowerMag(LowPowerMagEnabled);
+                SetLowPowerGyro(LowPowerGyroEnabled);
+            }
+
+
             //BackgroundWorker worker;
             SetDataReceived(false);
 

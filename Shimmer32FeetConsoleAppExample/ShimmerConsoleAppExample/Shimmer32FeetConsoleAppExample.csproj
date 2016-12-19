@@ -7,11 +7,12 @@
     <ProjectGuid>{4D2B71B9-1E21-4266-9090-D883D0FCA63B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShimmerConsoleAppExample</RootNamespace>
-    <AssemblyName>ShimmerConsoleAppExample</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <RootNamespace>Shimmer32FeetConsoleAppExample</RootNamespace>
+    <AssemblyName>Shimmer32FeetConsoleAppExample</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

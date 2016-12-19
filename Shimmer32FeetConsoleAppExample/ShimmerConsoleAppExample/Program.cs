@@ -9,7 +9,7 @@ namespace ShimmerConsoleAppExample
 {
     class Program
     {
-        ShimmerSDBT shimmer;
+        ShimmerSDBT32Feet shimmer;
 
         static void Main(string[] args)
         {
@@ -20,8 +20,11 @@ namespace ShimmerConsoleAppExample
 
         public void start()
         {
-            int enabledSensors = ((int)Shimmer.SensorBitmapShimmer3.SENSOR_A_ACCEL); // this is to enable Accel
-            shimmer = new ShimmerSDBT("ShimmerID1", "COM17");
+            int enabledSensors = ((int)Shimmer.SensorBitmapShimmer3.SENSOR_A_ACCEL | (int)Shimmer.SensorBitmapShimmer3.SENSOR_GSR | (int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A13);
+
+            //shimmer = new Shimmer32Feet("ShimmerID1", "00:06:66:66:96:86");
+            shimmer = new ShimmerSDBT32Feet("ShimmerID1", "00:06:66:66:96:A9", 102.4, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
+
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();
             if (shimmer.GetState() == Shimmer.SHIMMER_STATE_CONNECTED)
@@ -38,7 +41,6 @@ namespace ShimmerConsoleAppExample
             switch (indicator)
             {
                 case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE:
-                    System.Diagnostics.Debug.Write(((Shimmer)sender).GetDeviceName() + " State = " + ((Shimmer)sender).GetStateString() + System.Environment.NewLine);
                     int state = (int)eventArgs.getObject();
                     if (state == (int)Shimmer.SHIMMER_STATE_CONNECTED)
                     {

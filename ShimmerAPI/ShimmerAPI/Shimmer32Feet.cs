@@ -44,7 +44,7 @@ using System.IO;
 
 namespace ShimmerAPI
 {
-    public class Shimmer32Feet:ShimmerBluetooth
+    public abstract class Shimmer32Feet:ShimmerBluetooth
     {
         
         protected String ComPort;
@@ -54,15 +54,24 @@ namespace ShimmerAPI
         BluetoothAddress addr;
         Stream peerStream;
         
-        public Shimmer32Feet(String devID, String bComPort)
+        public Shimmer32Feet(String devID, String bluetoothAddress)
             : base(devID)
         {
+            SetAddress(bluetoothAddress);
         }
 
-        public Shimmer32Feet(String devID, String bComPort, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
+        public Shimmer32Feet(String devName, String bluetoothAddress, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower)
+            :base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
+        {
+            SetAddress(bluetoothAddress);
+        }
+
+        public Shimmer32Feet(String devID, String bluetoothAddress, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
             : base(devID, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)
         {
+            SetAddress(bluetoothAddress);
         }
+
         protected override bool IsConnectionOpen(){
             return btClient.Connected;
         }

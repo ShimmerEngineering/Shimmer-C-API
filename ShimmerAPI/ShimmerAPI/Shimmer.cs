@@ -46,7 +46,7 @@ using System.Threading;
 
 namespace ShimmerAPI
 {
-    public class Shimmer : ShimmerBluetooth
+    public abstract class Shimmer : ShimmerBluetooth
     {
         protected String ComPort;
         public System.IO.Ports.SerialPort SerialPort = new System.IO.Ports.SerialPort();
