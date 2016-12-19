@@ -2731,7 +2731,7 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_GSR) > 0))
                 {
-                    int iGSR = getSignalIndex("GSR Raw");
+                    int iGSR = getSignalIndex(Shimmer3Configuration.SignalNames.GSR);
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
                     double p1 = 0, p2 = 0;
