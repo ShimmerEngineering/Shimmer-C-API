@@ -1933,7 +1933,7 @@ namespace ShimmerAPI
         {
             String[] signalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
             String[] signalDataTypeArray = new String[MAX_NUMBER_OF_SIGNALS];
-            signalNameArray[0] = "TimeStamp";
+            signalNameArray[0] = ShimmerConfiguration.SignalNames.TIMESTAMP;
             signalDataTypeArray[0] = "u16";
             int packetSize = 2; // Time stamp
             if (CompatibilityCode >= 6)
@@ -2367,7 +2367,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG2 CH1";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH1;
                         signalDataTypeArray[i + 1] = "i24r";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG2_24BIT);
@@ -2377,7 +2377,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG2 CH2";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH2;
                         signalDataTypeArray[i + 1] = "i24r";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG2_24BIT);
@@ -2387,7 +2387,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG1 CH1 16Bit";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG1_16BIT);
@@ -2397,7 +2397,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG1 CH2 16Bit";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG1_16BIT);
@@ -2407,7 +2407,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG2 CH1 16Bit";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG2_16BIT);
@@ -2417,7 +2417,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "EXG2 CH2 16Bit";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_EXG2_16BIT);
@@ -2427,7 +2427,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Bridge Amplifier High";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BRIDGE_AMP);
@@ -2437,7 +2437,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                     {
-                        signalNameArray[i + 1] = "Bridge Amplifier Low";
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BRIDGE_AMP);
@@ -2464,11 +2464,11 @@ namespace ShimmerAPI
             byte[] newPacketByte = packet.ToArray();
             long[] newPacket = ParseData(newPacketByte, SignalDataTypeArray);
 
-            int iTimeStamp = getSignalIndex("TimeStamp"); //find index
+            int iTimeStamp = getSignalIndex(ShimmerConfiguration.SignalNames.TIMESTAMP); //find index
             objectCluster.RawTimeStamp = (int)newPacket[iTimeStamp];
-            objectCluster.Add("Timestamp", "RAW", "no units", newPacket[iTimeStamp]);
+            objectCluster.Add(ShimmerConfiguration.SignalNames.TIMESTAMP, "RAW", "no units", newPacket[iTimeStamp]);
             double calibratedTS = CalibrateTimeStamp(newPacket[iTimeStamp]);
-            objectCluster.Add("Timestamp", "CAL", "mSecs", calibratedTS);
+            objectCluster.Add(ShimmerConfiguration.SignalNames.TIMESTAMP, "CAL", "mSecs", calibratedTS);
             double time = (DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
             if (FirstSystemTimestamp)
             {
@@ -2486,9 +2486,9 @@ namespace ShimmerAPI
             {
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0))
                 {
-                    int iAccelX = getSignalIndex("Low Noise Accelerometer X"); //find index
-                    int iAccelY = getSignalIndex("Low Noise Accelerometer Y"); //find index
-                    int iAccelZ = getSignalIndex("Low Noise Accelerometer Z"); //find index
+                    int iAccelX = getSignalIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X); //find index
+                    int iAccelY = getSignalIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y); //find index
+                    int iAccelZ = getSignalIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel);
                     string units;
@@ -2500,21 +2500,21 @@ namespace ShimmerAPI
                     {
                         units = "m/(sec^2)";
                     }
-                    objectCluster.Add("Low Noise Accelerometer X", "RAW", "no units", newPacket[iAccelX]);
-                    objectCluster.Add("Low Noise Accelerometer X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Low Noise Accelerometer Y", "RAW", "no units", newPacket[iAccelY]);
-                    objectCluster.Add("Low Noise Accelerometer Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Low Noise Accelerometer Z", "RAW", "no units", newPacket[iAccelZ]);
-                    objectCluster.Add("Low Noise Accelerometer Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X, "RAW", "no units", newPacket[iAccelX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y, "RAW", "no units", newPacket[iAccelY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z, "RAW", "no units", newPacket[iAccelZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z, "CAL", units, datatemp[2]);
                     accelerometer[0] = datatemp[0];
                     accelerometer[1] = datatemp[1];
                     accelerometer[2] = datatemp[2];
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
                 {
-                    int iAccelX = getSignalIndex("Wide Range Accelerometer X"); //find index
-                    int iAccelY = getSignalIndex("Wide Range Accelerometer Y"); //find index
-                    int iAccelZ = getSignalIndex("Wide Range Accelerometer Z"); //find index
+                    int iAccelX = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_X); //find index
+                    int iAccelY = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y); //find index
+                    int iAccelZ = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel2, SensitivityMatrixAccel2, OffsetVectorAccel2);
                     string units;
@@ -2526,12 +2526,12 @@ namespace ShimmerAPI
                     {
                         units = "m/(sec^2)";
                     }
-                    objectCluster.Add("Wide Range Accelerometer X", "RAW", "no units", newPacket[iAccelX]);
-                    objectCluster.Add("Wide Range Accelerometer X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Wide Range Accelerometer Y", "RAW", "no units", newPacket[iAccelY]);
-                    objectCluster.Add("Wide Range Accelerometer Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Wide Range Accelerometer Z", "RAW", "no units", newPacket[iAccelZ]);
-                    objectCluster.Add("Wide Range Accelerometer Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_X, "RAW", "no units", newPacket[iAccelX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y, "RAW", "no units", newPacket[iAccelY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z, "RAW", "no units", newPacket[iAccelZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z, "CAL", units, datatemp[2]);
 
                     accelerometer[0] = datatemp[0];
                     accelerometer[1] = datatemp[1];
@@ -2540,9 +2540,9 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0))
                 {
-                    int iGyroX = getSignalIndex("Gyroscope X");
-                    int iGyroY = getSignalIndex("Gyroscope Y");
-                    int iGyroZ = getSignalIndex("Gyroscope Z");
+                    int iGyroX = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_X);
+                    int iGyroY = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_Y);
+                    int iGyroZ = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_Z);
                     double[] datatemp = new double[3] { newPacket[iGyroX], newPacket[iGyroY], newPacket[iGyroZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixGyro, SensitivityMatrixGyro, OffsetVectorGyro);
                     string units;
@@ -2554,12 +2554,12 @@ namespace ShimmerAPI
                     {
                         units = "deg/sec";
                     }
-                    objectCluster.Add("Gyroscope X", "RAW", "no units", newPacket[iGyroX]);
-                    objectCluster.Add("Gyroscope X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Gyroscope Y", "RAW", "no units", newPacket[iGyroY]);
-                    objectCluster.Add("Gyroscope Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Gyroscope Z", "RAW", "no units", newPacket[iGyroZ]);
-                    objectCluster.Add("Gyroscope Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GYROSCOPE_X, "RAW", "no units", newPacket[iGyroX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GYROSCOPE_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GYROSCOPE_Y, "RAW", "no units", newPacket[iGyroY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GYROSCOPE_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GYROSCOPE_Z, "RAW", "no units", newPacket[iGyroZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GYROSCOPE_Z, "CAL", units, datatemp[2]);
 
                     gyroscope[0] = datatemp[0] * Math.PI / 180;
                     gyroscope[1] = datatemp[1] * Math.PI / 180;
@@ -2596,9 +2596,9 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0))
                 {
-                    int iMagX = getSignalIndex("Magnetometer X");
-                    int iMagY = getSignalIndex("Magnetometer Y");
-                    int iMagZ = getSignalIndex("Magnetometer Z");
+                    int iMagX = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_X);
+                    int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y);
+                    int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z);
                     double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
                     datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
                     string units;
@@ -2610,12 +2610,12 @@ namespace ShimmerAPI
                     {
                         units = "local";
                     }
-                    objectCluster.Add("Magnetometer X", "RAW", "no units", newPacket[iMagX]);
-                    objectCluster.Add("Magnetometer X", "CAL", units, datatemp[0]);
-                    objectCluster.Add("Magnetometer Y", "RAW", "no units", newPacket[iMagY]);
-                    objectCluster.Add("Magnetometer Y", "CAL", units, datatemp[1]);
-                    objectCluster.Add("Magnetometer Z", "RAW", "no units", newPacket[iMagZ]);
-                    objectCluster.Add("Magnetometer Z", "CAL", units, datatemp[2]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_X, "RAW", "no units", newPacket[iMagX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_X, "CAL", units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y, "RAW", "no units", newPacket[iMagY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y, "CAL", units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z, "RAW", "no units", newPacket[iMagZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z, "CAL", units, datatemp[2]);
 
                     magnetometer[0] = datatemp[0];
                     magnetometer[1] = datatemp[1];
@@ -2624,7 +2624,7 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_VBATT) > 0))
                 {
-                    int index = getSignalIndex("VSenseBatt");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.V_SENSE_BATT);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1) * 1.988);
                     if (datatemp < 3400 && datatemp > 3000)
@@ -2653,70 +2653,70 @@ namespace ShimmerAPI
                             CurrentLEDStatus = 0;
                         }
                     }
-                    objectCluster.Add("VSenseBatt", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("VSenseBatt", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.V_SENSE_BATT, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.V_SENSE_BATT, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A7) > 0))
                 {
-                    int index = getSignalIndex("External ADC A7");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("External ADC A7", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("External ADC A7", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A6) > 0))
                 {
-                    int index = getSignalIndex("External ADC A6");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("External ADC A6", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("External ADC A6", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A15) > 0))
                 {
-                    int index = getSignalIndex("External ADC A15");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("External ADC A15", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("External ADC A15", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A1) > 0))
                 {
-                    int index = getSignalIndex("Internal ADC A1");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("Internal ADC A1", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A1", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A12) > 0))
                 {
-                    int index = getSignalIndex("Internal ADC A12");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("Internal ADC A12", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A12", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A13) > 0))
                 {
-                    int index = getSignalIndex("Internal ADC A13");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("Internal ADC A13", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A13", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, "CAL", "mVolts", datatemp);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A14) > 0))
                 {
-                    int index = getSignalIndex("Internal ADC A14");
+                    int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14);
                     double datatemp = newPacket[index];
                     datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
-                    objectCluster.Add("Internal ADC A14", "RAW", "no units", newPacket[index]);
-                    objectCluster.Add("Internal ADC A14", "CAL", "mVolts", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14, "RAW", "no units", newPacket[index]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14, "CAL", "mVolts", datatemp);
                 }
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE) > 0))
                 {
-                    int iUP = getSignalIndex("Pressure");
-                    int iUT = getSignalIndex("Temperature");
+                    int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
+                    int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
                     double UT = (double)newPacket[iUT];
                     double UP = (double)newPacket[iUP];
                     UP = UP / Math.Pow(2, 8 - PressureResolution);
@@ -2724,10 +2724,10 @@ namespace ShimmerAPI
                     double[] bmp180caldata = CalibratePressureSensorData(UP, datatemp[1]);
 
 
-                    objectCluster.Add("Pressure", "RAW", "no units", UP);
-                    objectCluster.Add("Pressure", "CAL", "kPa", bmp180caldata[0] / 1000);
-                    objectCluster.Add("Temperature", "RAW", "no units", newPacket[iUT]);
-                    objectCluster.Add("Temperature", "CAL", "Celcius*", bmp180caldata[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, "RAW", "no units", UP);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, "CAL", "kPa", bmp180caldata[0] / 1000);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, "RAW", "no units", newPacket[iUT]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, "CAL", "Celcius*", bmp180caldata[1]);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_GSR) > 0))
                 {
@@ -2769,47 +2769,47 @@ namespace ShimmerAPI
                         p2 = -0.3014;
                     }
                     datatemp = CalibrateGsrData(datatemp, p1, p2);
-                    objectCluster.Add("GSR", "RAW", "no units", newPacket[iGSR]);
-                    objectCluster.Add("GSR", "CAL", "kOhms", datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, "RAW", "no units", newPacket[iGSR]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, "CAL", "kOhms", datatemp);
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0)
                 {
-                    int iStatus = getSignalIndex("EXG1 Sta");
-                    int iCh1 = getSignalIndex("EXG1 CH1");
-                    int iCh2 = getSignalIndex("EXG1 CH2");
+                    int iStatus = getSignalIndex(Shimmer3Configuration.SignalNames.EXG1_STATUS);
+                    int iCh1 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG1_CH1);
+                    int iCh2 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG1_CH2);
                     double[] datatemp = new double[3] { newPacket[iStatus], newPacket[iCh1], newPacket[iCh2] };
                     int gain = ConvertEXGGainSettingToValue((Exg1RegArray[3] >> 4) & 7);
                     datatemp[1] = datatemp[1] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
                     gain = ConvertEXGGainSettingToValue((Exg1RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
-                    objectCluster.Add("EXG1 Sta", "RAW", "no units", newPacket[iStatus]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_STATUS, "RAW", "no units", newPacket[iStatus]);
                     if (IsDefaultECGConfigurationEnabled())
                     {
-                        objectCluster.Add("ECG LL-RA", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("ECG LL-RA", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("ECG LA-RA", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG LA-RA", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LA_RA, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LA_RA, "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
-                        objectCluster.Add("EMG CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EMG CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EMG CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EMG CH2", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH2, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH2, "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
-                        objectCluster.Add("EXG1 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG1 CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EXG1 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG1 CH2", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH2, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH2, "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
                 {
-                    int iStatus = getSignalIndex("EXG2 Sta");
-                    int iCh1 = getSignalIndex("EXG2 CH1");
-                    int iCh2 = getSignalIndex("EXG2 CH2");
+                    int iStatus = getSignalIndex(Shimmer3Configuration.SignalNames.EXG2_STATUS);
+                    int iCh1 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG2_CH1);
+                    int iCh2 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG2_CH2);
                     double[] datatemp = new double[3] { newPacket[iStatus], newPacket[iCh1], newPacket[iCh2] };
                     int gain = ConvertEXGGainSettingToValue((Exg2RegArray[3] >> 4) & 7);
                     datatemp[1] = datatemp[1] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
@@ -2818,103 +2818,103 @@ namespace ShimmerAPI
                     objectCluster.Add("EXG2 Sta", "RAW", "no units", newPacket[iStatus]);
                     if (IsDefaultECGConfigurationEnabled())
                     {
-                        objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("ECG Vx-RL", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG Vx-RL", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
-                        objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EXG2 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2, "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
-                        objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EXG2 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2, "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0)
                 {
-                    int iStatus = getSignalIndex("EXG1 Sta");
-                    int iCh1 = getSignalIndex("EXG1 CH1 16Bit");
-                    int iCh2 = getSignalIndex("EXG1 CH2 16Bit");
+                    int iStatus = getSignalIndex(Shimmer3Configuration.SignalNames.EXG1_STATUS);
+                    int iCh1 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT);
+                    int iCh2 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT);
                     double[] datatemp = new double[3] { newPacket[iStatus], newPacket[iCh1], newPacket[iCh2] };
                     int gain = ConvertEXGGainSettingToValue((Exg1RegArray[3] >> 4) & 7);
                     datatemp[1] = datatemp[1] * (((2.42 * 1000) / (gain * 2)) / (Math.Pow(2, 15) - 1));
                     gain = ConvertEXGGainSettingToValue((Exg1RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / (gain * 2)) / (Math.Pow(2, 15) - 1));
-                    objectCluster.Add("EXG1 Sta", "RAW", "no units", newPacket[iStatus]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_STATUS, "RAW", "no units", newPacket[iStatus]);
                     if (IsDefaultECGConfigurationEnabled())
                     {
-                        objectCluster.Add("ECG LL-RA", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("ECG LL-RA", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("ECG LA-RA", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG LA-RA", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LA_RA, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LA_RA, "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
-                        objectCluster.Add("EMG CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EMG CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EMG CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EMG CH2", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH2, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EMG_CH2, "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
-                        objectCluster.Add("EXG1 CH1 16Bit", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG1 CH1 16Bit", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EXG1 CH2 16Bit", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG1 CH2 16Bit", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT, "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)
                 {
-                    int iStatus = getSignalIndex("EXG2 Sta");
-                    int iCh1 = getSignalIndex("EXG2 CH1 16Bit");
-                    int iCh2 = getSignalIndex("EXG2 CH2 16Bit");
+                    int iStatus = getSignalIndex(Shimmer3Configuration.SignalNames.EXG2_STATUS);
+                    int iCh1 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT);
+                    int iCh2 = getSignalIndex(Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT);
                     double[] datatemp = new double[3] { newPacket[iStatus], newPacket[iCh1], newPacket[iCh2] };
                     int gain = ConvertEXGGainSettingToValue((Exg2RegArray[3] >> 4) & 7);
                     datatemp[1] = datatemp[1] * (((2.42 * 1000) / (gain * 2)) / (Math.Pow(2, 15) - 1));
                     gain = ConvertEXGGainSettingToValue((Exg2RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / (gain * 2)) / (Math.Pow(2, 15) - 1));
-                    objectCluster.Add("EXG2 Sta", "RAW", "no units", newPacket[iStatus]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_STATUS, "RAW", "no units", newPacket[iStatus]);
                     if (IsDefaultECGConfigurationEnabled())
                     {
-                        objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("ECG Vx-RL", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("ECG Vx-RL", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, "CAL", "mVolts", datatemp[2]);
                     }
                     else if (IsDefaultEMGConfigurationEnabled())
                     {
-                        objectCluster.Add("EXG2 CH1", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EXG2 CH2", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2, "CAL", "mVolts", datatemp[2]);
                     }
                     else
                     {
-                        objectCluster.Add("EXG2 CH1 16Bit", "RAW", "no units", newPacket[iCh1]);
-                        objectCluster.Add("EXG2 CH1 16Bit", "CAL", "mVolts", datatemp[1]);
-                        objectCluster.Add("EXG2 CH2 16Bit", "RAW", "no units", newPacket[iCh2]);
-                        objectCluster.Add("EXG2 CH2 16Bit", "CAL", "mVolts", datatemp[2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT, "RAW", "no units", newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT, "CAL", "mVolts", datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT, "RAW", "no units", newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT, "CAL", "mVolts", datatemp[2]);
                     }
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BRIDGE_AMP) > 0)
                 {
-                    int iSGHigh = getSignalIndex("Bridge Amplifier High");
-                    int iSGLow = getSignalIndex("Bridge Amplifier Low");
+                    int iSGHigh = getSignalIndex(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH);
+                    int iSGLow = getSignalIndex(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW);
                     double[] datatemp = new double[2] { newPacket[iSGHigh], newPacket[iSGLow] };
                     datatemp[0] = CalibrateU12AdcValue(datatemp[0], OffsetSGHigh, VRef, GainSGHigh);
                     datatemp[1] = CalibrateU12AdcValue(datatemp[1], OffsetSGLow, VRef, GainSGLow);
-                    objectCluster.Add("Bridge Amplifier High", "RAW", "no units", newPacket[iSGHigh]);
-                    objectCluster.Add("Bridge Amplifier High", "CAL", "mVolts", datatemp[0]);
-                    objectCluster.Add("Bridge Amplifier Low", "RAW", "no units", newPacket[iSGLow]);
-                    objectCluster.Add("Bridge Amplifier Low", "CAL", "mVolts", datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH, "RAW", "no units", newPacket[iSGHigh]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH, "CAL", "mVolts", datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, "RAW", "no units", newPacket[iSGLow]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, "CAL", "mVolts", datatemp[1]);
                 }
                 if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
                     && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
@@ -2931,14 +2931,14 @@ namespace ShimmerAPI
                     Rx = q.q2 / Math.Sin(rho);
                     Ry = q.q3 / Math.Sin(rho);
                     Rz = q.q4 / Math.Sin(rho);
-                    objectCluster.Add("Axis Angle A", "CAL", "local", theta);
-                    objectCluster.Add("Axis Angle X", "CAL", "local", Rx);
-                    objectCluster.Add("Axis Angle Y", "CAL", "local", Ry);
-                    objectCluster.Add("Axis Angle Z", "CAL", "local", Rz);
-                    objectCluster.Add("Quaternion 0", "CAL", "local", q.q1);
-                    objectCluster.Add("Quaternion 1", "CAL", "local", q.q2);
-                    objectCluster.Add("Quaternion 2", "CAL", "local", q.q3);
-                    objectCluster.Add("Quaternion 3", "CAL", "local", q.q4);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_A, "CAL", "local", theta);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_X, "CAL", "local", Rx);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_Y, "CAL", "local", Ry);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_Z, "CAL", "local", Rz);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_0, "CAL", "local", q.q1);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_1, "CAL", "local", q.q2);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_2, "CAL", "local", q.q3);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_3, "CAL", "local", q.q4);
                 }
             }
             else
