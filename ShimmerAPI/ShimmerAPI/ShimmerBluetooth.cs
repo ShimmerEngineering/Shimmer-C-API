@@ -2931,10 +2931,10 @@ namespace ShimmerAPI
                     Rx = q.q2 / Math.Sin(rho);
                     Ry = q.q3 / Math.Sin(rho);
                     Rz = q.q4 / Math.Sin(rho);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_A, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, theta);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_X, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rx);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_Y, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Ry);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.ANGLE_AXIS_Z, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rz);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.AXIS_ANGLE_A, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, theta);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.AXIS_ANGLE_X, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rx);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.AXIS_ANGLE_Y, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Ry);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.AXIS_ANGLE_Z, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rz);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_0, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q1);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q2);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_2, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q3);
@@ -3223,10 +3223,10 @@ namespace ShimmerAPI
                     Rx = q.q2 / Math.Sin(rho);
                     Ry = q.q3 / Math.Sin(rho);
                     Rz = q.q4 / Math.Sin(rho);
-                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_A, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, theta);
-                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_X, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rx);
-                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_Y, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Ry);
-                    objectCluster.Add(Shimmer2Configuration.SignalNames.ANGLE_AXIS_Z, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rz);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.AXIS_ANGLE_A, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, theta);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.AXIS_ANGLE_X, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rx);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.AXIS_ANGLE_Y, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Ry);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.AXIS_ANGLE_Z, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, Rz);
                     objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_0, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q1);
                     objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q2);
                     objectCluster.Add(Shimmer2Configuration.SignalNames.QUATERNION_2, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q3);
@@ -5617,10 +5617,10 @@ namespace ShimmerAPI
             public static readonly String QUATERNION_2 = "Quaternion 2";
             public static readonly String QUATERNION_3 = "Quaternion 3";
             public static readonly String HEART_RATE = "Heart Rate";
-            public static readonly String ANGLE_AXIS_A = "Angle Axis A";
-            public static readonly String ANGLE_AXIS_X = "Angle Axis X";
-            public static readonly String ANGLE_AXIS_Y = "Angle Axis Y";
-            public static readonly String ANGLE_AXIS_Z = "Angle Axis Z";
+            public static readonly String AXIS_ANGLE_A = "Axis Angle A";
+            public static readonly String AXIS_ANGLE_X = "Axis Angle X";
+            public static readonly String AXIS_ANGLE_Y = "Axis Angle Y";
+            public static readonly String AXIS_ANGLE_Z = "Axis Angle Z";
         }
 
 
@@ -5684,10 +5684,10 @@ namespace ShimmerAPI
             public static readonly String QUATERNION_1 = "Quaternion 1";
             public static readonly String QUATERNION_2 = "Quaternion 2";
             public static readonly String QUATERNION_3 = "Quaternion 3";
-            public static readonly String ANGLE_AXIS_A = "Angle Axis A";
-            public static readonly String ANGLE_AXIS_X = "Angle Axis X";
-            public static readonly String ANGLE_AXIS_Y = "Angle Axis Y";
-            public static readonly String ANGLE_AXIS_Z = "Angle Axis Z";
+            public static readonly String AXIS_ANGLE_A = "Axis Angle A";
+            public static readonly String AXIS_ANGLE_X = "Axis Angle X";
+            public static readonly String AXIS_ANGLE_Y = "Axis Angle Y";
+            public static readonly String AXIS_ANGLE_Z = "Axis Angle Z";
         }
                
 
