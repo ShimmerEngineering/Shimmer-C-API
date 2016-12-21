@@ -825,7 +825,7 @@ namespace ShimmerAPI
 
                 if (((enabledSensors & 0xFFFFFF) & (int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A1) > 0)
                 {
-                    if (PConfiguration.PControlForm.PPGSignalName.Equals("Internal ADC A1"))
+                    if (PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1))
                     {
                         comboBoxPPGAdcChannel.SelectedIndex = 0;
                     }
@@ -833,7 +833,7 @@ namespace ShimmerAPI
 
                 if (((enabledSensors & 0xFFFFFF) & (int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A12) > 0)
                 {
-                    if (PConfiguration.PControlForm.PPGSignalName.Equals("Internal ADC A12"))
+                    if (PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12))
                     {
                         comboBoxPPGAdcChannel.SelectedIndex = 1;
                     }
@@ -842,7 +842,7 @@ namespace ShimmerAPI
 
                 if (((enabledSensors & 0xFFFFFF) & (int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A13) > 0)
                 {
-                    if (PConfiguration.PControlForm.PPGSignalName.Equals("Internal ADC A13"))
+                    if (PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13))
                     {
                         comboBoxPPGAdcChannel.SelectedIndex = 2;
                     }
@@ -851,7 +851,7 @@ namespace ShimmerAPI
 
                 if (((enabledSensors & 0xFFFFFF) & (int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A14) > 0)
                 {
-                    if (PConfiguration.PControlForm.PPGSignalName.Equals("Internal ADC A14"))
+                    if (PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14))
                     {
                         comboBoxPPGAdcChannel.SelectedIndex = 3;
                     }
@@ -1042,19 +1042,19 @@ namespace ShimmerAPI
                         }
                     }
 
-                    if (PConfiguration.PControlForm.ECGSignalName.Equals("ECG LL-RA"))
+                    if (PConfiguration.PControlForm.ECGSignalName.Equals(Shimmer3Configuration.SignalNames.ECG_LL_RA))
                     {
                         comboBoxSelectECGChannel.SelectedIndex = 0;
                     }
-                    else if (PConfiguration.PControlForm.ECGSignalName.Equals("ECG LA-RA"))
+                    else if (PConfiguration.PControlForm.ECGSignalName.Equals(Shimmer3Configuration.SignalNames.ECG_LA_RA))
                     {
                         comboBoxSelectECGChannel.SelectedIndex = 1;
                     }
-                    else if (PConfiguration.PControlForm.ECGSignalName.Equals("EXG2 CH1"))
+                    else if (PConfiguration.PControlForm.ECGSignalName.Equals(Shimmer3Configuration.SignalNames.EXG2_CH1))
                     {
                         comboBoxSelectECGChannel.SelectedIndex = 2;
                     }
-                    else if (PConfiguration.PControlForm.ECGSignalName.Equals("ECG Vx-RL"))
+                    else if (PConfiguration.PControlForm.ECGSignalName.Equals(Shimmer3Configuration.SignalNames.ECG_VX_RL))
                     {
                         comboBoxSelectECGChannel.SelectedIndex = 3;
                     }

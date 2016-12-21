@@ -143,9 +143,9 @@ namespace ShimmerAPI
         public bool EnableHPF_5HZ = false;
         public bool EnableBSF_49_51HZ = false;
         public bool EnableBSF_59_61HZ = false;
-        public String PPGSignalName = "Internal ADC A13"; //This is used to identify which signal to feed into the PPF to HR algorithm
+        public String PPGSignalName = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13; //This is used to identify which signal to feed into the PPF to HR algorithm
         //ExG
-        public String ECGSignalName = "ECG LL-RA"; //This is used to identify which signal to feed into the ECG to HR algorithm
+        public String ECGSignalName = Shimmer3Configuration.SignalNames.ECG_LL_RA; //This is used to identify which signal to feed into the ECG to HR algorithm
         private int ExGLeadOffCounter = 0;
         private int ExGLeadOffCounterSize = 0;
 
@@ -1675,8 +1675,8 @@ namespace ShimmerAPI
 
                     if (EnablePPGtoHRConversion)
                     {
-                        int index = objectCluster.GetIndex(PPGSignalName, "CAL");
-                        int indexts = objectCluster.GetIndex("Timestamp", "CAL");
+                        int index = objectCluster.GetIndex(PPGSignalName, ShimmerConfiguration.SignalFormats.CAL);
+                        int indexts = objectCluster.GetIndex(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL);
                         if (index != -1)
                         {
                             double dataFilteredLP = LPF_PPG.filterData(data[index]);
@@ -1695,14 +1695,14 @@ namespace ShimmerAPI
                     if (ShimmerDevice.Is3DOrientationEnabled() && Is3DCubeOpen)
                     {
                         double[,] rotMatrix = new double[3, 3];
-                        double theta = (objectCluster.GetData("Axis Angle A", "CAL")).GetData();
-                        double Rx = (objectCluster.GetData("Axis Angle X", "CAL")).GetData();
-                        double Ry = (objectCluster.GetData("Axis Angle Y", "CAL")).GetData();
-                        double Rz = (objectCluster.GetData("Axis Angle Z", "CAL")).GetData();
-                        double q1 = (objectCluster.GetData("Quaternion 0", "CAL")).GetData();
-                        double q2 = (objectCluster.GetData("Quaternion 1", "CAL")).GetData();
-                        double q3 = (objectCluster.GetData("Quaternion 2", "CAL")).GetData();
-                        double q4 = (objectCluster.GetData("Quaternion 3", "CAL")).GetData();
+                        double theta = (objectCluster.GetData(Shimmer3Configuration.SignalNames.AXIS_ANGLE_A, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double Rx = (objectCluster.GetData(Shimmer3Configuration.SignalNames.AXIS_ANGLE_X, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double Ry = (objectCluster.GetData(Shimmer3Configuration.SignalNames.AXIS_ANGLE_Y, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double Rz = (objectCluster.GetData(Shimmer3Configuration.SignalNames.AXIS_ANGLE_Z, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double q1 = (objectCluster.GetData(Shimmer3Configuration.SignalNames.QUATERNION_0, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double q2 = (objectCluster.GetData(Shimmer3Configuration.SignalNames.QUATERNION_1, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double q3 = (objectCluster.GetData(Shimmer3Configuration.SignalNames.QUATERNION_2, ShimmerConfiguration.SignalFormats.CAL)).GetData();
+                        double q4 = (objectCluster.GetData(Shimmer3Configuration.SignalNames.QUATERNION_3, ShimmerConfiguration.SignalFormats.CAL)).GetData();
 
                         //convert to a rotation matrix
                         rotMatrix[0, 0] = 2 * q1 * q1 - 1 + 2 * q2 * q2;
@@ -1747,10 +1747,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("ECG LL-RA", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("ECG LA-RA", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LA_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1762,10 +1762,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EMG CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EMG CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1777,10 +1777,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EXG1 CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EXG1 CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1795,10 +1795,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("ECG Vx-RL", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -1810,10 +1810,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -1825,10 +1825,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -1844,10 +1844,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("ECG LL-RA", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("ECG LA-RA", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LA_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1859,10 +1859,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EMG CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EMG CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1874,10 +1874,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EXG1 CH1 16Bit", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EXG1 CH2 16Bit", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1892,10 +1892,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("ECG Vx-RL", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -1907,10 +1907,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -1923,10 +1923,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1 16Bit", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = HPF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2 16Bit", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = HPF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -1946,10 +1946,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("ECG LL-RA", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("ECG LA-RA", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LA_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1961,10 +1961,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EMG CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EMG CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1976,10 +1976,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EXG1 CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EXG1 CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -1994,10 +1994,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("ECG Vx-RL", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2009,10 +2009,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2024,10 +2024,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2043,10 +2043,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("ECG LL-RA", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("ECG LA-RA", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LA_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2058,10 +2058,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EMG CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EMG CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2073,10 +2073,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EXG1 CH1 16Bit", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EXG1 CH2 16Bit", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2091,10 +2091,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("ECG Vx-RL", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2106,10 +2106,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2121,10 +2121,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1 16Bit", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = BSF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2 16Bit", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = BSF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2144,10 +2144,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("ECG LL-RA", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("ECG LA-RA", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LA_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2159,10 +2159,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EMG CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EMG CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2174,10 +2174,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EXG1 CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EXG1 CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2192,10 +2192,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("ECG Vx-RL", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2207,10 +2207,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2222,10 +2222,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2241,10 +2241,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("ECG LL-RA", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("ECG LA-RA", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_LA_RA, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2256,10 +2256,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EMG CH1", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EMG CH2", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EMG_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2271,10 +2271,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index1[0] = objectCluster.GetIndex("EXG1 CH1 16Bit", "CAL");
+                                        index1[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg1Ch1.filterData(new double[] { data[index1[0]] });
                                         data[index1[0]] = filteredData1[0];
-                                        index1[1] = objectCluster.GetIndex("EXG1 CH2 16Bit", "CAL");
+                                        index1[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg1Ch2.filterData(new double[] { data[index1[1]] });
                                         data[index1[1]] = filteredData2[0];
                                     }
@@ -2289,10 +2289,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("ECG Vx-RL", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2304,10 +2304,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2319,10 +2319,10 @@ namespace ShimmerAPI
                                 {
                                     try
                                     {
-                                        index2[0] = objectCluster.GetIndex("EXG2 CH1 16Bit", "CAL");
+                                        index2[0] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData1 = NQF_Exg2Ch1.filterData(new double[] { data[index2[0]] });
                                         data[index2[0]] = filteredData1[0];
-                                        index2[1] = objectCluster.GetIndex("EXG2 CH2 16Bit", "CAL");
+                                        index2[1] = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT, ShimmerConfiguration.SignalFormats.CAL);
                                         double[] filteredData2 = NQF_Exg2Ch2.filterData(new double[] { data[index2[1]] });
                                         data[index2[1]] = filteredData2[0];
                                     }
@@ -2341,18 +2341,18 @@ namespace ShimmerAPI
                         int index = -1;
                         if (ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
                         {
-                            index = objectCluster.GetIndex(ECGSignalName, "RAW");
+                            index = objectCluster.GetIndex(ECGSignalName, ShimmerConfiguration.SignalFormats.RAW);
                         }
                         else
                         {
-                            index = objectCluster.GetIndex(ECGSignalName, "RAW");
+                            index = objectCluster.GetIndex(ECGSignalName, ShimmerConfiguration.SignalFormats.RAW);
                         }
                         if (index != -1)
                         {
                             int hr = -1;
                             double ecgData = -1;
                             ecgData = data[index];
-                            double calTimestamp = objectCluster.GetData("Timestamp", "CAL").GetData();
+                            double calTimestamp = objectCluster.GetData(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL).GetData();
                             hr = (int)ECGtoHR.ECGToHRConversion(ecgData, calTimestamp);
                             names.Add("Heart Rate ECG");
                             formats.Add("");
@@ -2375,10 +2375,10 @@ namespace ShimmerAPI
                         {
                             try
                             {
-                                int ExG1statusIndex = objectCluster.GetIndex("EXG1 Sta", "RAW");
-                                int ExG2statusIndex = objectCluster.GetIndex("EXG2 Sta", "RAW");
-                                double ExG1status = objectCluster.GetData("EXG1 Sta", "RAW").GetData();
-                                double ExG2status = objectCluster.GetData("EXG2 Sta", "RAW").GetData();
+                                int ExG1statusIndex = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG1_STATUS, ShimmerConfiguration.SignalFormats.RAW);
+                                int ExG2statusIndex = objectCluster.GetIndex(Shimmer3Configuration.SignalNames.EXG2_STATUS, ShimmerConfiguration.SignalFormats.RAW);
+                                double ExG1status = objectCluster.GetData(Shimmer3Configuration.SignalNames.EXG1_STATUS, ShimmerConfiguration.SignalFormats.RAW).GetData();
+                                double ExG2status = objectCluster.GetData(Shimmer3Configuration.SignalNames.EXG2_STATUS, ShimmerConfiguration.SignalFormats.RAW).GetData();
                                 if (ExGLeadOffCounter < ExGLeadOffCounterSize) // call updateExGLeadOff code once every second
                                 {
                                     ExGLeadOffCounter++;
@@ -2447,7 +2447,7 @@ namespace ShimmerAPI
                         for (int i = 0; i < names.Count; i++)
                         {
                             //RAW and CAL signals separated to allow for checkbox set up - RAW on LHS, CAL on RHS.
-                            if (formats[i].Equals("RAW"))
+                            if (formats[i].Equals(ShimmerConfiguration.SignalFormats.RAW))
                             {
                                 signalNamesandFormatsRaw.Add(names[i] + " " + formats[i]);
                                 StreamingSignalNamesRaw.Add(names[i] + " " + formats[i]);
