@@ -13,6 +13,10 @@ namespace ShimmerConsoleAppExample
 
         static void Main(string[] args)
         {
+            var client = new BluetoothClient();
+            BluetoothDeviceInfo[] availableDevices = client.DiscoverDevices(); // I've found this to be SLOW!
+
+
             System.Console.WriteLine("Hello");
             Program p = new Program();
             p.start();
@@ -21,7 +25,7 @@ namespace ShimmerConsoleAppExample
         public void start()
         {
             int enabledSensors = ((int)Shimmer.SensorBitmapShimmer3.SENSOR_A_ACCEL); // this is to enable Accel
-            shimmer = new ShimmerSDBT("ShimmerID1", "COM17");
+            shimmer = new ShimmerSDBT("ShimmerID1", "COM15");
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();
             if (shimmer.GetState() == Shimmer.SHIMMER_STATE_CONNECTED)
@@ -50,6 +54,7 @@ namespace ShimmerConsoleAppExample
                     }
                     else if (state == (int)Shimmer.SHIMMER_STATE_NONE)
                     {
+                        System.Diagnostics.Debug.Write("Disconnected");
 
                     }
                     else if (state == (int)Shimmer.SHIMMER_STATE_STREAMING)
