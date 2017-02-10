@@ -1,0 +1,17 @@
+﻿<Page
+    x:Class="BLEFileTransfer.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:BLEFileTransfer"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBlock x:Name="textTitle" HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="BLE File Transfer Application" VerticalAlignment="Top" FontSize="56"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="10,175,0,0" TextWrapping="Wrap" Text="Awaiting activity..." VerticalAlignment="Top" Height="360" Width="691" IsReadOnly="True" AcceptsReturn="True"/>
+        <Button x:Name="button" Content="Show BLE Devices" Click="btnShowDevices_Click" HorizontalAlignment="Left" Margin="900,175,0,0" VerticalAlignment="Top" Height="60" Width="195"/>
+
+    </Grid>
+
+</Page>

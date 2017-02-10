@@ -114,6 +114,7 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sensors\NordicUartService.cs" />
     <Compile Include="Sensors\DeviceInfoService.cs" />
     <Compile Include="Exceptions\DeviceNotFoundException.cs" />
     <Compile Include="Exceptions\DeviceNotInitializedException.cs" />

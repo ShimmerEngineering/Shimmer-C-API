@@ -22,6 +22,10 @@ namespace X2CodingLab.SensorTag
         public const string UUID_INF_CERT = "00002A2A-0000-1000-8000-00805f9b34fb";
         public const string UUID_INF_PNP_ID = "00002A50-0000-1000-8000-00805f9b34fb";
 
+        public const string UUID_NUS_SERV = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
+        public const string UUID_NUS_TX_DATA = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
+        public const string UUID_NUS_RX_DATA = "6E400003-B5A3-F393-E0A9-E50E24DCCA9E";
+
         // Custom temperature UUID from "our_service.h"
         public const string UUID_TMP_SERV = "0000f00d-1212-efde-1523-785fef13d123";
         public const string UUID_TMP_CONF = "00002902-0000-1000-8000-00805f9b34fb";
