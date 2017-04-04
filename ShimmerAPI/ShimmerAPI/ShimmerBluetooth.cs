@@ -911,6 +911,7 @@ namespace ShimmerAPI
                 try
                 {
                     byte b = (byte)ReadByte();
+                    StreamTimeOutCount = 0;
                     if (ShimmerState == SHIMMER_STATE_STREAMING)
                     {
                         
@@ -1341,11 +1342,17 @@ namespace ShimmerAPI
                 catch (System.TimeoutException)
                 {
                     //
-                    if (ShimmerState == SHIMMER_STATE_STREAMING)
+                    if (ShimmerState == SHIMMER_STATE_STREAMING || ShimmerState == SHIMMER_STATE_CONNECTED)
                     {
                         System.Console.WriteLine("Timeout Streaming");
                         StreamTimeOutCount++;
-                        if (StreamTimeOutCount == 10)
+                        if (StreamTimeOutCount % 5 == 0 && ShimmerState == SHIMMER_STATE_CONNECTED && GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
+                        {
+                            System.Console.WriteLine("Sending Get Status Command");
+                            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                            System.Threading.Thread.Sleep(500);
+                        }
+                        if (StreamTimeOutCount > 10)
                         {
                             CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost" );
                             OnNewEvent(newEventArgs);

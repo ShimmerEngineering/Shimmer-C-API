@@ -1537,6 +1537,7 @@ namespace ShimmerAPI
                         //System.Console.WriteLine("In Stream CMD Response");
                         if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
+                            System.Console.WriteLine("Status Response Received");
                             //STATUS: 0|0|0|STREAMING|LOGGING|SELFCMD|SENSING|DOCKED
                             int bufferint = ReadByte();
                             bool docked = (bufferint & 0x01) == 1;
@@ -1756,6 +1757,7 @@ namespace ShimmerAPI
                         //System.Console.WriteLine("CMD Response");
                         if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
+                            System.Console.WriteLine("Status Response Received");
                             //STATUS: 0|0|0|0|0|SELFCMD|SENSING|DOCKED
                             int bufferint = ReadByte();
                             bool docked = (bufferint & 0x01) == 1;
