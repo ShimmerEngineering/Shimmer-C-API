@@ -13,9 +13,10 @@ namespace ShimmerConsoleAppExample
 
         static void Main(string[] args)
         {
+            /* Example of using 32 feet to scan for devices
             var client = new BluetoothClient();
             BluetoothDeviceInfo[] availableDevices = client.DiscoverDevices(); // I've found this to be SLOW!
-
+            */
 
             System.Console.WriteLine("Hello");
             Program p = new Program();
