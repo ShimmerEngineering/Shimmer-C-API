@@ -2822,26 +2822,27 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE) > 0))
                 {
+                    double[] bmp180caldata = new double[2];
+                    int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
+                    int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
+                    double UP;
+                    double UT;
                     if (isShimmer3withUpdatedSensors())
-                    {
-                        int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
-                        int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
-                        double UT = (double)newPacket[iUT];
-                        double UP = (double)newPacket[iUP];
+                    { 
+                        UT = (double)newPacket[iUT];
+                        UP = (double)newPacket[iUP];
                         UT = UT * Math.Pow(2, 4);
                         UP = UP / Math.Pow(2, 4);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        double[] bmp180caldata = CalibratePressure280SensorData(UP, datatemp[1]);
+                        bmp180caldata = CalibratePressure280SensorData(UP, datatemp[1]);
                     }
                     else
                     {
-                        int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
-                        int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
-                        double UT = (double)newPacket[iUT];
-                        double UP = (double)newPacket[iUP];
+                        UT = (double)newPacket[iUT];
+                        UP = (double)newPacket[iUP];
                         UP = UP / Math.Pow(2, 8 - PressureResolution);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        double[] bmp180caldata = CalibratePressureSensorData(UP, datatemp[1]);
+                        bmp180caldata = CalibratePressureSensorData(UP, datatemp[1]);
                     }
 
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, UP);
@@ -5185,39 +5186,92 @@ namespace ShimmerAPI
             LowPowerAccelEnabled = enable;
             if (!LowPowerAccelEnabled)
             {
-                //enableLowResolutionMode(false);
-                if (SamplingRate <= 1)
+                if (isShimmer3withUpdatedSensors())
                 {
-                    WriteWRAccelSamplingRate(1);
-                }
-                else if (SamplingRate <= 10)
-                {
-                    WriteWRAccelSamplingRate(2);
-                }
-                else if (SamplingRate <= 25)
-                {
-                    WriteWRAccelSamplingRate(3);
-                }
-                else if (SamplingRate <= 50)
-                {
-                    WriteWRAccelSamplingRate(4);
-                }
-                else if (SamplingRate <= 100)
-                {
-                    WriteWRAccelSamplingRate(5);
-                }
-                else if (SamplingRate <= 200)
-                {
-                    WriteWRAccelSamplingRate(6);
+                    if (SamplingRate <= 12.5)
+                    {
+                        WriteWRAccelSamplingRate(1);
+                    }
+                    else if (SamplingRate <= 25)
+                    {
+                        WriteWRAccelSamplingRate(2);
+                    }
+                    else if (SamplingRate <= 50)
+                    {
+                        WriteWRAccelSamplingRate(3);
+                    }
+                    else if (SamplingRate <= 100)
+                    {
+                        WriteWRAccelSamplingRate(4);
+                    }
+                    else if (SamplingRate <= 200)
+                    {
+                        WriteWRAccelSamplingRate(5);
+                    }
+                    else if (SamplingRate <= 400)
+                    {
+                        WriteWRAccelSamplingRate(6);
+                    }
+                    else if (SamplingRate <= 800)
+                    {
+                        WriteWRAccelSamplingRate(7);
+                    }
+                    else if (SamplingRate <= 1600)
+                    {
+                        WriteWRAccelSamplingRate(8);
+                    }
+                    else if (SamplingRate <= 3200)
+                    {
+                        WriteWRAccelSamplingRate(9);
+                    }
+                    else
+                    {
+                        WriteWRAccelSamplingRate(10);
+                    }
                 }
                 else
                 {
-                    WriteWRAccelSamplingRate(7);
+                    //enableLowResolutionMode(false);
+                    if (SamplingRate <= 1)
+                    {
+                        WriteWRAccelSamplingRate(1);
+                    }
+                    else if (SamplingRate <= 10)
+                    {
+                        WriteWRAccelSamplingRate(2);
+                    }
+                    else if (SamplingRate <= 25)
+                    {
+                        WriteWRAccelSamplingRate(3);
+                    }
+                    else if (SamplingRate <= 50)
+                    {
+                        WriteWRAccelSamplingRate(4);
+                    }
+                    else if (SamplingRate <= 100)
+                    {
+                        WriteWRAccelSamplingRate(5);
+                    }
+                    else if (SamplingRate <= 200)
+                    {
+                        WriteWRAccelSamplingRate(6);
+                    }
+                    else
+                    {
+                        WriteWRAccelSamplingRate(7);
+                    }
                 }
             }
             else
             {
-                WriteWRAccelSamplingRate(2);
+                if (isShimmer3withUpdatedSensors())
+                {
+                    WriteWRAccelSamplingRate(1);
+                }
+                else
+                {
+                    WriteWRAccelSamplingRate(2);
+                }
             }
         }
 
