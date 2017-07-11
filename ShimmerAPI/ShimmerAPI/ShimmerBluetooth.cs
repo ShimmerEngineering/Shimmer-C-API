@@ -4835,6 +4835,7 @@ namespace ShimmerAPI
 
         /// <summary>
         /// Write Mag Range For Shimmer2R and Shimmer3. Shimmer2R: 0,1,2,3,4,5,6 = 0.7,1.0,1.5,2.0,3.2,3.8,4.5 . Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1
+        /// Not supported for updated Shimmer3s which are using LSM303AHTR
         /// </summary>
         /// <param name="range">0-6 for Shimmer2R and 1-7 for Shimmer3</param>
         public void WriteMagRange(int range)
@@ -4844,9 +4845,15 @@ namespace ShimmerAPI
             }
             else
             {
-                WriteBytes(new byte[2] { (byte)PacketTypeShimmer2.SET_MAG_GAIN_COMMAND, (byte)range }, 0, 2);
-                System.Threading.Thread.Sleep(250);
-                MagGain = range;
+                if (isShimmer3withUpdatedSensors())
+                {
+
+                }
+                else {
+                    WriteBytes(new byte[2] { (byte)PacketTypeShimmer2.SET_MAG_GAIN_COMMAND, (byte)range }, 0, 2);
+                    System.Threading.Thread.Sleep(250);
+                    MagGain = range;
+                }
             }
         }
 
@@ -5040,29 +5047,62 @@ namespace ShimmerAPI
             {
                 if (!LowPowerMagEnabled)
                 {
-                    if (SamplingRate >= 50)
+                    if (isShimmer3withUpdatedSensors())
                     {
-                        WriteMagSamplingRate(6);
-                    }
-                    else if (SamplingRate >= 20)
-                    {
-                        WriteMagSamplingRate(5);
-                    }
-                    else if (SamplingRate >= 10)
-                    {
-                        WriteMagSamplingRate(4);
+                        if (SamplingRate >= 100)
+                        {
+                            WriteMagSamplingRate(3);
+                        }
+                        else if (SamplingRate >= 50)
+                        {
+                            WriteMagSamplingRate(2);
+                        }
+                        else if (SamplingRate >= 20)
+                        {
+                            WriteMagSamplingRate(1);
+                        }
+                        else if (SamplingRate >= 10)
+                        {
+                            WriteMagSamplingRate(0);
+                        }
+                        else
+                        {
+                            WriteMagSamplingRate(0);
+                        }
                     }
                     else
                     {
-                        WriteMagSamplingRate(3);
+                        if (SamplingRate >= 50)
+                        {
+                            WriteMagSamplingRate(6);
+                        }
+                        else if (SamplingRate >= 20)
+                        {
+                            WriteMagSamplingRate(5);
+                        }
+                        else if (SamplingRate >= 10)
+                        {
+                            WriteMagSamplingRate(4);
+                        }
+                        else
+                        {
+                            WriteMagSamplingRate(3);
+                        }
                     }
                 }
                 else
                 {
-                    WriteMagSamplingRate(4);
+                    if (isShimmer3withUpdatedSensors())
+                    {
+                        WriteMagSamplingRate(1);
+                    }
+                    else
+                    {
+                        WriteMagSamplingRate(4);
+                    }
                 }
             }
-            else
+            else //Shimmer2r
             {
                 if (!LowPowerMagEnabled)
                 {
