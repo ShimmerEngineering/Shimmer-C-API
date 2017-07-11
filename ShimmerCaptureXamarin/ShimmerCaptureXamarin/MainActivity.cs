@@ -8,6 +8,7 @@ using Android.OS;
 using Android.Bluetooth;
 using Java.Util;
 using ShimmerAPI;
+using System.Collections.Generic;
 
 namespace ShimmerCaptureXamarin
 {
@@ -40,8 +41,22 @@ namespace ShimmerCaptureXamarin
 
             switch (indicator)
             {
-                case (int)Shimmer.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
+                case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
                     ObjectCluster objectCluster = new ObjectCluster((ObjectCluster)eventArgs.getObject());
+                    List<Double> data = objectCluster.GetData();
+                    List<String> dataNames = objectCluster.GetNames();
+                    String result="";
+                    String resultNames = "";
+                    foreach (Double d in data)
+                    {
+                        result = d.ToString() + " " + result;
+                    }
+                    foreach (String s in dataNames)
+                    {
+                        resultNames = s + " " + resultNames;
+                    }
+                    System.Console.WriteLine(resultNames);
+                    System.Console.WriteLine(result);
                     break;
             }
 
