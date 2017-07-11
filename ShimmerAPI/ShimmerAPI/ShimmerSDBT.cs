@@ -571,6 +571,8 @@ namespace ShimmerAPI
                 readInfoMem();
             }
             */
+
+
             readInfoMem(); 
             
             ReadPressureCalibrationCoefficients();

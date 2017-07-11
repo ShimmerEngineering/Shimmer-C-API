@@ -72,6 +72,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Timers;
 using System.ComponentModel;
+using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 
 namespace ShimmerAPI
 {
@@ -138,6 +139,9 @@ namespace ShimmerAPI
         protected int BaudRate;
         protected byte[] ExpansionDetectArray;//Expansion board detect for Shimmer3
         protected string ExpansionBoard;
+        protected int ExpansionBoardId;
+        protected int ExpansionBoardRev;
+        protected int ExpansionBoardRevSpecial;
 
         protected int TimeStampPacketByteSize = 2;
         protected int TimeStampPacketRawMaxValue = 65536;// 16777216 or 65536 
@@ -174,6 +178,19 @@ namespace ShimmerAPI
         public double MB = -32767;
         public double MC = -8711;
         public double MD = 2868;
+
+        public double dig_T1 = 27504;
+        public double dig_T2 = 26435;
+        public double dig_T3 = -1000;
+        public double dig_P1 = 36477;
+        public double dig_P2 = -10685;
+        public double dig_P3 = 3024;
+        public double dig_P4 = 2855;
+        public double dig_P5 = 140;
+        public double dig_P6 = -7;
+        public double dig_P7 = 15500;
+        public double dig_P8 = -14600;
+        public double dig_P9 = 6000;
 
         public double OffsetECGRALL = 2060;
         public double GainECGRALL = 175;
@@ -507,7 +524,14 @@ namespace ShimmerAPI
             EXPANSION_PROTO3_MINI = 36,
             EXPANSION_EXG = 37,
             EXPANSION_PROTO3_DELUXE = 38,
-        }
+            SHIMMER_3_EXG_EXTENDED = 59,
+            SHIMMER3 = 31,
+            EXP_BRD_HIGH_G_ACCEL = 44,
+            EXP_BRD_GPS = 46,
+            EXP_BRD_EXG_UNIFIED = 47,
+            EXP_BRD_GSR_UNIFIED = 48,
+            EXP_BRD_BR_AMP_UNIFIED = 49,
+    }
 
         public static readonly String[] LIST_OF_BAUD_RATE = { "115200", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "230400", "460800", "921600" };
         public static readonly String[] LIST_OF_EXG_ECG_REFERENCE_ELECTRODES = {"Fixed Potential", "Inverse Wilson CT", };
@@ -740,6 +764,7 @@ namespace ShimmerAPI
                             if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                             {
                                 WriteBatteryFrequency(0);
+                                ReadExpansionBoard();
                                 InitializeShimmer3SDBT();
                             }
                             else if (GetFirmwareIdentifier() == FW_IDENTIFIER_BTSTREAM)
@@ -1134,7 +1159,12 @@ namespace ShimmerAPI
                                 else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXPANSION_EXG) ExpansionBoard = "ExG";
                                 else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE) ExpansionBoard = "PROTO3 Deluxe";
                                 else ExpansionBoard = "Unknown";
-
+                                if (NumBytes >= 3)
+                                {
+                                    ExpansionBoardId = ExpansionDetectArray[0];
+                                    ExpansionBoardRev = ExpansionDetectArray[1];
+                                    ExpansionBoardRevSpecial = ExpansionDetectArray[2];
+                                }
                                 if (!ExpansionBoard.Equals("Unknown"))
                                 {
                                     ExpansionBoard = string.Format("{0} (SR{1}-{2}.{3})", ExpansionBoard, ExpansionDetectArray[0], ExpansionDetectArray[1], ExpansionDetectArray[2]);
@@ -1280,6 +1310,28 @@ namespace ShimmerAPI
                                 MB = Calculatetwoscomplement((int)((int)(bufferbyte[17] & 0xFF) + ((int)(bufferbyte[16] & 0xFF) << 8)), 16);
                                 MC = Calculatetwoscomplement((int)((int)(bufferbyte[19] & 0xFF) + ((int)(bufferbyte[18] & 0xFF) << 8)), 16);
                                 MD = Calculatetwoscomplement((int)((int)(bufferbyte[21] & 0xFF) + ((int)(bufferbyte[20] & 0xFF) << 8)), 16);
+                                break;
+                            case (byte)InstructionsResponse.Bmp280CalibrationCoefficientsResponse:
+                                bufferbyte = new byte[24];
+                                for (int p = 0; p < 24; p++)
+                                {
+                                    bufferbyte[p] = (byte)ReadByte();
+                                }
+                                byte[] pressureResoRes = bufferbyte;
+                                dig_T1 = (int)((int)(pressureResoRes[0] & 0xFF) + ((int)(pressureResoRes[1] & 0xFF) << 8));
+                                dig_T2 = Calculatetwoscomplement((int)((int)(pressureResoRes[2] & 0xFF) + ((int)(pressureResoRes[3] & 0xFF) << 8)), 16);
+                                dig_T3 = Calculatetwoscomplement((int)((int)(pressureResoRes[4] & 0xFF) + ((int)(pressureResoRes[5] & 0xFF) << 8)), 16);
+
+                                dig_P1 = (int)((int)(pressureResoRes[6] & 0xFF) + ((int)(pressureResoRes[7] & 0xFF) << 8));
+                                dig_P2 = Calculatetwoscomplement((int)((int)(pressureResoRes[8] & 0xFF) + ((int)(pressureResoRes[9] & 0xFF) << 8)), 16);
+                                dig_P3 = Calculatetwoscomplement((int)((int)(pressureResoRes[10] & 0xFF) + ((int)(pressureResoRes[11] & 0xFF) << 8)), 16);
+                                dig_P4 = Calculatetwoscomplement((int)((int)(pressureResoRes[12] & 0xFF) + ((int)(pressureResoRes[13] & 0xFF) << 8)), 16);
+                                dig_P5 = Calculatetwoscomplement((int)((int)(pressureResoRes[14] & 0xFF) + ((int)(pressureResoRes[15] & 0xFF) << 8)), 16);
+                                dig_P6 = Calculatetwoscomplement((int)((int)(pressureResoRes[16] & 0xFF) + ((int)(pressureResoRes[17] & 0xFF) << 8)), 16);
+                                dig_P7 = Calculatetwoscomplement((int)((int)(pressureResoRes[18] & 0xFF) + ((int)(pressureResoRes[19] & 0xFF) << 8)), 16);
+                                dig_P8 = Calculatetwoscomplement((int)((int)(pressureResoRes[20] & 0xFF) + ((int)(pressureResoRes[21] & 0xFF) << 8)), 16);
+                                dig_P9 = Calculatetwoscomplement((int)((int)(pressureResoRes[22] & 0xFF) + ((int)(pressureResoRes[23] & 0xFF) << 8)), 16);
+
                                 break;
                             case (byte)PacketTypeShimmer2.BLINK_LED_RESPONSE:
                                 bufferbyte = new byte[1];
@@ -1605,6 +1657,23 @@ namespace ShimmerAPI
             Inquiry();
         }
 
+        public Boolean isShimmer3withUpdatedSensors()
+        {
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 && (
+                    (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev >= 3)
+                    || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED && ExpansionBoardRev >= 3)
+                    || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_BR_AMP_UNIFIED && ExpansionBoardRev >= 2)
+                    || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.SHIMMER3 && ExpansionBoardRev >= 6)
+                    || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE && ExpansionBoardRev >= 3)))//??????
+            //				|| (expBrdId==HW_ID_SR_CODES.EXP_BRD_PROTO3_MINI && expBrdRev>=3) //??????
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
         public void InterpretInquiryResponseShimmer3(List<byte> packet)
         {
@@ -2753,14 +2822,27 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE) > 0))
                 {
-                    int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
-                    int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
-                    double UT = (double)newPacket[iUT];
-                    double UP = (double)newPacket[iUP];
-                    UP = UP / Math.Pow(2, 8 - PressureResolution);
-                    double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                    double[] bmp180caldata = CalibratePressureSensorData(UP, datatemp[1]);
-
+                    if (isShimmer3withUpdatedSensors())
+                    {
+                        int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
+                        int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
+                        double UT = (double)newPacket[iUT];
+                        double UP = (double)newPacket[iUP];
+                        UT = UT * Math.Pow(2, 4);
+                        UP = UP / Math.Pow(2, 4);
+                        double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
+                        double[] bmp180caldata = CalibratePressure280SensorData(UP, datatemp[1]);
+                    }
+                    else
+                    {
+                        int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
+                        int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
+                        double UT = (double)newPacket[iUT];
+                        double UP = (double)newPacket[iUP];
+                        UP = UP / Math.Pow(2, 8 - PressureResolution);
+                        double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
+                        double[] bmp180caldata = CalibratePressureSensorData(UP, datatemp[1]);
+                    }
 
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, UP);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloPascal, bmp180caldata[0] / 1000);
@@ -4628,10 +4710,18 @@ namespace ShimmerAPI
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
             {
                 //if (FirmwareVersion > 0.1)
-                if (CompatibilityCode > 1)
+                if (isShimmer3withUpdatedSensors())
                 {
-                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_BMP180_CALIBRATION_COEFFICIENTS_COMMAND }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
                     System.Threading.Thread.Sleep(800);
+                }
+                else
+                {
+                    if (CompatibilityCode > 1)
+                    {
+                        WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_BMP180_CALIBRATION_COEFFICIENTS_COMMAND }, 0, 1);
+                        System.Threading.Thread.Sleep(800);
+                    }
                 }
             }
         }
@@ -5384,6 +5474,44 @@ namespace ShimmerAPI
             //the following is the new linear method see user GSR user guide for further details
             double gsrCalibratedData = (1 / (p1 * gsrUncalibratedData + p2)) * 1000; //kohms 
             return gsrCalibratedData;
+        }
+
+        protected double[] CalibratePressure280SensorData(double UP, double UT)
+        {
+            double adc_T = UT;
+            double adc_P = UP;
+
+            // Returns temperature in DegC, double precision. Output value of “51.23” equals 51.23 DegC.
+            // t_fine carries fine temperature as global value
+            double var1 = ((adc_T) / 16384.0 - dig_T1 / 1024.0) * dig_T2;
+            double var2 = (((adc_T) / 131072.0 - dig_T1 / 8192.0) * (adc_T / 131072.0 - dig_T1 / 8192.0)) * dig_T3;
+            double t_fine = var1 + var2;
+            double T = t_fine / 5120.0;
+            //		double fTemp = T * 1.8 + 32; // Fahrenheit
+            //		T = T/100.0;
+
+            // Returns pressure in Pa as double. Output value of “96386.2” equals 96386.2 Pa = 963.862 hPa
+            var1 = (t_fine / 2.0) - 64000.0;
+            var2 = var1 * var1 * dig_P6 / 32768.0;
+            var2 = var2 + var1 * dig_P5 * 2.0;
+            var2 = (var2 / 4.0) + (dig_P4 * 65536.0);
+            var1 = (dig_P3 * var1 * var1 / 524288.0 + dig_P2 * var1) / 524288.0;
+            var1 = (1.0 + var1 / 32768.0) * dig_P1;
+            if (var1 == 0.0)
+            {
+                //			return 0; // avoid exception caused by division by zero
+            }
+            double p = 1048576.0 - adc_P;
+            p = (p - (var2 / 4096.0)) * 6250.0 / var1;
+            var1 = dig_P9 * p * p / 2147483648.0;
+            var2 = p * dig_P8 / 32768.0;
+            p = p + (var1 + var2 + dig_P7) / 16.0;
+
+
+            double[] caldata = new double[2];
+            caldata[0] = p;
+            caldata[1] = T;///10; // TODO divided by 10 in BMP180, needed here?
+            return caldata;
         }
 
         protected double[] CalibratePressureSensorData(double UP, double UT)
