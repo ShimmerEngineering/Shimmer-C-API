@@ -1036,7 +1036,7 @@ namespace ShimmerAPI
                                     if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                                     {
                                         byte c = (byte)ReadByte(); // get the next byte and pass it the ShimmerSDBT, this should be instreamcmd
-                                        if (c != (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE)
+                                        if (c != (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE)
                                         {
                                             KeepObjectCluster = null;
                                         }
@@ -1432,7 +1432,7 @@ namespace ShimmerAPI
                         if (StreamTimeOutCount % 5 == 0 && ShimmerState == SHIMMER_STATE_CONNECTED && GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                         {
                             System.Console.WriteLine("Sending Get Status Command");
-                            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
                             System.Threading.Thread.Sleep(500);
                         }
                         if (StreamTimeOutCount > 10)
@@ -2739,7 +2739,7 @@ namespace ShimmerAPI
                         //System.Threading.Thread.Sleep(500);
                         if (CurrentLEDStatus != 1)
                         {
-                            WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)1 }, 0, 2);
+                            WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)1 }, 0, 2);
                             CurrentLEDStatus = 1;
                         }
                     }
@@ -2748,7 +2748,7 @@ namespace ShimmerAPI
                         //System.Threading.Thread.Sleep(500);
                         if (CurrentLEDStatus != 2)
                         {
-                            WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)2 }, 0, 2);
+                            WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)2 }, 0, 2);
                             CurrentLEDStatus = 2;
                         }
                     }
@@ -2756,7 +2756,7 @@ namespace ShimmerAPI
                     {
                         if (CurrentLEDStatus != 0)
                         {
-                            WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)0 }, 0, 2);
+                            WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)0 }, 0, 2);
                             CurrentLEDStatus = 0;
                         }
                     }
@@ -3308,7 +3308,7 @@ namespace ShimmerAPI
                             //System.Threading.Thread.Sleep(500);
                             if (CurrentLEDStatus == 0)
                             {
-                                WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)1 }, 0, 2);
+                                WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)1 }, 0, 2);
                                 CurrentLEDStatus = 1;
 
                             }
@@ -3317,7 +3317,7 @@ namespace ShimmerAPI
                                 //System.Threading.Thread.Sleep(500);
                                 if (CurrentLEDStatus == 1)
                                 {
-                                    WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)0 }, 0, 2);
+                                    WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)0 }, 0, 2);
                                     CurrentLEDStatus = 0;
 
                                 }
@@ -4751,20 +4751,20 @@ namespace ShimmerAPI
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && CompatibilityCode >= 4)
             {
-                WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_SHIMMERNAME_COMMAND }, 0, 1);
+                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_SHIMMERNAME_COMMAND }, 0, 1);
                 System.Threading.Thread.Sleep(300);
             }
         }
 
         public void ReadExpID()
         {
-                WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_EXPID_COMMAND }, 0, 1);
+                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_EXPID_COMMAND }, 0, 1);
                 System.Threading.Thread.Sleep(300);
         }
 
         public void ReadConfigTime()
         {
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_CONFIGTIME_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CONFIGTIME_COMMAND }, 0, 1);
             System.Threading.Thread.Sleep(300);
         }
 
@@ -4893,7 +4893,7 @@ namespace ShimmerAPI
 
         public void WriteBlinkLED(int value)
         {
-            WriteBytes(new byte[2] { (byte)Shimmer.PacketTypeShimmer2.SET_BLINK_LED, (byte)value }, 0, 2);
+            WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)value }, 0, 2);
             CurrentLEDStatus = value;
         }
 
