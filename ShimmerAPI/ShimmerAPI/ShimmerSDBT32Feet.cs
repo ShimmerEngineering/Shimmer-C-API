@@ -528,7 +528,7 @@ namespace ShimmerAPI
             */
 
             readInfoMem();
-
+            ReadBaudRate();
             ReadPressureCalibrationCoefficients();
 
             if (CurrentSensingStatus)

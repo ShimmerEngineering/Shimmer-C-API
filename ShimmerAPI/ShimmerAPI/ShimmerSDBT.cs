@@ -573,8 +573,8 @@ namespace ShimmerAPI
             */
 
 
-            readInfoMem(); 
-            
+            readInfoMem();
+            ReadBaudRate();
             ReadPressureCalibrationCoefficients();
 
             //write the RWC
