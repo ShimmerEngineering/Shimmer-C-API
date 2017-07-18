@@ -2299,7 +2299,14 @@ namespace ShimmerAPI
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
-                        signalDataTypeArray[i + 1] = "i16*";
+                        if (!isShimmer3withUpdatedSensors())
+                        {
+                            signalDataTypeArray[i + 1] = "i16*";
+                        }
+                        else
+                        {
+                            signalDataTypeArray[i + 1] = "i16";
+                        }
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
                     }
@@ -2317,7 +2324,14 @@ namespace ShimmerAPI
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
-                        signalDataTypeArray[i + 1] = "i16*";
+                        if (!isShimmer3withUpdatedSensors())
+                        {
+                            signalDataTypeArray[i + 1] = "i16*";
+                        }
+                        else
+                        {
+                            signalDataTypeArray[i + 1] = "i16";
+                        }
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
                     }
@@ -2933,7 +2947,7 @@ namespace ShimmerAPI
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE) > 0))
                 {
-                    double[] bmp180caldata = new double[2];
+                    double[] bmpX80caldata = new double[2];
                     int iUP = getSignalIndex(Shimmer3Configuration.SignalNames.PRESSURE);
                     int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
                     double UP;
@@ -2945,7 +2959,7 @@ namespace ShimmerAPI
                         UT = UT * Math.Pow(2, 4);
                         UP = UP / Math.Pow(2, 4);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmp180caldata = CalibratePressure280SensorData(UP, UT);
+                        bmpX80caldata = CalibratePressure280SensorData(UP, UT);
                     }
                     else
                     {
@@ -2953,13 +2967,13 @@ namespace ShimmerAPI
                         UP = (double)newPacket[iUP];
                         UP = UP / Math.Pow(2, 8 - PressureResolution);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmp180caldata = CalibratePressureSensorData(UP, datatemp[1]);
+                        bmpX80caldata = CalibratePressureSensorData(UP, datatemp[1]);
                     }
 
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, UP);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloPascal, bmp180caldata[0] / 1000);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloPascal, bmpX80caldata[0] / 1000);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iUT]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Celcius, bmp180caldata[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Celcius, bmpX80caldata[1]);
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_GSR) > 0))
                 {
