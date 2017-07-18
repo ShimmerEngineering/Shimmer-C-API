@@ -119,7 +119,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="ShimmerAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
+      <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Debug\ShimmerAPI.dll</HintPath>
     </Reference>
     <Reference Include="ShimmerClosedLibraryRev0_4, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

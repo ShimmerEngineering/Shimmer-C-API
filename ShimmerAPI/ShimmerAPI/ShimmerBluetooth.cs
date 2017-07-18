@@ -2945,7 +2945,7 @@ namespace ShimmerAPI
                         UT = UT * Math.Pow(2, 4);
                         UP = UP / Math.Pow(2, 4);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmp180caldata = CalibratePressure280SensorData(UP, datatemp[1]);
+                        bmp180caldata = CalibratePressure280SensorData(UP, UT);
                     }
                     else
                     {
