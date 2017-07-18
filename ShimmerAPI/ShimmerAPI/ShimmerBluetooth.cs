@@ -571,16 +571,49 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_5_6GA_SHIMMER2 = new double[3, 3] { { 330, 0, 0 }, { 0, 330, 0 }, { 0, 0, 330 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER2 = new double[3, 3] { { 230, 0, 0 }, { 0, 230, 0 }, { 0, 0, 230 } };
 
-        public static readonly double[,] ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3 = new double[3, 3] { { 0, -1, 0 }, { -1, 0, 0 }, { 0, 0, -1 } }; 	//Default Values for Accelerometer Calibration
-        public static readonly double[,] OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3 = new double[3, 1] { { 2047 }, { 2047 }, { 2047 } };				//Default Values for Accelerometer Calibration
+        [System.Obsolete] // As the shimmer 3 sensors are updated, this is made obsolete, and new variables used which indicate the sensor names e.g. KCRB5-2042
+        public static readonly double[,] ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3 = new double[3, 3] { { 0, -1, 0 }, { -1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        [System.Obsolete]
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3 = new double[3, 1] { { 2047 }, { 2047 }, { 2047 } };                //Default Values for Accelerometer Calibration
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3 = new double[3, 3] { { 83, 0, 0 }, { 0, 83, 0 }, { 0, 0, 83 } };
 
+        public static readonly double[,] ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KCRB5_2042 = new double[3, 3] { { 0, -1, 0 }, { -1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3_KCRB5_2042 = new double[3, 1] { { 2047 }, { 2047 }, { 2047 } };                //Default Values for Accelerometer Calibration
+        public static readonly double[,] SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KCRB5_2042 = new double[3, 3] { { 83, 0, 0 }, { 0, 83, 0 }, { 0, 0, 83 } };
+
+        public static readonly double[,] ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KXTC9_2050 = new double[3, 3] { { 0, -1, 0 }, { -1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3_KXTC9_2050 = new double[3, 1] { { 2253 }, { 2253 }, { 2253 } };                //Default Values for Accelerometer Calibration
+        public static readonly double[,] SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KXTC9_2050 = new double[3, 3] { { 92, 0, 0 }, { 0, 92, 0 }, { 0, 0, 92 } };
+
+        [System.Obsolete] // As the shimmer 3 sensors are updated, this is made obsolete, and new variables used which indicate the sensor names e.g. LSM303DLHC
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3 = new double[3, 3] { { 1631, 0, 0 }, { 0, 1631, 0 }, { 0, 0, 1631 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3 = new double[3, 3] { { 815, 0, 0 }, { 0, 815, 0 }, { 0, 0, 815 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3 = new double[3, 3] { { 408, 0, 0 }, { 0, 408, 0 }, { 0, 0, 408 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3 = new double[3, 3] { { 135, 0, 0 }, { 0, 135, 0 }, { 0, 0, 135 } };
-        public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } }; 	//Default Values for Accelerometer Calibration
+        [System.Obsolete]
+        public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        [System.Obsolete]
         public static readonly double[,] OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };				//Default Values for Accelerometer Calibration
+
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3_LSM303DLHC = new double[3, 3] { { 1631, 0, 0 }, { 0, 1631, 0 }, { 0, 0, 1631 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3_LSM303DLHC = new double[3, 3] { { 815, 0, 0 }, { 0, 815, 0 }, { 0, 0, 815 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3_LSM303DLHC = new double[3, 3] { { 408, 0, 0 }, { 0, 408, 0 }, { 0, 0, 408 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3_LSM303DLHC = new double[3, 3] { { 135, 0, 0 }, { 0, 135, 0 }, { 0, 0, 135 } };
+        public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303DLHC = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303DLHC = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
+
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3_LSM303AH = new double[3, 3] { { 1671, 0, 0 }, { 0, 1671, 0 }, { 0, 0, 1671 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3_LSM303AH = new double[3, 3] { { 836, 0, 0 }, { 0, 836, 0 }, { 0, 0, 836 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3_LSM303AH = new double[3, 3] { { 418, 0, 0 }, { 0, 418, 0 }, { 0, 0, 418 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3_LSM303AH = new double[3, 3] { { 209, 0, 0 }, { 0, 209, 0 }, { 0, 0, 209 } };
+        public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH = new double[3, 3] { { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
+
+
 
         public static readonly double[,] ALIGNMENT_MATRIX_GYRO_SHIMMER3 = new double[3, 3] { { 0, -1, 0 }, { -1, 0, 0 }, { 0, 0, -1 } }; 				//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3 = new double[3, 3] { { 131, 0, 0 }, { 0, 131, 0 }, { 0, 0, 131 } }; 		//Default Values for Gyroscope Calibration
@@ -589,15 +622,39 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3 = new double[3, 3] { { 16.4, 0, 0 }, { 0, 16.4, 0 }, { 0, 0, 16.4 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } }; 				//Default Values for Magnetometer Calibration
+        [System.Obsolete]
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };              //Default Values for Magnetometer Calibration
+        [System.Obsolete]
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_1_3GA_SHIMMER3 = new double[3, 3] { { 1100, 0, 0 }, { 0, 1100, 0 }, { 0, 0, 980 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_1_9GA_SHIMMER3 = new double[3, 3] { { 855, 0, 0 }, { 0, 855, 0 }, { 0, 0, 760 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_2_5GA_SHIMMER3 = new double[3, 3] { { 670, 0, 0 }, { 0, 670, 0 }, { 0, 0, 600 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_4_0GA_SHIMMER3 = new double[3, 3] { { 450, 0, 0 }, { 0, 450, 0 }, { 0, 0, 400 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_4_7GA_SHIMMER3 = new double[3, 3] { { 400, 0, 0 }, { 0, 400, 0 }, { 0, 0, 355 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_5_6GA_SHIMMER3 = new double[3, 3] { { 330, 0, 0 }, { 0, 330, 0 }, { 0, 0, 295 } };
+        [System.Obsolete]
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3 = new double[3, 3] { { 230, 0, 0 }, { 0, 230, 0 }, { 0, 0, 205 } };
+
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303DLHC = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } }; 				//Default Values for Magnetometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3_LSM303DLHC = new double[3, 1] { { 0 }, { 0 }, { 0 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_1_3GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 1100, 0, 0 }, { 0, 1100, 0 }, { 0, 0, 980 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_1_9GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 855, 0, 0 }, { 0, 855, 0 }, { 0, 0, 760 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_2_5GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 670, 0, 0 }, { 0, 670, 0 }, { 0, 0, 600 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_4_0GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 450, 0, 0 }, { 0, 450, 0 }, { 0, 0, 400 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_4_7GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 400, 0, 0 }, { 0, 400, 0 }, { 0, 0, 355 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_5_6GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 330, 0, 0 }, { 0, 330, 0 }, { 0, 0, 295 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3_LSM303DLHC = new double[3, 3] { { 230, 0, 0 }, { 0, 230, 0 }, { 0, 0, 205 } };
+
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH = new double[3, 3] { { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } }; 				//Default Values for Magnetometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
+
 
         public static readonly byte[] SHIMMER3_DEFAULT_ECG_REG1 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x40, 0x2D, 0x00, 0x00, 0x02, 0x03 };
         public static readonly byte[] SHIMMER3_DEFAULT_ECG_REG2 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x47, 0x00, 0x00, 0x00, 0x02, 0x01 };
@@ -1809,9 +1866,18 @@ namespace ShimmerAPI
             else if (packetType == (byte)PacketTypeShimmer3.LNACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
                 DefaultAccelParams = true;
-                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3;
-                AlignmentMatrixAccel = ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3;
-                OffsetVectorAccel = OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3;
+                if (!isShimmer3withUpdatedSensors())
+                {
+                    SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KCRB5_2042;
+                    AlignmentMatrixAccel = ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KCRB5_2042;
+                    OffsetVectorAccel = OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3_KCRB5_2042;
+                } 
+                else
+                {
+                    SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KXTC9_2050;
+                    AlignmentMatrixAccel = ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KXTC9_2050;
+                    OffsetVectorAccel = OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3_KXTC9_2050;
+                }
             }
             else if (packetType == (byte)PacketTypeShimmer3.WR_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1)
             {
@@ -1823,25 +1889,47 @@ namespace ShimmerAPI
             else if (packetType == (byte)PacketTypeShimmer3.WR_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1)
             {
                 DefaultWRAccelParams = true;
-
-                if (AccelRange == 0)
+                if (!isShimmer3withUpdatedSensors())
                 {
-                    SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3;
-                }
-                else if (AccelRange == 1)
+                    if (AccelRange == 0)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (AccelRange == 1)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (AccelRange == 2)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (AccelRange == 3)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3_LSM303DLHC;
+                    }
+                    AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303DLHC;
+                    OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303DLHC;
+                } else 
                 {
-                    SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3;
+                    if (AccelRange == 0)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3_LSM303AH;
+                    }
+                    else if (AccelRange == 2)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3_LSM303AH;
+                    }
+                    else if (AccelRange == 3)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3_LSM303AH;
+                    }
+                    else if (AccelRange == 1)
+                    {
+                        SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3_LSM303AH;
+                    }
+                    AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH;
+                    OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH;
                 }
-                else if (AccelRange == 2)
-                {
-                    SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3;
-                }
-                else if (AccelRange == 3)
-                {
-                    SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3;
-                }
-                AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3;
-                OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3;
             }
             else if (packetType == (byte)PacketTypeShimmer2.GYRO_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2))
             {
@@ -1950,35 +2038,43 @@ namespace ShimmerAPI
             else if (packetType == (byte)PacketTypeShimmer3.MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
                 DefaultMagParams = true;
-                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3;
-                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3;
-                if (GetMagRange() == 1)
+                if (!isShimmer3withUpdatedSensors())
                 {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_1_3GA_SHIMMER3;
-                }
-                else if (GetMagRange() == 2)
+                    AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303DLHC;
+                    OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3_LSM303DLHC;
+                    if (GetMagRange() == 1)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_1_3GA_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (GetMagRange() == 2)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_1_9GA_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (GetMagRange() == 3)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_2_5GA_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (GetMagRange() == 4)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4_0GA_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (GetMagRange() == 5)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4_7GA_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (GetMagRange() == 6)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_5_6GA_SHIMMER3_LSM303DLHC;
+                    }
+                    else if (GetMagRange() == 7)
+                    {
+                        SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3_LSM303DLHC;
+                    }
+                } else //using Shimmer3 with updated sensors 
                 {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_1_9GA_SHIMMER3;
-                }
-                else if (GetMagRange() == 3)
-                {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_2_5GA_SHIMMER3;
-                }
-                else if (GetMagRange() == 4)
-                {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4_0GA_SHIMMER3;
-                }
-                else if (GetMagRange() == 5)
-                {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4_7GA_SHIMMER3;
-                }
-                else if (GetMagRange() == 6)
-                {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_5_6GA_SHIMMER3;
-                }
-                else if (GetMagRange() == 7)
-                {
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3;
+                    AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH;
+                    OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH;
+                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH;
                 }
 
             }
@@ -2178,7 +2274,13 @@ namespace ShimmerAPI
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
-                        signalDataTypeArray[i + 1] = "i16*";
+                        if (!isShimmer3withUpdatedSensors())
+                        {
+                            signalDataTypeArray[i + 1] = "i16*";
+                        } else
+                        {
+                            signalDataTypeArray[i + 1] = "i16";
+                        }
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
                     }
@@ -4119,7 +4221,7 @@ namespace ShimmerAPI
             return MagGain;
         }
 
-        public void SetMagRange(int range)
+        protected void SetMagRange(int range)
         {
             MagGain = range;
         }
@@ -4151,7 +4253,7 @@ namespace ShimmerAPI
             return AccelRange;
         }
 
-        public void SetAccelRange(int range)
+        protected void SetAccelRange(int range)
         {
             AccelRange = range;
         }
@@ -4161,7 +4263,7 @@ namespace ShimmerAPI
             return GyroRange;
         }
 
-        public void SetGyroRange(int range)
+        protected void SetGyroRange(int range)
         {
             GyroRange = range;
         }
@@ -4171,7 +4273,7 @@ namespace ShimmerAPI
             return GSRRange;
         }
 
-        public void SetGSRRange(int range)
+        protected void SetGSRRange(int range)
         {
             GSRRange = range;
         }
@@ -4181,12 +4283,12 @@ namespace ShimmerAPI
             return magSamplingRate;
         }
 
-        public void SetMagSamplingRate(int rate)
+        protected void SetMagSamplingRate(int rate)
         {
             magSamplingRate = rate;
         }
 
-        public void SetAccelSamplingRate(int rate)
+        protected void SetAccelSamplingRate(int rate)
         {
             AccelSamplingRate = rate;
         }
@@ -4201,7 +4303,7 @@ namespace ShimmerAPI
             return InternalExpPower;
         }
 
-        public void SetInternalExpPower(int value)
+        protected void SetInternalExpPower(int value)
         {
             InternalExpPower = value;
         }
@@ -4211,12 +4313,12 @@ namespace ShimmerAPI
             return PressureResolution;
         }
 
-        public void SetPressureResolution(int setting)
+        protected void SetPressureResolution(int setting)
         {
             PressureResolution = setting;
         }
 
-        public void SetVReg(bool val)
+        protected void SetVReg(bool val)
         {
             if (val)
             {
@@ -4240,7 +4342,7 @@ namespace ShimmerAPI
             }
         }
 
-        public void SetConfigSetupByte0(int val)
+        protected void SetConfigSetupByte0(int val)
         {
             ConfigSetupByte0 = val;
         }
@@ -4274,7 +4376,7 @@ namespace ShimmerAPI
             return Exg2RegArray[index];
         }
 
-        public void SetEXG1RegisterContents(byte[] exgReg)
+        protected void SetEXG1RegisterContents(byte[] exgReg)
         {
             for (int i = 0; i < exgReg.Length; i++)
             {
@@ -4282,7 +4384,7 @@ namespace ShimmerAPI
             }
         }
 
-        public void SetEXG2RegisterContents(byte[] exgReg)
+        protected void SetEXG2RegisterContents(byte[] exgReg)
         {
             for (int i = 0; i < exgReg.Length; i++)
             {
@@ -4290,7 +4392,7 @@ namespace ShimmerAPI
             }
         }
 
-        public void SetPMux(bool val)
+        protected void SetPMux(bool val)
         {
             if (val)
             {
@@ -4315,7 +4417,7 @@ namespace ShimmerAPI
             }
         }
 
-        public void SetBaudRate(int baud)
+        protected void SetBaudRate(int baud)
         {
             BaudRate = baud;
         }
@@ -4462,7 +4564,7 @@ namespace ShimmerAPI
             }
         }
 
-        public void SetState(int state)
+        protected void SetState(int state)
         {
             if (ShimmerState == SHIMMER_STATE_CONNECTED) {
                 
@@ -4834,8 +4936,10 @@ namespace ShimmerAPI
         }
 
         /// <summary>
-        /// Write Mag Range For Shimmer2R and Shimmer3. Shimmer2R: 0,1,2,3,4,5,6 = 0.7,1.0,1.5,2.0,3.2,3.8,4.5 . Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1
+        /// Write Mag Range For Shimmer2R and Shimmer3. Shimmer2R: 0,1,2,3,4,5,6 = 0.7,1.0,1.5,2.0,3.2,3.8,4.5 . 
+        /// Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1
         /// Not supported for updated Shimmer3s which are using LSM303AHTR
+        /// To determine if your Shimmer 3 device is using updated sensors please see isShimmer3withUpdatedSensors
         /// </summary>
         /// <param name="range">0-6 for Shimmer2R and 1-7 for Shimmer3</param>
         public void WriteMagRange(int range)
@@ -4881,7 +4985,11 @@ namespace ShimmerAPI
             System.Threading.Thread.Sleep(200);
         }
         /// <summary>
-        /// This is used to set the accel range of the Shimmer2r and the range of the Wide Range Accel of the Shimmer. Shimmer2r options - 0,1,2,3 = 1.5g,2g,4g,6g. Shimmer3 options - 0,1,2,3,4 = 2g,4g,8g,16g.
+        /// This is used to set the accel range of the Shimmer2r and the range of the Wide Range Accel of the Shimmer3 device. 
+        /// Shimmer2r options - 0,1,2,3 = 1.5g,2g,4g,6g. 
+        /// Shimmer3 options - 0,1,2,3 = 2g,4g,8g,16g. 
+        /// Shimmer3 with updated sensor options - 0,1,2,3 = 2g,16g,4g,8g. 
+        /// To determine if your Shimmer 3 device is using updated sensors please see isShimmer3withUpdatedSensors
         /// </summary>
         /// <param name="range">A value between 0-3</param>
         public void WriteAccelRange(int range)
@@ -5037,7 +5145,9 @@ namespace ShimmerAPI
         public virtual void writeRealWorldClock() { }
 
         /// <summary>
-        /// This is used to set the Magnetometer (Shimmer2R and Shimmer3) to low power mode, where the internal sampling rate of the Magnetometer chip is reduced to 10 Hz for Shimmer2r and 15Hz for Shimmer3
+        /// This is used to set the Magnetometer (Shimmer2R and Shimmer3) to low power mode, where the internal sampling rate of the Magnetometer chip is reduced to 10 Hz for Shimmer2r 
+        /// , 15Hz for Shimmer3, and 10 Hz for Shimmer3 with updated sensors.
+        /// To determine if your Shimmer 3 device is using updated sensors please see isShimmer3withUpdatedSensors
         /// </summary>
         /// <param name="enable">Set to true to enable</param>
         public void SetLowPowerMag(bool enable)
@@ -5090,11 +5200,11 @@ namespace ShimmerAPI
                         }
                     }
                 }
-                else
+                else //Low power mag for shimmer3 enabled
                 {
                     if (isShimmer3withUpdatedSensors())
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0);
                     }
                     else
                     {
@@ -5218,7 +5328,8 @@ namespace ShimmerAPI
         }
 
         /// <summary>
-        /// This sets the Wide Range Accel on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the wide range accelerometer is reduced to 10Hz
+        /// This sets the Wide Range Accel on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the wide range accelerometer is reduced to 10Hz for Shimmer3 devices, and 12.5Hz for Shimmer3 devices with updated sensors.
+        /// To determine if your Shimmer 3 device is using updated sensors please see isShimmer3withUpdatedSensors
         /// </summary>
         /// <param name="enable">Set to true to enable low power mode</param>
         public void SetLowPowerAccel(bool enable)
