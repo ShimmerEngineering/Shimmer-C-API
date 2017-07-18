@@ -62,14 +62,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorData.cs" />
     <None Include="README.md" />
-    <None Include="Shimmer.cs" />
-    <None Include="Shimmer32Feet.cs" />
+    <Compile Include="Shimmer.cs" />
+    <Compile Include="Shimmer32Feet.cs" />
     <Compile Include="ShimmerBluetooth.cs" />
     <Compile Include="ShimmerLogAndStream.cs" />
-    <None Include="ShimmerLogAndStream32Feet.cs" />
-    <None Include="ShimmerLogAndStreamSystemSerialPort.cs" />
-    <None Include="ShimmerSDBT.cs" />
-    <None Include="ShimmerSDBT32Feet.cs" />
+    <Compile Include="ShimmerLogAndStream32Feet.cs" />
+    <Compile Include="ShimmerLogAndStreamSystemSerialPort.cs" />
+    <Compile Include="ShimmerSDBT.cs" />
+    <Compile Include="ShimmerSDBT32Feet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
