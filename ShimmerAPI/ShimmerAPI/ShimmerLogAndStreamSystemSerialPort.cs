@@ -81,9 +81,14 @@ namespace ShimmerAPI
             SerialPort.DiscardOutBuffer();
         }
 
-        protected override string GetShimmerAddress()
+        public override string GetShimmerAddress()
         {
             return ComPort;
+        }
+
+        public override void SetShimmerAddress(string address)
+        {
+            ComPort = address;
         }
     }
 }

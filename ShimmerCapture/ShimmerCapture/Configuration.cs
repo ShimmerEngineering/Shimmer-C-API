@@ -37,8 +37,8 @@ namespace ShimmerAPI
             tabControl1.TabPages[2].Text = "Logging Options";
             tabControl1.TabPages[1].Text = "Advanced ExG";
 
-            if (PControlForm.ShimmerDevice.GetState() == Shimmer.SHIMMER_STATE_STREAMING
-                || PControlForm.ShimmerDevice.GetState() == Shimmer.SHIMMER_STATE_NONE)
+            if (PControlForm.ShimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING
+                || PControlForm.ShimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_NONE)
             {
                 tabControl1.TabPages[0].Enabled = false;
                 tabControl1.TabPages[1].Enabled = false;
@@ -50,19 +50,19 @@ namespace ShimmerAPI
                 //Only enable ExG config if Shimmer3 and BtStream > 0.2.8 and if ExG sensors are enabled
                 int enabledSensors = PControlForm.ShimmerDevice.GetEnabledSensors();
 
-                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
+                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
                     ExgReg1UI = PControlForm.ShimmerDevice.GetEXG1RegisterContents();
                     ExgReg2UI = PControlForm.ShimmerDevice.GetEXG2RegisterContents();
                     EnabledSensorsUI = PControlForm.ShimmerDevice.GetEnabledSensors();
                 }
 
-                if ((((PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
+                if ((((PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 && ((PControlForm.ShimmerDevice.GetFirmwareVersion() == 0.2 & PControlForm.ShimmerDevice.GetFirmwareInternal() >= 8)
                 || (PControlForm.ShimmerDevice.GetFirmwareVersion() >= 0.3)))
                 || PControlForm.ShimmerDevice.GetFirmwareIdentifier() == 3)
-                && (((enabledSensors & (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) || ((enabledSensors & (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
-                || ((enabledSensors & (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) || ((enabledSensors & (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)))
+                && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
+                || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)))
                 {
                     tabControl1.TabPages[1].Enabled = true;
                     
@@ -127,7 +127,7 @@ namespace ShimmerAPI
             buttonOk.Text = "Configuring";
             buttonOk.Enabled = false;
             buttonCancel.Enabled = false;
-            if (userControlGeneralConfig1.comboBoxBaudRate.SelectedIndex != PControlForm.ShimmerDevice.GetBaudRate() && PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
+            if (userControlGeneralConfig1.comboBoxBaudRate.SelectedIndex != PControlForm.ShimmerDevice.GetBaudRate() && PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
                 userControlGeneralConfig1.BaudRateChangeFlag = true;
             }
@@ -146,7 +146,7 @@ namespace ShimmerAPI
         {
             if (ExgTabOpened)
             {
-                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
+                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
                     userControlExgConfig1.setExGRegBytesinForm();
                 }
@@ -167,7 +167,7 @@ namespace ShimmerAPI
             PControlForm.ShimmerDevice.ReadShimmerName();
             PControlForm.ShimmerDevice.ReadExpID();
             PControlForm.ShimmerDevice.ReadConfigTime();
-            MessageBox.Show("Configurations changed.", ShimmerSDBT.AppNameCapture,
+            MessageBox.Show("Configurations changed.", ShimmerLogAndStream.AppNameCapture,
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

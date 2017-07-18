@@ -45,22 +45,22 @@ namespace ShimmerAPI
 
                 PConfiguration = (Configuration)this.Parent.Parent.Parent;
 
-                comboBoxExGReferenceElectrode.Items.AddRange(Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES);
+                comboBoxExGReferenceElectrode.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES);
                 comboBoxExGReferenceElectrode.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 comboBoxExGReferenceElectrode.AutoCompleteSource = AutoCompleteSource.ListItems;
                 comboBoxExGReferenceElectrode.DropDownStyle = ComboBoxStyle.DropDownList;
 
-                comboBoxLeadOffDetection.Items.AddRange(Shimmer.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS);
+                comboBoxLeadOffDetection.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS);
                 comboBoxLeadOffDetection.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 comboBoxLeadOffDetection.AutoCompleteSource = AutoCompleteSource.ListItems;
                 comboBoxLeadOffDetection.DropDownStyle = ComboBoxStyle.DropDownList;
 
-                comboBoxExGLeadOffCurrent.Items.AddRange(Shimmer.LIST_OF_EXG_LEAD_OFF_CURRENTS);
+                comboBoxExGLeadOffCurrent.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_CURRENTS);
                 comboBoxExGLeadOffCurrent.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 comboBoxExGLeadOffCurrent.AutoCompleteSource = AutoCompleteSource.ListItems;
                 comboBoxExGLeadOffCurrent.DropDownStyle = ComboBoxStyle.DropDownList;
 
-                comboBoxLeadOffComparatorThreshold.Items.AddRange(Shimmer.LIST_OF_EXG_LEAD_OFF_COMPARATOR_THRESHOLDS);
+                comboBoxLeadOffComparatorThreshold.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_COMPARATOR_THRESHOLDS);
                 comboBoxLeadOffComparatorThreshold.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                 comboBoxLeadOffComparatorThreshold.AutoCompleteSource = AutoCompleteSource.ListItems;
                 comboBoxLeadOffComparatorThreshold.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -469,7 +469,7 @@ namespace ShimmerAPI
                 labelEXG.Text = "Custom";
             }
 
-            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
+            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
                 setExGUIElements();
                 setExGRegBytesinForm();
@@ -479,7 +479,7 @@ namespace ShimmerAPI
         private void setExGUIElements()
         {
             // update lead-off detection mode combox, check byte 1 of both chips and byte 5 of 
-            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)Shimmer.ShimmerVersion.SHIMMER3)
+            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
                 byte byte1exg1 = PConfiguration.ExgReg1UI[1];
                 byte byte5exg1 = PConfiguration.ExgReg1UI[5];
@@ -491,12 +491,12 @@ namespace ShimmerAPI
                 if (((byte1exg1 & 0x40) == 0) && ((byte1exg2 & 0x40) == 0) && ((byte5exg1 & 0x10) == 0) && ((byte6exg1 & 0x0F) == 0) && ((byte6exg2 & 0x0F) == 0) && (((byte4exg2 & 0x80) == 0) || ((byte4exg2 & 0x80) == 0X80)))
                 {
                     comboBoxLeadOffDetection.SelectedIndex = 0;
-                    comboBoxLeadOffDetection.Text = Shimmer.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[0];
+                    comboBoxLeadOffDetection.Text = ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[0];
                 }
                 else if (((byte1exg1 & 0x40) == 0x40) && ((byte1exg2 & 0x40) == 0x40) && ((byte5exg1 & 0x10) == 0x10) && ((byte6exg1 & 0x0F) == 0x07) && ((byte6exg2 & 0x0F) == 0x04) && ((byte4exg2 & 0x80) == 0))
                 {
                     comboBoxLeadOffDetection.SelectedIndex = 1;
-                    comboBoxLeadOffDetection.Text = Shimmer.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[1];
+                    comboBoxLeadOffDetection.Text = ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[1];
                 }
                 else
                 {
@@ -507,19 +507,19 @@ namespace ShimmerAPI
                 comboBoxExGReferenceElectrode.Items.Clear();
                 if (PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked) // ECG enabled
                 {
-                    comboBoxExGReferenceElectrode.Items.AddRange(Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES);
+                    comboBoxExGReferenceElectrode.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES);
                     comboBoxExGReferenceElectrode.Enabled = true;
                     comboBoxLeadOffDetection.Enabled = true;
                 }
                 else if (PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked) // EMG enabled
                 {
-                    comboBoxExGReferenceElectrode.Items.AddRange(Shimmer.LIST_OF_EXG_EMG_REFERENCE_ELECTRODES);
+                    comboBoxExGReferenceElectrode.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_EMG_REFERENCE_ELECTRODES);
                     comboBoxExGReferenceElectrode.Enabled = true;
                     comboBoxLeadOffDetection.Enabled = false;
                 }
                 else
                 {
-                    comboBoxExGReferenceElectrode.Items.AddRange(Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES); // ECG and EMG disabled
+                    comboBoxExGReferenceElectrode.Items.AddRange(ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES); // ECG and EMG disabled
                     comboBoxExGReferenceElectrode.Enabled = false;
                     comboBoxLeadOffDetection.Enabled = false;
                 }
@@ -589,14 +589,14 @@ namespace ShimmerAPI
                 if ((byte5exg1 & 0x0F) == 0) // reference electrode is lower 4 bits of byte 5 on ExG chip 1
                 {
                     comboBoxExGReferenceElectrode.SelectedIndex = 0;
-                    comboBoxExGReferenceElectrode.Text = Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[0];
+                    comboBoxExGReferenceElectrode.Text = ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[0];
                 }
                 else if ((byte5exg1 & 0x0F) == 13)
                 {
                     comboBoxExGReferenceElectrode.SelectedIndex = 1;
                     if (PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked) // ECG enabled
                     {
-                        comboBoxExGReferenceElectrode.Text = Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[1];
+                        comboBoxExGReferenceElectrode.Text = ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[1];
                     }
                     else
                     {
@@ -609,7 +609,7 @@ namespace ShimmerAPI
                     comboBoxExGReferenceElectrode.SelectedIndex = 1;
                     if (PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked) // EMG enabled
                     {
-                        comboBoxExGReferenceElectrode.Text = Shimmer.LIST_OF_EXG_EMG_REFERENCE_ELECTRODES[1];
+                        comboBoxExGReferenceElectrode.Text = ShimmerBluetooth.LIST_OF_EXG_EMG_REFERENCE_ELECTRODES[1];
                     }
                     else
                     {
@@ -742,7 +742,7 @@ namespace ShimmerAPI
                 oversamplingRatio = 6;
             }
             
-            if (comboBoxLeadOffDetection.Text.Equals(Shimmer.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[0])) // Lead-Off Detection is OFF
+            if (comboBoxLeadOffDetection.Text.Equals(ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[0])) // Lead-Off Detection is OFF
             {
                 
                 LeadOffDetectCurrent = 0x00;
@@ -761,7 +761,7 @@ namespace ShimmerAPI
                     RLD_Buffer_Power = 0x00;
                 }
             }
-            else if (comboBoxLeadOffDetection.Text.Equals(Shimmer.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[1])) // DC Current Lead-Off Detection
+            else if (comboBoxLeadOffDetection.Text.Equals(ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[1])) // DC Current Lead-Off Detection
             {
                 LeadOffDetectCurrent = 0x00;
                 LeadOffDetectComparators = 0x40;
@@ -1273,7 +1273,7 @@ namespace ShimmerAPI
             buttonApply.Enabled = true;
 
             PConfiguration.PControlForm.AppendTextBox("Configuration done.");
-            MessageBox.Show("Configurations changed.", ShimmerSDBT.AppNameCapture,
+            MessageBox.Show("Configurations changed.", ShimmerLogAndStream.AppNameCapture,
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1485,17 +1485,17 @@ namespace ShimmerAPI
             if (PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked)
             {
                 ExGMode = "ECG";
-                comboBoxExGReferenceElectrode.Text = Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[referenceElectrode];
+                comboBoxExGReferenceElectrode.Text = ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[referenceElectrode];
             }
             else if (PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked)
             {
                 ExGMode = "EMG";
-                comboBoxExGReferenceElectrode.Text = Shimmer.LIST_OF_EXG_EMG_REFERENCE_ELECTRODES[referenceElectrode];
+                comboBoxExGReferenceElectrode.Text = ShimmerBluetooth.LIST_OF_EXG_EMG_REFERENCE_ELECTRODES[referenceElectrode];
             }
             else
             {
                 ExGMode = "Default";
-                comboBoxExGReferenceElectrode.Text = Shimmer.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[referenceElectrode];
+                comboBoxExGReferenceElectrode.Text = ShimmerBluetooth.LIST_OF_EXG_ECG_REFERENCE_ELECTRODES[referenceElectrode];
             }
 
             int referenceElectrodeSetting = ConvertEXGReferenceValuetoSetting(ExGMode, referenceElectrode);
@@ -1591,7 +1591,7 @@ namespace ShimmerAPI
                 comboBoxLeadOffComparatorThreshold.SelectedIndex = 2;
             }
 
-            comboBoxLeadOffDetection.Text = (Shimmer.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[leadOffDetection]);
+            comboBoxLeadOffDetection.Text = (ShimmerBluetooth.LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS[leadOffDetection]);
 
             byte byte1exg1 = (byte)((exg1Reg[1] & 0xBF) | (LeadOffDetectComparators));
             byte byte1exg2 = (byte)((exg2Reg[1] & 0xBF) | (LeadOffDetectComparators));

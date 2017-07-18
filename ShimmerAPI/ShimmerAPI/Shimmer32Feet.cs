@@ -94,7 +94,7 @@ namespace ShimmerAPI
         }
 
 
-        protected override string GetShimmerAddress()
+        public override string GetShimmerAddress()
         {
             return ComPort;
         }

@@ -1912,5 +1912,10 @@ namespace ShimmerAPI
                 }
             }
         }
+
+        public override void SetShimmerAddress(String address)
+        {
+            ComPort = address;
+        }
     }
 }

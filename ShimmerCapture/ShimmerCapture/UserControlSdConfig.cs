@@ -59,17 +59,17 @@ namespace ShimmerAPI
             bool param_changed = false;
             bool trial_changed = false;
             //PConfiguration.PControlForm.shimmer
-            if (PConfiguration.PControlForm.ShimmerDevice.GetState() == Shimmer.SHIMMER_STATE_STREAMING)
+            if (PConfiguration.PControlForm.ShimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING)
             {
                 MessageBox.Show("Cannot change configure settings while streaming data. ", Control.ApplicationName,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (PConfiguration.PControlForm.ShimmerDevice.GetState() == Shimmer.SHIMMER_STATE_CONNECTING)
+            else if (PConfiguration.PControlForm.ShimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_CONNECTING)
             {
                 MessageBox.Show("Cannot change configure settings while building configuration ", Control.ApplicationName,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else if (PConfiguration.PControlForm.ShimmerDevice.GetState() == Shimmer.SHIMMER_STATE_NONE)
+            else if (PConfiguration.PControlForm.ShimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_NONE)
             {
                 MessageBox.Show("Please connect to a shimmer before configuration.", Control.ApplicationName,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -315,7 +315,7 @@ namespace ShimmerAPI
             {
                 if (radBtnSingletouch.Checked)
                 {
-                    MessageBox.Show("Sync must be set on in Single Touch mode", ShimmerSDBT.AppNameCapture,
+                    MessageBox.Show("Sync must be set on in Single Touch mode", ShimmerLogAndStream.AppNameCapture,
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     chBxSync.Checked = true;
                 }
@@ -328,7 +328,7 @@ namespace ShimmerAPI
         {
             try
             {
-                if (PConfiguration.PControlForm.ShimmerDevice.GetState() == Shimmer.SHIMMER_STATE_STREAMING)
+                if (PConfiguration.PControlForm.ShimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING)
                     buttonApplySd.Enabled = false;
                 else
                     buttonApplySd.Enabled = true;
@@ -357,7 +357,7 @@ namespace ShimmerAPI
             if (ChangeSuccesful)
             {
                 PConfiguration.PControlForm.AppendTextBox("Configuration done.");
-                MessageBox.Show("Configurations changed.", ShimmerSDBT.AppNameCapture,
+                MessageBox.Show("Configurations changed.", ShimmerLogAndStream.AppNameCapture,
                                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ChangeSuccesful = false;
                 

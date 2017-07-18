@@ -2665,7 +2665,16 @@ namespace ShimmerAPI
             SignalDataTypeArray = signalDataTypeArray;
             PacketSize = packetSize;
         }
-        protected abstract String GetShimmerAddress();
+        /// <summary>
+        /// Returns the address used to connect to the device, note that if the serial port is used it should return the comport number and if the bluetooth address is used the bluetooth address should be returned;
+        /// </summary>
+        /// <returns></returns>
+        public abstract String GetShimmerAddress();
+        /// <summary>
+        /// Set the address/comport used to connect to the device, therefore this depends on whether you are using the serialport/32feet/xamarin
+        /// </summary>
+        /// <param name="address"></param>
+        public abstract void SetShimmerAddress(String address);
         protected ObjectCluster BuildMsg(List<byte> packet)
         {
 

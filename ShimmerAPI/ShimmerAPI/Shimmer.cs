@@ -101,7 +101,7 @@ namespace ShimmerAPI
             SerialPort.Write(b, index, length);
         }
 
-        protected override string GetShimmerAddress()
+        public override string GetShimmerAddress()
         {
             return ComPort;
         }
