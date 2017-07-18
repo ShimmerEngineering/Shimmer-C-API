@@ -37,6 +37,7 @@ using System.ComponentModel;
 
 namespace ShimmerAPI
 {
+    [System.Obsolete] //Moving the serial port controls (Shimmer32Feet.cs) to the highest implementing class so code is more concise and extendible for use with 32 feet/xamarin/etc
     public class ShimmerSDBT32Feet : Shimmer32Feet
     {
 

@@ -1,32 +1,4 @@
-﻿/* * Rev 0.6
- * 
- * Changes since Rev 0.5
- * - Removed startstreamandlog when Shimmer button pressed
- * - Removed computer driver/directory search
- * - Removed sd card config file writing (firmware handles this)
- * 
- * Changes since Rev 0.4
- * - Add read pressure sensor coefficients to initializeshimmer3sdbt
- * - fixed problem with initializeshimmer2
- * - Removed serial port functions
- * 
- *  Changes since Rev 0.3
- * - include sleep before sending start streaming cmd
- * - update writesdconfig which was writing wrong sampling rate
- * - include get status command in stop streaming to get dock status, so the ui can update between Stream and Log / Stream
- * 
- * Changes since Rev 0.2
- * - Removed MessageBox
- * - Added ShimmerSDBTMinorIdentifier, for easier identification of message
- * - Included TempDrivePath, to set the drivePath when there more than one Shimmer device
- * - Removed SDConfigWriteFinish
- * 
- * Changes since Rev 0.1
- * - Removed delegates, switched to virtual and override methods
- * - Removed Backgroundworker
- * - Remove UICallBackSDBT, now using OnMyPropertyChanged inherited method
- * 
-*/
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,24 +9,21 @@ using System.ComponentModel;
 
 namespace ShimmerAPI
 {
-    [System.Obsolete]  //Moving the serial port controls (Shimmer.cs) to the highest implementing class so code is more concise and extendible for use with 32 feet/xamarin/etc
-    public class ShimmerSDBT : Shimmer
-    {
 
+    public abstract class ShimmerLogAndStream : ShimmerBluetooth
+    {
         public enum ShimmerSDBTMinorIdentifier
         {
             MSG_WARNING = 0,
             MSG_EXTRA_REMOVABLE_DEVICES_DETECTED = 1,
             MSG_ERROR = 2,
         }
-
-        public ShimmerSDBT(String devID, String bComPort)
-            : base(devID, bComPort)
+        
+        public ShimmerLogAndStream(String devID)
+            : base(devID)
         {
-            //PControlForm = controlForm;
             isLogging = false;
             CurrentSensingStatus = false;
-            
         }
 
         //Shimmer3 Constructor
@@ -75,10 +44,11 @@ namespace ShimmerAPI
         /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
         /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
         /// <param name="internalExpPower"></param>
-        public ShimmerSDBT(String devName, String bComPort, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower)
-            :base(devName, bComPort, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
+        public ShimmerLogAndStream(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower)
+            : base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
         {
-            
+            isLogging = false;
+            CurrentSensingStatus = false;
         }
 
         //Shimmer2R Constructor
@@ -91,10 +61,11 @@ namespace ShimmerAPI
         /// <param name="gsrRange">Range is between 0 and 4. 0 = 10-56kOhm, 1 = 56-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
         /// <param name="magGain">Shimmer2R: 0,1,2,3,4,5,6 = 0.7,1.0,1.5,2.0,3.2,3.8,4.5 </param>
         /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer2, for multiple sensors use an or operation</param>
-        public ShimmerSDBT(String devID, String bComPort, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
-            : base(devID, bComPort, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)
+        public ShimmerLogAndStream(String devID, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
+            : base(devID, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)
         {
-
+            isLogging = false;
+            CurrentSensingStatus = false;
         }
         //===================================================================
         //===================================================================
@@ -367,7 +338,7 @@ namespace ShimmerAPI
 
         public void ReadDirectory()
         {
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_DIR_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_DIR_COMMAND }, 0, 1);
         }
 
         public override void StopStreaming()
@@ -377,12 +348,12 @@ namespace ShimmerAPI
             if (GetFirmwareIdentifier() == 3)
             {
                 System.Threading.Thread.Sleep(300);
-                WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
                 System.Threading.Thread.Sleep(500);
                 String message = "Stopped.";
                 if (isLogging)
                 {
-                    WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_DIR_COMMAND }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_DIR_COMMAND }, 0, 1);
                     int i = 11;
                     while (((i--) > 1) && (GetSdDir() == ""))
                     {
@@ -404,7 +375,7 @@ namespace ShimmerAPI
                 //PControlForm.ChangeStatusLabel("Stopped, Last SDLog Directory : " + GetSdDir());
                 SetSdDir("");
 
-              
+
 
             }
 
@@ -430,14 +401,14 @@ namespace ShimmerAPI
                         OrientationAlgo = null;
                         if (GetFirmwareIdentifier() == 3)
                         {
-                            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
                             System.Threading.Thread.Sleep(500);
                         }
                         SetSdDir("");
                         if (CurrentDockStatus)
                         {
                             String message = "Streaming only mode. \nShimmer on dock, SD mode not accessible.";
-                            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_WARNING);
+                            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
                             OnNewEvent(newEventArgs);
                             isLogging = false;
                         }
@@ -453,7 +424,7 @@ namespace ShimmerAPI
                             //SetState(SHIMMER_STATE_STREAMING);
                             mWaitingForStartStreamingACK = true;
                             System.Threading.Thread.Sleep(300);
-                            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.START_SDBT_COMMAND }, 0, 1);
+                            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.START_SDBT_COMMAND }, 0, 1);
                             //System.Threading.Thread.Sleep(1500);
                             /*
                             if (isLogging)
@@ -487,20 +458,20 @@ namespace ShimmerAPI
                     else
                     {
                         String message = "Failed to read configuration information from shimmer. Please ensure correct shimmer is connected";
-                        CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_WARNING);
+                        CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
                         OnNewEvent(newEventArgs);
                     }
                 }
                 else
                 {
                     String message = "No serial port is open";
-                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_WARNING);
+                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
                     OnNewEvent(newEventArgs);
                 }
             }
         }
 
-        
+
         protected override void InitializeShimmer3SDBT()
         {
             if (SetupDevice == true)
@@ -522,7 +493,7 @@ namespace ShimmerAPI
             //BackgroundWorker worker;
             SetDataReceived(false);
 
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
 
             waitTilTimeOut();
             /*
@@ -596,7 +567,7 @@ namespace ShimmerAPI
                 //PControlForm.buttonStart_Click1();
                 
                 //StartStreamingandLog();
-                */ 
+                */
             }
             else
             {
@@ -683,7 +654,7 @@ namespace ShimmerAPI
             OnNewEvent(newEventArgs);
             //PControlForm.status_text = "Acquiring trial configure settings...";
             //worker.ReportProgress(55, status_text);
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_TRIAL_CONFIG_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_TRIAL_CONFIG_COMMAND }, 0, 1);
             waitTilTimeOut();
 
             status_text = "Acquiring center name...";
@@ -691,7 +662,7 @@ namespace ShimmerAPI
             OnNewEvent(newEventArgs);
             //PControlForm.status_text = "Acquiring center name...";
             //worker.ReportProgress(60, status_text);
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_CENTER_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CENTER_COMMAND }, 0, 1);
             waitTilTimeOut();
 
             status_text = "Acquiring shimmer name...";
@@ -699,7 +670,7 @@ namespace ShimmerAPI
             OnNewEvent(newEventArgs);
             //PControlForm.status_text = "Acquiring shimmer name...";
             //worker.ReportProgress(65, status_text);
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_SHIMMERNAME_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_SHIMMERNAME_COMMAND }, 0, 1);
             waitTilTimeOut();
 
             status_text = "Acquiring experiment ID...";
@@ -707,7 +678,7 @@ namespace ShimmerAPI
             OnNewEvent(newEventArgs);
             //PControlForm.status_text = "Acquiring experiment ID...";
             //worker.ReportProgress(70, status_text);
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_EXPID_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_EXPID_COMMAND }, 0, 1);
             waitTilTimeOut();
 
             status_text = "Acquiring Multi Shimmer settings...";
@@ -715,10 +686,10 @@ namespace ShimmerAPI
             OnNewEvent(newEventArgs);
             //PControlForm.status_text = "Acquiring Multi Shimmer settings...";
             //worker.ReportProgress(75, status_text);
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_MYID_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_MYID_COMMAND }, 0, 1);
             waitTilTimeOut();
 
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_NSHIMMER_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_NSHIMMER_COMMAND }, 0, 1);
             waitTilTimeOut();
 
             status_text = "Acquiring configure time...";
@@ -726,7 +697,7 @@ namespace ShimmerAPI
             OnNewEvent(newEventArgs);
             //PControlForm.status_text = "Acquiring configure time...";
             //worker.ReportProgress(80, status_text);
-            WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_CONFIGTIME_COMMAND }, 0, 1);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CONFIGTIME_COMMAND }, 0, 1);
             waitTilTimeOut();
 
             status_text = "Acquiring general settings...";
@@ -749,7 +720,7 @@ namespace ShimmerAPI
         {
             byte[] trial_config_byte = BitConverter.GetBytes((Int16)GetTrialConfig());
             byte[] tosend = new byte[4];
-            tosend[0] = (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_TRIAL_CONFIG_COMMAND;
+            tosend[0] = (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_TRIAL_CONFIG_COMMAND;
             tosend[1] = trial_config_byte[0];
             tosend[2] = trial_config_byte[1];
             tosend[3] = (byte)GetInterval();
@@ -777,7 +748,7 @@ namespace ShimmerAPI
             byte[] center_byte = System.Text.Encoding.Default.GetBytes(GetCenter());
 
             byte[] tosend = new byte[center_byte.Length + 2];
-            tosend[0] = (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_CENTER_COMMAND;
+            tosend[0] = (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_CENTER_COMMAND;
             tosend[1] = (byte)center_byte.Length;
             System.Buffer.BlockCopy(center_byte, 0, tosend, 2, center_byte.Length);
             WriteBytes(tosend, 0, tosend.Length);
@@ -789,7 +760,7 @@ namespace ShimmerAPI
             byte[] shimmername_byte = System.Text.Encoding.Default.GetBytes(GetShimmerName());
 
             byte[] tosend = new byte[shimmername_byte.Length + 2];
-            tosend[0] = (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_SHIMMERNAME_COMMAND;
+            tosend[0] = (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_SHIMMERNAME_COMMAND;
             tosend[1] = (byte)shimmername_byte.Length;
             System.Buffer.BlockCopy(shimmername_byte, 0, tosend, 2, shimmername_byte.Length);
             WriteBytes(tosend, 0, tosend.Length);
@@ -801,7 +772,7 @@ namespace ShimmerAPI
             byte[] expid_byte = System.Text.Encoding.Default.GetBytes(GetExperimentID());
 
             byte[] tosend = new byte[expid_byte.Length + 2];
-            tosend[0] = (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_EXPID_COMMAND;
+            tosend[0] = (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_EXPID_COMMAND;
             tosend[1] = (byte)expid_byte.Length;
             System.Buffer.BlockCopy(expid_byte, 0, tosend, 2, expid_byte.Length);
             WriteBytes(tosend, 0, tosend.Length);
@@ -810,14 +781,14 @@ namespace ShimmerAPI
 
         public override void WriteNshimmer()
         {
-            byte[] tosend = new byte[] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_NSHIMMER_COMMAND, (byte)GetNshimmer() };
+            byte[] tosend = new byte[] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_NSHIMMER_COMMAND, (byte)GetNshimmer() };
             WriteBytes(tosend, 0, 2);
             System.Threading.Thread.Sleep(200);
         }
 
         public override void WriteMyID()
         {
-            byte[] tosend = new byte[] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_MYID_COMMAND, (byte)GetMyID() };
+            byte[] tosend = new byte[] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_MYID_COMMAND, (byte)GetMyID() };
             WriteBytes(tosend, 0, 2);
             System.Threading.Thread.Sleep(200);
         }
@@ -827,7 +798,7 @@ namespace ShimmerAPI
             byte[] configtime_byte = System.Text.Encoding.Default.GetBytes(Convert.ToString(GetConfigTime()));
 
             byte[] tosend = new byte[configtime_byte.Length + 2];
-            tosend[0] = (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SET_CONFIGTIME_COMMAND;
+            tosend[0] = (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SET_CONFIGTIME_COMMAND;
             tosend[1] = (byte)configtime_byte.Length;
             System.Buffer.BlockCopy(configtime_byte, 0, tosend, 2, configtime_byte.Length);
             WriteBytes(tosend, 0, tosend.Length);
@@ -839,7 +810,7 @@ namespace ShimmerAPI
             // btsd changes
             if (GetFirmwareIdentifier() == 3)
             {
-                WriteBytes(new byte[1] { (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
                 //System.Threading.Thread.Sleep(200);
 
                 waitTilTimeOut();
@@ -893,7 +864,7 @@ namespace ShimmerAPI
             TempDrivePath = path;
         }
 
-        
+
 
 
         public void SdConfigWrite()
@@ -926,14 +897,14 @@ namespace ShimmerAPI
             else if (totalRemovable > 1)
             {
                 String message = totalRemovable + "Two or more removable devices are detected. Please choose the intended Shimmer.";
-                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_EXTRA_REMOVABLE_DEVICES_DETECTED);
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_EXTRA_REMOVABLE_DEVICES_DETECTED);
                 OnNewEvent(newEventArgs);
                 drivePath = TempDrivePath;
             }
             else
             {
                 String message = "No removable storage device is found.";
-                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_ERROR);
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_ERROR);
                 OnNewEvent(newEventArgs);
                 return;
             }
@@ -960,8 +931,8 @@ namespace ShimmerAPI
             file.WriteLine("intch12=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_INT_A12) == 0 ? 0 : 1));
             file.WriteLine("intch13=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_INT_A13) == 0 ? 0 : 1));
             file.WriteLine("intch14=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_INT_A14) == 0 ? 0 : 1));
-            file.WriteLine("accel_mpu=" + ((GetEnabledSensors() & (int)ShimmerSDBT.SensorBitmapShimmer3_unused.SensorMpuAccel) == 0 ? 0 : 1));
-            file.WriteLine("mag_mpu=" + ((GetEnabledSensors() & (int)ShimmerSDBT.SensorBitmapShimmer3_unused.SensorMpuMag) == 0 ? 0 : 1));
+            file.WriteLine("accel_mpu=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3_unused.SensorMpuAccel) == 0 ? 0 : 1));
+            file.WriteLine("mag_mpu=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3_unused.SensorMpuMag) == 0 ? 0 : 1));
             file.WriteLine("exg1_16bit=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_EXG1_16BIT) == 0 ? 0 : 1));
             file.WriteLine("exg2_16bit=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_EXG2_16BIT) == 0 ? 0 : 1));
             file.WriteLine("pres_bmp180=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE) == 0 ? 0 : 1));
@@ -1021,9 +992,9 @@ namespace ShimmerAPI
         // 0    if successful
         // 1    if need InfoMemRead() + SdConfigWrite()
         // -1   if unexpected error happens
-        
+
         private int SdConfigRead()
-        {   
+        {
             string drivePath = "";
             string filePath = "";
             DriveInfo[] drives = DriveInfo.GetDrives();
@@ -1058,7 +1029,7 @@ namespace ShimmerAPI
 
                 //Users should always ensure TempDrivePath is taken care of on the outer class/ui which is called through the method OnMyPropertyChanged
                 String message = totalRemovable + "Two or more removable devices are detected. Please choose the intended Shimmer.";
-                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_EXTRA_REMOVABLE_DEVICES_DETECTED);
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_EXTRA_REMOVABLE_DEVICES_DETECTED);
                 OnNewEvent(newEventArgs);
                 drivePath = TempDrivePath;
             }
@@ -1176,12 +1147,12 @@ namespace ShimmerAPI
                     else if (line.Contains("accel_mpu="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[2] |= (byte)(((int)ShimmerSDBT.SensorBitmapShimmer3_unused.SensorMpuAccel >> 16) & 0xff);//sdbt only
+                            file_sensors[2] |= (byte)(((int)SensorBitmapShimmer3_unused.SensorMpuAccel >> 16) & 0xff);//sdbt only
                     }
                     else if (line.Contains("mag_mpu="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[2] |= (byte)(((int)ShimmerSDBT.SensorBitmapShimmer3_unused.SensorMpuMag >> 16) & 0xff);//sdbt only
+                            file_sensors[2] |= (byte)(((int)SensorBitmapShimmer3_unused.SensorMpuMag >> 16) & 0xff);//sdbt only
                     }
                     else if (line.Contains("exg1_16bit="))
                     {
@@ -1230,41 +1201,41 @@ namespace ShimmerAPI
                     else if (line.Contains("user_button_enable="))
                     {
                         if (line[equals] == '1')
-                            file_trialConfig[0] |= (byte)ShimmerSDBT.TrialConfigBitmap.UserButton;
+                            file_trialConfig[0] |= (byte)TrialConfigBitmap.UserButton;
                     }
                     else if (line.Contains("iammaster="))
                     {
                         if (line[equals] == '1')
-                            file_trialConfig[0] |= (byte)ShimmerSDBT.TrialConfigBitmap.IAmMaster;
+                            file_trialConfig[0] |= (byte)TrialConfigBitmap.IAmMaster;
                     }
                     else if (line.Contains("sync="))
                     {
                         if (line[equals] == '1')
-                            file_trialConfig[0] |= (byte)ShimmerSDBT.TrialConfigBitmap.Sync;
+                            file_trialConfig[0] |= (byte)TrialConfigBitmap.Sync;
                     }
                     else if (line.Contains("singletouch="))
                     {
                         if (line[equals] == '1')
-                            file_trialConfig[1] |= (byte)ShimmerSDBT.TrialConfigBitmap.SingleTouch;
+                            file_trialConfig[1] |= (byte)TrialConfigBitmap.SingleTouch;
                     }
                     else if (line.Contains("exp_power="))
                     {
                         //if (line.Contains("True"))
                         if (line[equals] == '1')
-                            file_trialConfig[1] |= (byte)ShimmerSDBT.TrialConfigBitmap.ExpPower;
+                            file_trialConfig[1] |= (byte)TrialConfigBitmap.ExpPower;
                     }
                     else if (line.Contains("tcxo="))
                     {
                         if (line[equals] == '1')
                         {
-                            file_trialConfig[1] |= (byte)ShimmerSDBT.TrialConfigBitmap.TCXO;
+                            file_trialConfig[1] |= (byte)TrialConfigBitmap.TCXO;
                             SetClockTCXO(1);
                         }
                     }
                     else if (line.Contains("user_button_enable="))
                     {
                         if (line[equals] == '1')
-                            file_trialConfig[0] |= (byte)ShimmerSDBT.TrialConfigBitmap.UserButton;
+                            file_trialConfig[0] |= (byte)TrialConfigBitmap.UserButton;
                     }
                     else if (line.Contains("interval="))
                     {
@@ -1368,24 +1339,24 @@ namespace ShimmerAPI
                 file_sample_rate[1] = (byte)(a / 256);
 
                 // they are sharing adc13,14, so ban them when strain is on
-                if ((byte)((byte)file_sensors[1] & (byte)(((int)Shimmer.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP >> 8) & 0xff)) != 0)
+                if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP >> 8) & 0xff)) != 0)
                 {
-                    file_sensors[1] &= (byte)(0xff - (byte)(((int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A13 >> 8) & 0xff));
-                    file_sensors[2] &= (byte)(0xff - (byte)(((int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A14 >> 16) & 0xff));
+                    file_sensors[1] &= (byte)(0xff - (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A13 >> 8) & 0xff));
+                    file_sensors[2] &= (byte)(0xff - (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A14 >> 16) & 0xff));
                 }
 
                 // they are sharing adc1, so ban intch1 when gsr is on
-                if ((byte)((byte)file_sensors[0] & (byte)Shimmer.SensorBitmapShimmer3.SENSOR_GSR) != 0)
-                    file_sensors[1] &= (byte)(0xff - (byte)(((int)Shimmer.SensorBitmapShimmer3.SENSOR_INT_A1 >> 8) & 0xff));
+                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GSR) != 0)
+                    file_sensors[1] &= (byte)(0xff - (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A1 >> 8) & 0xff));
 
                 if (GetInterval() < 54)
                 {
                     SetInterval(54);
                 }
-                if ((byte)((byte)file_trialConfig[1] & (byte)ShimmerSDBT.TrialConfigBitmap.SingleTouch) != 0)
+                if ((byte)((byte)file_trialConfig[1] & (byte)TrialConfigBitmap.SingleTouch) != 0)
                 {
-                    file_trialConfig[0] |= (byte)ShimmerSDBT.TrialConfigBitmap.UserButton;
-                    file_trialConfig[0] |= (byte)ShimmerSDBT.TrialConfigBitmap.Sync;
+                    file_trialConfig[0] |= (byte)TrialConfigBitmap.UserButton;
+                    file_trialConfig[0] |= (byte)TrialConfigBitmap.Sync;
                 }
 
                 if (!centername_set) // if no center is appointed, let this guy be the center
@@ -1398,129 +1369,129 @@ namespace ShimmerAPI
 
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.XLNAccel);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.YLNAccel);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ZLNAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.XLNAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.YLNAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.ZLNAccel);
                     nbrAdcChans += 3;
                 }
                 if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_VBATT >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.VBatt);
+                    buffer_channelContents.Add((byte)ChannelContents.VBatt);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXT_A7) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ExternalAdc7);
+                    buffer_channelContents.Add((byte)ChannelContents.ExternalAdc7);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXT_A6) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ExternalAdc6);
+                    buffer_channelContents.Add((byte)ChannelContents.ExternalAdc6);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXT_A15 >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ExternalAdc15);
+                    buffer_channelContents.Add((byte)ChannelContents.ExternalAdc15);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A12 >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.InternalAdc12);
+                    buffer_channelContents.Add((byte)ChannelContents.InternalAdc12);
                     nbrAdcChans++;
                 }
-                if ((byte)((byte)file_sensors[1] & (byte)(((int)Shimmer.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP >> 8) & 0xff)) != 0)
+                if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.STRAIN_HIGH);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.STRAIN_LOW);
+                    buffer_channelContents.Add((byte)ChannelContents.STRAIN_HIGH);
+                    buffer_channelContents.Add((byte)ChannelContents.STRAIN_LOW);
                     nbrAdcChans += 2;
                 }
                 if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A13 >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.InternalAdc13);
+                    buffer_channelContents.Add((byte)ChannelContents.InternalAdc13);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[2] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A14 >> 16) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.InternalAdc14);
+                    buffer_channelContents.Add((byte)ChannelContents.InternalAdc14);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GSR) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.GsrRaw);
+                    buffer_channelContents.Add((byte)ChannelContents.GsrRaw);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A1 >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.InternalAdc1);
+                    buffer_channelContents.Add((byte)ChannelContents.InternalAdc1);
                     nbrAdcChans++;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.XGyro);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.YGyro);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ZGyro);
+                    buffer_channelContents.Add((byte)ChannelContents.XGyro);
+                    buffer_channelContents.Add((byte)ChannelContents.YGyro);
+                    buffer_channelContents.Add((byte)ChannelContents.ZGyro);
                     nbrDigiChans += 3;
                 }
                 if ((byte)((byte)file_sensors[1] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_D_ACCEL >> 8) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.XWRAccel);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.YWRAccel);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ZWRAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.XWRAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.YWRAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.ZWRAccel);
                     nbrDigiChans += 3;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.XMag);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.YMag);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ZMag);
+                    buffer_channelContents.Add((byte)ChannelContents.XMag);
+                    buffer_channelContents.Add((byte)ChannelContents.YMag);
+                    buffer_channelContents.Add((byte)ChannelContents.ZMag);
                     nbrDigiChans += 3;
                 }
-                if ((byte)((byte)file_sensors[2] & (byte)(((int)ShimmerSDBT.SensorBitmapShimmer3_unused.SensorMpuAccel >> 16) & 0xff)) != 0)
+                if ((byte)((byte)file_sensors[2] & (byte)(((int)SensorBitmapShimmer3_unused.SensorMpuAccel >> 16) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.AlternativeXAccel);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.AlternativeYAccel);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.AlternativeZAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.AlternativeXAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.AlternativeYAccel);
+                    buffer_channelContents.Add((byte)ChannelContents.AlternativeZAccel);
                     nbrDigiChans += 3;
                 }
-                if ((byte)((byte)file_sensors[2] & (byte)(((int)ShimmerSDBT.SensorBitmapShimmer3_unused.SensorMpuMag >> 16) & 0xff)) != 0)
+                if ((byte)((byte)file_sensors[2] & (byte)(((int)SensorBitmapShimmer3_unused.SensorMpuMag >> 16) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.AlternativeXMag);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.AlternativeYMag);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.AlternativeZMag);
+                    buffer_channelContents.Add((byte)ChannelContents.AlternativeXMag);
+                    buffer_channelContents.Add((byte)ChannelContents.AlternativeYMag);
+                    buffer_channelContents.Add((byte)ChannelContents.AlternativeZMag);
                     nbrDigiChans += 3;
                 }
                 if ((byte)((byte)file_sensors[2] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE >> 16) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Temperature);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Pressure);
+                    buffer_channelContents.Add((byte)ChannelContents.Temperature);
+                    buffer_channelContents.Add((byte)ChannelContents.Pressure);
                     nbrDigiChans += 2;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg1_Status);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg1_CH1);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg1_CH2);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg1_Status);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg1_CH1);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg1_CH2);
                     nbrDigiChans += 3;
                 }
                 if ((byte)((byte)file_sensors[2] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT >> 16) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg1_Status);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg1_CH1_16Bit);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg1_CH2_16Bit);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg1_Status);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg1_CH1_16Bit);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg1_CH2_16Bit);
                     nbrDigiChans += 3;
                 }
                 if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg2_Status);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg2_CH1);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg2_CH2);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg2_Status);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg2_CH1);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg2_CH2);
                     nbrDigiChans += 3;
                 }
                 if ((byte)((byte)file_sensors[2] & (byte)(((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT >> 16) & 0xff)) != 0)
                 {
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg2_Status);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg2_CH1_16Bit);
-                    buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.Exg2_CH2_16Bit);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg2_Status);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg2_CH1_16Bit);
+                    buffer_channelContents.Add((byte)ChannelContents.Exg2_CH2_16Bit);
                     nbrDigiChans += 3;
                 }
 
@@ -1552,7 +1523,7 @@ namespace ShimmerAPI
             }
             return 0;
         }
-        
+
 
         public override void SDBT_switch(byte b)
         {
@@ -1562,9 +1533,10 @@ namespace ShimmerAPI
             {
                 switch (b)
                 {
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE: int inStreamCMD = ReadByte();
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE:
+                        int inStreamCMD = ReadByte();
                         //System.Console.WriteLine("In Stream CMD Response");
-                        if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
+                        if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
                             System.Console.WriteLine("Status Response Received");
                             //STATUS: 0|0|0|STREAMING|LOGGING|SELFCMD|SENSING|DOCKED
@@ -1589,9 +1561,9 @@ namespace ShimmerAPI
                                 if (docked && isLogging)
                                 {
                                     String message = "Shimmer docking detected.\nStop writing to SD card.";
-                                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_WARNING);
+                                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
                                     OnNewEvent(newEventArgs);
-                                    
+
                                     /*if (GetSdDir() != "")
                                         this.Invoke(new Action(() => { PChangeStatusLabel("BT Streaming. Last SDLog Directory : " + pProfile.GetSdDir()); }));
                                     else
@@ -1620,12 +1592,12 @@ namespace ShimmerAPI
                                         String message = "Stopped. Last SDLog Directory : " + GetSdDir();
                                         CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                         OnNewEvent(newEventArgs);
-                                        
+
 
                                     }
                                     else
                                     {
-                                        
+
                                         String message = "Stopped.";
                                         CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                         OnNewEvent(newEventArgs);
@@ -1650,7 +1622,7 @@ namespace ShimmerAPI
 
                             SetDataReceived(true);
                         }
-                        else if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.DIR_RESPONSE)
+                        else if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.DIR_RESPONSE)
                         {
                             buffer.Clear();
                             int len = ReadByte();
@@ -1676,7 +1648,8 @@ namespace ShimmerAPI
                             if (isLogging)
                             {
                                 if (GetSdDir() != "")
-                                {   String message = "BTStream + SDLog, Current SDLog Directory : " + GetSdDir();
+                                {
+                                    String message = "BTStream + SDLog, Current SDLog Directory : " + GetSdDir();
                                     CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                     OnNewEvent(newEventArgs);
                                 }
@@ -1702,7 +1675,7 @@ namespace ShimmerAPI
             {
                 switch (b)
                 {
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.TRIAL_CONFIG_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.TRIAL_CONFIG_RESPONSE:
                         for (i = 0; i < 3; i++)
                         {
                             // get 2 bytes trial config and 1 byte interval
@@ -1712,7 +1685,7 @@ namespace ShimmerAPI
                         buffer.Clear();
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.CENTER_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.CENTER_RESPONSE:
                         {
                             int len = ReadByte();
                             for (i = 0; i < len; i++)
@@ -1725,7 +1698,7 @@ namespace ShimmerAPI
                         }
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.SHIMMERNAME_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.SHIMMERNAME_RESPONSE:
                         {
                             int len = ReadByte();
                             for (i = 0; i < len; i++)
@@ -1739,7 +1712,7 @@ namespace ShimmerAPI
                         }
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.EXPID_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.EXPID_RESPONSE:
                         {
                             int len = ReadByte();
                             for (i = 0; i < len; i++)
@@ -1753,7 +1726,7 @@ namespace ShimmerAPI
                         }
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.CONFIGTIME_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.CONFIGTIME_RESPONSE:
                         {
                             int len = ReadByte();
                             for (i = 0; i < len; i++)
@@ -1774,17 +1747,18 @@ namespace ShimmerAPI
                         }
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.MYID_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.MYID_RESPONSE:
                         SetMyID(ReadByte());
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.NSHIMMER_RESPONSE:
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.NSHIMMER_RESPONSE:
                         SetNshimmer(ReadByte());
                         SetDataReceived(true);
                         break;
-                    case (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE: int inStreamCMD = ReadByte();
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE:
+                        int inStreamCMD = ReadByte();
                         //System.Console.WriteLine("CMD Response");
-                        if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
+                        if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
                             System.Console.WriteLine("Status Response Received");
                             //STATUS: 0|0|0|0|0|SELFCMD|SENSING|DOCKED
@@ -1802,7 +1776,7 @@ namespace ShimmerAPI
                                 {
 
                                     String message = "Shimmer docking detected.\nStop writing to SD card.";
-                                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBT.ShimmerSDBTMinorIdentifier.MSG_WARNING);
+                                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
                                     OnNewEvent(newEventArgs);
                                 }
                             }
@@ -1821,19 +1795,19 @@ namespace ShimmerAPI
                                 {
                                     if (isLogging && (GetSdDir() != ""))
                                     {
-                                        
+
                                         String message = "Stopped. Last SDLog Directory : " + GetSdDir();
                                         CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
-                                            
+
                                         OnNewEvent(newEventArgs);
-                                    
+
                                     }
                                     else
                                     {
                                         String message = "Stopped.";
                                         CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                         OnNewEvent(newEventArgs);
-                                    
+
                                     }
                                     SetSdDir("");
                                     if (IsConnectionOpen())
@@ -1848,13 +1822,13 @@ namespace ShimmerAPI
                                         FlushInputConnection();
                                     }
                                     // todo: check button status
-                                    
+
                                 }
                             }
 
                             SetDataReceived(true);
                         }
-                        else if (inStreamCMD == (byte)ShimmerSDBT.PacketTypeShimmer3SDBT.DIR_RESPONSE)
+                        else if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.DIR_RESPONSE)
                         {
                             buffer.Clear();
                             int len = ReadByte();
@@ -1875,7 +1849,7 @@ namespace ShimmerAPI
                                 SetSdDir("");
                             }
 
-                            
+
                             if (GetSdDir() != "")
                             {
                                 if (CurrentSensingStatus)
@@ -1883,16 +1857,16 @@ namespace ShimmerAPI
                                     String message = "BTStream + SDLog, Current SDLog Directory : " + GetSdDir();
                                     CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                     OnNewEvent(newEventArgs);
-                                
+
                                 }
                                 else
                                 {
                                     String message = "BTStream + SDLog, Last Known SDLog Directory : " + GetSdDir();
                                     CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                     OnNewEvent(newEventArgs);
-                                
+
                                 }
-                                    
+
                             }
                             else
                             {
@@ -1900,7 +1874,7 @@ namespace ShimmerAPI
                                 CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message);
                                 OnNewEvent(newEventArgs);
                             }
-                            
+
                             SetDataReceived(true);
                         }
                         buffer.Clear();
