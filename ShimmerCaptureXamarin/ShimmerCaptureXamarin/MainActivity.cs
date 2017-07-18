@@ -1,4 +1,5 @@
-﻿using System;
+﻿//NOTE: This is only provided as an example and has not been tested extensively
+using System;
 using Android.App;
 using Android.Content;
 using Android.Runtime;
