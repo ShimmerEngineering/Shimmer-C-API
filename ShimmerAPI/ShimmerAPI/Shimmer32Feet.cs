@@ -44,6 +44,7 @@ using System.IO;
 
 namespace ShimmerAPI
 {
+    [System.Obsolete]
     public abstract class Shimmer32Feet:ShimmerBluetooth
     {
         

@@ -58,6 +58,7 @@
     <Compile Include="Shimmer32Feet.cs" />
     <Compile Include="ShimmerBluetooth.cs" />
     <Compile Include="ShimmerLogAndStream.cs" />
+    <Compile Include="ShimmerLogAndStream32Feet.cs" />
     <Compile Include="ShimmerLogAndStreamSystemSerialPort.cs" />
     <Compile Include="ShimmerSDBT.cs" />
     <Compile Include="ShimmerSDBT32Feet.cs" />
