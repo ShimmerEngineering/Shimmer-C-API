@@ -16,7 +16,7 @@ namespace ShimmerCaptureXamarin
     public class MainActivity : Activity
     {
         int count = 1;
-        ShimmerAndroidXamarin shimmer;
+        ShimmerLogAndStreamXamarin shimmer;
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
@@ -30,7 +30,7 @@ namespace ShimmerCaptureXamarin
 
             button.Click += delegate { shimmer.StartStreaming(); };
 
-            shimmer = new ShimmerAndroidXamarin("", "00:06:66:79:E4:54");
+            shimmer = new ShimmerLogAndStreamXamarin("", "00:06:66:79:E4:54");
             shimmer.UICallback += this.HandleEvent;
             shimmer.StartConnectThread();
         }
