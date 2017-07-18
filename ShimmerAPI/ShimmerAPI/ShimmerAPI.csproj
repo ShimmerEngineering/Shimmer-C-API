@@ -61,6 +61,7 @@
     <Compile Include="ObjectCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorData.cs" />
+    <None Include="README.md" />
     <None Include="Shimmer.cs" />
     <None Include="Shimmer32Feet.cs" />
     <Compile Include="ShimmerBluetooth.cs" />
