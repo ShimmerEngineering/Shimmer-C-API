@@ -34,3 +34,6 @@ C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\GrpcTest\Wind
 C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\GrpcTest\WindowsFormsApplication1\bin\Debug\System.Interactive.Async.xml
 C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\GrpcTest\WindowsFormsApplication1\obj\Debug\GrpcTest.exe
 C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\GrpcTest\WindowsFormsApplication1\obj\Debug\GrpcTest.pdb
+C:\Users\User\Documents\GitHub\Shimmer-C-API\GrpcTest\WindowsFormsApplication1\bin\Debug\GrpcTest.exe.config
+C:\Users\User\Documents\GitHub\Shimmer-C-API\GrpcTest\WindowsFormsApplication1\obj\Debug\GrpcTest.exe
+C:\Users\User\Documents\GitHub\Shimmer-C-API\GrpcTest\WindowsFormsApplication1\obj\Debug\GrpcTest.pdb

@@ -20,3 +20,6 @@ C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\ProtoBufTest\
 C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\ProtoBufTest\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
 C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\ProtoBufTest\WindowsFormsApplication1\obj\Debug\ProtoBufTest.Properties.Resources.resources
 C:\Users\Lim\Documents\Shimmer\C#\Shimmer_Csharp_API_v0.2.1\Source\ProtoBufTest\WindowsFormsApplication1\obj\Debug\ProtoBufTest.csproj.GenerateResource.Cache
+C:\Users\User\Documents\GitHub\Shimmer-C-API\ProtoBufTest\WindowsFormsApplication1\bin\Debug\ProtoBufTest.exe.config
+C:\Users\User\Documents\GitHub\Shimmer-C-API\ProtoBufTest\WindowsFormsApplication1\obj\Debug\ProtoBufTest.exe
+C:\Users\User\Documents\GitHub\Shimmer-C-API\ProtoBufTest\WindowsFormsApplication1\obj\Debug\ProtoBufTest.pdb
