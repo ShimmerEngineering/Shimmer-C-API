@@ -515,7 +515,33 @@ namespace ShimmerAPI
             checkBoxGyroOnTheFly.Checked = PConfiguration.PControlForm.ShimmerDevice.IsGyroOnTheFlyCalEnabled();
 
             //ComboBoxes
-            comboBoxAccelRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetAccelRange();
+            int accelRange = PConfiguration.PControlForm.ShimmerDevice.GetAccelRange();
+            if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
+            {
+                comboBoxAccelRange.SelectedIndex = accelRange;
+            }
+            else //updated Shimmer3 (0,2,3,1)
+            {
+                if (comboBoxAccelRange.SelectedIndex == 0)
+                {
+                    comboBoxAccelRange.SelectedIndex = 0;
+                }
+                else if (comboBoxAccelRange.SelectedIndex == 1)
+                {
+                    comboBoxAccelRange.SelectedIndex = 2;
+                }
+                else if (comboBoxAccelRange.SelectedIndex == 2)
+                {
+                    comboBoxAccelRange.SelectedIndex = 3;
+                }
+                else if (comboBoxAccelRange.SelectedIndex == 3)
+                {
+                    comboBoxAccelRange.SelectedIndex = 1;
+                }
+
+            }
+
+
             comboBoxGSRRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetGSRRange();
 
             checkEnabledSensors();
@@ -735,6 +761,7 @@ namespace ShimmerAPI
                         checkBoxLowPowerMag.Visible = false;
                         comboBoxMagRange.Visible = false;
                         comboBoxMagRange.Enabled = false;
+                        labelMagRange.Visible = false;
                     }
                     else
                     {
@@ -742,6 +769,7 @@ namespace ShimmerAPI
                         checkBoxLowPowerMag.Enabled = true;
                         comboBoxMagRange.Visible = true;
                         comboBoxMagRange.Enabled = true;
+                        labelMagRange.Visible = true;
                     }
                 }
                 else

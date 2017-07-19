@@ -1498,6 +1498,10 @@ namespace ShimmerAPI
                             OnNewEvent(newEventArgs);
                             Disconnect();
                         }
+                        if(GetFirmwareIdentifier() == FW_IDENTIFIER_BTSTREAM && ShimmerState == SHIMMER_STATE_CONNECTED)
+                        {
+                            StreamTimeOutCount = 0;
+                        }
                     }
 
                 }
