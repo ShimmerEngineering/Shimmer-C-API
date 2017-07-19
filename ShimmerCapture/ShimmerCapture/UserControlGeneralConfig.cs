@@ -522,19 +522,19 @@ namespace ShimmerAPI
             }
             else //updated Shimmer3 (0,2,3,1)
             {
-                if (comboBoxAccelRange.SelectedIndex == 0)
+                if (accelRange == 0)
                 {
                     comboBoxAccelRange.SelectedIndex = 0;
                 }
-                else if (comboBoxAccelRange.SelectedIndex == 1)
+                else if (accelRange == 1)
                 {
                     comboBoxAccelRange.SelectedIndex = 2;
                 }
-                else if (comboBoxAccelRange.SelectedIndex == 2)
+                else if (accelRange == 2)
                 {
                     comboBoxAccelRange.SelectedIndex = 3;
                 }
-                else if (comboBoxAccelRange.SelectedIndex == 3)
+                else if (accelRange == 3)
                 {
                     comboBoxAccelRange.SelectedIndex = 1;
                 }
