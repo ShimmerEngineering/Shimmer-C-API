@@ -67,12 +67,25 @@ namespace ShimmerAPI
         }
         protected override int ReadByte()
         {
-            return peerStream.ReadByte();
+            int byteRead = peerStream.ReadByte();
+            if (byteRead == -1 && GetState() == ShimmerBluetooth.SHIMMER_STATE_STREAMING)
+            {
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost");
+                OnNewEvent(newEventArgs);
+                Disconnect();
+            } else if (byteRead == -1 && GetState() == ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
+            {
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost");
+                OnNewEvent(newEventArgs);
+                Disconnect();
+            }
+            return byteRead;
         }
         protected override void OpenConnection()
         {
             btEndpoint = new BluetoothEndPoint(addr, g);
             btClient = new BluetoothClient();
+            SetState(SHIMMER_STATE_CONNECTING);
             btClient.Connect(btEndpoint);
             peerStream = btClient.GetStream();
         }

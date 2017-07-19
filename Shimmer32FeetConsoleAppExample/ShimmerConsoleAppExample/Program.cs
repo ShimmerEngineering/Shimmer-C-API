@@ -45,19 +45,19 @@ namespace ShimmerConsoleAppExample
                     int state = (int)eventArgs.getObject();
                     if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
                     {
-
+                        System.Console.WriteLine("Connected");
                     }
                     else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTING)
                     {
-
+                        System.Console.WriteLine("Connecting");
                     }
                     else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_NONE)
                     {
-
+                        System.Console.WriteLine("Disconnected");
                     }
                     else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING)
                     {
-
+                        System.Console.WriteLine("Streaming");
                     }
                     break;
                 case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE:
