@@ -520,7 +520,7 @@ namespace ShimmerAPI
             {
                 comboBoxAccelRange.SelectedIndex = accelRange;
             }
-            else //updated Shimmer3 (0,2,3,1)
+            else //updated Shimmer3 (0,2,3,1) 
             {
                 if (accelRange == 0)
                 {
@@ -528,15 +528,15 @@ namespace ShimmerAPI
                 }
                 else if (accelRange == 1)
                 {
-                    comboBoxAccelRange.SelectedIndex = 2;
+                    comboBoxAccelRange.SelectedIndex = 3;
                 }
                 else if (accelRange == 2)
                 {
-                    comboBoxAccelRange.SelectedIndex = 3;
+                    comboBoxAccelRange.SelectedIndex = 1;
                 }
                 else if (accelRange == 3)
                 {
-                    comboBoxAccelRange.SelectedIndex = 1;
+                    comboBoxAccelRange.SelectedIndex = 2;
                 }
 
             }
