@@ -729,8 +729,20 @@ namespace ShimmerAPI
                 if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
                 {
                     checkBoxSensor4.Checked = true;
-                    checkBoxLowPowerMag.Enabled = true;
-                    comboBoxMagRange.Enabled = true;
+                    if (PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors()) //new mag sensor (updated Shimmer 3) has no variable mag range
+                    {
+                        checkBoxLowPowerMag.Enabled = false;
+                        checkBoxLowPowerMag.Visible = false;
+                        comboBoxMagRange.Visible = false;
+                        comboBoxMagRange.Enabled = false;
+                    }
+                    else
+                    {
+                        checkBoxLowPowerMag.Visible = true;
+                        checkBoxLowPowerMag.Enabled = true;
+                        comboBoxMagRange.Visible = true;
+                        comboBoxMagRange.Enabled = true;
+                    }
                 }
                 else
                 {
@@ -1991,7 +2003,29 @@ namespace ShimmerAPI
             PConfiguration.PControlForm.ShimmerDevice.SetLowPowerGyro(checkBoxLowPowerGyro.Checked);
             PConfiguration.PControlForm.ShimmerDevice.Set3DOrientation(checkBox3DOrientation.Checked);
             PConfiguration.PControlForm.ShimmerDevice.SetGyroOnTheFlyCalibration(checkBoxGyroOnTheFly.Checked, 100, 1.2);
-            PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(comboBoxAccelRange.SelectedIndex);
+            if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
+            {
+                PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(comboBoxAccelRange.SelectedIndex);
+            } else //updated Shimmer3 (0,2,3,1)
+            {
+                if (comboBoxAccelRange.SelectedIndex == 0)
+                {
+                    PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(0);
+                }
+                else if (comboBoxAccelRange.SelectedIndex == 1)
+                {
+                    PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(2);
+                }
+                else if (comboBoxAccelRange.SelectedIndex == 2)
+                {
+                    PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(3);
+                }
+                else if (comboBoxAccelRange.SelectedIndex == 3)
+                {
+                    PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(1);
+                }
+
+            }
             PConfiguration.PControlForm.ShimmerDevice.WriteGSRRange(comboBoxGSRRange.SelectedIndex);
 
 
