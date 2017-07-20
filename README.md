@@ -24,7 +24,7 @@ NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, 
 
 # REV 0.7
 - BTStream Firmware Is No Longer officially supported
-- Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project), restructuring was driven by Xamarin not being able to handle Bluetooth implementations (e.g. system serial port/32 feet)
+- Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project), restructuring was driven by the need to reduce unsustainable code duplicates as well as Xamarin not being able to handle Bluetooth implementations (e.g. system serial port/32 feet)
 - Consolidating duplicates of code in ShimmerSDBT and ShimmerSDBT32Feet into ShimmerLogAndStream
 - Major restructuring to code, ensuring platform specific bluetooth controls are strictly seperated between ShimmerLogAndStream and classes which extend it ShimmerLogAndStreamSystemSerialPort/ShimmerLogAndStream32Feet/ShimmerLogAndStreamXamarin
 - Updates to API to support the updated Shimmer3 device whose sensors have been updated to the following
