@@ -6,8 +6,14 @@ To use, build the ShimmerAPI project and make sure the examples (e.g. ShimmerCap
 NOTE: Where require the dlls for ShimmerLibrary, InTheHand, MathNet.Numerics can be found in the libraries folder in the ShimmerAPI project
 
 Changes since Rev0.6
-- Shimmer and Shimmer32Feet have been converted to abstract classes, in the past these classes supported BTStream while ShimmerSDBT supported LogandStream. BTStream has since been deprecated
-
+- BTStream Firmware Is No Longer officially supported
+- Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project)
+- Major restructuring to code, ensuring platform specific bluetooth controls are strictly seperated between ShimmerLogAndStream and classes which extend it ShimmerLogAndStreamSystemSerialPort/ShimmerLogAndStream32Feet/ShimmerLogAndStreamXamarin
+- Updates to API to support the updated Shimmer3 device whose sensors have been updated as follows
+      1.	Pressure sensor:		BMP180 → BMP280
+      2.	Gyroscope + mag:		MPU9150 → MPU9250
+      3.	Low-Noise Accel:		KXRB5-2042 → KXTC9-2050
+      4.	Wide-Range Accel:		LSM303DLHC → LSM303AHTR
 
 # The Following Applies To All Code Provided in the repository
 Copyright (c) 2014, Shimmer Research, Ltd.
