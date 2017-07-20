@@ -1,11 +1,11 @@
-# Shimmer-C-API Rev0.7 (BETA)
+# Shimmer-C-API
 The C# APi is currently in a BETA development state, users are free to use and provide feedback. For users working on production code we recommend downloading the API from the Shimmer Website http://www.shimmersensing.com/support/wireless-sensor-networks-download/
 
 To use, build the ShimmerAPI project and make sure the examples (e.g. ShimmerCapture) references the build dll.
 
-NOTE: Where require the dlls for ShimmerClosedLibrary (algorithms), InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
+NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
 
-Changes since Rev0.6
+# REV 0_7
 - BTStream Firmware Is No Longer officially supported
 - Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project)
 - Major restructuring to code, ensuring platform specific bluetooth controls are strictly seperated between ShimmerLogAndStream and classes which extend it ShimmerLogAndStreamSystemSerialPort/ShimmerLogAndStream32Feet/ShimmerLogAndStreamXamarin
@@ -18,6 +18,29 @@ Changes since Rev0.6
       3.	Low-Noise Accel:		KXRB5-2042 → KXTC9-2050
       
       4.	Wide-Range Accel:		LSM303DLHC → LSM303AHTR
+
+
+# REV 0_6
+- fix to calibrated time stamp when using 3 byte raw time stamp (e.g. LogAndStream 0.6)
+
+# REV 0_5
+- major updates to allow API to work with LogAndStream 0.6 and BtStream 0.8, 3 byte raw timestamp
+
+# REV 0_4
+- minor update to packet loss detection, increasing the limit to 10%
+- update to writesamplingrate makes sure internal sensor rates are approximately close/higher than shimmer sampling rate
+
+# REV 0_3_2
+- Fix to filter, fix to to exg, gui failing when custom gain is used 
+- Currently uses ShimmerClosedLibraryRev0_4
+
+# REV 0_3_1
+- Minor fix to ppgtohr reset
+- Currently uses ShimmerClosedLibraryRev0_4
+
+# REV 0_3
+- Major update to ecgtohr algorithm and filtering algorithm, minor update to ppgtohr algorithm, user should see major improvements in both ecgtohr and ppgtohr algorithms.
+- Currently uses ShimmerClosedLibraryRev0_3
 
 # The Following Applies To All Code Provided in the repository
 Copyright (c) 2014, Shimmer Research, Ltd.
