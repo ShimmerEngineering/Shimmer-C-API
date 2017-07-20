@@ -1,7 +1,14 @@
 # Shimmer-C-API
-The C# APi is currently in a BETA development state, users are free to use and provide feedback. For users working on production code we recommend downloading the API from the Shimmer Website http://www.shimmersensing.com/support/wireless-sensor-networks-download/
+The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware.
+This API is broken into the following projects, please refer to the Readme of each project for further info
 
-To use, build the ShimmerAPI project and make sure the examples (e.g. ShimmerCapture) references the build dll.
+      1.	ShimmerAPI
+                  
+      2.	ShimmerCapture
+      
+      3.	ShimmerComPortParsingExample
+      
+      4.	ShimmerConsoleAppExample
 
 NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
 
