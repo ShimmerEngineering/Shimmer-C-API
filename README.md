@@ -9,6 +9,16 @@ This API is broken into the following projects, please refer to the Readme of ea
       3.	ShimmerComPortParsingExample
       
       4.	ShimmerConsoleAppExample
+      
+      5.    ShimmerECGConsoleAppExample
+      
+      6.    ShimmerEXGConsoleAppExample
+      
+      7.    Shimmer32FeetConsoleAppExample
+      
+      8.    ShimmerPPGHRGSRConsoleAppExample
+      
+      9.    ShimmerCaptureXamarin
 
 NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
 
