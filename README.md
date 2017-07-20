@@ -9,7 +9,7 @@ Changes since Rev0.6
 - BTStream Firmware Is No Longer officially supported
 - Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project)
 - Major restructuring to code, ensuring platform specific bluetooth controls are strictly seperated between ShimmerLogAndStream and classes which extend it ShimmerLogAndStreamSystemSerialPort/ShimmerLogAndStream32Feet/ShimmerLogAndStreamXamarin
-- Updates to API to support the updated Shimmer3 device whose sensors have been updated as follows
+- Updates to API to support the updated Shimmer3 device whose sensors have been updated to the following
 
       1.	Pressure sensor:		BMP180 → BMP280
       
