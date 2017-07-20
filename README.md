@@ -19,7 +19,8 @@ NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, 
       
       4.	Wide-Range Accel:		LSM303DLHC → LSM303AHTR
 
-- Added some support for Xamarin
+- Added support for Xamarin 
+- Fixes when using 32 Feet
 
 # REV 0.6
 - fix to calibrated time stamp when using 3 byte raw time stamp (e.g. LogAndStream 0.6)
