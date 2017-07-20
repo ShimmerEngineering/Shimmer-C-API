@@ -5,7 +5,7 @@ To use, build the ShimmerAPI project and make sure the examples (e.g. ShimmerCap
 
 NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
 
-# REV 0_7
+# REV 0.7
 - BTStream Firmware Is No Longer officially supported
 - Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project)
 - Major restructuring to code, ensuring platform specific bluetooth controls are strictly seperated between ShimmerLogAndStream and classes which extend it ShimmerLogAndStreamSystemSerialPort/ShimmerLogAndStream32Feet/ShimmerLogAndStreamXamarin
@@ -20,21 +20,21 @@ NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, 
       4.	Wide-Range Accel:		LSM303DLHC → LSM303AHTR
 
 
-# REV 0_6
+# REV 0.6
 - fix to calibrated time stamp when using 3 byte raw time stamp (e.g. LogAndStream 0.6)
 
-# REV 0_5
+# REV 0.5
 - major updates to allow API to work with LogAndStream 0.6 and BtStream 0.8, 3 byte raw timestamp
 
-# REV 0_4
+# REV 0.4
 - minor update to packet loss detection, increasing the limit to 10%
 - update to writesamplingrate makes sure internal sensor rates are approximately close/higher than shimmer sampling rate
 
-# REV 0_3_2
+# REV 0.3.2
 - Fix to filter, fix to to exg, gui failing when custom gain is used 
 - Currently uses ShimmerClosedLibraryRev0_4
 
-# REV 0_3_1
+# REV 0.3.1
 - Minor fix to ppgtohr reset
 - Currently uses ShimmerClosedLibraryRev0_4
 
