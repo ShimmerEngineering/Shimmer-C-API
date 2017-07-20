@@ -3,7 +3,7 @@ The C# APi is currently in a BETA development state, users are free to use and p
 
 To use, build the ShimmerAPI project and make sure the examples (e.g. ShimmerCapture) references the build dll.
 
-NOTE: Where require the dlls for ShimmerLibrary, InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
+NOTE: Where require the dlls for ShimmerClosedLibrary (algorithms), InTheHand, MathNet.Numerics can be found in the libs folder in the ShimmerAPI project
 
 Changes since Rev0.6
 - BTStream Firmware Is No Longer officially supported
