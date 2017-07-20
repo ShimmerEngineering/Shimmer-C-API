@@ -38,7 +38,7 @@ NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms), InTheHand, 
 - Minor fix to ppgtohr reset
 - Currently uses ShimmerClosedLibraryRev0_4
 
-# REV 0_3
+# REV 0.3
 - Major update to ecgtohr algorithm and filtering algorithm, minor update to ppgtohr algorithm, user should see major improvements in both ecgtohr and ppgtohr algorithms.
 - Currently uses ShimmerClosedLibraryRev0_3
 
