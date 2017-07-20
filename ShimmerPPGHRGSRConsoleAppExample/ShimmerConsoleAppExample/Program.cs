@@ -12,7 +12,7 @@ namespace ShimmerConsoleAppExample
     {
         Filter LPF_PPG;
         Filter HPF_PPG;
-        PPGtoHRAlgorithm PPGtoHeartRateCalculation;
+        PPGToHRAlgorithm PPGtoHeartRateCalculation;
         int NumberOfHeartBeatsToAverage = 1;
         int TrainingPeriodPPG = 10; //10 second buffer
         double LPF_CORNER_FREQ_HZ = 5;

@@ -38,9 +38,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
     </Reference>
-    <Reference Include="ShimmerLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ShimmerAPI\ShimmerAPI\Libraries\ShimmerLibrary.dll</HintPath>
+    <Reference Include="ShimmerClosedLibraryRev0_4">
+      <HintPath>..\..\ShimmerAPI\ShimmerAPI\libs\ShimmerClosedLibraryRev0_4.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

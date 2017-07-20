@@ -42,8 +42,9 @@
       <HintPath>..\packages\Google.Protobuf.3.3.0\lib\net45\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="InTheHand.Net.Personal">
-      <HintPath>Libraries\InTheHand.Net.Personal.dll</HintPath>
+    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>libs\InTheHand.Net.Personal.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -73,6 +74,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="libs\InTheHand.Net.Personal.dll" />
+    <Content Include="libs\MathNet.Numerics.dll" />
+    <Content Include="libs\ShimmerClosedLibraryRev0_4.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
