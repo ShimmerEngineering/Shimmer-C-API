@@ -1,5 +1,5 @@
 # API
-This project holds the API code required to control and connect to a Shimmer3 device running LogandStream firmware.
+This project holds the API code required to control, connect and stream data (via Bluetooth SPP) from a Shimmer3 device running LogandStream firmware.
 
 # Instuctions for Compiling Library (ShimmerAPI.dll) for Xamarin
 
