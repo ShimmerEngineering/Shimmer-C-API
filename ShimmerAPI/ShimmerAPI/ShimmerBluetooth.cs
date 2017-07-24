@@ -1561,7 +1561,7 @@ namespace ShimmerAPI
                     }
                     else
                     {
-                        StopStreaming();
+                        //StopStreaming();
                     }
 
                 }
