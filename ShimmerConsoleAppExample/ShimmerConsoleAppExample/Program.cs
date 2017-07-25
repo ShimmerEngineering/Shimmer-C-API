@@ -52,7 +52,7 @@ namespace ShimmerConsoleAppExample
             switch (indicator)
             {
                 case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE:
-                    System.Diagnostics.Debug.Write(((ShimmerBluetooth)sender).GetDeviceName() + " State = " + ((Shimmer)sender).GetStateString() + System.Environment.NewLine);
+                    System.Diagnostics.Debug.Write(((ShimmerBluetooth)sender).GetDeviceName() + " State = " + ((ShimmerBluetooth)sender).GetStateString() + System.Environment.NewLine);
                     int state = (int)eventArgs.getObject();
                     if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
                     {
