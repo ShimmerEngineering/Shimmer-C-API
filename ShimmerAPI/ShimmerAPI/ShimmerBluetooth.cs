@@ -839,7 +839,10 @@ namespace ShimmerAPI
                 }
                 catch
                 {
-                    TimerConnect.Stop(); // Enable it
+                    if (TimerConnect != null)
+                    {
+                        TimerConnect.Stop(); // Enable it
+                    }
                     StopReading = true;
                     ReadThread = null;
                     SetState(SHIMMER_STATE_NONE);
@@ -854,7 +857,10 @@ namespace ShimmerAPI
             }
             else
             {
-                TimerConnect.Stop(); // Enable it
+                if (TimerConnect != null)
+                {
+                    TimerConnect.Stop(); // Enable it
+                }
                 StopReading = true;
                 ReadThread = null;
                 SetState(SHIMMER_STATE_NONE);
