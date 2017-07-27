@@ -20,7 +20,9 @@ This API is broken into the following projects, please refer to the Readme of ea
       
       9.    ShimmerCaptureXamarin
 
-NOTE: Where required the dlls for ShimmerClosedLibrary (algorithms)
+NOTE: Where required the dll for ShimmerClosedLibrary (algorithms) can be found in the libs folder within the ShimmerAPI project. Where required the following nuget packages are used:-
+- MathNet.Numerics which is a ShimmerClosedLibrary dependency
+- 32feet.NET which is required when using the 32 feet library (ShimmerLogAndStream32Feet.cs , etc)
 
 # REV 0.7
 - BTStream Firmware Is No Longer officially supported
