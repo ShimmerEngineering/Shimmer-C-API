@@ -1,6 +1,7 @@
-# Notes
+# ShimmerCaptureXamarin
 This is a work in progress, any feedback is appreciated. 
 This code serves as an example on how to extend the ShimmerLogAndStream class (used for streaming between the API and a Shimmer Device running LogAndStream Firmware).
+- To use example update the bluetooth address in MainActivity.cs
 
 # Instuctions for Compiling Library (ShimmerAPI.dll) for Xamarin
 
