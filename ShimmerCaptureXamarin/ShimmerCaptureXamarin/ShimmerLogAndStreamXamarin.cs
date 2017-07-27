@@ -79,7 +79,9 @@ namespace ShimmerAPI
                 byteRead = input.Read();
             } catch (Java.IO.IOException)
             {
-
+                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost");
+                OnNewEvent(newEventArgs);
+                Disconnect();
             }
             return byteRead;
         }

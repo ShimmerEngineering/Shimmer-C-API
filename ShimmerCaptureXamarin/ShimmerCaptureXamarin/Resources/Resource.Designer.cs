@@ -72,6 +72,12 @@ namespace ShimmerCaptureXamarin
 			// aapt resource value: 0x7f050003
 			public const int buttonStop = 2131034115;
 			
+			// aapt resource value: 0x7f050005
+			public const int textViewAccelX = 2131034117;
+			
+			// aapt resource value: 0x7f050004
+			public const int textViewShimmerState = 2131034116;
+			
 			static Id()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
