@@ -73,7 +73,15 @@ namespace ShimmerAPI
 
         protected override int ReadByte()
         {
-            return input.Read();
+            int byteRead = -1;
+            try
+            {
+                byteRead = input.Read();
+            } catch (Java.IO.IOException)
+            {
+
+            }
+            return byteRead;
         }
 
         protected override void WriteBytes(byte[] b, int index, int length)

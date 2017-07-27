@@ -16,7 +16,6 @@ namespace ShimmerCaptureXamarin
     [Activity(Label = "ShimmerCaptureXamarin", MainLauncher = true, Icon = "@drawable/icon")]
     public class MainActivity : Activity
     {
-        int count = 1;
         ShimmerLogAndStreamXamarin shimmer;
         protected override void OnCreate(Bundle bundle)
         {
@@ -27,13 +26,33 @@ namespace ShimmerCaptureXamarin
 
             // Get our button from the layout resource,
             // and attach an event to it
-            Button button = FindViewById<Button>(Resource.Id.MyButton);
+            Button buttonStart = FindViewById<Button>(Resource.Id.buttonStart);
 
-            button.Click += delegate { shimmer.StartStreaming(); };
+            buttonStart.Click += delegate { shimmer.StartStreaming(); };
 
-            shimmer = new ShimmerLogAndStreamXamarin("", "00:06:66:79:E4:54");
-            shimmer.UICallback += this.HandleEvent;
-            shimmer.StartConnectThread();
+            // Get our button from the layout resource,
+            // and attach an event to it
+            Button buttonStop = FindViewById<Button>(Resource.Id.buttonStop);
+
+            buttonStop.Click += delegate { shimmer.StopStreaming(); };
+
+            // Get our button from the layout resource,
+            // and attach an event to it
+            Button buttonConnect = FindViewById<Button>(Resource.Id.buttonConnect);
+
+            buttonConnect.Click += delegate {
+                shimmer = new ShimmerLogAndStreamXamarin("", "00:06:66:79:E4:54");
+                shimmer.UICallback += this.HandleEvent;
+                shimmer.StartConnectThread();
+            };
+
+            // Get our button from the layout resource,
+            // and attach an event to it
+            Button buttonDisconnect = FindViewById<Button>(Resource.Id.buttonDisconnect);
+
+            buttonDisconnect.Click += delegate {
+                shimmer.Disconnect();
+            };
         }
         public void HandleEvent(object sender, EventArgs args)
         {

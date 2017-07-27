@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="Hello">Hello World, Click Me!</string>
+    <string name="Connect">Connect</string>
+    <string name="Disconnect">Disconnect</string>
+    <string name="Start">Start Streaming</string>
+    <string name="Stop">Stop Streaming</string>
     <string name="ApplicationName">ShimmerCaptureXamarin</string>
 </resources>

@@ -61,7 +61,16 @@ namespace ShimmerCaptureXamarin
 		{
 			
 			// aapt resource value: 0x7f050000
-			public const int MyButton = 2131034112;
+			public const int buttonConnect = 2131034112;
+			
+			// aapt resource value: 0x7f050001
+			public const int buttonDisconnect = 2131034113;
+			
+			// aapt resource value: 0x7f050002
+			public const int buttonStart = 2131034114;
+			
+			// aapt resource value: 0x7f050003
+			public const int buttonStop = 2131034115;
 			
 			static Id()
 			{
@@ -92,11 +101,23 @@ namespace ShimmerCaptureXamarin
 		public partial class String
 		{
 			
+			// aapt resource value: 0x7f040005
+			public const int ApplicationName = 2130968581;
+			
 			// aapt resource value: 0x7f040001
-			public const int ApplicationName = 2130968577;
+			public const int Connect = 2130968577;
+			
+			// aapt resource value: 0x7f040002
+			public const int Disconnect = 2130968578;
 			
 			// aapt resource value: 0x7f040000
 			public const int Hello = 2130968576;
+			
+			// aapt resource value: 0x7f040003
+			public const int Start = 2130968579;
+			
+			// aapt resource value: 0x7f040004
+			public const int Stop = 2130968580;
 			
 			static String()
 			{
