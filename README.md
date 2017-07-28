@@ -1,5 +1,8 @@
 # Shimmer-C-API
 The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware. **Build the ShimmerAPI first as a 'Release' before proceeding to using the examples as the examples reference the ShimmerAPI dll**.
+
+![Build Release](/Resources/img/Build_Release.png?raw=true "Build Release Of ShimmerAPI")
+
 This API is broken into the following projects, please refer to the Readme of each project for further info
 
       1.	ShimmerAPI
