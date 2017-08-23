@@ -630,11 +630,17 @@ namespace ShimmerAPI
         private void ToolStripMenuItemShow3DOrientation_Click(object sender, EventArgs e)
         {
             if (!ToolStripMenuItemShow3DOrientation.Checked)
-            {
+            {   
                 ToolStripMenuItemShow3DOrientation.Checked = true;
                 Orientation3DForm = new Orientation3D();
                 Orientation3DForm.setControl(this);
                 Orientation3DForm.Show();
+                if ((ShimmerDevice.GetEnabledSensors() & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0){
+                    MessageBox.Show("Wide Range Accelerometer Being Used for Orientation Calculation, to use Low Noise disable Wide Range Accelerometer");
+                } else if ((ShimmerDevice.GetEnabledSensors() & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0)
+                {
+                    MessageBox.Show("Low Noise Accelerometer Being Used for Orientation Calculation, enable Wide Range to use it");
+                }
                 Is3DCubeOpen = true;
             }
             else
