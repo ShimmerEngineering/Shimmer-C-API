@@ -639,7 +639,7 @@ namespace ShimmerAPI
                     MessageBox.Show("Wide Range Accelerometer Being Used for Orientation Calculation, to use Low Noise disable Wide Range Accelerometer");
                 } else if ((ShimmerDevice.GetEnabledSensors() & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0)
                 {
-                    MessageBox.Show("Low Noise Accelerometer Being Used for Orientation Calculation, enable Wide Range to use it");
+                    MessageBox.Show("Low Noise Accelerometer Being Used for Orientation Calculation, to use Wide Range for Orientation Calculation Enable It");
                 }
                 Is3DCubeOpen = true;
             }
