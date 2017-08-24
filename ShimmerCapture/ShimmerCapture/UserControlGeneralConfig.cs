@@ -1778,6 +1778,8 @@ namespace ShimmerAPI
                     comboBoxGyroRange.Enabled = true;
                     comboBoxMagRange.Enabled = true;
                     checkBoxLowPowerMag.Enabled = true;
+
+                    MessageBox.Show("If both Wide Range and Low Noise Accelerometer are enabled, Wide Range will be used by the Orientation Algorithm");
                 }
                 else
                 {
