@@ -1490,7 +1490,7 @@ namespace ShimmerAPI
                     //
                     if (ShimmerState == SHIMMER_STATE_STREAMING || ShimmerState == SHIMMER_STATE_CONNECTED)
                     {
-                        System.Console.WriteLine("Timeout Streaming");
+                        //System.Console.WriteLine("Timeout Streaming");
                         StreamTimeOutCount++;
                         if (StreamTimeOutCount % 5 == 0 && ShimmerState == SHIMMER_STATE_CONNECTED && GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                         {
