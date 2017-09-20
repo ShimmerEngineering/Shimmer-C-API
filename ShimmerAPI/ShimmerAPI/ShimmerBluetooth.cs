@@ -5186,7 +5186,7 @@ namespace ShimmerAPI
         public void SetLowPowerMag(bool enable)
         {
             LowPowerMagEnabled = enable;
-            if (HardwareVersion != (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3) //Shimmer3
             {
                 if (!LowPowerMagEnabled)
                 {
