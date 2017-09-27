@@ -480,7 +480,7 @@ namespace ShimmerAPI
                 WriteGSRRange(GSRRange);
                 WriteGyroRange(GyroRange);
                 WriteMagRange(MagGain);
-                WriteSamplingRate(SamplingRate);
+                WriteSamplingRate(SamplingRate);  //note that this updates the exg data rate using WriteEXGRate which updates Exg1RegArray and Exg2RegArray
                 WriteInternalExpPower(InternalExpPower);
                 WriteEXGConfigurations(Exg1RegArray, Exg2RegArray);
                 WriteSensors(SetEnabledSensors); //this should always be the last command

@@ -693,8 +693,8 @@ namespace ShimmerAPI
         /// <param name="enableLowPowerMag"></param>
         /// <param name="gyroRange">Options are 0,1,2,3. Where 0 = 250 Degree/s, 1 = 500 Degree/s, 2 = 1000 Degree/s, 3 = 2000 Degree/s</param>
         /// <param name="magRange">Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1</param>
-        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
-        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param> , note that the EXG data rate is automatically updated based on the Shimmer sampling rate
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param> , note that the EXG data rate is automatically updated based on the Shimmer sampling rate
         /// <param name="internalExpPower"></param>
         public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalExpPower)
         {
@@ -1702,7 +1702,7 @@ namespace ShimmerAPI
                 WriteGSRRange(GSRRange);
                 WriteGyroRange(GyroRange);
                 WriteMagRange(MagGain);
-                WriteSamplingRate(SamplingRate);
+                WriteSamplingRate(SamplingRate); //note that this updates the exg data rate using WriteEXGRate which updates Exg1RegArray and Exg2RegArray
                 WriteInternalExpPower(InternalExpPower);
                 WriteEXGConfigurations(Exg1RegArray, Exg2RegArray);
                 WriteSensors(SetEnabledSensors); //this should always be the last command
