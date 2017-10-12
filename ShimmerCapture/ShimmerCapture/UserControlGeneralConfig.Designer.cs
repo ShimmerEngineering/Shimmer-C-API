@@ -86,6 +86,7 @@
             this.numericUpDownBeatsToAve = new System.Windows.Forms.NumericUpDown();
             this.groupBoxHeartRate = new System.Windows.Forms.GroupBox();
             this.groupBoxECGtoHR = new System.Windows.Forms.GroupBox();
+            this.numericUpDownBeatsToAveECG = new System.Windows.Forms.NumericUpDown();
             this.labelSelectECGChannel = new System.Windows.Forms.Label();
             this.comboBoxSelectECGChannel = new System.Windows.Forms.ComboBox();
             this.checkBoxEnableECGtoHR = new System.Windows.Forms.CheckBox();
@@ -95,24 +96,23 @@
             this.buttonApply = new System.Windows.Forms.Button();
             this.buttonDetectExpansionBoard = new System.Windows.Forms.Button();
             this.textBoxExpansionBoard = new System.Windows.Forms.TextBox();
-            this.numericUpDownBeatsToAveECG = new System.Windows.Forms.NumericUpDown();
             this.groupBoxSensors.SuspendLayout();
             this.groupBoxSettings.SuspendLayout();
             this.groupBoxDelimeter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeatsToAve)).BeginInit();
             this.groupBoxHeartRate.SuspendLayout();
             this.groupBoxECGtoHR.SuspendLayout();
-            this.groupBoxPPGtoHR.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeatsToAveECG)).BeginInit();
+            this.groupBoxPPGtoHR.SuspendLayout();
             this.SuspendLayout();
             // 
             // checkBoxSensor1
             // 
             this.checkBoxSensor1.AutoSize = true;
-            this.checkBoxSensor1.Location = new System.Drawing.Point(9, 31);
-            this.checkBoxSensor1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor1.Location = new System.Drawing.Point(8, 25);
+            this.checkBoxSensor1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor1.Name = "checkBoxSensor1";
-            this.checkBoxSensor1.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor1.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor1.TabIndex = 0;
             this.checkBoxSensor1.Text = "checkBox1";
             this.checkBoxSensor1.UseVisualStyleBackColor = true;
@@ -121,10 +121,10 @@
             // checkBoxSensor2
             // 
             this.checkBoxSensor2.AutoSize = true;
-            this.checkBoxSensor2.Location = new System.Drawing.Point(9, 62);
-            this.checkBoxSensor2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor2.Location = new System.Drawing.Point(8, 50);
+            this.checkBoxSensor2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor2.Name = "checkBoxSensor2";
-            this.checkBoxSensor2.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor2.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor2.TabIndex = 1;
             this.checkBoxSensor2.Text = "checkBox2";
             this.checkBoxSensor2.UseVisualStyleBackColor = true;
@@ -133,10 +133,10 @@
             // checkBoxSensor3
             // 
             this.checkBoxSensor3.AutoSize = true;
-            this.checkBoxSensor3.Location = new System.Drawing.Point(9, 92);
-            this.checkBoxSensor3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor3.Location = new System.Drawing.Point(8, 74);
+            this.checkBoxSensor3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor3.Name = "checkBoxSensor3";
-            this.checkBoxSensor3.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor3.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor3.TabIndex = 2;
             this.checkBoxSensor3.Text = "checkBox3";
             this.checkBoxSensor3.UseVisualStyleBackColor = true;
@@ -145,10 +145,10 @@
             // checkBoxSensor4
             // 
             this.checkBoxSensor4.AutoSize = true;
-            this.checkBoxSensor4.Location = new System.Drawing.Point(9, 123);
-            this.checkBoxSensor4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor4.Location = new System.Drawing.Point(8, 98);
+            this.checkBoxSensor4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor4.Name = "checkBoxSensor4";
-            this.checkBoxSensor4.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor4.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor4.TabIndex = 3;
             this.checkBoxSensor4.Text = "checkBox4";
             this.checkBoxSensor4.UseVisualStyleBackColor = true;
@@ -157,10 +157,10 @@
             // checkBoxSensor5
             // 
             this.checkBoxSensor5.AutoSize = true;
-            this.checkBoxSensor5.Location = new System.Drawing.Point(9, 154);
-            this.checkBoxSensor5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor5.Location = new System.Drawing.Point(8, 123);
+            this.checkBoxSensor5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor5.Name = "checkBoxSensor5";
-            this.checkBoxSensor5.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor5.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor5.TabIndex = 4;
             this.checkBoxSensor5.Text = "checkBox5";
             this.checkBoxSensor5.UseVisualStyleBackColor = true;
@@ -169,10 +169,10 @@
             // checkBoxSensor6
             // 
             this.checkBoxSensor6.AutoSize = true;
-            this.checkBoxSensor6.Location = new System.Drawing.Point(9, 185);
-            this.checkBoxSensor6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor6.Location = new System.Drawing.Point(8, 148);
+            this.checkBoxSensor6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor6.Name = "checkBoxSensor6";
-            this.checkBoxSensor6.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor6.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor6.TabIndex = 5;
             this.checkBoxSensor6.Text = "checkBox6";
             this.checkBoxSensor6.UseVisualStyleBackColor = true;
@@ -181,10 +181,10 @@
             // checkBoxSensor7
             // 
             this.checkBoxSensor7.AutoSize = true;
-            this.checkBoxSensor7.Location = new System.Drawing.Point(9, 215);
-            this.checkBoxSensor7.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor7.Location = new System.Drawing.Point(8, 172);
+            this.checkBoxSensor7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor7.Name = "checkBoxSensor7";
-            this.checkBoxSensor7.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor7.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor7.TabIndex = 6;
             this.checkBoxSensor7.Text = "checkBox7";
             this.checkBoxSensor7.UseVisualStyleBackColor = true;
@@ -193,10 +193,10 @@
             // checkBoxSensor8
             // 
             this.checkBoxSensor8.AutoSize = true;
-            this.checkBoxSensor8.Location = new System.Drawing.Point(9, 246);
-            this.checkBoxSensor8.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor8.Location = new System.Drawing.Point(8, 197);
+            this.checkBoxSensor8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor8.Name = "checkBoxSensor8";
-            this.checkBoxSensor8.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor8.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor8.TabIndex = 7;
             this.checkBoxSensor8.Text = "checkBox8";
             this.checkBoxSensor8.UseVisualStyleBackColor = true;
@@ -204,10 +204,10 @@
             // checkBoxSensor9
             // 
             this.checkBoxSensor9.AutoSize = true;
-            this.checkBoxSensor9.Location = new System.Drawing.Point(9, 277);
-            this.checkBoxSensor9.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor9.Location = new System.Drawing.Point(8, 222);
+            this.checkBoxSensor9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor9.Name = "checkBoxSensor9";
-            this.checkBoxSensor9.Size = new System.Drawing.Size(113, 24);
+            this.checkBoxSensor9.Size = new System.Drawing.Size(98, 21);
             this.checkBoxSensor9.TabIndex = 8;
             this.checkBoxSensor9.Text = "checkBox9";
             this.checkBoxSensor9.UseVisualStyleBackColor = true;
@@ -238,11 +238,11 @@
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor4);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor6);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor5);
-            this.groupBoxSensors.Location = new System.Drawing.Point(18, 18);
-            this.groupBoxSensors.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxSensors.Location = new System.Drawing.Point(16, 14);
+            this.groupBoxSensors.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxSensors.Name = "groupBoxSensors";
-            this.groupBoxSensors.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxSensors.Size = new System.Drawing.Size(552, 382);
+            this.groupBoxSensors.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxSensors.Size = new System.Drawing.Size(491, 306);
             this.groupBoxSensors.TabIndex = 19;
             this.groupBoxSensors.TabStop = false;
             this.groupBoxSensors.Text = "Sensors to Sample";
@@ -250,10 +250,10 @@
             // checkBoxSensor22
             // 
             this.checkBoxSensor22.AutoSize = true;
-            this.checkBoxSensor22.Location = new System.Drawing.Point(300, 337);
-            this.checkBoxSensor22.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor22.Location = new System.Drawing.Point(267, 270);
+            this.checkBoxSensor22.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor22.Name = "checkBoxSensor22";
-            this.checkBoxSensor22.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor22.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor22.TabIndex = 22;
             this.checkBoxSensor22.Text = "checkBox22";
             this.checkBoxSensor22.UseVisualStyleBackColor = true;
@@ -262,10 +262,10 @@
             // checkBoxSensor21
             // 
             this.checkBoxSensor21.AutoSize = true;
-            this.checkBoxSensor21.Location = new System.Drawing.Point(300, 308);
-            this.checkBoxSensor21.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor21.Location = new System.Drawing.Point(267, 246);
+            this.checkBoxSensor21.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor21.Name = "checkBoxSensor21";
-            this.checkBoxSensor21.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor21.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor21.TabIndex = 21;
             this.checkBoxSensor21.Text = "checkBox21";
             this.checkBoxSensor21.UseVisualStyleBackColor = true;
@@ -274,10 +274,10 @@
             // checkBoxSensor20
             // 
             this.checkBoxSensor20.AutoSize = true;
-            this.checkBoxSensor20.Location = new System.Drawing.Point(300, 277);
-            this.checkBoxSensor20.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor20.Location = new System.Drawing.Point(267, 222);
+            this.checkBoxSensor20.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor20.Name = "checkBoxSensor20";
-            this.checkBoxSensor20.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor20.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor20.TabIndex = 20;
             this.checkBoxSensor20.Text = "checkBox20";
             this.checkBoxSensor20.UseVisualStyleBackColor = true;
@@ -286,10 +286,10 @@
             // checkBoxSensor18
             // 
             this.checkBoxSensor18.AutoSize = true;
-            this.checkBoxSensor18.Location = new System.Drawing.Point(300, 246);
-            this.checkBoxSensor18.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor18.Location = new System.Drawing.Point(267, 197);
+            this.checkBoxSensor18.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor18.Name = "checkBoxSensor18";
-            this.checkBoxSensor18.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor18.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor18.TabIndex = 19;
             this.checkBoxSensor18.Text = "checkBox18";
             this.checkBoxSensor18.UseVisualStyleBackColor = true;
@@ -298,10 +298,10 @@
             // checkBoxSensor19
             // 
             this.checkBoxSensor19.AutoSize = true;
-            this.checkBoxSensor19.Location = new System.Drawing.Point(300, 215);
-            this.checkBoxSensor19.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor19.Location = new System.Drawing.Point(267, 172);
+            this.checkBoxSensor19.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor19.Name = "checkBoxSensor19";
-            this.checkBoxSensor19.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor19.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor19.TabIndex = 18;
             this.checkBoxSensor19.Text = "checkBox19";
             this.checkBoxSensor19.UseVisualStyleBackColor = true;
@@ -310,10 +310,10 @@
             // checkBoxSensor17
             // 
             this.checkBoxSensor17.AutoSize = true;
-            this.checkBoxSensor17.Location = new System.Drawing.Point(300, 182);
-            this.checkBoxSensor17.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor17.Location = new System.Drawing.Point(267, 146);
+            this.checkBoxSensor17.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor17.Name = "checkBoxSensor17";
-            this.checkBoxSensor17.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor17.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor17.TabIndex = 16;
             this.checkBoxSensor17.Text = "checkBox17";
             this.checkBoxSensor17.UseVisualStyleBackColor = true;
@@ -323,10 +323,10 @@
             // checkBoxSensor16
             // 
             this.checkBoxSensor16.AutoSize = true;
-            this.checkBoxSensor16.Location = new System.Drawing.Point(300, 151);
-            this.checkBoxSensor16.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor16.Location = new System.Drawing.Point(267, 121);
+            this.checkBoxSensor16.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor16.Name = "checkBoxSensor16";
-            this.checkBoxSensor16.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor16.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor16.TabIndex = 15;
             this.checkBoxSensor16.Text = "checkBox16";
             this.checkBoxSensor16.UseVisualStyleBackColor = true;
@@ -336,10 +336,10 @@
             // checkBoxSensor15
             // 
             this.checkBoxSensor15.AutoSize = true;
-            this.checkBoxSensor15.Location = new System.Drawing.Point(300, 123);
-            this.checkBoxSensor15.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor15.Location = new System.Drawing.Point(267, 98);
+            this.checkBoxSensor15.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor15.Name = "checkBoxSensor15";
-            this.checkBoxSensor15.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor15.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor15.TabIndex = 14;
             this.checkBoxSensor15.Text = "checkBox15";
             this.checkBoxSensor15.UseVisualStyleBackColor = true;
@@ -349,10 +349,10 @@
             // checkBoxSensor14
             // 
             this.checkBoxSensor14.AutoSize = true;
-            this.checkBoxSensor14.Location = new System.Drawing.Point(300, 92);
-            this.checkBoxSensor14.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor14.Location = new System.Drawing.Point(267, 74);
+            this.checkBoxSensor14.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor14.Name = "checkBoxSensor14";
-            this.checkBoxSensor14.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor14.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor14.TabIndex = 13;
             this.checkBoxSensor14.Text = "checkBox14";
             this.checkBoxSensor14.UseVisualStyleBackColor = true;
@@ -362,10 +362,10 @@
             // checkBoxSensor13
             // 
             this.checkBoxSensor13.AutoSize = true;
-            this.checkBoxSensor13.Location = new System.Drawing.Point(300, 62);
-            this.checkBoxSensor13.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor13.Location = new System.Drawing.Point(267, 50);
+            this.checkBoxSensor13.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor13.Name = "checkBoxSensor13";
-            this.checkBoxSensor13.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor13.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor13.TabIndex = 12;
             this.checkBoxSensor13.Text = "checkBox13";
             this.checkBoxSensor13.UseVisualStyleBackColor = true;
@@ -374,10 +374,10 @@
             // checkBoxSensor12
             // 
             this.checkBoxSensor12.AutoSize = true;
-            this.checkBoxSensor12.Location = new System.Drawing.Point(300, 31);
-            this.checkBoxSensor12.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor12.Location = new System.Drawing.Point(267, 25);
+            this.checkBoxSensor12.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor12.Name = "checkBoxSensor12";
-            this.checkBoxSensor12.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor12.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor12.TabIndex = 11;
             this.checkBoxSensor12.Text = "checkBox12";
             this.checkBoxSensor12.UseVisualStyleBackColor = true;
@@ -387,10 +387,10 @@
             // checkBoxSensor11
             // 
             this.checkBoxSensor11.AutoSize = true;
-            this.checkBoxSensor11.Location = new System.Drawing.Point(9, 337);
-            this.checkBoxSensor11.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor11.Location = new System.Drawing.Point(8, 270);
+            this.checkBoxSensor11.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor11.Name = "checkBoxSensor11";
-            this.checkBoxSensor11.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor11.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor11.TabIndex = 10;
             this.checkBoxSensor11.Text = "checkBox11";
             this.checkBoxSensor11.UseVisualStyleBackColor = true;
@@ -400,10 +400,10 @@
             // checkBoxSensor10
             // 
             this.checkBoxSensor10.AutoSize = true;
-            this.checkBoxSensor10.Location = new System.Drawing.Point(9, 308);
-            this.checkBoxSensor10.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxSensor10.Location = new System.Drawing.Point(8, 246);
+            this.checkBoxSensor10.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor10.Name = "checkBoxSensor10";
-            this.checkBoxSensor10.Size = new System.Drawing.Size(122, 24);
+            this.checkBoxSensor10.Size = new System.Drawing.Size(106, 21);
             this.checkBoxSensor10.TabIndex = 9;
             this.checkBoxSensor10.Text = "checkBox10";
             this.checkBoxSensor10.UseVisualStyleBackColor = true;
@@ -413,10 +413,10 @@
             // checkBox5VReg
             // 
             this.checkBox5VReg.AutoSize = true;
-            this.checkBox5VReg.Location = new System.Drawing.Point(9, 31);
-            this.checkBox5VReg.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBox5VReg.Location = new System.Drawing.Point(8, 25);
+            this.checkBox5VReg.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox5VReg.Name = "checkBox5VReg";
-            this.checkBox5VReg.Size = new System.Drawing.Size(183, 24);
+            this.checkBox5VReg.Size = new System.Drawing.Size(161, 21);
             this.checkBox5VReg.TabIndex = 21;
             this.checkBox5VReg.Text = "Enable 5V Regulator";
             this.checkBox5VReg.UseVisualStyleBackColor = true;
@@ -425,10 +425,10 @@
             // checkBoxVoltageMon
             // 
             this.checkBoxVoltageMon.AutoSize = true;
-            this.checkBoxVoltageMon.Location = new System.Drawing.Point(9, 62);
-            this.checkBoxVoltageMon.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxVoltageMon.Location = new System.Drawing.Point(8, 50);
+            this.checkBoxVoltageMon.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxVoltageMon.Name = "checkBoxVoltageMon";
-            this.checkBoxVoltageMon.Size = new System.Drawing.Size(222, 24);
+            this.checkBoxVoltageMon.Size = new System.Drawing.Size(196, 21);
             this.checkBoxVoltageMon.TabIndex = 22;
             this.checkBoxVoltageMon.Text = "Enable Voltage Monitoring";
             this.checkBoxVoltageMon.UseVisualStyleBackColor = true;
@@ -437,10 +437,10 @@
             // checkBox3DOrientation
             // 
             this.checkBox3DOrientation.AutoSize = true;
-            this.checkBox3DOrientation.Location = new System.Drawing.Point(9, 92);
-            this.checkBox3DOrientation.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBox3DOrientation.Location = new System.Drawing.Point(8, 74);
+            this.checkBox3DOrientation.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBox3DOrientation.Name = "checkBox3DOrientation";
-            this.checkBox3DOrientation.Size = new System.Drawing.Size(192, 24);
+            this.checkBox3DOrientation.Size = new System.Drawing.Size(170, 21);
             this.checkBox3DOrientation.TabIndex = 23;
             this.checkBox3DOrientation.Text = "Enable 3D Orientation";
             this.checkBox3DOrientation.UseVisualStyleBackColor = true;
@@ -449,10 +449,10 @@
             // checkBoxGyroOnTheFly
             // 
             this.checkBoxGyroOnTheFly.AutoSize = true;
-            this.checkBoxGyroOnTheFly.Location = new System.Drawing.Point(9, 123);
-            this.checkBoxGyroOnTheFly.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxGyroOnTheFly.Location = new System.Drawing.Point(8, 98);
+            this.checkBoxGyroOnTheFly.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxGyroOnTheFly.Name = "checkBoxGyroOnTheFly";
-            this.checkBoxGyroOnTheFly.Size = new System.Drawing.Size(255, 24);
+            this.checkBoxGyroOnTheFly.Size = new System.Drawing.Size(226, 21);
             this.checkBoxGyroOnTheFly.TabIndex = 24;
             this.checkBoxGyroOnTheFly.Text = "Enable Gyro-In-Use Calibration";
             this.checkBoxGyroOnTheFly.UseVisualStyleBackColor = true;
@@ -461,10 +461,10 @@
             // checkBoxLowPowerMag
             // 
             this.checkBoxLowPowerMag.AutoSize = true;
-            this.checkBoxLowPowerMag.Location = new System.Drawing.Point(9, 154);
-            this.checkBoxLowPowerMag.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxLowPowerMag.Location = new System.Drawing.Point(8, 123);
+            this.checkBoxLowPowerMag.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxLowPowerMag.Name = "checkBoxLowPowerMag";
-            this.checkBoxLowPowerMag.Size = new System.Drawing.Size(187, 24);
+            this.checkBoxLowPowerMag.Size = new System.Drawing.Size(165, 21);
             this.checkBoxLowPowerMag.TabIndex = 25;
             this.checkBoxLowPowerMag.Text = "Enable Mag LP Mode";
             this.checkBoxLowPowerMag.UseVisualStyleBackColor = true;
@@ -472,10 +472,10 @@
             // checkBoxLowPowerAccel
             // 
             this.checkBoxLowPowerAccel.AutoSize = true;
-            this.checkBoxLowPowerAccel.Location = new System.Drawing.Point(9, 185);
-            this.checkBoxLowPowerAccel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxLowPowerAccel.Location = new System.Drawing.Point(8, 148);
+            this.checkBoxLowPowerAccel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxLowPowerAccel.Name = "checkBoxLowPowerAccel";
-            this.checkBoxLowPowerAccel.Size = new System.Drawing.Size(226, 24);
+            this.checkBoxLowPowerAccel.Size = new System.Drawing.Size(199, 21);
             this.checkBoxLowPowerAccel.TabIndex = 26;
             this.checkBoxLowPowerAccel.Text = "Enable WR Accel LP Mode";
             this.checkBoxLowPowerAccel.UseVisualStyleBackColor = true;
@@ -508,11 +508,11 @@
             this.groupBoxSettings.Controls.Add(this.checkBoxLowPowerMag);
             this.groupBoxSettings.Controls.Add(this.checkBox3DOrientation);
             this.groupBoxSettings.Controls.Add(this.checkBoxGyroOnTheFly);
-            this.groupBoxSettings.Location = new System.Drawing.Point(597, 18);
-            this.groupBoxSettings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxSettings.Location = new System.Drawing.Point(531, 14);
+            this.groupBoxSettings.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxSettings.Name = "groupBoxSettings";
-            this.groupBoxSettings.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxSettings.Size = new System.Drawing.Size(514, 568);
+            this.groupBoxSettings.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxSettings.Size = new System.Drawing.Size(457, 454);
             this.groupBoxSettings.TabIndex = 20;
             this.groupBoxSettings.TabStop = false;
             this.groupBoxSettings.Text = "Settings";
@@ -521,100 +521,100 @@
             // labelBaudRate
             // 
             this.labelBaudRate.AutoSize = true;
-            this.labelBaudRate.Location = new System.Drawing.Point(300, 191);
+            this.labelBaudRate.Location = new System.Drawing.Point(267, 153);
             this.labelBaudRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelBaudRate.Name = "labelBaudRate";
-            this.labelBaudRate.Size = new System.Drawing.Size(86, 20);
+            this.labelBaudRate.Size = new System.Drawing.Size(75, 17);
             this.labelBaudRate.TabIndex = 40;
             this.labelBaudRate.Text = "Baud Rate";
             // 
             // comboBoxBaudRate
             // 
             this.comboBoxBaudRate.FormattingEnabled = true;
-            this.comboBoxBaudRate.Location = new System.Drawing.Point(300, 215);
-            this.comboBoxBaudRate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxBaudRate.Location = new System.Drawing.Point(267, 172);
+            this.comboBoxBaudRate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxBaudRate.Name = "comboBoxBaudRate";
-            this.comboBoxBaudRate.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxBaudRate.Size = new System.Drawing.Size(160, 24);
             this.comboBoxBaudRate.TabIndex = 39;
             this.comboBoxBaudRate.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 495);
+            this.label3.Location = new System.Drawing.Point(9, 396);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 20);
+            this.label3.Size = new System.Drawing.Size(68, 17);
             this.label3.TabIndex = 37;
             this.label3.Text = "ExG Gain";
             // 
             // comboBoxExgGain
             // 
             this.comboBoxExgGain.FormattingEnabled = true;
-            this.comboBoxExgGain.Location = new System.Drawing.Point(10, 518);
-            this.comboBoxExgGain.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxExgGain.Location = new System.Drawing.Point(9, 414);
+            this.comboBoxExgGain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxExgGain.Name = "comboBoxExgGain";
-            this.comboBoxExgGain.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxExgGain.Size = new System.Drawing.Size(160, 24);
             this.comboBoxExgGain.TabIndex = 38;
             this.comboBoxExgGain.SelectedIndexChanged += new System.EventHandler(this.comboBoxExgGain_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(300, 497);
+            this.label2.Location = new System.Drawing.Point(267, 398);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(120, 20);
+            this.label2.Size = new System.Drawing.Size(105, 17);
             this.label2.TabIndex = 35;
             this.label2.Text = "ExG Resolution";
             // 
             // comboBoxExGResolution
             // 
             this.comboBoxExGResolution.FormattingEnabled = true;
-            this.comboBoxExGResolution.Location = new System.Drawing.Point(300, 520);
-            this.comboBoxExGResolution.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxExGResolution.Location = new System.Drawing.Point(267, 416);
+            this.comboBoxExGResolution.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxExGResolution.Name = "comboBoxExGResolution";
-            this.comboBoxExGResolution.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxExGResolution.Size = new System.Drawing.Size(160, 24);
             this.comboBoxExGResolution.TabIndex = 36;
             this.comboBoxExGResolution.SelectedIndexChanged += new System.EventHandler(this.comboBoxExGResolution_SelectedIndexChanged);
             // 
             // labelPressureRes
             // 
             this.labelPressureRes.AutoSize = true;
-            this.labelPressureRes.Location = new System.Drawing.Point(300, 428);
+            this.labelPressureRes.Location = new System.Drawing.Point(267, 342);
             this.labelPressureRes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelPressureRes.Name = "labelPressureRes";
-            this.labelPressureRes.Size = new System.Drawing.Size(152, 20);
+            this.labelPressureRes.Size = new System.Drawing.Size(136, 17);
             this.labelPressureRes.TabIndex = 0;
             this.labelPressureRes.Text = "Pressure Resolution";
             // 
             // labelGyroRange
             // 
             this.labelGyroRange.AutoSize = true;
-            this.labelGyroRange.Location = new System.Drawing.Point(9, 428);
+            this.labelGyroRange.Location = new System.Drawing.Point(8, 342);
             this.labelGyroRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelGyroRange.Name = "labelGyroRange";
-            this.labelGyroRange.Size = new System.Drawing.Size(138, 20);
+            this.labelGyroRange.Size = new System.Drawing.Size(123, 17);
             this.labelGyroRange.TabIndex = 1;
             this.labelGyroRange.Text = "Gyroscope Range";
             // 
             // labelGSRRange
             // 
             this.labelGSRRange.AutoSize = true;
-            this.labelGSRRange.Location = new System.Drawing.Point(300, 358);
+            this.labelGSRRange.Location = new System.Drawing.Point(267, 286);
             this.labelGSRRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelGSRRange.Name = "labelGSRRange";
-            this.labelGSRRange.Size = new System.Drawing.Size(97, 20);
+            this.labelGSRRange.Size = new System.Drawing.Size(84, 17);
             this.labelGSRRange.TabIndex = 2;
             this.labelGSRRange.Text = "GSR Range";
             // 
             // labelAccelRange
             // 
             this.labelAccelRange.AutoSize = true;
-            this.labelAccelRange.Location = new System.Drawing.Point(9, 358);
+            this.labelAccelRange.Location = new System.Drawing.Point(8, 286);
             this.labelAccelRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelAccelRange.Name = "labelAccelRange";
-            this.labelAccelRange.Size = new System.Drawing.Size(164, 20);
+            this.labelAccelRange.Size = new System.Drawing.Size(145, 17);
             this.labelAccelRange.TabIndex = 3;
             this.labelAccelRange.Text = "Accelerometer Range";
             this.labelAccelRange.Click += new System.EventHandler(this.labelAccelRange_Click);
@@ -622,85 +622,85 @@
             // labelMagRange
             // 
             this.labelMagRange.AutoSize = true;
-            this.labelMagRange.Location = new System.Drawing.Point(300, 282);
+            this.labelMagRange.Location = new System.Drawing.Point(267, 226);
             this.labelMagRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelMagRange.Name = "labelMagRange";
-            this.labelMagRange.Size = new System.Drawing.Size(165, 20);
+            this.labelMagRange.Size = new System.Drawing.Size(145, 17);
             this.labelMagRange.TabIndex = 4;
             this.labelMagRange.Text = "Magnetometer Range";
             // 
             // labelSamplingRate
             // 
             this.labelSamplingRate.AutoSize = true;
-            this.labelSamplingRate.Location = new System.Drawing.Point(9, 282);
+            this.labelSamplingRate.Location = new System.Drawing.Point(8, 226);
             this.labelSamplingRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelSamplingRate.Name = "labelSamplingRate";
-            this.labelSamplingRate.Size = new System.Drawing.Size(114, 20);
+            this.labelSamplingRate.Size = new System.Drawing.Size(100, 17);
             this.labelSamplingRate.TabIndex = 5;
             this.labelSamplingRate.Text = "Sampling Rate";
             // 
             // comboBoxPressureRes
             // 
             this.comboBoxPressureRes.FormattingEnabled = true;
-            this.comboBoxPressureRes.Location = new System.Drawing.Point(300, 451);
-            this.comboBoxPressureRes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxPressureRes.Location = new System.Drawing.Point(267, 361);
+            this.comboBoxPressureRes.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxPressureRes.Name = "comboBoxPressureRes";
-            this.comboBoxPressureRes.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxPressureRes.Size = new System.Drawing.Size(160, 24);
             this.comboBoxPressureRes.TabIndex = 27;
             // 
             // comboBoxGyroRange
             // 
             this.comboBoxGyroRange.FormattingEnabled = true;
-            this.comboBoxGyroRange.Location = new System.Drawing.Point(9, 451);
-            this.comboBoxGyroRange.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxGyroRange.Location = new System.Drawing.Point(8, 361);
+            this.comboBoxGyroRange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxGyroRange.Name = "comboBoxGyroRange";
-            this.comboBoxGyroRange.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxGyroRange.Size = new System.Drawing.Size(160, 24);
             this.comboBoxGyroRange.TabIndex = 30;
             // 
             // comboBoxGSRRange
             // 
             this.comboBoxGSRRange.FormattingEnabled = true;
-            this.comboBoxGSRRange.Location = new System.Drawing.Point(300, 382);
-            this.comboBoxGSRRange.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxGSRRange.Location = new System.Drawing.Point(267, 306);
+            this.comboBoxGSRRange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxGSRRange.Name = "comboBoxGSRRange";
-            this.comboBoxGSRRange.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxGSRRange.Size = new System.Drawing.Size(160, 24);
             this.comboBoxGSRRange.TabIndex = 31;
             // 
             // comboBoxAccelRange
             // 
             this.comboBoxAccelRange.FormattingEnabled = true;
-            this.comboBoxAccelRange.Location = new System.Drawing.Point(9, 382);
-            this.comboBoxAccelRange.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxAccelRange.Location = new System.Drawing.Point(8, 306);
+            this.comboBoxAccelRange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxAccelRange.Name = "comboBoxAccelRange";
-            this.comboBoxAccelRange.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxAccelRange.Size = new System.Drawing.Size(160, 24);
             this.comboBoxAccelRange.TabIndex = 32;
             // 
             // comboBoxMagRange
             // 
             this.comboBoxMagRange.FormattingEnabled = true;
-            this.comboBoxMagRange.Location = new System.Drawing.Point(300, 305);
-            this.comboBoxMagRange.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxMagRange.Location = new System.Drawing.Point(267, 244);
+            this.comboBoxMagRange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxMagRange.Name = "comboBoxMagRange";
-            this.comboBoxMagRange.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxMagRange.Size = new System.Drawing.Size(160, 24);
             this.comboBoxMagRange.TabIndex = 33;
             // 
             // comboBoxSamplingRate
             // 
             this.comboBoxSamplingRate.FormattingEnabled = true;
-            this.comboBoxSamplingRate.Location = new System.Drawing.Point(9, 305);
-            this.comboBoxSamplingRate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxSamplingRate.Location = new System.Drawing.Point(8, 244);
+            this.comboBoxSamplingRate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxSamplingRate.Name = "comboBoxSamplingRate";
-            this.comboBoxSamplingRate.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxSamplingRate.Size = new System.Drawing.Size(160, 24);
             this.comboBoxSamplingRate.TabIndex = 34;
             this.comboBoxSamplingRate.SelectedIndexChanged += new System.EventHandler(this.comboBoxSamplingRate_SelectedIndexChanged);
             // 
             // checkBoxIntExpPower
             // 
             this.checkBoxIntExpPower.AutoSize = true;
-            this.checkBoxIntExpPower.Location = new System.Drawing.Point(9, 246);
-            this.checkBoxIntExpPower.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxIntExpPower.Location = new System.Drawing.Point(8, 197);
+            this.checkBoxIntExpPower.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxIntExpPower.Name = "checkBoxIntExpPower";
-            this.checkBoxIntExpPower.Size = new System.Drawing.Size(164, 24);
+            this.checkBoxIntExpPower.Size = new System.Drawing.Size(144, 21);
             this.checkBoxIntExpPower.TabIndex = 28;
             this.checkBoxIntExpPower.Text = "Enable Exp Power";
             this.checkBoxIntExpPower.UseVisualStyleBackColor = true;
@@ -710,20 +710,20 @@
             // checkBoxLowPowerGyro
             // 
             this.checkBoxLowPowerGyro.AutoSize = true;
-            this.checkBoxLowPowerGyro.Location = new System.Drawing.Point(9, 215);
-            this.checkBoxLowPowerGyro.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxLowPowerGyro.Location = new System.Drawing.Point(8, 172);
+            this.checkBoxLowPowerGyro.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxLowPowerGyro.Name = "checkBoxLowPowerGyro";
-            this.checkBoxLowPowerGyro.Size = new System.Drawing.Size(190, 24);
+            this.checkBoxLowPowerGyro.Size = new System.Drawing.Size(169, 21);
             this.checkBoxLowPowerGyro.TabIndex = 29;
             this.checkBoxLowPowerGyro.Text = "Enable Gyro LP Mode";
             this.checkBoxLowPowerGyro.UseVisualStyleBackColor = true;
             // 
             // buttonToggleLED
             // 
-            this.buttonToggleLED.Location = new System.Drawing.Point(392, 532);
-            this.buttonToggleLED.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonToggleLED.Location = new System.Drawing.Point(348, 426);
+            this.buttonToggleLED.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonToggleLED.Name = "buttonToggleLED";
-            this.buttonToggleLED.Size = new System.Drawing.Size(178, 38);
+            this.buttonToggleLED.Size = new System.Drawing.Size(158, 30);
             this.buttonToggleLED.TabIndex = 40;
             this.buttonToggleLED.Text = "Toggle LED";
             this.buttonToggleLED.UseVisualStyleBackColor = true;
@@ -733,11 +733,11 @@
             // 
             this.groupBoxDelimeter.Controls.Add(this.checkBoxTab);
             this.groupBoxDelimeter.Controls.Add(this.checkBoxComma);
-            this.groupBoxDelimeter.Location = new System.Drawing.Point(392, 409);
-            this.groupBoxDelimeter.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxDelimeter.Location = new System.Drawing.Point(348, 327);
+            this.groupBoxDelimeter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxDelimeter.Name = "groupBoxDelimeter";
-            this.groupBoxDelimeter.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxDelimeter.Size = new System.Drawing.Size(178, 105);
+            this.groupBoxDelimeter.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxDelimeter.Size = new System.Drawing.Size(158, 84);
             this.groupBoxDelimeter.TabIndex = 42;
             this.groupBoxDelimeter.TabStop = false;
             this.groupBoxDelimeter.Text = "CSV Delimiter Fomat";
@@ -745,10 +745,10 @@
             // checkBoxTab
             // 
             this.checkBoxTab.AutoSize = true;
-            this.checkBoxTab.Location = new System.Drawing.Point(9, 62);
-            this.checkBoxTab.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxTab.Location = new System.Drawing.Point(8, 50);
+            this.checkBoxTab.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxTab.Name = "checkBoxTab";
-            this.checkBoxTab.Size = new System.Drawing.Size(62, 24);
+            this.checkBoxTab.Size = new System.Drawing.Size(55, 21);
             this.checkBoxTab.TabIndex = 38;
             this.checkBoxTab.Text = "Tab";
             this.checkBoxTab.UseVisualStyleBackColor = true;
@@ -757,10 +757,10 @@
             // checkBoxComma
             // 
             this.checkBoxComma.AutoSize = true;
-            this.checkBoxComma.Location = new System.Drawing.Point(9, 29);
-            this.checkBoxComma.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxComma.Location = new System.Drawing.Point(8, 23);
+            this.checkBoxComma.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxComma.Name = "checkBoxComma";
-            this.checkBoxComma.Size = new System.Drawing.Size(90, 24);
+            this.checkBoxComma.Size = new System.Drawing.Size(77, 21);
             this.checkBoxComma.TabIndex = 39;
             this.checkBoxComma.Text = "Comma";
             this.checkBoxComma.UseVisualStyleBackColor = true;
@@ -769,10 +769,10 @@
             // checkBoxEnablePPGtoHR
             // 
             this.checkBoxEnablePPGtoHR.AutoSize = true;
-            this.checkBoxEnablePPGtoHR.Location = new System.Drawing.Point(12, 25);
-            this.checkBoxEnablePPGtoHR.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxEnablePPGtoHR.Location = new System.Drawing.Point(11, 20);
+            this.checkBoxEnablePPGtoHR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxEnablePPGtoHR.Name = "checkBoxEnablePPGtoHR";
-            this.checkBoxEnablePPGtoHR.Size = new System.Drawing.Size(85, 24);
+            this.checkBoxEnablePPGtoHR.Size = new System.Drawing.Size(74, 21);
             this.checkBoxEnablePPGtoHR.TabIndex = 35;
             this.checkBoxEnablePPGtoHR.Text = "Enable";
             this.checkBoxEnablePPGtoHR.UseVisualStyleBackColor = true;
@@ -780,15 +780,15 @@
             // 
             // numericUpDownBeatsToAve
             // 
-            this.numericUpDownBeatsToAve.Location = new System.Drawing.Point(12, 58);
-            this.numericUpDownBeatsToAve.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.numericUpDownBeatsToAve.Location = new System.Drawing.Point(11, 46);
+            this.numericUpDownBeatsToAve.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.numericUpDownBeatsToAve.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
             this.numericUpDownBeatsToAve.Name = "numericUpDownBeatsToAve";
-            this.numericUpDownBeatsToAve.Size = new System.Drawing.Size(88, 26);
+            this.numericUpDownBeatsToAve.Size = new System.Drawing.Size(78, 22);
             this.numericUpDownBeatsToAve.TabIndex = 36;
             this.numericUpDownBeatsToAve.Value = new decimal(new int[] {
             1,
@@ -801,11 +801,11 @@
             // 
             this.groupBoxHeartRate.Controls.Add(this.groupBoxECGtoHR);
             this.groupBoxHeartRate.Controls.Add(this.groupBoxPPGtoHR);
-            this.groupBoxHeartRate.Location = new System.Drawing.Point(18, 409);
-            this.groupBoxHeartRate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxHeartRate.Location = new System.Drawing.Point(16, 327);
+            this.groupBoxHeartRate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxHeartRate.Name = "groupBoxHeartRate";
-            this.groupBoxHeartRate.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxHeartRate.Size = new System.Drawing.Size(364, 246);
+            this.groupBoxHeartRate.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxHeartRate.Size = new System.Drawing.Size(324, 197);
             this.groupBoxHeartRate.TabIndex = 41;
             this.groupBoxHeartRate.TabStop = false;
             this.groupBoxHeartRate.Text = "Heart Rate Conversion";
@@ -817,41 +817,60 @@
             this.groupBoxECGtoHR.Controls.Add(this.comboBoxSelectECGChannel);
             this.groupBoxECGtoHR.Controls.Add(this.checkBoxEnableECGtoHR);
             this.groupBoxECGtoHR.Enabled = false;
-            this.groupBoxECGtoHR.Location = new System.Drawing.Point(9, 128);
-            this.groupBoxECGtoHR.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxECGtoHR.Location = new System.Drawing.Point(8, 102);
+            this.groupBoxECGtoHR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxECGtoHR.Name = "groupBoxECGtoHR";
-            this.groupBoxECGtoHR.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxECGtoHR.Size = new System.Drawing.Size(346, 98);
+            this.groupBoxECGtoHR.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxECGtoHR.Size = new System.Drawing.Size(308, 78);
             this.groupBoxECGtoHR.TabIndex = 0;
             this.groupBoxECGtoHR.TabStop = false;
             this.groupBoxECGtoHR.Text = "ECG-HR";
             // 
+            // numericUpDownBeatsToAveECG
+            // 
+            this.numericUpDownBeatsToAveECG.Location = new System.Drawing.Point(11, 50);
+            this.numericUpDownBeatsToAveECG.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.numericUpDownBeatsToAveECG.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownBeatsToAveECG.Name = "numericUpDownBeatsToAveECG";
+            this.numericUpDownBeatsToAveECG.Size = new System.Drawing.Size(78, 22);
+            this.numericUpDownBeatsToAveECG.TabIndex = 37;
+            this.numericUpDownBeatsToAveECG.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownBeatsToAveECG.Visible = false;
+            // 
             // labelSelectECGChannel
             // 
             this.labelSelectECGChannel.AutoSize = true;
-            this.labelSelectECGChannel.Location = new System.Drawing.Point(129, 20);
+            this.labelSelectECGChannel.Location = new System.Drawing.Point(115, 16);
             this.labelSelectECGChannel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelSelectECGChannel.Name = "labelSelectECGChannel";
-            this.labelSelectECGChannel.Size = new System.Drawing.Size(156, 20);
+            this.labelSelectECGChannel.Size = new System.Drawing.Size(136, 17);
             this.labelSelectECGChannel.TabIndex = 39;
             this.labelSelectECGChannel.Text = "Select ECG Channel";
             // 
             // comboBoxSelectECGChannel
             // 
             this.comboBoxSelectECGChannel.FormattingEnabled = true;
-            this.comboBoxSelectECGChannel.Location = new System.Drawing.Point(129, 45);
-            this.comboBoxSelectECGChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxSelectECGChannel.Location = new System.Drawing.Point(115, 36);
+            this.comboBoxSelectECGChannel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxSelectECGChannel.Name = "comboBoxSelectECGChannel";
-            this.comboBoxSelectECGChannel.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxSelectECGChannel.Size = new System.Drawing.Size(160, 24);
             this.comboBoxSelectECGChannel.TabIndex = 38;
             // 
             // checkBoxEnableECGtoHR
             // 
             this.checkBoxEnableECGtoHR.AutoSize = true;
-            this.checkBoxEnableECGtoHR.Location = new System.Drawing.Point(12, 31);
-            this.checkBoxEnableECGtoHR.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBoxEnableECGtoHR.Location = new System.Drawing.Point(11, 25);
+            this.checkBoxEnableECGtoHR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxEnableECGtoHR.Name = "checkBoxEnableECGtoHR";
-            this.checkBoxEnableECGtoHR.Size = new System.Drawing.Size(85, 24);
+            this.checkBoxEnableECGtoHR.Size = new System.Drawing.Size(74, 21);
             this.checkBoxEnableECGtoHR.TabIndex = 37;
             this.checkBoxEnableECGtoHR.Text = "Enable";
             this.checkBoxEnableECGtoHR.UseVisualStyleBackColor = true;
@@ -864,11 +883,11 @@
             this.groupBoxPPGtoHR.Controls.Add(this.checkBoxEnablePPGtoHR);
             this.groupBoxPPGtoHR.Controls.Add(this.numericUpDownBeatsToAve);
             this.groupBoxPPGtoHR.Enabled = false;
-            this.groupBoxPPGtoHR.Location = new System.Drawing.Point(9, 23);
-            this.groupBoxPPGtoHR.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxPPGtoHR.Location = new System.Drawing.Point(8, 18);
+            this.groupBoxPPGtoHR.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.groupBoxPPGtoHR.Name = "groupBoxPPGtoHR";
-            this.groupBoxPPGtoHR.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxPPGtoHR.Size = new System.Drawing.Size(346, 98);
+            this.groupBoxPPGtoHR.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBoxPPGtoHR.Size = new System.Drawing.Size(308, 78);
             this.groupBoxPPGtoHR.TabIndex = 1;
             this.groupBoxPPGtoHR.TabStop = false;
             this.groupBoxPPGtoHR.Text = "PPG-HR";
@@ -876,29 +895,29 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(129, 34);
+            this.label1.Location = new System.Drawing.Point(115, 27);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(155, 20);
+            this.label1.Size = new System.Drawing.Size(135, 17);
             this.label1.TabIndex = 35;
             this.label1.Text = "Select ADC Channel";
             // 
             // comboBoxPPGAdcChannel
             // 
             this.comboBoxPPGAdcChannel.FormattingEnabled = true;
-            this.comboBoxPPGAdcChannel.Location = new System.Drawing.Point(129, 57);
-            this.comboBoxPPGAdcChannel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.comboBoxPPGAdcChannel.Location = new System.Drawing.Point(115, 46);
+            this.comboBoxPPGAdcChannel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.comboBoxPPGAdcChannel.Name = "comboBoxPPGAdcChannel";
-            this.comboBoxPPGAdcChannel.Size = new System.Drawing.Size(180, 28);
+            this.comboBoxPPGAdcChannel.Size = new System.Drawing.Size(160, 24);
             this.comboBoxPPGAdcChannel.TabIndex = 36;
             this.comboBoxPPGAdcChannel.SelectedIndexChanged += new System.EventHandler(this.comboBoxPPGAdcChannel_SelectedIndexChanged);
             // 
             // buttonApply
             // 
-            this.buttonApply.Location = new System.Drawing.Point(952, 617);
-            this.buttonApply.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonApply.Location = new System.Drawing.Point(846, 494);
+            this.buttonApply.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonApply.Name = "buttonApply";
-            this.buttonApply.Size = new System.Drawing.Size(159, 38);
+            this.buttonApply.Size = new System.Drawing.Size(141, 30);
             this.buttonApply.TabIndex = 43;
             this.buttonApply.Text = "Apply";
             this.buttonApply.UseVisualStyleBackColor = true;
@@ -906,10 +925,10 @@
             // 
             // buttonDetectExpansionBoard
             // 
-            this.buttonDetectExpansionBoard.Location = new System.Drawing.Point(392, 578);
-            this.buttonDetectExpansionBoard.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonDetectExpansionBoard.Location = new System.Drawing.Point(348, 462);
+            this.buttonDetectExpansionBoard.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.buttonDetectExpansionBoard.Name = "buttonDetectExpansionBoard";
-            this.buttonDetectExpansionBoard.Size = new System.Drawing.Size(178, 35);
+            this.buttonDetectExpansionBoard.Size = new System.Drawing.Size(158, 28);
             this.buttonDetectExpansionBoard.TabIndex = 44;
             this.buttonDetectExpansionBoard.Text = "Detect Exp Board";
             this.buttonDetectExpansionBoard.UseVisualStyleBackColor = true;
@@ -917,34 +936,16 @@
             // 
             // textBoxExpansionBoard
             // 
-            this.textBoxExpansionBoard.Location = new System.Drawing.Point(392, 625);
-            this.textBoxExpansionBoard.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBoxExpansionBoard.Location = new System.Drawing.Point(348, 500);
+            this.textBoxExpansionBoard.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.textBoxExpansionBoard.Name = "textBoxExpansionBoard";
             this.textBoxExpansionBoard.ReadOnly = true;
-            this.textBoxExpansionBoard.Size = new System.Drawing.Size(259, 26);
+            this.textBoxExpansionBoard.Size = new System.Drawing.Size(231, 22);
             this.textBoxExpansionBoard.TabIndex = 45;
-            // 
-            // numericUpDownBeatsToAveECG
-            // 
-            this.numericUpDownBeatsToAveECG.Location = new System.Drawing.Point(12, 62);
-            this.numericUpDownBeatsToAveECG.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.numericUpDownBeatsToAveECG.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownBeatsToAveECG.Name = "numericUpDownBeatsToAveECG";
-            this.numericUpDownBeatsToAveECG.Size = new System.Drawing.Size(88, 26);
-            this.numericUpDownBeatsToAveECG.TabIndex = 37;
-            this.numericUpDownBeatsToAveECG.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // UserControlGeneralConfig
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.textBoxExpansionBoard);
             this.Controls.Add(this.buttonDetectExpansionBoard);
@@ -954,9 +955,9 @@
             this.Controls.Add(this.groupBoxDelimeter);
             this.Controls.Add(this.groupBoxSettings);
             this.Controls.Add(this.groupBoxSensors);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "UserControlGeneralConfig";
-            this.Size = new System.Drawing.Size(1192, 677);
+            this.Size = new System.Drawing.Size(1060, 542);
             this.Load += new System.EventHandler(this.UserControlGeneralConfig_Load);
             this.groupBoxSensors.ResumeLayout(false);
             this.groupBoxSensors.PerformLayout();
@@ -968,9 +969,9 @@
             this.groupBoxHeartRate.ResumeLayout(false);
             this.groupBoxECGtoHR.ResumeLayout(false);
             this.groupBoxECGtoHR.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeatsToAveECG)).EndInit();
             this.groupBoxPPGtoHR.ResumeLayout(false);
             this.groupBoxPPGtoHR.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBeatsToAveECG)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

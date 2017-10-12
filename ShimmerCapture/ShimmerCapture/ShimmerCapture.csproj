@@ -118,9 +118,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
     </Reference>
-    <Reference Include="ShimmerClosedLibraryRev0_4, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ShimmerClosedLibraryRev0_5, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>libs\ShimmerClosedLibraryRev0_4.dll</HintPath>
+      <HintPath>libs\ShimmerClosedLibraryRev0_5.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -250,7 +250,7 @@
   <ItemGroup>
     <Content Include="%24this.Icon.ico" />
     <Content Include="ic_shimmercapture.ico" />
-    <Content Include="libs\ShimmerClosedLibraryRev0_4.dll" />
+    <Content Include="libs\ShimmerClosedLibraryRev0_5.dll" />
     <Content Include="Resources\%24this.Icon.ico" />
     <Content Include="Resources\Green_Plus_20x20.png" />
     <Content Include="Resources\icon.ico" />

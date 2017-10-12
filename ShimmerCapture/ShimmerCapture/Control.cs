@@ -12,6 +12,7 @@ using System.IO.Ports;
 using ZedGraph;
 using ShimmerAPI;
 using ShimmerLibrary;
+using static ShimmerLibrary.ECGToHRAdaptive;
 //using ExceptionReporting;   // For ExceptionReporting
 
 /*
@@ -115,11 +116,11 @@ namespace ShimmerAPI
         //PPG-HR
         private PPGToHRAlgorithm PPGtoHeartRateCalculation;
         private Boolean EnablePPGtoHRConversion = false;
-        private int NumberOfHeartBeatsToAverage = 5;
+        private int NumberOfHeartBeatsToAverage = 1;
         private int NumberOfHeartBeatsToAverageECG = 1;
         private int TrainingPeriodPPG = 10; //5 second buffer
         //ECG-HR
-        private ECGToHR ECGtoHR;
+        private ECGToHRAdaptive ECGtoHRAdaptive;
         private Boolean EnableECGtoHRConversion = false;
         private int TrainingPeriodECG = 10; //5 second buffer
         //Filters
@@ -1354,7 +1355,7 @@ namespace ShimmerAPI
             //ECG-HR Conversion
             if (EnableECGtoHRConversion)
             {
-                ECGtoHR = new ECGToHR(ShimmerDevice.GetSamplingRate(), TrainingPeriodECG, NumberOfHeartBeatsToAverageECG);
+                ECGtoHRAdaptive = new ECGToHRAdaptive(ShimmerDevice.GetSamplingRate());
             }
 
             CountXAxisDataPoints = 0;
@@ -1688,11 +1689,19 @@ namespace ShimmerAPI
                             double dataFilteredLP = LPF_PPG.filterData(data[index]);
                             double dataFilteredHP = HPF_PPG.filterData(dataFilteredLP);
                             double[] dataTS = new double[] { data[indexts] };
-                            int heartRate = (int)Math.Round(PPGtoHeartRateCalculation.ppgToHrConversion(dataFilteredHP, dataTS[0]));
+                            //int heartRate = (int)Math.Round(PPGtoHeartRateCalculation.ppgToHrConversion(dataFilteredHP, dataTS[0]));
+                            DataPPGToHROutput datahr = PPGtoHeartRateCalculation.ppgToHrandIbiConversion(dataFilteredHP, dataTS[0]);
+                            int heartRate = (int)datahr.getHeartRate();
                             names.Add("Heart Rate PPG");
                             formats.Add("");
                             units.Add("Beats/min");
                             data.Add(heartRate);
+                            //add inter beat interval
+                            names.Add("IBI PPG");
+                            formats.Add("");
+                            units.Add("ms");
+                            data.Add(datahr.getInterBeatInterval());
+
                         }
                     }
 
@@ -2355,15 +2364,18 @@ namespace ShimmerAPI
                         }
                         if (index != -1)
                         {
-                            int hr = -1;
                             double ecgData = -1;
                             ecgData = data[index];
                             double calTimestamp = objectCluster.GetData(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL).GetData();
-                            hr = (int)ECGtoHR.ECGToHRConversion(ecgData, calTimestamp);
+                            ECGToHRAdaptive.DataECGToHROutput hrdata = ECGtoHRAdaptive.ecgToHrConversion(ecgData, calTimestamp);
                             names.Add("Heart Rate ECG");
                             formats.Add("");
                             units.Add("Beats/min");
-                            data.Add(hr);
+                            data.Add(hrdata.getHeartRate());
+                            names.Add("IBI ECG");
+                            formats.Add("");
+                            units.Add("ms");
+                            data.Add(hrdata.getInterBeatInterval());
                         }
                     }
                     /*
@@ -2695,7 +2707,7 @@ namespace ShimmerAPI
             //ECG-HR Conversion
             if (EnableECGtoHRConversion)
             {
-                ECGtoHR = new ECGToHR(ShimmerDevice.GetSamplingRate(), TrainingPeriodECG, NumberOfHeartBeatsToAverageECG);
+                ECGtoHRAdaptive = new ECGToHRAdaptive(ShimmerDevice.GetSamplingRate());
             }
             ExGLeadOffCounter = 0;
             ExGLeadOffCounterSize = (int)ShimmerDevice.GetSamplingRate();

@@ -1944,6 +1944,10 @@ namespace ShimmerAPI
                     PConfiguration.PControlForm.EnablePPGtoHR(checkBoxEnablePPGtoHR.Checked);
                     PConfiguration.PControlForm.SetNumberOfBeatsToAve((int)numericUpDownBeatsToAve.Value);
                     PConfiguration.PControlForm.SetNumberOfBeatsToAveECG((int)numericUpDownBeatsToAveECG.Value);
+                    if (numericUpDownBeatsToAve.Value != 1)
+                    {
+                        MessageBox.Show("IBI PPG is not functional when number of beats to average is not 1");
+                    }
                 }
                 else
                 {
@@ -1952,8 +1956,16 @@ namespace ShimmerAPI
 
                 if (checkBoxSensor15.Checked || checkBoxSensor17.Checked)
                 {
-                    PConfiguration.PControlForm.ECGSignalName = comboBoxSelectECGChannel.Text;
-                    PConfiguration.PControlForm.EnableECGtoHR(checkBoxEnableECGtoHR.Checked);
+          
+                    if (samplingRate <= 128)
+                    {
+                        MessageBox.Show("ECG to HR algorithm not enabled, a sampling rate of 128Hz and above is required.");
+                        checkBoxEnableECGtoHR.Checked = false;
+                    } else
+                    {
+                        PConfiguration.PControlForm.ECGSignalName = comboBoxSelectECGChannel.Text;
+                        PConfiguration.PControlForm.EnableECGtoHR(checkBoxEnableECGtoHR.Checked);
+                    }
                 }
                 else
                 {
@@ -1961,7 +1973,8 @@ namespace ShimmerAPI
                 }
 
             }
-            else
+            else if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R
+                || PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2)
             {
                 switch (selectedIndexSamplingRate)
                 {
@@ -2019,8 +2032,15 @@ namespace ShimmerAPI
 
                 if (checkBoxSensor5.Checked)
                 {
-                    PConfiguration.PControlForm.ECGSignalName = comboBoxSelectECGChannel.Text;
-                    PConfiguration.PControlForm.EnableECGtoHR(checkBoxEnableECGtoHR.Checked);
+                    if (samplingRate <= 128)
+                    {
+                        MessageBox.Show("ECG to HR algorithm not enabled, a sampling rate of 128Hz and above is required.");
+                        checkBoxEnableECGtoHR.Checked = false;
+                    } else
+                    {
+                        PConfiguration.PControlForm.ECGSignalName = comboBoxSelectECGChannel.Text;
+                        PConfiguration.PControlForm.EnableECGtoHR(checkBoxEnableECGtoHR.Checked);
+                    }
                 }
                 else
                 {
