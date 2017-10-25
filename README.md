@@ -30,6 +30,7 @@ NOTE: Where required the dll for ShimmerClosedLibrary (algorithms) can be found 
 NOTE: The ShimmerClosedLibrary provides 
 - ECG to Heart Rate/Inter Beat Interval(IBI) algorithm
 - PPG to Heart Rate/Inter Beat Interval(IBI) algorithm
+
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
 
 
