@@ -27,6 +27,12 @@ NOTE: Where required the dll for ShimmerClosedLibrary (algorithms) can be found 
 - MathNet.Numerics which is a ShimmerClosedLibrary dependency
 - 32feet.NET which is required when using the 32 feet library (ShimmerLogAndStream32Feet.cs , etc)
 
+NOTE: The ShimmerClosedLibrary provides 
+- ECG to Heart Rate/Inter Beat Interval(IBI) algorithm
+- PPG to Heart Rate/Inter Beat Interval(IBI) algorithm
+User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
+
+
 # REV 0.7
 - BTStream Firmware Is No Longer officially supported
 - Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project), restructuring was driven by the need to reduce unsustainable code duplicates as well as Xamarin not being able to handle Bluetooth implementations (e.g. system serial port/32 feet)
