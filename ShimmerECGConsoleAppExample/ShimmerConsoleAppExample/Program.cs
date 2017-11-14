@@ -101,6 +101,7 @@ namespace ShimmerConsoleAppExample
                     else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING)
                     {
                         System.Console.WriteLine("Streaming");
+                        System.Console.WriteLine("Data being written to ecg.csv");
                     }
                     break;
                 case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE:
