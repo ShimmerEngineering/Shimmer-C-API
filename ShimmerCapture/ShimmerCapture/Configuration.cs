@@ -148,7 +148,7 @@ namespace ShimmerAPI
             {
                 if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
-                    userControlExgConfig1.setExGRegBytesinForm();
+                    userControlExgConfig1.setExGRegBytesinForm(false);
                 }
                 userControlExgConfig1.ApplyExgConfigurations();
             }

@@ -200,7 +200,7 @@ namespace ShimmerAPI
                 checkBoxDefaultEMG.Checked = false;
                 checkBoxDefaultExGTest.Checked = false;
                 setExGUIElements();
-                setExGRegBytesinForm();
+                setExGRegBytesinForm(true);
             }
             else
             {
@@ -221,7 +221,7 @@ namespace ShimmerAPI
                 checkBoxDefaultECG.Checked = false;
                 checkBoxDefaultExGTest.Checked = false;
                 setExGUIElements();
-                setExGRegBytesinForm();
+                setExGRegBytesinForm(true);
             }
             else
             {
@@ -245,7 +245,7 @@ namespace ShimmerAPI
                 checkBoxDefaultECG.Checked = false;
                 checkBoxDefaultEMG.Checked = false;
                 setExGUIElements();
-                setExGRegBytesinForm();
+                setExGRegBytesinForm(true);
             }
             else
             {
@@ -472,7 +472,7 @@ namespace ShimmerAPI
             if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
                 setExGUIElements();
-                setExGRegBytesinForm();
+                setExGRegBytesinForm(false);
             }
         }
 
@@ -667,7 +667,7 @@ namespace ShimmerAPI
             }
         }
 
-        public void setExGRegBytesinForm() // reads the combobox settings (Reference Electrode, lead-off detection, lead-off current, threshold, gain) and sets the ExG Reg bytes
+        public void setExGRegBytesinForm(bool updateDataRate) // reads the combobox settings (Reference Electrode, lead-off detection, lead-off current, threshold, gain) and sets the ExG Reg bytes
         {
             this.textBoxChip1Reg1.TextChanged -= new System.EventHandler(this.textBoxChip1Reg1_TextChanged);
             this.textBoxChip2Reg1.TextChanged -= new System.EventHandler(this.textBoxChip2Reg1_TextChanged);
@@ -796,8 +796,12 @@ namespace ShimmerAPI
             string exg1Hex = BitConverter.ToString(exg1Reg);
             string[] exg1RegHex = exg1Hex.Split('-');
             //FILL EXG CONFIGURATIONS CHIP 1
-            byte byte0exg1 = (byte)(((exg1Reg[0] >> 3) << 3) | oversamplingRatio);
-
+            byte byte0exg1 = exg1Reg[0];
+            if (updateDataRate)
+            {
+                byte0exg1 = (byte)(((exg1Reg[0] >> 3) << 3) | oversamplingRatio);
+            }
+            
             // set lead-off detection current, lead-off comparator threshold for chip1
             exg1Reg[2] = (byte)((exg1Reg[2] & 0x1F) | leadOffComparatorThresholdSetting);
             exg1Reg[2] = (byte)((exg1Reg[2] & 0xF3) | leadOffCurrentSetting);
@@ -894,7 +898,12 @@ namespace ShimmerAPI
             {
                 byte6exg2 = (byte)((exg2Reg[6] & 0xF0) | (LeadOffDetect_2P));
             }
-            byte byte0exg2 = (byte)(((exg2Reg[0] >> 3) << 3) | oversamplingRatio);
+
+            byte byte0exg2 = exg2Reg[0];
+            if (updateDataRate)
+            {
+                byte0exg2 = (byte)(((exg2Reg[0] >> 3) << 3) | oversamplingRatio);
+            }
             textBoxChip2Reg1.Text = BitConverter.ToString(new byte[] { byte0exg2 });
             textBoxChip2Reg2.Text = BitConverter.ToString(new byte[] { byte1exg2 });
             textBoxChip2Reg3.Text = BitConverter.ToString(new byte[] { byte2exg2 });
@@ -1503,7 +1512,7 @@ namespace ShimmerAPI
             byte byte5exg1 = (byte)((exg1Reg[5] & 0xF0) | (referenceElectrodeSetting));
             exg1Reg[5] = byte5exg1;
             PConfiguration.ExgReg1UI = exg1Reg;
-            setExGRegBytesinForm();
+            setExGRegBytesinForm(true);
         }
 
         private void comboBoxExGLeadOffCurrent_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1522,7 +1531,7 @@ namespace ShimmerAPI
 
             PConfiguration.ExgReg1UI = exg1Reg;
             PConfiguration.ExgReg2UI = exg2Reg;
-            setExGRegBytesinForm();
+            setExGRegBytesinForm(true);
         }
 
         private void comboBoxLeadOffComparatorThreshold_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1541,7 +1550,7 @@ namespace ShimmerAPI
 
             PConfiguration.ExgReg1UI = exg1Reg;
             PConfiguration.ExgReg2UI = exg2Reg;
-            setExGRegBytesinForm();
+            setExGRegBytesinForm(true);
         }
 
         private void comboBoxLeadOffDetection_SelectionChangeCommitted(object sender, EventArgs e)
@@ -1625,7 +1634,7 @@ namespace ShimmerAPI
             PConfiguration.ExgReg1UI = exg1Reg;
             PConfiguration.ExgReg2UI = exg2Reg;
 
-            setExGRegBytesinForm();
+            setExGRegBytesinForm(true);
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
