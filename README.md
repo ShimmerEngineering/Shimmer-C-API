@@ -27,6 +27,13 @@ NOTE: Where required the dll for ShimmerClosedLibrary (algorithms) can be found 
 - MathNet.Numerics which is a ShimmerClosedLibrary dependency
 - 32feet.NET which is required when using the 32 feet library (ShimmerLogAndStream32Feet.cs , etc)
 
+NOTE: The ShimmerClosedLibrary provides 
+- ECG to Heart Rate/Inter Beat Interval(IBI) algorithm
+- PPG to Heart Rate/Inter Beat Interval(IBI) algorithm
+
+User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
+
+
 # REV 0.7
 - BTStream Firmware Is No Longer officially supported
 - Shimmer, Shimmer32Feet, ShimmerSDBT and ShimmerSDBT32Feet has been deprecated, please see ShimmerLogAndStreamSystemSerialPort and ShimmerLogAndStream32Feet, and ShimmerLogAndStreamXamarin (Within the ShimmerCaptureXamarin Project), restructuring was driven by the need to reduce unsustainable code duplicates as well as Xamarin not being able to handle Bluetooth implementations (e.g. system serial port/32 feet)
@@ -66,6 +73,22 @@ NOTE: Where required the dll for ShimmerClosedLibrary (algorithms) can be found 
 # REV 0.3
 - Major update to ecgtohr algorithm and filtering algorithm, minor update to ppgtohr algorithm, user should see major improvements in both ecgtohr and ppgtohr algorithms.
 - Currently uses ShimmerClosedLibraryRev0_3
+
+# Linux Mono
+1) In order to use the API on Linux, please change the .net framework to 4.5. Mono is required and can be installed via the following command 
+*sudo apt-get install mono-complete*
+2) The following command can be used to build the c# project 
+*xbuild ShimmerCapture.sln*
+3) To run the application use the following command
+*sudo mono ShimmerCapture\ vX.X.exe*
+4) Note without the **sudo** command when running the application connecting to the Bluetooth device **will not work**
+
+# Linux Bluetooth Pairing
+1) first install Bluetooth Manager : sudo apt-get install blueman
+2) next open Bluetooth Manager and search for devices
+3) right click on the device you want to use and choose pair, note the Bluetooth pairing key is 1234
+4) once paired click setup, and connect to serial port, at this stage you should see the Bluetooth come on permanently on the Shimmer device, also you should see a pop up indicating /dev/rfcommx
+5) now you can open the exe and connect to that port /dev/rfcommx
 
 # The Following Applies To All Code Provided in the repository
 Copyright (c) 2014, Shimmer Research, Ltd.
