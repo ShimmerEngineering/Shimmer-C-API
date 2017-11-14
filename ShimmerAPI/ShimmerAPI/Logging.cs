@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using System.Windows.Forms;
 
 namespace ShimmerAPI
 {
-    class Logging
+    public class Logging
     {
         private StreamWriter PCsvFile = null;
         private String FileName;
@@ -23,8 +22,7 @@ namespace ShimmerAPI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Save to CSV",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                System.Console.WriteLine(ex);
             }
 	    }
 

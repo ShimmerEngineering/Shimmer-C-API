@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShimmerAPI</RootNamespace>
     <AssemblyName>ShimmerCapture v0.7</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -114,8 +114,7 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ShimmerAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ShimmerAPI">
       <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
     </Reference>
     <Reference Include="ShimmerClosedLibraryRev0_5, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -167,7 +166,6 @@
     <Compile Include="Configuration.Designer.cs">
       <DependentUpon>Configuration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Logging.cs" />
     <Compile Include="Control.cs">
       <SubType>Form</SubType>
     </Compile>
