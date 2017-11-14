@@ -5609,6 +5609,60 @@ namespace ShimmerAPI
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exgGain"> where 0 = 6x Gain, 1 = 1x , 2 = 2x , 3 = 3x, 4 = 4x, 5 = 8x, 6 = 12x </param>
+        public void WriteEXGGain(byte exgGain)
+        {
+            if (IsConnectionOpen())
+            {
+                if (CompatibilityCode >= 3)
+                {
+
+                    byte exg1ar4 = (byte)(Exg1RegArray[3] & 0x8F); //143 = 1000 1111b
+                    byte exg1ar5 = (byte)(Exg1RegArray[4] & 0x8F); //143 = 1000 1111b
+                    exg1ar4 = (byte)(exg1ar4 | (exgGain<<4));
+                    exg1ar5 = (byte)(exg1ar5 | (exgGain<<4));
+                    byte[] exgChip1ToBeWritten = Exg1RegArray;
+                    exgChip1ToBeWritten[3] = exg1ar4;
+                    exgChip1ToBeWritten[4] = exg1ar5;                    
+
+                    byte exg2ar4 = (byte)(Exg2RegArray[3] & 0x8F); //143 = 1000 1111b
+                    byte exg2ar5 = (byte)(Exg2RegArray[4] & 0x8F); //143 = 1000 1111b
+                    exg2ar4 = (byte)(exg2ar4 | (exgGain<<4));
+                    exg2ar5 = (byte)(exg2ar5 | (exgGain<<4));
+                    byte[] exgChip2ToBeWritten = Exg2RegArray;
+                    exgChip2ToBeWritten[3] = exg2ar4;
+                    exgChip2ToBeWritten[4] = exg2ar5;
+
+                    /*WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.SET_EXG_REGS_COMMAND }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1); //CHIPID1
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1); //Starting Index In the Register
+                    WriteBytes(new byte[1] { (byte)10 }, 0, 1); //Number Of Bytes Being Written
+                    WriteBytes(exgChip1ToBeWritten,0,10);
+                    Exg1RegArray = exgChip1ToBeWritten;
+
+                    System.Threading.Thread.Sleep(200);
+
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.SET_EXG_REGS_COMMAND }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)1 }, 0, 1); //CHIPID2
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1); //Starting Index In the Register
+                    WriteBytes(new byte[1] { (byte)10 }, 0, 1); //Number Of Bytes Being Written
+                    WriteBytes(exgChip2ToBeWritten, 0, 1);
+                    Exg2RegArray = exgChip2ToBeWritten;
+                    System.Threading.Thread.Sleep(200);
+                    */
+
+                    WriteEXGConfigurations(exgChip1ToBeWritten, exgChip2ToBeWritten);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exgRate">where 0=125SPS ; 1=250SPS; 2=500SPS; 3=1000SPS; 4=2000SPS</param>
         public void WriteEXGRate(byte exgRate)
         {
             if (IsConnectionOpen())
@@ -5624,8 +5678,8 @@ namespace ShimmerAPI
 
                     WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.SET_EXG_REGS_COMMAND }, 0, 1);
                     WriteBytes(new byte[1] { (byte)0 }, 0, 1); //CHIPID1
-                    WriteBytes(new byte[1] { (byte)0 }, 0, 1);
-                    WriteBytes(new byte[1] { (byte)1 }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1); //Starting Index In the Register
+                    WriteBytes(new byte[1] { (byte)1 }, 0, 1); //Number Of Bytes Being Written
                     WriteBytes(new byte[1] { exg1ar1 }, 0, 1);
                     Exg1RegArray[0] = exg1ar1;
 
@@ -5633,8 +5687,8 @@ namespace ShimmerAPI
 
                     WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.SET_EXG_REGS_COMMAND }, 0, 1);
                     WriteBytes(new byte[1] { (byte)1 }, 0, 1); //CHIPID2
-                    WriteBytes(new byte[1] { (byte)0 }, 0, 1);
-                    WriteBytes(new byte[1] { (byte)1 }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)0 }, 0, 1); //Starting Index In the Register
+                    WriteBytes(new byte[1] { (byte)1 }, 0, 1); //Number Of Bytes Being Written
                     WriteBytes(new byte[1] { exg2ar1 }, 0, 1);
                     Exg2RegArray[0] = exg2ar1;
                     System.Threading.Thread.Sleep(500);
