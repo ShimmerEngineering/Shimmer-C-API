@@ -4534,7 +4534,7 @@ namespace ShimmerAPI
             CompatibilityCode = 0;
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
             {
-                if (FirmwareIdentifier == 1)    //BtStream
+                if (FirmwareIdentifier == 1)    //BtStream //Also Used For EXG MD
                 {
                     if (FirmwareVersion == 0.1)
                     {
@@ -4559,6 +4559,10 @@ namespace ShimmerAPI
                     else if (FirmwareVersion >= 0.7 && FirmwareInternal>2)
                     {
                         CompatibilityCode = 7; //skip CompatibilityCode = 6 since functionality of code 6 and 7 was introduced at the same time 
+                    }
+                    else if (FirmwareVersion >= 0.8)
+                    {
+                        CompatibilityCode = 7;
                     }
                 }
                 else if (FirmwareIdentifier == 3)   //LogAndStream
