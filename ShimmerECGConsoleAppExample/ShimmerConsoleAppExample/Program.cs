@@ -29,7 +29,7 @@ namespace ShimmerConsoleAppExample
             //There are two main uses of the constructors, first one just connects to the device without setting and specific configurations
             //shimmer = new ShimmerSDBT("ShimmerID1", "COM15");
             int enabledSensors = ((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT); // this is to enable the two EXG Chips on the Shimmer3
-            double samplingRate = 51.2;
+            double samplingRate = 512;
             //byte[] defaultECGReg1 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x40, 0x2D, 0x00, 0x00, 0x02, 0x03 }; //see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1
             //byte[] defaultECGReg2 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x47, 0x00, 0x00, 0x00, 0x02, 0x01 }; //see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2
             byte[] defaultECGReg1 = ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG1 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG1
@@ -52,7 +52,8 @@ namespace ShimmerConsoleAppExample
                     System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
                 }
                 System.Console.WriteLine();
-                shimmer.WriteEXGRate(1); //Note that it is better to set the exgrate via writesamplingrate
+                //Note that it is better to set the exgrate via writesamplingrate, a value of 2 is 500 SPS, it should actually be 3 1000 SPS for a sampling rate of 512Hz
+                shimmer.WriteEXGRate(2); 
                 shimmer.WriteEXGGain(1);
                 
                 shimmer.ReadEXGConfigurations(1);
