@@ -35,7 +35,7 @@ namespace ShimmerConsoleAppExample
             byte[] defaultECGReg1 = ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG1 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG1
             byte[] defaultECGReg2 = ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG2 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG2
             //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
-            shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM29", samplingRate, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
+            shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM169", samplingRate, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();
             if (shimmer.GetState() == ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
@@ -51,10 +51,14 @@ namespace ShimmerConsoleAppExample
                 {
                     System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
                 }
-                System.Console.WriteLine();
-                //Note that it is better to set the exgrate via writesamplingrate, a value of 2 is 500 SPS, it should actually be 3 1000 SPS for a sampling rate of 512Hz
-                shimmer.WriteEXGRate(2); 
-                shimmer.WriteEXGGain(1);
+                System.Console.WriteLine("\n");
+                
+                //Note the data rate of the EXG chips (exgrate) is automatically set via writesamplingrate(). For a sampling rate of 512Hz, the exgrate is set to 0x03, which corresponds to 1000 SPS. 
+                //The exgrate can be set to a different settting afterwards, e.g. to 2000 SPS:
+                shimmer.WriteEXGRate(4);
+
+                //The gain of the EXG chips is also configurable. The default gain = 4 (0x04). Now the gain is set to 0x05, which corresponds to a gain of 8:
+                shimmer.WriteEXGGain(5);
                 
                 shimmer.ReadEXGConfigurations(1);
                 shimmer.ReadEXGConfigurations(2);
@@ -68,11 +72,53 @@ namespace ShimmerConsoleAppExample
                 {
                     System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
                 }
-                System.Console.WriteLine();
+                System.Console.WriteLine("\n");
 
-                //EXAMPLE TO CHANGE ECG RESOLUTION
+                //Example code for changing the ecg resolution from 24bit to 16bit - to limit the amount of data transmitted over the Bluetooth link
                 enabledSensors = ((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT); // this is to enable the two EXG Chips on the Shimmer3 at 16 bit resolution
                 shimmer.WriteSensors(enabledSensors);
+
+                //Example code for changing the ecg resolution back to 24bit - recommended
+                enabledSensors = ((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT); // this is to enable the two EXG Chips on the Shimmer3 at 24 bit resolution
+                shimmer.WriteSensors(enabledSensors);
+
+                //Example code for setting the default ecg settings again (exggain = 4, exgrate >= sampling rate)
+                //First write the default register settings for both EXG chips
+                shimmer.WriteEXGConfigurations(defaultECGReg1, defaultECGReg2);
+                shimmer.ReadEXGConfigurations(1);
+                shimmer.ReadEXGConfigurations(2);
+                System.Console.WriteLine("SET DEFAULT ECG CONFIGURATIONS AGAIN");
+                System.Console.WriteLine("EXG CHIP 1 CONFIGURATION");
+                for (int i = 0; i < 10; i++)
+                {
+                    System.Console.Write(shimmer.GetEXG1RegisterContents()[i] + " ");
+                }
+                System.Console.WriteLine("\nEXG CHIP 2 CONFIGURATION");
+                for (int i = 0; i < 10; i++)
+                {
+                    System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
+                }
+                System.Console.WriteLine("\n");
+                //Second write the exgrate via writesamplingrate() this time
+                shimmer.WriteSamplingRate(512);
+                shimmer.ReadEXGConfigurations(1);
+                shimmer.ReadEXGConfigurations(2);
+                System.Console.WriteLine("SET ECG DATA RATE AUTOMATICALLY BY CHANGING THE SAMPLING RATE OF THE SHIMMER");
+                System.Console.WriteLine("EXG CHIP 1 CONFIGURATION");
+                for (int i = 0; i < 10; i++)
+                {
+                    System.Console.Write(shimmer.GetEXG1RegisterContents()[i] + " ");
+                }
+                System.Console.WriteLine("\nEXG CHIP 2 CONFIGURATION");
+                for (int i = 0; i < 10; i++)
+                {
+                    System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
+                }
+                System.Console.WriteLine("\n");
+
+                System.Console.WriteLine("IN ABOUT 5 SECONDS STREAMING WILL START AFTER THE BEEP");
+                Thread.Sleep(5000);
+                System.Console.Beep();
 
                 shimmer.StartStreaming();
             }
