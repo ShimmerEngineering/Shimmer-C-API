@@ -705,8 +705,8 @@ namespace ShimmerAPI
             GSRRange = gsrRange;
             GyroRange = gyroRange;
             SetEnabledSensors = setEnabledSensors;
-            Exg1RegArray = exg1configuration;
-            Exg2RegArray = exg2configuration;
+            Array.Copy(exg1configuration, Exg1RegArray, 10);
+            Array.Copy(exg2configuration, Exg2RegArray, 10);
             LowPowerAccelEnabled = enableLowPowerAccel;
             LowPowerGyroEnabled = enableLowPowerGyro;
             LowPowerMagEnabled = enableLowPowerMag;
