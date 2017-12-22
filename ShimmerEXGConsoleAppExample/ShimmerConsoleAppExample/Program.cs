@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ShimmerConsoleAppExample
@@ -37,7 +38,7 @@ namespace ShimmerConsoleAppExample
             byte[] defaultECGReg1 = ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG1; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG1
             byte[] defaultECGReg2 = ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG2; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG2
             //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
-            shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM29", samplingRate, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
+            shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM169", samplingRate, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();
             if (shimmer.GetState() == ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
@@ -53,28 +54,13 @@ namespace ShimmerConsoleAppExample
                 {
                     System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
                 }
-                System.Console.WriteLine();
-                shimmer.WriteEXGRate(1); //Note that it is better to set the exgrate via writesamplingrate
-                shimmer.WriteEXGGain(0);
-
-                shimmer.ReadEXGConfigurations(1);
-                shimmer.ReadEXGConfigurations(2);
-                System.Console.WriteLine("EXG CONFIGURATION AFTER MANUALLY SETTING THE VALUES (RATE and GAIN)");
-                System.Console.WriteLine("EXG CHIP 1 CONFIGURATION");
-                for (int i = 0; i < 10; i++)
-                {
-                    System.Console.Write(shimmer.GetEXG1RegisterContents()[i] + " ");
-                }
-                System.Console.WriteLine("\nEXG CHIP 2 CONFIGURATION");
-                for (int i = 0; i < 10; i++)
-                {
-                    System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
-                }
-                System.Console.WriteLine();
-
-                //EXAMPLE TO CHANGE ECG RESOLUTION
-                enabledSensors = ((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT); // this is to enable the two EXG Chips on the Shimmer3 at 16 bit resolution
+                System.Console.WriteLine("\n");
+              
                 shimmer.WriteSensors(enabledSensors);
+
+                System.Console.WriteLine("IN ABOUT 5 SECONDS STREAMING WILL START AFTER THE BEEP");
+                Thread.Sleep(5000);
+                System.Console.Beep();
 
                 shimmer.StartStreaming();
             }
@@ -111,7 +97,8 @@ namespace ShimmerConsoleAppExample
                     break;
                 case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
                     ObjectCluster objectCluster = (ObjectCluster)eventArgs.getObject();
-                    SensorData data = objectCluster.GetData(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, "CAL");
+                    //SensorData data = objectCluster.GetData(Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT, "CAL");
+                    SensorData data = objectCluster.GetData(Shimmer3Configuration.SignalNames.EXG1_CH1, "CAL");
                     System.Console.WriteLine("EXG Channel 1: " + data.Data);
                     logging.WriteData(objectCluster);
                     break;

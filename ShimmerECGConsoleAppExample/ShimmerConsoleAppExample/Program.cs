@@ -40,6 +40,7 @@ namespace ShimmerConsoleAppExample
             shimmer.Connect();
             if (shimmer.GetState() == ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
             {
+                System.Console.WriteLine("\n");
                 System.Console.WriteLine("EXG CONFIGURATION SET USING SHIMMER CONSTRUCTOR");
                 System.Console.WriteLine("EXG CHIP 1 CONFIGURATION");
                 for (int i = 0; i < 10; i++)
