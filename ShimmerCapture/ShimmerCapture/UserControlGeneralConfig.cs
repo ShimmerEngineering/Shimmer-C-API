@@ -160,7 +160,9 @@ namespace ShimmerAPI
                     comboBoxExgGain.DropDownStyle = ComboBoxStyle.DropDownList;
 
 
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier()== ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM
+                        //|| PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
+                        || PConfiguration.PControlForm.ShimmerDevice.compareVersions(ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM,0,1,5))
                     {
                         checkBoxSensor14.Enabled = true;
                     }
@@ -321,7 +323,10 @@ namespace ShimmerAPI
                 checkBoxGyroOnTheFly.Enabled = true;
                 checkBoxLowPowerAccel.Enabled = true;
                 checkBoxLowPowerGyro.Enabled = true;
-                if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
+                //if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
+                if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM
+                        //|| PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
+                        || PConfiguration.PControlForm.ShimmerDevice.compareVersions(ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM, 0, 1, 5))
                 {
                     checkBoxIntExpPower.Enabled = true;
                 }

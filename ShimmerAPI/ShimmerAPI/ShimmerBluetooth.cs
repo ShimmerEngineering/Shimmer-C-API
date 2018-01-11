@@ -115,7 +115,6 @@ namespace ShimmerAPI
         private int FirmwareMajor;
         private int FirmwareMinor;
         protected double FirmwareIdentifier;
-        protected double FirmwareVersion;
         protected int FirmwareInternal;
         protected String FirmwareVersionFullName;
         protected List<byte> ListofSensorChannels = new List<byte>();
@@ -790,7 +789,7 @@ namespace ShimmerAPI
                         // Set default firmware version values, if there is not response it means that this values remain, and the old firmware version has been detected
                         // The following are the three main identifiers used to identify the firmware version
                         FirmwareIdentifier = 1;
-                        FirmwareVersion = 0;
+
                         FirmwareVersionFullName = "BoilerPlate 0.1.0";
                         FirmwareInternal = 0;
 
@@ -800,7 +799,7 @@ namespace ShimmerAPI
                         WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND }, 0, 1);
                         System.Threading.Thread.Sleep(200);
 
-                        if (FirmwareVersion != 1.2) //Shimmer2r and Shimmer3 commands differ, using FWVersion to determine if its a Shimmer2r for the time being, future revisions of BTStream (Shimmer2r, should update the command to 3F)
+                        if (FirmwareMajor!=1 && FirmwareMinor!=2)//FirmwareVersion != 1.2) //Shimmer2r and Shimmer3 commands differ, using FWVersion to determine if its a Shimmer2r for the time being, future revisions of BTStream (Shimmer2r, should update the command to 3F)
                         {
                             WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_SHIMMER_VERSION_COMMAND }, 0, 1);
                         }
@@ -1410,10 +1409,12 @@ namespace ShimmerAPI
 
                                 }
                                 FirmwareIdentifier = ((double)((bufferbyte[1] & 0xFF) << 8) + (double)(bufferbyte[0] & 0xFF));
-                                FirmwareVersion = ((double)((bufferbyte[3] & 0xFF) << 8) + (double)(bufferbyte[2] & 0xFF) + ((double)((bufferbyte[4] & 0xFF)) / 10));
-                                FirmwareInternal = ((int)(bufferbyte[5] & 0xFF));
+                                
                                 FirmwareMajor = (int)((bufferbyte[3] & 0xFF) << 8) + (int)(bufferbyte[2] & 0xFF);
                                 FirmwareMinor = (int)(bufferbyte[4] & 0xFF);
+                                FirmwareInternal = ((int)(bufferbyte[5] & 0xFF));
+
+                                
 
                                 string fw_id = "";
                                 if (FirmwareIdentifier == 1)
@@ -1422,7 +1423,7 @@ namespace ShimmerAPI
                                     fw_id = "LogAndStream ";
                                 else
                                     fw_id = "Unknown ";
-                                string temp = fw_id + FirmwareVersion.ToString("0.0") + "." + FirmwareInternal.ToString();
+                                string temp = fw_id + FirmwareMajor.ToString() + "." + FirmwareMinor.ToString() + "." + FirmwareInternal.ToString();
                                 FirmwareVersionFullName = temp;
                                 SetCompatibilityCode();
                                 UpdateBasedOnCompatibilityCode();
@@ -4494,12 +4495,7 @@ namespace ShimmerAPI
         {
             return FirmwareVersionFullName;
         }
-
-        public double GetFirmwareVersion()
-        {
-            return FirmwareVersion;
-        }
-
+        
         public double GetFirmwareIdentifier()
         {
             return FirmwareIdentifier;
@@ -4536,50 +4532,50 @@ namespace ShimmerAPI
             {
                 if (FirmwareIdentifier == 1)    //BtStream //Also Used For EXG MD
                 {
-                    if (FirmwareVersion == 0.1)
+                    if (FirmwareMajor == 0 && FirmwareMinor == 1)//FirmwareVersion == 0.1)
                     {
                         CompatibilityCode = 1;
                     }
-                    else if (FirmwareVersion == 0.2)
+                    else if (FirmwareMajor == 0 && FirmwareMinor == 2)//FirmwareVersion == 0.2)
                     {
                         CompatibilityCode = 2;
                     }
-                    else if (FirmwareVersion == 0.3)
+                    else if (FirmwareMajor == 0 && FirmwareMinor == 3)//FirmwareVersion == 0.3)
                     {
                         CompatibilityCode = 3;
                     }
-                    else if (FirmwareVersion == 0.4)
+                    else if (FirmwareMajor == 0 && FirmwareMinor == 4)//FirmwareVersion == 0.4)
                     {
                         CompatibilityCode = 4;
                     }
-                    else if (FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
+                    else if ((FirmwareMajor == 0 && FirmwareMinor>=5)&&(FirmwareMajor == 0 && FirmwareMinor <= 7 && FirmwareInternal <= 2))//(FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
                     {
                         CompatibilityCode = 5;
                     }
-                    else if (FirmwareVersion >= 0.7 && FirmwareInternal>2)
+                    else if (FirmwareMajor == 0 && FirmwareMinor >= 7 && FirmwareInternal > 2)//(FirmwareVersion >= 0.7 && FirmwareInternal>2)
                     {
                         CompatibilityCode = 7; //skip CompatibilityCode = 6 since functionality of code 6 and 7 was introduced at the same time 
                     }
-                    else if (FirmwareVersion >= 0.8)
+                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 8))//(FirmwareVersion >= 0.8)
                     {
                         CompatibilityCode = 7;
                     }
                 }
                 else if (FirmwareIdentifier == 3)   //LogAndStream
                 {
-                    if (FirmwareVersion == 0.1)
+                    if (FirmwareMajor == 0 && FirmwareMinor == 1) //(FirmwareVersion == 0.1)
                     {
                         CompatibilityCode = 3;
                     }
-                    else if (FirmwareVersion == 0.2)
+                    else if (FirmwareMajor == 0 && FirmwareMinor == 2) //(FirmwareVersion == 0.2)
                     {
                         CompatibilityCode = 4;
                     }
-                    else if (FirmwareVersion >= 0.3 && FirmwareVersion<0.5)
+                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 3) && (FirmwareMajor == 0 && FirmwareMinor < 5))//(FirmwareVersion >= 0.3 && FirmwareVersion<0.5)
                     {
                         CompatibilityCode = 5;
                     }
-                    else if (FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
+                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 5 && FirmwareInternal >=4) || (FirmwareMajor == 0 && FirmwareMinor == 6))//(FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
                     {
                         CompatibilityCode = 6;
                     }
@@ -4593,7 +4589,7 @@ namespace ShimmerAPI
             {
                 if (FirmwareIdentifier == 1)    //BtStream
                 {
-                    if (FirmwareVersion == 1.2)
+                    if ((FirmwareMajor == 1 && FirmwareMinor == 2))//FirmwareVersion == 1.2)
                     {
                         CompatibilityCode = 1;
                     }
@@ -5810,6 +5806,15 @@ namespace ShimmerAPI
             return caldata;
         }
 
+        protected int countDigits(int number)
+        {
+            if (number == 0)
+            {
+                return 1;
+            }
+            return (int)Math.Floor(Math.Log10(Math.Abs(number)) + 1);
+        }
+
         protected double[] CalibratePressureSensorData(double UP, double UT)
         {
             double X1 = (UT - AC6) * AC5 / 32768;
@@ -5970,6 +5975,27 @@ namespace ShimmerAPI
             if (invoker != null) invoker(this, e);
         }
 
+        public bool compareVersions(int compMajor, int compMinor, int compInternal)
+        {
+
+            if ((compMajor > FirmwareMajor)
+                    || (FirmwareMajor == compMajor && compMinor > FirmwareMinor)
+                    || (FirmwareMajor == compMajor && FirmwareMinor == compMinor && compInternal >= FirmwareInternal))
+            {
+                return true; // if FW ID is the same and version is greater or equal 
+            }
+            return false; // if less or not the same FW ID
+        }
+
+        public bool compareVersions(int fwIdentifier, int compMajor, int compMinor, int compInternal)
+        {
+
+            if (fwIdentifier == FirmwareIdentifier)
+            {
+                return compareVersions(compMajor, compMinor, compInternal); // if FW ID is the same and version is greater or equal 
+            }
+            return false; // if less or not the same FW ID
+        }
 
     }
 
@@ -6155,6 +6181,6 @@ namespace ShimmerAPI
 
     }
 
-
+    
 }
 

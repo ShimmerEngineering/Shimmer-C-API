@@ -57,12 +57,13 @@ namespace ShimmerAPI
                     EnabledSensorsUI = PControlForm.ShimmerDevice.GetEnabledSensors();
                 }
 
-                if ((((PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
-                && ((PControlForm.ShimmerDevice.GetFirmwareVersion() == 0.2 & PControlForm.ShimmerDevice.GetFirmwareInternal() >= 8)
-                || (PControlForm.ShimmerDevice.GetFirmwareVersion() >= 0.3)))
-                || PControlForm.ShimmerDevice.GetFirmwareIdentifier() == 3)
+                if (((PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                //&& ((PControlForm.ShimmerDevice.GetFirmwareVersion() == 0.2 & PControlForm.ShimmerDevice.GetFirmwareInternal() >= 8)
+                //|| (PControlForm.ShimmerDevice.GetFirmwareVersion() >= 0.3)))
+                    && (PControlForm.ShimmerDevice.compareVersions(ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM,0,2,8)))
+                || PControlForm.ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM
                 && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
-                || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)))
+                    || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)))
                 {
                     tabControl1.TabPages[1].Enabled = true;
                     
