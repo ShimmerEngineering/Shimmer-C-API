@@ -33,6 +33,13 @@ NOTE: The ShimmerClosedLibrary provides
 
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
 
+# Rev 0.8
+- Updated ECG to HR and PPG to HR algorithms , now both support IBI
+- Updated 3D orientation example making it more user friendly
+- Added ShimmerConsoleTest which is a recursive test which: connect-stream-stop-disconnect-repeat
+- Fix to Low Power Mag not functioning
+- Updated the EXG console examples making it clearer and more user friendly
+- Added 3 byte time stamp support for internal (development) hardware and firmware
 
 # REV 0.7
 - BTStream Firmware Is No Longer officially supported
