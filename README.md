@@ -34,7 +34,7 @@ NOTE: The ShimmerClosedLibrary provides
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
 
 # Rev 0.9
-- Removed the double representation of the firmware version (FirmwareVersion) as there is no way to represent 0.1 ( where 0 is FirmwareMajor and 1 is FirmwareMinor) and 0.10 ( where 0 is FirmwareMajor and 10 is FirmwareMinor) as a double. FirmwareMajor and FirmwareMinor variables remain. Added two methods compareVersions which allows quick version comparisons
+- Removed the double representation of the firmware version (FirmwareVersion) as there is no way to represent 0.1 (_where 0 is FirmwareMajor and 1 is FirmwareMinor_) and 0.10 (_where 0 is FirmwareMajor and 10 is FirmwareMinor_) as a double. FirmwareMajor and FirmwareMinor variables remain. Added two methods compareVersions which allows quick version comparisons
 
 # Rev 0.8
 - Updated ECG to HR and PPG to HR algorithms , now both support IBI
