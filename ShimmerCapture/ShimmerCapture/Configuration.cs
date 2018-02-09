@@ -61,6 +61,10 @@ namespace ShimmerAPI
                 //&& ((PControlForm.ShimmerDevice.GetFirmwareVersion() == 0.2 & PControlForm.ShimmerDevice.GetFirmwareInternal() >= 8)
                 //|| (PControlForm.ShimmerDevice.GetFirmwareVersion() >= 0.3)))
                     && (PControlForm.ShimmerDevice.compareVersions(ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM,0,2,8)))
+                || ((PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                //&& ((PControlForm.ShimmerDevice.GetFirmwareVersion() == 0.2 & PControlForm.ShimmerDevice.GetFirmwareInternal() >= 8)
+                //|| (PControlForm.ShimmerDevice.GetFirmwareVersion() >= 0.3)))
+                    && (PControlForm.ShimmerDevice.compareVersions(ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD, 0, 0, 1)))
                 || PControlForm.ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM
                 && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
                     || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) || ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)))

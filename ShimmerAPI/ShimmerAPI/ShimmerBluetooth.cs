@@ -85,6 +85,7 @@ namespace ShimmerAPI
         public bool mEnableTimeStampAlignmentCheck = false;
         public const int FW_IDENTIFIER_BTSTREAM = 1;
         public const int FW_IDENTIFIER_LOGANDSTREAM = 3;
+        public const int FW_IDENTIFIER_SHIMMERECGMD = 16;
 
         public const int GSR_RANGE_10K_56K = 0;
         public const int GSR_RANGE_56K_220K = 1;
@@ -833,7 +834,13 @@ namespace ShimmerAPI
                                 WriteBatteryFrequency(0);
                                 InitializeShimmer3();
                             }
+                            else if (GetFirmwareIdentifier() == FW_IDENTIFIER_SHIMMERECGMD)
+                            {
+                                WriteBatteryFrequency(0);
+                                InitializeShimmer3();
+                            }
                         }
+
                     }
                 }
                 catch
@@ -1508,6 +1515,10 @@ namespace ShimmerAPI
                         if(GetFirmwareIdentifier() == FW_IDENTIFIER_BTSTREAM && ShimmerState == SHIMMER_STATE_CONNECTED)
                         {
                             StreamTimeOutCount = 0;
+                        }
+                        if (GetFirmwareIdentifier() == FW_IDENTIFIER_SHIMMERECGMD && ShimmerState == SHIMMER_STATE_CONNECTED)
+                        {
+                            ReadBlinkLED();
                         }
                     }
 
@@ -3072,7 +3083,7 @@ namespace ShimmerAPI
                     datatemp[1] = datatemp[1] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
                     gain = ConvertEXGGainSettingToValue((Exg2RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
-                    objectCluster.Add("EXG2 Sta", ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iStatus]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_STATUS, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iStatus]);
                     if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
@@ -4233,8 +4244,6 @@ namespace ShimmerAPI
             return DeviceName;
         }
 
-
-
         public int GetShimmerVersion()
         {
             return HardwareVersion;
@@ -4530,7 +4539,7 @@ namespace ShimmerAPI
             CompatibilityCode = 0;
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
             {
-                if (FirmwareIdentifier == 1)    //BtStream //Also Used For EXG MD
+                if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM)    //BtStream //Also Used For EXG MD, 9/2/2018: No longer used for newer ECGMD fw versions
                 {
                     if (FirmwareMajor == 0 && FirmwareMinor == 1)//FirmwareVersion == 0.1)
                     {
@@ -4548,7 +4557,7 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 4;
                     }
-                    else if ((FirmwareMajor == 0 && FirmwareMinor>=5)&&(FirmwareMajor == 0 && FirmwareMinor <= 7 && FirmwareInternal <= 2))//(FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
+                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 5) && (FirmwareMajor == 0 && FirmwareMinor <= 7 && FirmwareInternal <= 2))//(FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
                     {
                         CompatibilityCode = 5;
                     }
@@ -4561,7 +4570,7 @@ namespace ShimmerAPI
                         CompatibilityCode = 7;
                     }
                 }
-                else if (FirmwareIdentifier == 3)   //LogAndStream
+                else if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
                 {
                     if (FirmwareMajor == 0 && FirmwareMinor == 1) //(FirmwareVersion == 0.1)
                     {
@@ -4575,7 +4584,7 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 5;
                     }
-                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 5 && FirmwareInternal >=4) || (FirmwareMajor == 0 && FirmwareMinor == 6))//(FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
+                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 5 && FirmwareInternal >= 4) || (FirmwareMajor == 0 && FirmwareMinor == 6))//(FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
                     {
                         CompatibilityCode = 6;
                     }
@@ -4584,8 +4593,12 @@ namespace ShimmerAPI
                         CompatibilityCode = 6;
                     }
                 }
+                else if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
+                {
+                    CompatibilityCode = 7;
+                }
             }
-            else
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
             {
                 if (FirmwareIdentifier == 1)    //BtStream
                 {
@@ -5694,6 +5707,32 @@ namespace ShimmerAPI
                     System.Threading.Thread.Sleep(500);
                 }
             }
+        }
+
+        public void StartStreamingEXGSawtoothTestSignal()
+        {
+
+            if (ShimmerState == SHIMMER_STATE_CONNECTED)
+            {
+                if (ShimmerState != SHIMMER_STATE_STREAMING)
+                {
+                    StreamingACKReceived = false;
+                    StreamTimeOutCount = 0;
+                    LastReceivedTimeStamp = 0;
+                    CurrentTimeStampCycle = 0;
+                    LastReceivedCalibratedTimeStamp = -1;
+                    FirstTimeCalTime = true;
+                    FirstSystemTimestamp = true;
+                    PacketLossCount = 0;
+                    PacketReceptionRate = 100;
+                    KeepObjectCluster = null; //This is important and is required!
+                    OrientationAlgo = null;
+                    mWaitingForStartStreamingACK = true;            
+                    //{0x9B, 0x88, 0x13, 0x00}
+                    WriteBytes(new byte[4] { (byte)155, (byte)136, (byte)19, (byte)0 }, 0, 4); 
+                }
+            }
+
         }
 
         protected double CalibrateTimeStamp(double timeStamp)

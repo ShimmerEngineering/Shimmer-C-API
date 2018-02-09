@@ -181,6 +181,7 @@ namespace ShimmerAPI
             buttonStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
             button1.Visible = false;
+            button2.Visible = false;
             labelPRR.Visible = false;
             if (!usingLinux)
             {
@@ -1503,6 +1504,12 @@ namespace ShimmerAPI
 
             if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
             {
+
+                if (ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
+                {
+                    button2.Visible = true;
+                }
+
                 buttonConnect.Enabled = false;
                 //checkBoxTSACheck.Visible = true;
                 checkBoxTSACheck.Checked = ShimmerDevice.mEnableTimeStampAlignmentCheck;
@@ -1539,6 +1546,7 @@ namespace ShimmerAPI
             // btsd changes3 end
             else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_NONE)
             {
+                button2.Visible = false;
                 buttonConnect.Enabled = true;
                 buttonDisconnect.Enabled = false;
                 buttonStreamandLog.Enabled = false;
@@ -2800,6 +2808,10 @@ namespace ShimmerAPI
             PPGtoHeartRateCalculation.resetParameters();
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ShimmerDevice.StartStreamingEXGSawtoothTestSignal();
+        }
     }
 
 

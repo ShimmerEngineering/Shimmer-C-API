@@ -171,8 +171,9 @@ namespace ShimmerAPI
                         checkBoxSensor14.Enabled = false;
                     }
                     // exg only supported from BTStream 0.2.8 onwards. 
-                    if (PConfiguration.PControlForm.ShimmerDevice.VersionLaterThan(1, 0, 2, 8) ||
-                        PConfiguration.PControlForm.ShimmerDevice.VersionLaterThan(3, 0, 1, 0))
+                    if (PConfiguration.PControlForm.ShimmerDevice.VersionLaterThan(ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM, 0, 2, 8) ||
+                        PConfiguration.PControlForm.ShimmerDevice.VersionLaterThan(ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM, 0, 1, 0) ||
+                        PConfiguration.PControlForm.ShimmerDevice.VersionLaterThan(ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD, 0, 0, 1))
                     {
 
                         //ExG
