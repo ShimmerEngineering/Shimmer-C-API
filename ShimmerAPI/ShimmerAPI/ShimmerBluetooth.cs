@@ -5708,8 +5708,11 @@ namespace ShimmerAPI
                 }
             }
         }
-
-        public void StartStreamingEXGSawtoothTestSignal()
+        /// <summary>
+        /// To be used with SHIMMERECGMD/SHIMMEREXGMD
+        /// </summary>
+        /// <param name="value">Increment value (in y-axis) of sawtooth waveform, max value is 16777215 if the value specified is larger it will default to 5000, same if the value is less than 0</param>
+        public void StartStreamingEXGSawtoothTestSignal(int value)
         {
 
             if (ShimmerState == SHIMMER_STATE_CONNECTED)
@@ -5727,9 +5730,17 @@ namespace ShimmerAPI
                     PacketReceptionRate = 100;
                     KeepObjectCluster = null; //This is important and is required!
                     OrientationAlgo = null;
-                    mWaitingForStartStreamingACK = true;            
-                    //{0x9B, 0x88, 0x13, 0x00}
-                    WriteBytes(new byte[4] { (byte)155, (byte)136, (byte)19, (byte)0 }, 0, 4); 
+                    mWaitingForStartStreamingACK = true;
+                    if (value > 16777215 || value <0)
+                    {
+                        //5000 default
+                        //{0x9B, 0x88, 0x13, 0x00}
+                        WriteBytes(new byte[4] { (byte)155, (byte)136, (byte)19, (byte)0 }, 0, 4);
+                    } else
+                    {
+                        byte[] valuebytearray = BitConverter.GetBytes(value);
+                        WriteBytes(new byte[4] { (byte)155, valuebytearray[0], valuebytearray[1], valuebytearray[2] }, 0, 4);
+                    }
                 }
             }
 

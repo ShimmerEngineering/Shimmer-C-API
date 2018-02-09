@@ -167,6 +167,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
+            this.textBoxSawtoothValue = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -1714,14 +1715,23 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(394, 87);
+            this.button2.Location = new System.Drawing.Point(528, 121);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(124, 26);
+            this.button2.Size = new System.Drawing.Size(165, 33);
             this.button2.TabIndex = 151;
             this.button2.Text = "EXG Saw";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // textBoxSawtoothValue
+            // 
+            this.textBoxSawtoothValue.Location = new System.Drawing.Point(719, 125);
+            this.textBoxSawtoothValue.Name = "textBoxSawtoothValue";
+            this.textBoxSawtoothValue.Size = new System.Drawing.Size(114, 22);
+            this.textBoxSawtoothValue.TabIndex = 152;
+            this.textBoxSawtoothValue.Text = "5000";
+            this.textBoxSawtoothValue.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // Control
             // 
@@ -1729,6 +1739,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(1914, 735);
+            this.Controls.Add(this.textBoxSawtoothValue);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBoxTSACheck);
@@ -2006,6 +2017,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TextBox textBoxSawtoothValue;
     }
 }
 

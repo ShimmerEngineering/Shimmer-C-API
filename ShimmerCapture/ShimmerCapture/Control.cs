@@ -182,6 +182,7 @@ namespace ShimmerAPI
             buttonReadDirectory.Visible = false;
             button1.Visible = false;
             button2.Visible = false;
+            textBoxSawtoothValue.Visible = false;
             labelPRR.Visible = false;
             if (!usingLinux)
             {
@@ -1508,6 +1509,9 @@ namespace ShimmerAPI
                 if (ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
                 {
                     button2.Visible = true;
+                    textBoxSawtoothValue.Visible = true;
+                    button2.Enabled = true;
+                    textBoxSawtoothValue.Enabled = true;
                 }
 
                 buttonConnect.Enabled = false;
@@ -1547,6 +1551,7 @@ namespace ShimmerAPI
             else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_NONE)
             {
                 button2.Visible = false;
+                textBoxSawtoothValue.Visible = false;
                 buttonConnect.Enabled = true;
                 buttonDisconnect.Enabled = false;
                 buttonStreamandLog.Enabled = false;
@@ -1558,6 +1563,8 @@ namespace ShimmerAPI
             }
             else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING)
             {
+                button2.Enabled = false;
+                textBoxSawtoothValue.Enabled = false;
                 buttonConnect.Enabled = false;
                 buttonDisconnect.Enabled = true;
                 buttonStreamandLog.Enabled = false;
@@ -2810,7 +2817,13 @@ namespace ShimmerAPI
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ShimmerDevice.StartStreamingEXGSawtoothTestSignal();
+            int SawtoothValue = Convert.ToInt32(textBoxSawtoothValue.Text.ToString());
+            ShimmerDevice.StartStreamingEXGSawtoothTestSignal(SawtoothValue);
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 
