@@ -2701,6 +2701,11 @@ namespace ShimmerAPI
             SignalDataTypeArray = signalDataTypeArray;
             PacketSize = packetSize;
         }
+
+        public String[] GetSignalNameArray()
+        {
+            return SignalNameArray;
+        }
         /// <summary>
         /// Returns the address used to connect to the device, note that if the serial port is used it should return the comport number and if the bluetooth address is used the bluetooth address should be returned;
         /// </summary>

@@ -1,0 +1,1 @@
+<Playlist Version="1.0"><Add Test="ShimmerBluetoothTests.UnitTest.TestMethodDeviceName" /><Add Test="ShimmerBluetoothTests.UnitTest.TestMethodWriteECG" /><Add Test="ShimmerBluetoothTests.UnitTest.TestMethodWriteSensors" /><Add Test="ShimmerBluetoothTests.UnitTest.TestECG" /><Add Test="ShimmerBluetoothTests.UnitTest.TestMethodEXGSaw" /></Playlist>
