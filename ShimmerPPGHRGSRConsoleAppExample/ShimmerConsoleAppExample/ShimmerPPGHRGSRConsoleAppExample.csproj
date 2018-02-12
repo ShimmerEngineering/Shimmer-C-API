@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4D2B71B9-1E21-4266-9090-D883D0FCA63B}</ProjectGuid>
+    <ProjectGuid>{41BBBE0F-FCD2-4035-A182-2601E6DD4503}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShimmerConsoleAppExample</RootNamespace>
@@ -38,10 +38,6 @@
       <HintPath>..\packages\MathNet.Numerics.3.20.0\lib\net40\MathNet.Numerics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ShimmerAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
-    </Reference>
     <Reference Include="ShimmerClosedLibraryRev0_5, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\ShimmerClosedLibraryRev0_5.dll</HintPath>
@@ -65,6 +61,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="libs\ShimmerClosedLibraryRev0_5.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj">
+      <Project>{428cb744-8e79-4f56-9d71-b9027f4113da}</Project>
+      <Name>ShimmerAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

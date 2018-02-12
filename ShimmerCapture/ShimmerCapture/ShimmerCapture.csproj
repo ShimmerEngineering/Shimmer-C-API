@@ -114,9 +114,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ShimmerAPI">
-      <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Release\ShimmerAPI.dll</HintPath>
-    </Reference>
     <Reference Include="ShimmerClosedLibraryRev0_5, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\ShimmerClosedLibraryRev0_5.dll</HintPath>
@@ -290,7 +287,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj">
+      <Project>{428cb744-8e79-4f56-9d71-b9027f4113da}</Project>
+      <Name>ShimmerAPI</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

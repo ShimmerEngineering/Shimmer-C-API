@@ -1484,7 +1484,7 @@ namespace ShimmerAPI
                                 }
                                 else
                                 {
-                                    System.Console.WriteLine("?");
+
                                 }
                                 break;
                         }
