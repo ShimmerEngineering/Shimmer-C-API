@@ -142,6 +142,8 @@ namespace ShimmerAPI
         protected int ExpansionBoardId;
         protected int ExpansionBoardRev;
         protected int ExpansionBoardRevSpecial;
+        protected double BatteryVoltage;
+        protected int ChargingStatus;
 
         protected int TimeStampPacketByteSize = 2;
         protected int TimeStampPacketRawMaxValue = 65536;// 16777216 or 65536 
@@ -149,7 +151,7 @@ namespace ShimmerAPI
         List<double> HRMovingAVGWindow = new List<double>(4);
         String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
         String[] SignalDataTypeArray = new String[MAX_NUMBER_OF_SIGNALS];
-        int PacketSize = 2; // Time stamp
+        protected int PacketSize = 2; // Time stamp
         protected int EnabledSensors;
         protected ObjectCluster KeepObjectCluster = null; // this is to keep the packet for one byte, just incase there is a dropped packet
         public double[,] AlignmentMatrixAccel = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, 1 } };
@@ -469,6 +471,8 @@ namespace ShimmerAPI
             GET_BAUD_RATE_COMMAND = 0X6C,
             DETECT_EXPANSION_BOARD_RESPONSE = 0X65,
             GET_EXPANSION_BOARD_COMMAND = 0x66,
+            VBATT_RESPONSE = 0x94,
+            GET_VBATT_COMMAND = 0x95,
             SET_VBATT_FREQ_COMMAND = 0x98,
             VBATT_FREQ_RESPONSE = 0x99,
             GET_VBATT_FREQ_COMMAND = 0x9A,
@@ -768,8 +772,7 @@ namespace ShimmerAPI
         protected abstract void FlushInputConnection();
         protected abstract void WriteBytes(byte[] b, int index, int length);
         protected abstract int ReadByte();
-        
-        
+
         public void Connect()
         {
             if (!IsConnectionOpen())
@@ -1039,10 +1042,6 @@ namespace ShimmerAPI
                     StreamTimeOutCount = 0;
                     if (ShimmerState == SHIMMER_STATE_STREAMING)
                     {
-                        
-                        
-                        
-                        
                         switch (b)
                         {
                             case (byte)PacketTypeShimmer2.DATA_PACKET: //Shimmer3 has the same value
@@ -1259,6 +1258,8 @@ namespace ShimmerAPI
                                 {
                                     SetState(SHIMMER_STATE_STREAMING);
                                     mWaitingForStartStreamingACK = false;
+                                    System.Console.WriteLine("ACK for Streaming Command Received");
+                                    StreamingACKReceived = true;
                                 }
                                 break;
                             case (byte)PacketTypeShimmer2.ACCEL_CALIBRATION_RESPONSE:
@@ -1406,6 +1407,16 @@ namespace ShimmerAPI
                                 bufferbyte = new byte[1];
                                 bufferbyte[0] = (byte)ReadByte();
                                 CurrentLEDStatus = bufferbyte[0];
+                                break;
+                            case (byte)PacketTypeShimmer3.VBATT_RESPONSE:
+                                bufferbyte = new byte[3];
+                                for (int p = 0; p < 3; p++)
+                                {
+                                    bufferbyte[p] = (byte)ReadByte();
+                                }
+                                int batteryadcvalue = (int)((bufferbyte[1] & 0xFF) << 8) + (int)(bufferbyte[0] & 0xFF);
+                                ChargingStatus = bufferbyte[2];
+                                BatteryVoltage = adcValToBattVoltage(batteryadcvalue);
                                 break;
                             case (byte)PacketTypeShimmer2.FW_VERSION_RESPONSE:
                                 // size is 21 bytes
@@ -2716,7 +2727,7 @@ namespace ShimmerAPI
         /// </summary>
         /// <param name="address"></param>
         public abstract void SetShimmerAddress(String address);
-        protected ObjectCluster BuildMsg(List<byte> packet)
+        protected virtual ObjectCluster BuildMsg(List<byte> packet)
         {
 
             ObjectCluster objectCluster = new ObjectCluster(GetShimmerAddress(), GetDeviceName());
@@ -4793,6 +4804,12 @@ namespace ShimmerAPI
             System.Threading.Thread.Sleep(200);
         }
 
+        public void ReadBattery()
+        {
+            WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_VBATT_COMMAND }, 0, 1);
+            System.Threading.Thread.Sleep(200);
+        }
+
         /// <summary>
         /// Read ConfigByte0 (Shimmer3/Shimmer2r)
         /// </summary>
@@ -5958,6 +5975,28 @@ namespace ShimmerAPI
             }
 
             return resultant;
+        }
+
+        public double getBatteryVoltage()
+        {
+            return BatteryVoltage;
+        }
+
+        public int getBatteryChargingStatus()
+        {
+            return ChargingStatus;
+        }
+
+        protected static double adcValToBattVoltage(int adcVal)
+        {
+            double calibratedData = calibrateU12AdcValue(adcVal, 0.0, 3.0, 1.0);
+            double battVoltage = ((calibratedData * 1.988)) / 1000; // 1.988 is due to components on the Shimmmer, 1000 is to convert to volts
+            return battVoltage;
+        }
+        protected static double calibrateU12AdcValue(double uncalibratedData, double offset, double vRefP, double gain)
+        {
+            double calibratedData = (uncalibratedData - offset) * (((vRefP * 1000) / gain) / 4095);
+            return calibratedData;
         }
 
         protected double[,] MatrixInverse3x3(double[,] data)

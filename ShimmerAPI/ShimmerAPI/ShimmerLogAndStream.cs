@@ -1662,6 +1662,18 @@ namespace ShimmerAPI
                             }
                             SetDataReceived(true);
                         }
+                        else if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3.VBATT_RESPONSE)
+                        {
+
+                            byte[] bufferbyte = new byte[3];
+                            for (int p = 0; p < 3; p++)
+                            {
+                                bufferbyte[p] = (byte)ReadByte();
+                            }
+                            int batteryadcvalue = (int)((bufferbyte[1] & 0xFF) << 8) + (int)(bufferbyte[0] & 0xFF);
+                            ChargingStatus = bufferbyte[2];
+                            BatteryVoltage = adcValToBattVoltage(batteryadcvalue);
+                        }
                         buffer.Clear();
                         SetDataReceived(true);
                         break;
@@ -1876,6 +1888,17 @@ namespace ShimmerAPI
                             }
 
                             SetDataReceived(true);
+                        } else if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3.VBATT_RESPONSE)
+                        {
+
+                            byte[] bufferbyte = new byte[3];
+                            for (int p = 0; p < 3; p++)
+                            {
+                                bufferbyte[p] = (byte)ReadByte();
+                            }
+                            int batteryadcvalue = (int)((bufferbyte[1] & 0xFF) << 8) + (int)(bufferbyte[0] & 0xFF);
+                            ChargingStatus = bufferbyte[2];
+                            BatteryVoltage = adcValToBattVoltage(batteryadcvalue);
                         }
                         buffer.Clear();
                         SetDataReceived(true);

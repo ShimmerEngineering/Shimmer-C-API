@@ -15,8 +15,8 @@ namespace ShimmerBluetoothTests
         String deviceName = "testName";
         ShimmerLogAndStreamSystemSerialPort shimmerDevice;
         
-        [TestMethod]
-        public void TestMethodWriteSensors()
+        [TestInitialize]
+        public void TestInitialize()
         {
             shimmerDevice = new ShimmerLogAndStreamSystemSerialPort(deviceName, comPort);
             shimmerDevice.Connect();
@@ -25,9 +25,22 @@ namespace ShimmerBluetoothTests
                 Thread.Sleep(100);
                 if (shimmerDevice.GetState() == ShimmerBluetooth.SHIMMER_STATE_NONE)
                 {
-                    Assert.Fail();
+                    Assert.Fail("ConnectionFail");
                 }
             }
+        }
+
+        [TestCleanup]
+        public void Finish()
+        {
+            shimmerDevice.Disconnect();
+            Thread.Sleep(1000);
+            shimmerDevice = null;
+        }
+
+        [TestMethod]
+        public void TestMethodWriteSensors()
+        {
 
             shimmerDevice.WriteSensors((int)SensorBitmapShimmer3.SENSOR_A_ACCEL);
             Thread.Sleep(1000);
@@ -38,11 +51,53 @@ namespace ShimmerBluetoothTests
             Thread.Sleep(1000);
             array = shimmerDevice.GetSignalNameArray();
             Assert.AreEqual(array[1], Shimmer3Configuration.SignalNames.GYROSCOPE_X);
-            shimmerDevice.Disconnect();
-            Thread.Sleep(1000);
-            shimmerDevice = null;
+            
         }
         
+        [TestMethod]
+        public void TestBatteryVoltage()
+        {
+            shimmerDevice.ReadBattery();
+            if (shimmerDevice.getBatteryVoltage()<2 || shimmerDevice.getBatteryVoltage() > 5)
+            {
+                System.Console.WriteLine("Battery Voltage: " + shimmerDevice.getBatteryVoltage());
+                System.Console.WriteLine("Battery Status: " + shimmerDevice.getBatteryChargingStatus());
+                Assert.Fail();
+            } else
+            {
+                System.Console.WriteLine("Battery Voltage: " + shimmerDevice.getBatteryVoltage());
+                System.Console.WriteLine("Battery Status: " + shimmerDevice.getBatteryChargingStatus());
+            }
+
+        }
+
+
+        [TestMethod]
+        public void TestBatteryVoltageWhileStreaming()
+        {
+            if (shimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)
+            {
+                shimmerDevice.StartStreaming();
+                Thread.Sleep(5000);
+                shimmerDevice.ReadBattery();
+                Thread.Sleep(1000);
+                if (shimmerDevice.getBatteryVoltage() < 2 || shimmerDevice.getBatteryVoltage() > 5)
+                {
+                    System.Console.WriteLine("Battery Voltage: " + shimmerDevice.getBatteryVoltage());
+                    System.Console.WriteLine("Battery Status: " + shimmerDevice.getBatteryChargingStatus());
+                    Assert.Fail();
+                }
+                else
+                {
+                    System.Console.WriteLine("Battery Voltage: " + shimmerDevice.getBatteryVoltage());
+                    System.Console.WriteLine("Battery Status: " + shimmerDevice.getBatteryChargingStatus());
+                }
+                shimmerDevice.StopStreaming();
+            } else
+            {
+                Assert.Fail("This Shimmer Device Firmware version is not supported");
+            }
+        }
 
     }
 }
