@@ -1529,7 +1529,7 @@ namespace ShimmerAPI
                         }
                         if (GetFirmwareIdentifier() == FW_IDENTIFIER_SHIMMERECGMD && ShimmerState == SHIMMER_STATE_CONNECTED)
                         {
-                            ReadBlinkLED();
+                            ReadBattery();
                         }
                     }
 
