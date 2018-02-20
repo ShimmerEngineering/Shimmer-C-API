@@ -1939,9 +1939,13 @@ namespace ShimmerAPI
                     PConfiguration.PControlForm.ShimmerDevice.SetExpPower(false);
                 }
 
-                PConfiguration.PControlForm.ShimmerDevice.WriteMagRange(comboBoxMagRange.SelectedIndex + 1);
-                PConfiguration.PControlForm.ShimmerDevice.WriteGyroRange(comboBoxGyroRange.SelectedIndex);
-                PConfiguration.PControlForm.ShimmerDevice.WritePressureResolution(comboBoxPressureRes.SelectedIndex);
+                //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
+                if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
+                {
+                    PConfiguration.PControlForm.ShimmerDevice.WriteMagRange(comboBoxMagRange.SelectedIndex + 1);
+                    PConfiguration.PControlForm.ShimmerDevice.WriteGyroRange(comboBoxGyroRange.SelectedIndex);
+                    PConfiguration.PControlForm.ShimmerDevice.WritePressureResolution(comboBoxPressureRes.SelectedIndex);
+                }
                 PConfiguration.PControlForm.ShimmerDevice.WriteBaudRate(comboBoxBaudRate.SelectedIndex);
 
                 if (checkBoxIntExpPower.Checked)
@@ -2054,14 +2058,24 @@ namespace ShimmerAPI
                 }
             }
             PConfiguration.PControlForm.ShimmerDevice.WriteSamplingRate(samplingRate);
-            PConfiguration.PControlForm.ShimmerDevice.SetLowPowerMag(checkBoxLowPowerMag.Checked);
-            PConfiguration.PControlForm.ShimmerDevice.SetLowPowerAccel(checkBoxLowPowerAccel.Checked);
-            PConfiguration.PControlForm.ShimmerDevice.SetLowPowerGyro(checkBoxLowPowerGyro.Checked);
-            PConfiguration.PControlForm.ShimmerDevice.Set3DOrientation(checkBox3DOrientation.Checked);
-            PConfiguration.PControlForm.ShimmerDevice.SetGyroOnTheFlyCalibration(checkBoxGyroOnTheFly.Checked, 100, 1.2);
+
+            //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
+            if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
+            {
+                PConfiguration.PControlForm.ShimmerDevice.SetLowPowerMag(checkBoxLowPowerMag.Checked);
+                PConfiguration.PControlForm.ShimmerDevice.SetLowPowerAccel(checkBoxLowPowerAccel.Checked);
+                PConfiguration.PControlForm.ShimmerDevice.SetLowPowerGyro(checkBoxLowPowerGyro.Checked);
+                PConfiguration.PControlForm.ShimmerDevice.Set3DOrientation(checkBox3DOrientation.Checked);
+                PConfiguration.PControlForm.ShimmerDevice.SetGyroOnTheFlyCalibration(checkBoxGyroOnTheFly.Checked, 100, 1.2);
+            }
+
             if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
             {
-                PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(comboBoxAccelRange.SelectedIndex);
+                //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
+                if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
+                {
+                    PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(comboBoxAccelRange.SelectedIndex);
+                }
             } else //updated Shimmer3 (0,2,3,1)
             {
                 if (comboBoxAccelRange.SelectedIndex == 0)
@@ -2082,10 +2096,14 @@ namespace ShimmerAPI
                 }
 
             }
-            PConfiguration.PControlForm.ShimmerDevice.WriteGSRRange(comboBoxGSRRange.SelectedIndex);
+            //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
+            if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
+            {
+                PConfiguration.PControlForm.ShimmerDevice.WriteGSRRange(comboBoxGSRRange.SelectedIndex);
+            }
 
 
-            if (checkBoxComma.Checked)
+                if (checkBoxComma.Checked)
             {
                 PConfiguration.PControlForm.SetLoggingFormat(",");
             }
