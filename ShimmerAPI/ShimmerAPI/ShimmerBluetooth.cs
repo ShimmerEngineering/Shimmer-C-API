@@ -676,14 +676,32 @@ namespace ShimmerAPI
         public byte[] Exg1RegArray = new byte[10];
         public byte[] Exg2RegArray = new byte[10];
 
-        //This Constructor is for both Shimmer2 and Shimmer3 where upon connection the Settings on the Shimmer device is read and saved on the API; see bool variable SetupDevice
+        //This Constructor is for both Shimmer2, Shimmer3 and ShimmerECGMD where upon connection the Settings on the Shimmer device is read and saved on the API; see bool variable SetupDevice
         public ShimmerBluetooth(String devName)
         {
             DeviceName = devName;
             SetupDevice = false;
         }
 
-        //Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection
+        /// <summary>
+        /// ShimmerECGMD constructor, to set the Shimmer device according to specified settings upon connection
+        /// </summary>
+        /// <param name="devName">User Defined Device Name</param>
+        /// <param name="samplingRate">Sampling rate in Hz</param>
+        /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer3</param>
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
+        public ShimmerBluetooth(String devName, double samplingRate, int setEnabledSensors, byte[] exg1configuration, byte[] exg2configuration)
+        {
+            DeviceName = devName;
+            SamplingRate = samplingRate;
+            SetEnabledSensors = setEnabledSensors;
+            Array.Copy(exg1configuration, Exg1RegArray, 10);
+            Array.Copy(exg2configuration, Exg2RegArray, 10);
+            SetupDevice = true;
+        }
+
+        //Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection, please avoid using this constructor if you are not using a Shimmer3 device
         /// <summary>
         /// Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection
         /// </summary>
@@ -840,7 +858,7 @@ namespace ShimmerAPI
                             else if (GetFirmwareIdentifier() == FW_IDENTIFIER_SHIMMERECGMD)
                             {
                                 WriteBatteryFrequency(0);
-                                InitializeShimmer3();
+                                InitializeShimmerECGMD();
                             }
                         }
 
@@ -1741,6 +1759,22 @@ namespace ShimmerAPI
             ReadAccelSamplingRate();
             ReadCalibrationParameters("All");
             ReadPressureCalibrationCoefficients();
+            ReadEXGConfigurations(1);
+            ReadEXGConfigurations(2);
+            ReadBaudRate();
+            Inquiry();
+        }
+
+        public void InitializeShimmerECGMD()
+        {
+            if (SetupDevice == true)
+            {
+                WriteSamplingRate(SamplingRate); //note that this updates the exg data rate using WriteEXGRate which updates Exg1RegArray and Exg2RegArray
+                WriteEXGConfigurations(Exg1RegArray, Exg2RegArray);
+                WriteSensors(SetEnabledSensors); //this should always be the last command
+            }
+            
+            ReadSamplingRate();
             ReadEXGConfigurations(1);
             ReadEXGConfigurations(2);
             ReadBaudRate();
@@ -4964,12 +4998,17 @@ namespace ShimmerAPI
             }
 
             //now check to see that the internal sensor rates are close to the sampling rate value
-            
-            SetLowPowerMag(LowPowerMagEnabled);
+            if (GetFirmwareIdentifier() != FW_IDENTIFIER_SHIMMERECGMD)
+            {
+                SetLowPowerMag(LowPowerMagEnabled);
+            }
             if ((HardwareVersion == (int)ShimmerVersion.SHIMMER3))
             {
-                SetLowPowerGyro(LowPowerGyroEnabled);
-                SetLowPowerAccel(LowPowerAccelEnabled);
+                if (GetFirmwareIdentifier() != FW_IDENTIFIER_SHIMMERECGMD)
+                {
+                    SetLowPowerGyro(LowPowerGyroEnabled);
+                    SetLowPowerAccel(LowPowerAccelEnabled);
+                }
                 if (SamplingRate <= 125)
                 {
                     WriteEXGRate(0);

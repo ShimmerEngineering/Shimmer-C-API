@@ -27,6 +27,12 @@ namespace ShimmerAPI
             SetShimmerAddress(bluetoothAddress);
         }
 
+        public ShimmerLogAndStream32Feet(String devName, String bluetoothAddress, double samplingRate, int setEnabledSensors, byte[] exg1configuration, byte[] exg2configuration)
+            : base(devName, samplingRate, setEnabledSensors, exg1configuration, exg2configuration)
+        {
+            SetShimmerAddress(bluetoothAddress);
+        }
+
         public ShimmerLogAndStream32Feet(String devName, String bluetoothAddress, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower)
             :base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
         {

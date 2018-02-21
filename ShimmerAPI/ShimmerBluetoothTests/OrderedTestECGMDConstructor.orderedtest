@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<OrderedTest name="OrderedTestECGMDConstructor" storage="d:\documents\github\shimmer-c-api\shimmerapi\shimmerbluetoothtests\orderedtestecgmdconstructor.orderedtest" id="e813c4d0-2b9e-4eb3-9d1e-0f0691364b47" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestLinks>
+    <TestLink id="cb107294-4795-b98c-5444-9077c49b37e9" name="TestMethodConstructor" storage="bin\debug\shimmerbluetoothtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+    <TestLink id="0d331b58-fe1c-2da4-3845-feaf4fdbf772" name="TestMethodInitializingConstructor" storage="bin\debug\shimmerbluetoothtests.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel,   PublicKeyToken=b03f5f7f11d50a3a" />
+  </TestLinks>
+</OrderedTest>

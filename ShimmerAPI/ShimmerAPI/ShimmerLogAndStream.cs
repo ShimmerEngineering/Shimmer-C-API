@@ -26,6 +26,21 @@ namespace ShimmerAPI
             CurrentSensingStatus = false;
         }
 
+        /// <summary>
+        /// ShimmerECGMD constructor, to set the Shimmer device according to specified settings upon connection
+        /// </summary>
+        /// <param name="devName">User Defined Device Name</param>
+        /// <param name="samplingRate">Sampling rate in Hz</param>
+        /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer3</param>
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
+        public ShimmerLogAndStream(String devName, double samplingRate, int setEnabledSensors, byte[] exg1configuration, byte[] exg2configuration)
+             : base( devName,  samplingRate,  setEnabledSensors,  exg1configuration,  exg2configuration)
+        {
+            isLogging = false;
+            CurrentSensingStatus = false;
+        }
+
         //Shimmer3 Constructor
         //Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection
         /// <summary>
