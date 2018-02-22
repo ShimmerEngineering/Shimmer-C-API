@@ -626,6 +626,12 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3 = new double[3, 3] { { 16.4, 0, 0 }, { 0, 16.4, 0 }, { 0, 0, 16.4 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
+        public static readonly double[] SHIMMER3_GSR_REF_RESISTORS_KOHMS = new double[] {
+            40.000, 	//Range 0
+			287.000, 	//Range 1
+			1000.000, 	//Range 2
+			3300.000}; 	//Range 3
+
         [System.Obsolete]
         public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };              //Default Values for Magnetometer Calibration
         [System.Obsolete]
@@ -3052,43 +3058,58 @@ namespace ShimmerAPI
                     int iGSR = getSignalIndex(Shimmer3Configuration.SignalNames.GSR);
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
-                    double p1 = 0, p2 = 0;
+                    datatemp = (double)((int)datatemp & 4095);
+                    double gsrResistanceKOhms = -1;
+                    //double p1 = 0, p2 = 0;
                     if (GSRRange == 4)
                     {
                         newGSRRange = (49152 & (int)datatemp) >> 14;
                     }
                     if (GSRRange == 0 || newGSRRange == 0)
-                    { //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
+                    {
+                        //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
                         // the polynomial function used for calibration has been deprecated, it is replaced with a linear function
                         //p1 = 0.0363;
                         //p2 = -24.8617;
-                        p1 = 0.0373;
-                        p2 = -24.9915;
+
+                        //Changed to new GSR algorithm using non inverting amp
+                        //p1 = 0.0373;
+                        //p2 = -24.9915;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 0);
                     }
                     else if (GSRRange == 1 || newGSRRange == 1)
                     {
                         //p1 = 0.0051;
                         //p2 = -3.8357;
-                        p1 = 0.0054;
-                        p2 = -3.5194;
+                        //Changed to new GSR algorithm using non inverting amp
+                        //p1 = 0.0054;
+                        //p2 = -3.5194;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 1);
                     }
                     else if (GSRRange == 2 || newGSRRange == 2)
                     {
                         //p1 = 0.0015;
                         //p2 = -1.0067;
-                        p1 = 0.0015;
-                        p2 = -1.0163;
+                        //Changed to new GSR algorithm using non inverting amp
+                        //p1 = 0.0015;
+                        //p2 = -1.0163;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 2);
                     }
                     else if (GSRRange == 3 || newGSRRange == 3)
                     {
                         //p1 = 4.4513e-04;
                         //p2 = -0.3193;
-                        p1 = 4.5580e-04;
-                        p2 = -0.3014;
+                        //Changed to new GSR algorithm using non inverting amp
+                        //p1 = 4.5580e-04;
+                        //p2 = -0.3014;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 3);
                     }
-                    datatemp = CalibrateGsrData(datatemp, p1, p2);
+                    //Changed to new GSR algorithm using non inverting amp
+                    //datatemp = CalibrateGsrData(datatemp, p1, p2);
+                    double gsrConductanceUSiemens = (1.0 / gsrResistanceKOhms) * 1000;
                     objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iGSR]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloOhms, datatemp);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloOhms, gsrResistanceKOhms);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.GSR_CONDUCTANCE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MicroSiemens, gsrConductanceUSiemens);
                 }
                 if ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0)
                 {
@@ -3259,7 +3280,7 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.QUATERNION_3, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Local, q.q4);
                 }
             }
-            else
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
             { //start of Shimmer2
 
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_ACCEL) > 0))
@@ -3378,7 +3399,9 @@ namespace ShimmerAPI
                     int iGSR = getSignalIndex(Shimmer2Configuration.SignalNames.GSR);
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
-                    double p1 = 0, p2 = 0;
+                    datatemp = (double)((int)datatemp & 4095);
+                    double gsrResistanceKOhms = -1;
+                    //double p1 = 0, p2 = 0;
                     if (GSRRange == 4)
                     {
                         newGSRRange = (49152 & (int)datatemp) >> 14;
@@ -3386,27 +3409,34 @@ namespace ShimmerAPI
                     if (GSRRange == 0 || newGSRRange == 0)
                     { //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
                         // the polynomial function used for calibration has been deprecated, it is replaced with a linear function
-                        p1 = 0.0373;
-                        p2 = -24.9915;
+                        //p1 = 0.0373;
+                        //p2 = -24.9915;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 0);
                     }
                     else if (GSRRange == 1 || newGSRRange == 1)
                     {
-                        p1 = 0.0054;
-                        p2 = -3.5194;
+                        //p1 = 0.0054;
+                        //p2 = -3.5194;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 1);
                     }
                     else if (GSRRange == 2 || newGSRRange == 2)
                     {
-                        p1 = 0.0015;
-                        p2 = -1.0163;
+                        //p1 = 0.0015;
+                        //p2 = -1.0163;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 2);
                     }
                     else if (GSRRange == 3 || newGSRRange == 3)
                     {
-                        p1 = 4.5580e-04;
-                        p2 = -0.3014;
+                        //p1 = 4.5580e-04;
+                        //p2 = -0.3014;
+                        gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 3);
                     }
-                    datatemp = CalibrateGsrData(datatemp, p1, p2);
+                    //datatemp = CalibrateGsrData(datatemp, p1, p2);
+                    double gsrConductanceUSiemens = (1.0 / gsrResistanceKOhms) * 1000;
                     objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iGSR]);
-                    objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloOhms, datatemp);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloOhms, gsrResistanceKOhms);
+                    objectCluster.Add(Shimmer2Configuration.SignalNames.GSR_CONDUCTANCE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MicroSiemens, gsrConductanceUSiemens);
+
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer2.SENSOR_ECG) > 0))
                 {
@@ -5962,6 +5992,13 @@ namespace ShimmerAPI
             return caldata;
         }
 
+        protected double CalibrateMspAdcChannel(double unCalData)
+        {
+            double offset = 0; double vRefP = 3; double gain = 1;
+            double calData = CalibrateU12AdcValue(unCalData, offset, vRefP, gain);
+            return calData;
+        }
+
         protected double CalibrateU12AdcValue(double uncalibratedData, double offset, double vRefP, double gain)
         {
             double calibratedData = (uncalibratedData - offset) * (((vRefP * 1000) / gain) / 4095);
@@ -6130,6 +6167,15 @@ namespace ShimmerAPI
             return false; // if less or not the same FW ID
         }
 
+        protected double CalibrateGsrDataToResistanceFromAmplifierEq(double gsrUncalibratedData, int range)
+        {
+            double rFeedback = SHIMMER3_GSR_REF_RESISTORS_KOHMS[range];
+            double volts = CalibrateMspAdcChannel(gsrUncalibratedData)/ 1000.0;
+            double rSource = rFeedback / ((volts / 0.5) - 1.0);
+            return rSource;
+        }
+
+
     }
 
     public class CustomEventArgs : EventArgs
@@ -6202,6 +6248,7 @@ namespace ShimmerAPI
             public static readonly String Local = "local";
             public static readonly String Local_DefaultCal = "local*";
             public static readonly String KiloOhms = "kOhms";
+            public static readonly String MicroSiemens = "uSiemens";
         }
     }
 
@@ -6227,6 +6274,7 @@ namespace ShimmerAPI
             public static readonly String EXPBOARD_A0 = "Exp Board A0";
             public static readonly String EXPBOARD_A7 = "Exp Board A7";
             public static readonly String GSR = "GSR";
+            public static readonly String GSR_CONDUCTANCE = "GSR Conductance";
             public static readonly String GSR_RES = "GSR Res";
             public static readonly String ECG_RA_LL = "ECG RA LL";
             public static readonly String ECG_LA_LL = "ECG LA LL";
@@ -6284,6 +6332,7 @@ namespace ShimmerAPI
             public static readonly String PRESSURE = "Pressure";
             public static readonly String TEMPERATURE = "Temperature";
             public static readonly String GSR = "GSR";
+            public static readonly String GSR_CONDUCTANCE = "GSR Conductance";
             public static readonly String EXG1_STATUS = "EXG1 Status";
             public static readonly String EXG2_STATUS = "EXG2 Status";
             public static readonly String ECG_LL_RA = "ECG LL-RA";
