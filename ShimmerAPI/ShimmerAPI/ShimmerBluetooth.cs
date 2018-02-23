@@ -630,7 +630,10 @@ namespace ShimmerAPI
             40.000, 	//Range 0
 			287.000, 	//Range 1
 			1000.000, 	//Range 2
-			3300.000}; 	//Range 3
+			3300.000};  //Range 3
+
+        // Equation breaks down below 683 for range 3
+        public static readonly int GSR_UNCAL_LIMIT_RANGE3 = 683;
 
         [System.Obsolete]
         public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };              //Default Values for Magnetometer Calibration
@@ -3058,13 +3061,13 @@ namespace ShimmerAPI
                     int iGSR = getSignalIndex(Shimmer3Configuration.SignalNames.GSR);
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
-                    datatemp = (double)((int)datatemp & 4095);
                     double gsrResistanceKOhms = -1;
                     //double p1 = 0, p2 = 0;
                     if (GSRRange == 4)
                     {
                         newGSRRange = (49152 & (int)datatemp) >> 14;
                     }
+                    datatemp = (double)((int)datatemp & 4095);
                     if (GSRRange == 0 || newGSRRange == 0)
                     {
                         //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
@@ -3102,6 +3105,10 @@ namespace ShimmerAPI
                         //Changed to new GSR algorithm using non inverting amp
                         //p1 = 4.5580e-04;
                         //p2 = -0.3014;
+                        if (datatemp < GSR_UNCAL_LIMIT_RANGE3)
+                        {
+                            datatemp = GSR_UNCAL_LIMIT_RANGE3;
+                        }
                         gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 3);
                     }
                     //Changed to new GSR algorithm using non inverting amp
@@ -3399,13 +3406,13 @@ namespace ShimmerAPI
                     int iGSR = getSignalIndex(Shimmer2Configuration.SignalNames.GSR);
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
-                    datatemp = (double)((int)datatemp & 4095);
                     double gsrResistanceKOhms = -1;
                     //double p1 = 0, p2 = 0;
                     if (GSRRange == 4)
                     {
                         newGSRRange = (49152 & (int)datatemp) >> 14;
                     }
+                    datatemp = (double)((int)datatemp & 4095);
                     if (GSRRange == 0 || newGSRRange == 0)
                     { //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
                         // the polynomial function used for calibration has been deprecated, it is replaced with a linear function
@@ -3429,6 +3436,10 @@ namespace ShimmerAPI
                     {
                         //p1 = 4.5580e-04;
                         //p2 = -0.3014;
+                        if (datatemp < GSR_UNCAL_LIMIT_RANGE3)
+                        {
+                            datatemp = GSR_UNCAL_LIMIT_RANGE3;
+                        }
                         gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 3);
                     }
                     //datatemp = CalibrateGsrData(datatemp, p1, p2);
