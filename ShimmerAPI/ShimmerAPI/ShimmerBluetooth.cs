@@ -87,8 +87,8 @@ namespace ShimmerAPI
         public const int FW_IDENTIFIER_LOGANDSTREAM = 3;
         public const int FW_IDENTIFIER_SHIMMERECGMD = 16;
 
-        public const int GSR_RANGE_10K_56K = 0;
-        public const int GSR_RANGE_56K_220K = 1;
+        public const int GSR_RANGE_8K_63K = 0;
+        public const int GSR_RANGE_63K_220K = 1;
         public const int GSR_RANGE_220K_680K = 2;
         public const int GSR_RANGE_680K_4700K = 3;
         public const int GSR_RANGE_AUTO = 4;
@@ -545,12 +545,12 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_EXG_LEAD_OFF_COMPARATOR_THRESHOLDS = { "Pos:95% - Neg:5%", "Pos:92.5% - Neg:7.5%", "Pos:90% - Neg:10%", "Pos:87.5% - Neg:12.5%", "Pos:85% - Neg:15%", "Pos:80% - Neg:20%", "Pos:75% - Neg:25%", "Pos:70% - Neg:30%" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER2 = { "± 1.5g", "± 2g", "± 4g", "± 6g" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER2 = { "± 0.7Ga", "± 1.0Ga", "± 1.5Ga", "± 2.0Ga", "± 3.2Ga", "± 3.8Ga", "± 4.5Ga"};
-        public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "10kOhm to 56kOhm", "56kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
+        public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
         public static readonly String[] LIST_OF_PRESSURE_RESOLUTION_SHIMMER3 = { "Low", "Standard", "High", "Very High" };
-        public static readonly String[] LIST_OF_GSR_RANGE = { "10kOhm to 56kOhm", "56kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
+        public static readonly String[] LIST_OF_GSR_RANGE = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_EXG_GAINS_SHIMMER3 = new string[] { "1", "2", "3", "4", "6", "8", "12" };
 
         public static readonly double[,] SENSITIVITY_MATRIX_ACCEL_1_5G_Shimmer2 = new double[3, 3] { { 101, 0, 0 }, { 0, 101, 0 }, { 0, 0, 101 } };
@@ -635,6 +635,13 @@ namespace ShimmerAPI
         // Equation breaks down below 683 for range 3
         public static readonly int GSR_UNCAL_LIMIT_RANGE3 = 683;
 
+        public static readonly double[,] SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS = new double[,] {
+            {8.0, 63.0}, 		//Range 0
+			{63.0, 220.0}, 		//Range 1
+			{220.0, 680.0}, 	//Range 2
+			{680.0, 4700.0}}; 	//Range 3
+
+
         [System.Obsolete]
         public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3 = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };              //Default Values for Magnetometer Calibration
         [System.Obsolete]
@@ -685,8 +692,12 @@ namespace ShimmerAPI
         public byte[] Exg1RegArray = new byte[10];
         public byte[] Exg2RegArray = new byte[10];
 
+        public ShimmerBluetooth()
+        {
+        }
+
         //This Constructor is for both Shimmer2, Shimmer3 and ShimmerECGMD where upon connection the Settings on the Shimmer device is read and saved on the API; see bool variable SetupDevice
-        public ShimmerBluetooth(String devName)
+            public ShimmerBluetooth(String devName)
         {
             DeviceName = devName;
             SetupDevice = false;
@@ -717,7 +728,7 @@ namespace ShimmerAPI
         /// <param name="devName">User Defined Device Name</param>
         /// <param name="samplingRate">Sampling rate in Hz</param>
         /// <param name="accelRange">Shimmer3 options - 0,1,2,3,4 = 2g,4g,8g,16g.</param>
-        /// <param name="gsrRange">Range is between 0 and 4. 0 = 10-56kOhm, 1 = 56-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
+        /// <param name="gsrRange">Range is between 0 and 4. 0 = 8-63kOhm, 1 = 63-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
         /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer3, for multiple sensors use an or operation</param>
         /// <param name="enableLowPowerAccel"></param>
         /// <param name="enableLowPowerGyro"></param>
@@ -757,7 +768,7 @@ namespace ShimmerAPI
         /// <param name="devName">User Defined Device Name</param>
         /// <param name="samplingRate">Sampling rate in Hz</param>
         /// <param name="accelRange">Shimmer2r options - 0,1,2,3 = 1.5g,2g,4g,6g</param>
-        /// <param name="gsrRange">Range is between 0 and 4. 0 = 10-56kOhm, 1 = 56-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
+        /// <param name="gsrRange">Range is between 0 and 4. 0 = 8-63kOhm, 1 = 63-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
         /// <param name="magGain">Shimmer2R: 0,1,2,3,4,5,6 = 0.7,1.0,1.5,2.0,3.2,3.8,4.5 </param>
         /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer2, for multiple sensors use an or operation</param>
         public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int magGain, int setEnabledSensors)
@@ -3113,6 +3124,7 @@ namespace ShimmerAPI
                     }
                     //Changed to new GSR algorithm using non inverting amp
                     //datatemp = CalibrateGsrData(datatemp, p1, p2);
+                    gsrResistanceKOhms = NudgeGsrResistance(gsrResistanceKOhms, GSRRange);
                     double gsrConductanceUSiemens = (1.0 / gsrResistanceKOhms) * 1000;
                     objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iGSR]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloOhms, gsrResistanceKOhms);
@@ -3443,6 +3455,7 @@ namespace ShimmerAPI
                         gsrResistanceKOhms = CalibrateGsrDataToResistanceFromAmplifierEq(datatemp, 3);
                     }
                     //datatemp = CalibrateGsrData(datatemp, p1, p2);
+                    gsrResistanceKOhms = NudgeGsrResistance(gsrResistanceKOhms, GSRRange);
                     double gsrConductanceUSiemens = (1.0 / gsrResistanceKOhms) * 1000;
                     objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iGSR]);
                     objectCluster.Add(Shimmer2Configuration.SignalNames.GSR, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloOhms, gsrResistanceKOhms);
@@ -5123,7 +5136,7 @@ namespace ShimmerAPI
             }
         }
         /// <summary>
-        /// This is used to set the GSR Range for both Shimmer2R and Shimmer3. Range is between 0 and 4. 0 = 10-56kOhm, 1 = 56-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range
+        /// This is used to set the GSR Range for both Shimmer2R and Shimmer3. Range is between 0 and 4. 0 = 8-63kOhm, 1 = 63-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range
         /// </summary>
         /// <param name="range"> Range between 0 and 4</param>
         public void WriteGSRRange(int range)
@@ -6186,6 +6199,19 @@ namespace ShimmerAPI
             return rSource;
         }
 
+        protected double NudgeGsrResistance(double gsrResistanceKOhms, int gsrRangeSetting)
+        {
+            if (gsrRangeSetting != 4)
+            {
+                return NudgeDouble(gsrResistanceKOhms, SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting,0], SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting,1]);
+            }
+            return gsrResistanceKOhms;
+        }
+
+        protected double NudgeDouble(double valToNudge, double minVal, double maxVal)
+        {
+            return Math.Max(minVal, Math.Min(maxVal, valToNudge));
+        }
 
     }
 
