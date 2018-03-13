@@ -1473,10 +1473,12 @@ namespace ShimmerAPI
                                 
 
                                 string fw_id = "";
-                                if (FirmwareIdentifier == 1)
+                                if (FirmwareIdentifier == FW_IDENTIFIER_BTSTREAM)
                                     fw_id = "BtStream ";
-                                else if (FirmwareIdentifier == 3)
+                                else if (FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM)
                                     fw_id = "LogAndStream ";
+                                else if (FirmwareIdentifier == FW_IDENTIFIER_SHIMMERECGMD)
+                                    fw_id = "ECGmd ";
                                 else
                                     fw_id = "Unknown ";
                                 string temp = fw_id + FirmwareMajor.ToString() + "." + FirmwareMinor.ToString() + "." + FirmwareInternal.ToString();
@@ -1567,7 +1569,14 @@ namespace ShimmerAPI
                         }
                         if (GetFirmwareIdentifier() == FW_IDENTIFIER_SHIMMERECGMD && ShimmerState == SHIMMER_STATE_CONNECTED)
                         {
-                            ReadBattery();
+                            try
+                            {
+                                ReadBattery();
+                            }
+                            catch (System.TimeoutException)
+                            {
+                                Disconnect();
+                            }
                         }
                     }
 
