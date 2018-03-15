@@ -1554,7 +1554,14 @@ namespace ShimmerAPI
                         if (StreamTimeOutCount % 5 == 0 && ShimmerState == SHIMMER_STATE_CONNECTED && GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                         {
                             System.Console.WriteLine("Sending Get Status Command");
-                            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                            try
+                            {
+                                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_STATUS_COMMAND }, 0, 1);
+                            }
+                            catch (System.TimeoutException)
+                            {
+                                Disconnect();
+                            }
                             System.Threading.Thread.Sleep(500);
                         }
                         if (StreamTimeOutCount > 10)
