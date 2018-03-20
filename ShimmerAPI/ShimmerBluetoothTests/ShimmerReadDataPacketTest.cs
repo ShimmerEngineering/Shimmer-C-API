@@ -53,6 +53,42 @@ namespace ShimmerBluetoothTests
         }
 
         [TestMethod]
+        public void TestPacketParserNoErrorsWithTimeout()
+        {
+            sbrd.data = new byte[] { 0, 1, 2, 3, 4, 5, 6, 0, 8, 9, 10 };
+            sbrd.enableReadTimeoutException(true);
+            sbrd.start();
+            while (ojcArray.Count < 10)
+            {
+                Thread.Sleep(1);
+            }
+            sbrd.stop();
+
+            for (int i = 0; i < ojcArray.Count; i++)
+            {
+                ObjectClusterByteArray ojc = (ObjectClusterByteArray)ojcArray[i];
+                for (int j = 0; j < 10; j++)
+                {
+                    System.Console.Write(ojc.packet[j] + " ");
+                    if (j == 0)
+                    {
+                        if (ojc.packet[j] == 1)
+                        {
+                        }
+                        else
+                        {
+                            Assert.Fail();
+                        }
+                    }
+                }
+
+                System.Console.WriteLine();
+            }
+            sbrd.enableReadTimeoutException(false);
+
+        }
+
+        [TestMethod]
         public void TestPacketParserIncorrectStartingByteAndRepeatZeroInPacketByteArray()
         {
             sbrd.byteDataIndex = 3;
