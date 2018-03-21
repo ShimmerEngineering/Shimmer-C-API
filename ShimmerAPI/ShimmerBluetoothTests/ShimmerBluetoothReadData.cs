@@ -23,9 +23,11 @@ namespace ShimmerBluetoothTests
         public int byteDataIndex = -1;
         public byte[] data = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         int numberOfPackets = 0;
+        bool exceptionThrown = false;
         public void enableReadTimeoutException(bool exception )
         {
             throwException = exception;
+            exceptionThrown = false;
         }
 
         public ShimmerBluetoothReadData(String name) : base(name)
@@ -99,11 +101,15 @@ namespace ShimmerBluetoothTests
             }
             if (throwException)
             {
-                if (numberOfPackets==5 && byteDataIndex==4)
+                if (numberOfPackets==5 && byteDataIndex==4 && !exceptionThrown)
                 {
+                    byteDataIndex--;
+                    exceptionThrown = true;
+                    System.Console.WriteLine("Timeout Exception");
                     throw new TimeoutException();
                 }
             }
+            System.Console.Write(data[byteDataIndex]+",");
             return data[byteDataIndex];
         }
 

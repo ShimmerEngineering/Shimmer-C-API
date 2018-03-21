@@ -51,14 +51,15 @@ namespace ShimmerBluetoothTests
             }
 
         }
-
+        
         [TestMethod]
         public void TestPacketParserNoErrorsWithTimeout()
         {
             sbrd.data = new byte[] { 0, 1, 2, 3, 4, 5, 6, 0, 8, 9, 10 };
             sbrd.enableReadTimeoutException(true);
+            
             sbrd.start();
-            while (ojcArray.Count < 10)
+            while (ojcArray.Count < 50)
             {
                 Thread.Sleep(1);
             }

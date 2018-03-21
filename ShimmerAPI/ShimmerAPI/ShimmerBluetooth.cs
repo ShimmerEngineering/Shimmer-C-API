@@ -1067,7 +1067,7 @@ namespace ShimmerAPI
             List<byte> buffer = new List<byte>();
             int i;
             byte[] bufferbyte;
-            List<byte> dataByte;
+            List<byte> dataByte = new List<byte>();
             ObjectCluster objectCluster;
             FlushInputConnection();
             KeepObjectCluster = null;
@@ -1080,93 +1080,104 @@ namespace ShimmerAPI
                     StreamTimeOutCount = 0;
                     if (ShimmerState == SHIMMER_STATE_STREAMING)
                     {
-                        switch (b)
+                        if (dataByte.Count() != 0 && dataByte.Count() < PacketSize)
                         {
-                            case (byte)PacketTypeShimmer2.DATA_PACKET: //Shimmer3 has the same value
-                                if (IsFilled)
-                                {
-                                    dataByte = new List<byte>();
-                                    for (i = 0; i < PacketSize; i++)
+                            dataByte.Add(b);
+                            for (i = dataByte.Count(); i < PacketSize; i++)
+                            {
+                                dataByte.Add((byte)ReadByte());
+                            }
+                        }
+                        else
+                        {
+                            switch (b)
+                            {
+                                case (byte)PacketTypeShimmer2.DATA_PACKET: //Shimmer3 has the same value
+                                    if (IsFilled)
                                     {
-                                        dataByte.Add((byte)ReadByte());
-                                    }
-
-                                    objectCluster = BuildMsg(dataByte);
-
-                                    if (KeepObjectCluster != null)
-                                    {
-                                        //ObjectClusterBuffer.Add(KeepObjectCluster); // dont need this if not storing packets in buffer
-                                    }
-                                    
-                                    // check if there was a previously received packet, if there is send that, as it is a packet without error (zero-zero test), each packet starts with zero
-                                    if (KeepObjectCluster != null)
-                                    {
-                                        //Check the time stamp
-                                        if (mEnableTimeStampAlignmentCheck)
+                                        dataByte = new List<byte>();
+                                        for (i = 0; i < PacketSize; i++)
                                         {
-                                            if (packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp))
+                                            dataByte.Add((byte)ReadByte());
+                                        }
+
+                                        objectCluster = BuildMsg(dataByte);
+
+                                        if (KeepObjectCluster != null)
+                                        {
+                                            //ObjectClusterBuffer.Add(KeepObjectCluster); // dont need this if not storing packets in buffer
+                                        }
+
+                                        // check if there was a previously received packet, if there is send that, as it is a packet without error (zero-zero test), each packet starts with zero
+                                        if (KeepObjectCluster != null)
+                                        {
+                                            //Check the time stamp
+                                            if (mEnableTimeStampAlignmentCheck)
+                                            {
+                                                if (packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp))
+                                                {
+                                                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
+                                                    OnNewEvent(newEventArgs);
+                                                }
+                                                else
+                                                {
+                                                    System.Console.WriteLine("Throwing Packet");
+                                                    KeepObjectCluster = null;
+                                                    ReadByte();
+                                                }
+
+                                            }
+                                            else
                                             {
                                                 CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
                                                 OnNewEvent(newEventArgs);
                                             }
+                                            //
+                                            //packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp);
+                                            //CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
+                                            //OnNewEvent(newEventArgs);
+
+                                        }
+                                        KeepObjectCluster = objectCluster;
+
+
+                                        buffer.Clear();
+                                    }
+                                    break;
+                                case (byte)PacketTypeShimmer2.ACK_COMMAND:
+                                    //Since the ack always proceeds the instreamcmd
+                                    if (StreamingACKReceived)
+                                    {
+
+                                        if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
+                                        {
+                                            byte c = (byte)ReadByte(); // get the next byte and pass it the ShimmerSDBT, this should be instreamcmd
+                                            if (c != (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE)
+                                            {
+                                                KeepObjectCluster = null;
+                                            }
                                             else
                                             {
-                                                System.Console.WriteLine("Throwing Packet");
-                                                KeepObjectCluster = null;
-                                                ReadByte();
+                                                SDBT_switch(c);
                                             }
-
                                         }
                                         else
                                         {
-                                            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
-                                            OnNewEvent(newEventArgs);
-                                        }
-                                        //
-                                        //packetTimeStampChecker(objectCluster.RawTimeStamp, KeepObjectCluster.RawTimeStamp);
-                                        //CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET, (object)KeepObjectCluster);
-                                        //OnNewEvent(newEventArgs);
-                                     
-                                    }
-                                    KeepObjectCluster = objectCluster;
-                                       
-                                        
-                                    buffer.Clear();
-                                }
-                                break;
-                            case (byte)PacketTypeShimmer2.ACK_COMMAND:
-                                //Since the ack always proceeds the instreamcmd
-                                if (StreamingACKReceived)
-                                {
-
-                                    if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
-                                    {
-                                        byte c = (byte)ReadByte(); // get the next byte and pass it the ShimmerSDBT, this should be instreamcmd
-                                        if (c != (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE)
-                                        {
-                                            KeepObjectCluster = null;
-                                        }
-                                        else
-                                        {
-                                            SDBT_switch(c);
+                                            System.Console.WriteLine("ACK for Command while Streaming Received");
                                         }
                                     }
                                     else
                                     {
-                                        System.Console.WriteLine("ACK for Command while Streaming Received");
+                                        System.Console.WriteLine("ACK for Streaming Command Received");
+                                        StreamingACKReceived = true;
                                     }
-                                }
-                                else
-                                {
-                                    System.Console.WriteLine("ACK for Streaming Command Received");
-                                    StreamingACKReceived = true;
-                                }
-                                break;
-                            default:
-                                System.Console.WriteLine("Misaligned ByteStream Detected");
-                                // If it gets here means the previous packet is invalid so make it null so it wont be added to the buffer
-                                KeepObjectCluster = null;
-                                break;
+                                    break;
+                                default:
+                                    System.Console.WriteLine("Misaligned ByteStream Detected");
+                                    // If it gets here means the previous packet is invalid so make it null so it wont be added to the buffer
+                                    KeepObjectCluster = null;
+                                    break;
+                            }
                         }
                     }
                     else //connected but not streaming
