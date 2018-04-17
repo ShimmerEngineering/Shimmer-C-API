@@ -1590,7 +1590,9 @@ namespace ShimmerAPI
                 }
                 catch (System.InvalidOperationException)
                 {
-
+                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost");
+                    OnNewEvent(newEventArgs);
+                    Disconnect();
                 }
                 catch (System.IO.IOException)
                 {
