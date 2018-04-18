@@ -1547,7 +1547,7 @@ namespace ShimmerAPI
                 catch (System.TimeoutException)
                 {
                     //
-                    if (ShimmerState == SHIMMER_STATE_STREAMING || ShimmerState == SHIMMER_STATE_CONNECTED)
+                    if (ShimmerState == SHIMMER_STATE_STREAMING || ShimmerState == SHIMMER_STATE_CONNECTED || ShimmerState == SHIMMER_STATE_CONNECTING)
                     {
                         //System.Console.WriteLine("Timeout Streaming");
                         StreamTimeOutCount++;
