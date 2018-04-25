@@ -627,7 +627,7 @@ namespace ShimmerAPI
         public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
         public static readonly double[] SHIMMER3_GSR_REF_RESISTORS_KOHMS = new double[] {
-            40.000, 	//Range 0
+            40.200, 	//Range 0
 			287.000, 	//Range 1
 			1000.000, 	//Range 2
 			3300.000};  //Range 3
