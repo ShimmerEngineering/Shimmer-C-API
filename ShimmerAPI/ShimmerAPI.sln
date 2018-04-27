@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShimmerPPGHRGSRConsoleAppEx
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSerialPort", "TestSerialPort\TestSerialPort.csproj", "{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSerialPortBuffer", "TestSerialPortBuffer\TestSerialPortBuffer.csproj", "{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -278,6 +280,30 @@ Global
 		{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}.ShimmerAPIBasic|x64.Build.0 = Release|Any CPU
 		{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}.ShimmerAPIBasic|x86.ActiveCfg = Release|Any CPU
 		{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}.ShimmerAPIBasic|x86.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Debug|x64.Build.0 = Debug|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Debug|x86.Build.0 = Debug|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Release|x64.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Release|x64.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Release|x86.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.Release|x86.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPI|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPI|Any CPU.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPI|x64.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPI|x64.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPI|x86.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPI|x86.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPIBasic|Any CPU.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPIBasic|Any CPU.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPIBasic|x64.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPIBasic|x64.Build.0 = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPIBasic|x86.ActiveCfg = Release|Any CPU
+		{AAF33C5B-3D43-4B05-B8F5-D41256F7A0F9}.ShimmerAPIBasic|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
