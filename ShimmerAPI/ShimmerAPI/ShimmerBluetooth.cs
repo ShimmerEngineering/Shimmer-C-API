@@ -5441,7 +5441,7 @@ namespace ShimmerAPI
             int lowerLimit = ADCRawSamplingRateValue - (int)(ADCRawSamplingRateValue * 0.05);
             if ((timeStamp2 - timeStamp1) < 0)
             {
-                timeStamp2 = timeStamp2 + 65536;
+                timeStamp2 = timeStamp2 + TimeStampPacketRawMaxValue;
                 
                 }
             int difference = timeStamp2 - timeStamp1;

@@ -177,7 +177,7 @@ namespace ShimmerAPI
         private void ControlForm_Load(object sender, EventArgs e)
         {
             buttonSetBlinkLED.Visible = false;
-            checkBoxTSACheck.Visible = false;
+            checkBoxTSACheck.Visible = true;
             buttonStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
             button1.Visible = false;
