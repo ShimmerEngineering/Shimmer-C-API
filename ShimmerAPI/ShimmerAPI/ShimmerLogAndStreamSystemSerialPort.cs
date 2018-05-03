@@ -62,13 +62,21 @@ namespace ShimmerAPI
         }
         protected override void WriteBytes(byte[] b, int index, int length)
         {
-            SerialPort.Write(b, index, length);
+            if (GetState() != SHIMMER_STATE_NONE)
+            {
+                SerialPort.Write(b, index, length);
+            }
         }
 
         protected override int ReadByte()
-        {
-            return SerialPort.ReadByte();
+        {   
+            if (GetState() != SHIMMER_STATE_NONE)
+            {
+                return SerialPort.ReadByte();
+            }
+            throw new InvalidOperationException();
         }
+
         protected override void OpenConnection()
         {
             SerialPort.BaudRate = 115200;
