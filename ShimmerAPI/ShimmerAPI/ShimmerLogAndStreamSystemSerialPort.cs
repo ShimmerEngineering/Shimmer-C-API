@@ -64,7 +64,15 @@ namespace ShimmerAPI
         {
             if (GetState() != SHIMMER_STATE_NONE)
             {
-                SerialPort.Write(b, index, length);
+                try
+                {
+                    SerialPort.Write(b, index, length);
+                } catch (Exception)
+                {
+                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost");
+                    OnNewEvent(newEventArgs);
+                    Disconnect();
+                }
             }
         }
 
