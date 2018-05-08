@@ -1264,6 +1264,13 @@ namespace ShimmerAPI
                                 else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_MINI) ExpansionBoard = "PROTO3 Mini";
                                 else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXPANSION_EXG) ExpansionBoard = "ExG";
                                 else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE) ExpansionBoard = "PROTO3 Deluxe";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.SHIMMER_3_EXG_EXTENDED) ExpansionBoard = "EXG";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.SHIMMER3) ExpansionBoard = "None";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXP_BRD_HIGH_G_ACCEL) ExpansionBoard = "High G Accel";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GPS) ExpansionBoard = "GPS";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED) ExpansionBoard = "EXG";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED) ExpansionBoard = "GSR+";
+                                else if (ExpansionDetectArray[0] == (int)ExpansionBoardDetectShimmer3.EXP_BRD_BR_AMP_UNIFIED) ExpansionBoard = "Bridge Amplifier+";
                                 else ExpansionBoard = "Unknown";
                                 if (NumBytes >= 3)
                                 {
