@@ -1,7 +1,5 @@
 # Shimmer-C-API
-The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware. **Build the ShimmerAPI first as a 'Release' before proceeding to using the examples as the examples reference the ShimmerAPI dll**.
-
-![Build Release](/Resources/img/Build_Release.png?raw=true "Build Release Of ShimmerAPI")
+The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware. **First open the ShimmerAPI solution. The examples will be opened along with the ShimmerAPI project. Build the ShimmerAPI first before proceeding to using the examples as the examples references the ShimmerAPI dll**.
 
 This API is broken into the following projects, please refer to the Readme of each project for further info
 
@@ -39,6 +37,7 @@ User's should note that IBI derived from ECG is more accurate than IBI derived f
 - Improve GSR algorithm accuracy
 - Fix to expansion board ID
 - Improve Bluetooth reliability, with previous uncaught exceptions being dealt with
+- Update project structure, when users open the ShimmerAPI solution, the other examples will be loaded as well, users will still need to build the ShimmerAPI dll to use the examples
 
 # Rev 0.9
 - Removed the double representation of the firmware version (FirmwareVersion) as there is no way to represent 0.1 (_where 0 is FirmwareMajor and 1 is FirmwareMinor_) and 0.10 (_where 0 is FirmwareMajor and 10 is FirmwareMinor_) as a double. FirmwareMajor and FirmwareMinor variables remain. Added two methods compareVersions which allows quick version comparisons
