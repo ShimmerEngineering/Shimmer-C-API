@@ -31,7 +31,7 @@ NOTE: The ShimmerClosedLibrary provides
 
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
 
-# Rev 1.0
+# Rev 1.0.0
 - Added functionality for FW_IDENTIFIER_SHIMMERECGMD
 - Started adding unit test
 - Improve GSR algorithm accuracy
