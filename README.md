@@ -33,6 +33,13 @@ NOTE: The ShimmerClosedLibrary provides
 
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
 
+# Rev 1.0
+- Added functionality for FW_IDENTIFIER_SHIMMERECGMD
+- Started adding unit test
+- Improve GSR algorithm accuracy
+- Fix to expansion board ID
+- Improve Bluetooth reliability, with previous uncaught exceptions being dealt with
+
 # Rev 0.9
 - Removed the double representation of the firmware version (FirmwareVersion) as there is no way to represent 0.1 (_where 0 is FirmwareMajor and 1 is FirmwareMinor_) and 0.10 (_where 0 is FirmwareMajor and 10 is FirmwareMinor_) as a double. FirmwareMajor and FirmwareMinor variables remain. Added two methods compareVersions which allows quick version comparisons
 
