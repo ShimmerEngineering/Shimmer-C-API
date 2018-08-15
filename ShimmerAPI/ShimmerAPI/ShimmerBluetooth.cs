@@ -1112,7 +1112,8 @@ namespace ShimmerAPI
                                             else
                                             {
                                                 System.Console.WriteLine("Throwing Packet");
-                                                KeepObjectCluster = null;
+                                                objectCluster = null;
+
                                                 ReadByte();
                                             }
 
