@@ -5059,7 +5059,7 @@ namespace ShimmerAPI
         }
 
         /// <summary>
-        /// Rate is set to Hz
+        /// Rate is set to Hz. Note that when using shimmer ecg/emg, setting the sampling rate also update the configuration bytes on the exg chip. Because of this you should always try to use writesamplingrate after a command such as WriteEXGConfigurations. Unless you are certain you are setting the correct data rate via WriteEXGConfigurations.
         /// </summary>
         /// <param name="rate"></param>
         public void WriteSamplingRate(double rate)
