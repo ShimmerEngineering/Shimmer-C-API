@@ -17,18 +17,29 @@ namespace com.shimmerresearch.grpc
             
         }
 
+        public async Task Connect(string address, string port)
+        {
+            try
+            {
+                Channel channel = new Channel(address + ":" + port, ChannelCredentials.Insecure);
+                client = new ShimmerServer.ShimmerServerClient(channel);
+                client.SayHello(new HelloRequest());
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+            
+        }
+
         public async Task Start()
         {
             
-            Channel channel = new Channel("localhost:50050", ChannelCredentials.Insecure);
-            client = new ShimmerServer.ShimmerServerClient(channel);
             var call = client.GetDataStream(new StreamRequest());
             while (await call.ResponseStream.MoveNext())
             {
                 var note = call.ResponseStream.Current;
                 Console.WriteLine("Received " + note);
             }
-            
         }
 
         public void Connect(string comport)

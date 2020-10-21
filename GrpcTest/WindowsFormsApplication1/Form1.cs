@@ -36,7 +36,7 @@ namespace WindowsFormsApplication1
             Console.WriteLine("Greeting: " + reply.Message);
              */
             
-            test.Start();
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -62,6 +62,33 @@ namespace WindowsFormsApplication1
         private void button4_Click(object sender, EventArgs e)
         {
             test.StopStreaming();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void button5_Click(object sender, EventArgs e)
+        {
+            try {
+                await test.Connect(textBoxAddress.Text, textBoxPort.Text);
+                labelClient.Text = "Client Is Connected";
+                test.Start();
+            } catch(Exception Ex)
+            {
+                labelClient.Text = "Client Is Not Connected";
+            }
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
