@@ -36,12 +36,12 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBoxAddress = new System.Windows.Forms.TextBox();
+            this.labelClient = new System.Windows.Forms.Label();
             this.textBoxPort = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.labelClient = new System.Windows.Forms.Label();
+            this.textBoxAddress = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button5 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -135,15 +135,40 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Server Commands";
             // 
-            // button5
+            // labelClient
             // 
-            this.button5.Location = new System.Drawing.Point(48, 41);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(128, 23);
-            this.button5.TabIndex = 0;
-            this.button5.Text = "Connect";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.labelClient.AutoSize = true;
+            this.labelClient.Location = new System.Drawing.Point(48, 71);
+            this.labelClient.Name = "labelClient";
+            this.labelClient.Size = new System.Drawing.Size(155, 17);
+            this.labelClient.TabIndex = 5;
+            this.labelClient.Text = "Client Is Not Connected";
+            this.labelClient.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // textBoxPort
+            // 
+            this.textBoxPort.Location = new System.Drawing.Point(575, 41);
+            this.textBoxPort.Name = "textBoxPort";
+            this.textBoxPort.Size = new System.Drawing.Size(100, 22);
+            this.textBoxPort.TabIndex = 4;
+            this.textBoxPort.Text = "50051";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(484, 46);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(38, 17);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Port:";
+            // 
+            // textBoxAddress
+            // 
+            this.textBoxAddress.Location = new System.Drawing.Point(304, 41);
+            this.textBoxAddress.Name = "textBoxAddress";
+            this.textBoxAddress.Size = new System.Drawing.Size(100, 22);
+            this.textBoxAddress.TabIndex = 2;
+            this.textBoxAddress.Text = "Localhost";
             // 
             // label2
             // 
@@ -155,40 +180,15 @@
             this.label2.Text = "Address:";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // textBoxAddress
+            // button5
             // 
-            this.textBoxAddress.Location = new System.Drawing.Point(304, 41);
-            this.textBoxAddress.Name = "textBoxAddress";
-            this.textBoxAddress.Size = new System.Drawing.Size(100, 22);
-            this.textBoxAddress.TabIndex = 2;
-            this.textBoxAddress.Text = "Localhost";
-            // 
-            // textBoxPort
-            // 
-            this.textBoxPort.Location = new System.Drawing.Point(575, 41);
-            this.textBoxPort.Name = "textBoxPort";
-            this.textBoxPort.Size = new System.Drawing.Size(100, 22);
-            this.textBoxPort.TabIndex = 4;
-            this.textBoxPort.Text = "50050";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(484, 46);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 17);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Port:";
-            // 
-            // labelClient
-            // 
-            this.labelClient.AutoSize = true;
-            this.labelClient.Location = new System.Drawing.Point(48, 71);
-            this.labelClient.Name = "labelClient";
-            this.labelClient.Size = new System.Drawing.Size(155, 17);
-            this.labelClient.TabIndex = 5;
-            this.labelClient.Text = "Client Is Not Connected";
-            this.labelClient.Click += new System.EventHandler(this.label4_Click);
+            this.button5.Location = new System.Drawing.Point(48, 41);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(128, 23);
+            this.button5.TabIndex = 0;
+            this.button5.Text = "Connect";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // Form1
             // 
@@ -197,7 +197,7 @@
             this.ClientSize = new System.Drawing.Size(775, 480);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
