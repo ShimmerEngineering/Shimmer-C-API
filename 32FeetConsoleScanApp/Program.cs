@@ -52,6 +52,9 @@ namespace _32FeetConsoleAppLib
                 }else if (shimmerDevices.Count == 1)
                 {
                     bdinfo = shimmerDevices[0];
+                } else
+                {
+                    System.Console.WriteLine("No Shimmer Devices Detected");
                 }
                 if (bdinfo != null)
                 {
