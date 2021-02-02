@@ -72,7 +72,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Timers;
 using System.ComponentModel;
-using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 
 namespace ShimmerAPI
 {
@@ -476,6 +475,8 @@ namespace ShimmerAPI
             SET_VBATT_FREQ_COMMAND = 0x98,
             VBATT_FREQ_RESPONSE = 0x99,
             GET_VBATT_FREQ_COMMAND = 0x9A,
+            BMP280_CALIBRATION_COEFFICIENTS_RESPONSE = 0xA0,
+            GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND = 0x9F,
             ACK_PROCESSED = 0xFF
         };
 
@@ -1427,7 +1428,7 @@ namespace ShimmerAPI
                                 MC = Calculatetwoscomplement((int)((int)(bufferbyte[19] & 0xFF) + ((int)(bufferbyte[18] & 0xFF) << 8)), 16);
                                 MD = Calculatetwoscomplement((int)((int)(bufferbyte[21] & 0xFF) + ((int)(bufferbyte[20] & 0xFF) << 8)), 16);
                                 break;
-                            case (byte)InstructionsResponse.Bmp280CalibrationCoefficientsResponse:
+                            case (byte)PacketTypeShimmer3.BMP280_CALIBRATION_COEFFICIENTS_RESPONSE:
                                 bufferbyte = new byte[24];
                                 for (int p = 0; p < 24; p++)
                                 {
@@ -2937,9 +2938,9 @@ namespace ShimmerAPI
 
                             if (GetStandardDeviation(GyroXCalList) < ThresholdGyroOnTheFly && GetStandardDeviation(GyroYCalList) < ThresholdGyroOnTheFly && GetStandardDeviation(GyroZCalList) < ThresholdGyroOnTheFly)
                             {
-                                OffsetVectorGyro[0, 0] = GyroXRawList.Average();
-                                OffsetVectorGyro[1, 0] = GyroYRawList.Average();
-                                OffsetVectorGyro[2, 0] = GyroZRawList.Average();
+                                OffsetVectorGyro[0, 0] = CalculateAverage(GyroXRawList);
+                                OffsetVectorGyro[1, 0] = CalculateAverage(GyroYRawList);
+                                OffsetVectorGyro[2, 0] = CalculateAverage(GyroZRawList);
                             }
                         }
                     }
@@ -3404,9 +3405,9 @@ namespace ShimmerAPI
 
                             if (GetStandardDeviation(GyroXCalList) < ThresholdGyroOnTheFly && GetStandardDeviation(GyroYCalList) < ThresholdGyroOnTheFly && GetStandardDeviation(GyroZCalList) < ThresholdGyroOnTheFly)
                             {
-                                OffsetVectorGyro[0, 0] = GyroXRawList.Average();
-                                OffsetVectorGyro[1, 0] = GyroYRawList.Average();
-                                OffsetVectorGyro[2, 0] = GyroZRawList.Average();
+                                OffsetVectorGyro[0, 0] = CalculateAverage(GyroXRawList);
+                                OffsetVectorGyro[1, 0] = CalculateAverage(GyroYRawList);
+                                OffsetVectorGyro[2, 0] = CalculateAverage(GyroZRawList);
                             }
                         }
                     }
@@ -4997,7 +4998,7 @@ namespace ShimmerAPI
                 //if (FirmwareVersion > 0.1)
                 if (isShimmer3withUpdatedSensors())
                 {
-                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND }, 0, 1);
                     System.Threading.Thread.Sleep(800);
                 }
                 else
@@ -6173,7 +6174,7 @@ namespace ShimmerAPI
 
         protected double GetStandardDeviation(List<double> doubleList)
         {
-            double average = doubleList.Average();
+            double average = CalculateAverage(doubleList);
             double sumOfDerivation = 0;
             foreach (double value in doubleList)
             {
@@ -6237,6 +6238,19 @@ namespace ShimmerAPI
         protected double NudgeDouble(double valToNudge, double minVal, double maxVal)
         {
             return Math.Max(minVal, Math.Min(maxVal, valToNudge));
+        }
+
+        public double CalculateAverage(List<Double> values)
+        {
+            Double sum = 0;
+            foreach (Double value in values){
+                sum = sum + value;
+            }
+            if (values.Count < 1)
+            {
+                return Double.NaN;
+            }
+            return sum/values.Count;
         }
 
     }
