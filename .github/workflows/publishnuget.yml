@@ -2,8 +2,8 @@ name: "Publish to NuGet"
 
 on:
   push:
-    tags:
-    - 'v*'
+    branches:
+      - CA-28 # Default release branc
 
 env:
   PROJECT_PATH: 'ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj'
