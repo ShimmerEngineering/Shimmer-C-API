@@ -6,7 +6,7 @@ on:
       - CA-28 # Default release branc
 
 env:
-  PROJECT_PATH: 'ShimmerAPI/ShimmerAPI.csproj'
+  PROJECT_PATH: 'ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
