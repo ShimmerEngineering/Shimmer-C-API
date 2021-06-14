@@ -3,7 +3,7 @@ name: Publish Packages
 on:
   push:
     branches:
-      - CA-28_2 # Default release branch
+      - CA-28 # Default release branch
 
 jobs:
   build:
@@ -22,5 +22,5 @@ jobs:
     - name: Publish FluentEmail.Core
       uses: brandedoutcast/publish-nuget@v2.5.2
       with:
-          PROJECT_FILE_PATH: 'ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj'
+          PROJECT_FILE_PATH: ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
