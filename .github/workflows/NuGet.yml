@@ -6,21 +6,21 @@ on:
       - CA-28_2 # Default release branch
 
 jobs:
-  build:
+  publish:
+    name: build, pack & publish
     runs-on: windows-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Publish FluentEmail.Core
-      uses: brandedoutcast/publish-nuget@v2.5.2
-      with:
+      - uses: actions/checkout@v2
+
+      # - name: Setup dotnet
+      #   uses: actions/setup-dotnet@v1
+      #   with:
+      #     dotnet-version: 3.1.200
+
+      # Publish
+      - name: publish on version change
+        id: publish_nuget
+        uses: rohith/publish-nuget@v2
+        with:
           PROJECT_FILE_PATH: ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
