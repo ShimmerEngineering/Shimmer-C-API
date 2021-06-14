@@ -3,11 +3,11 @@ name: Publish Packages
 on:
   push:
     branches:
-      - CA-28 # Default release branch
+      - CA-28_2 # Default release branch
 
 jobs:
   build:
-    runs-on: 'windows-latest'
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
