@@ -78,6 +78,7 @@
     <Compile Include="ObjectCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SensorData.cs" />
+    <Compile Include="Utilities\UtilCalibration.cs" />
     <None Include="README.md" />
     <Compile Include="Shimmer.cs" />
     <Compile Include="ShimmerBluetooth.cs" />
