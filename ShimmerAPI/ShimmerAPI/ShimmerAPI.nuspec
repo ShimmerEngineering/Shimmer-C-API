@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>ShimmerAPI</id>
+    <version>0.0.1</version>
+    <title>ShimmerAPI</title>
+    <authors>Shimmer Research Ltd.</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <description>The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware.</description>
+    <releaseNotes>CA-28 Test Nuget package publish</releaseNotes>
+    <copyright>Copyright ©  2018</copyright>
+    <tags>ShimmerAPI v0.0.1</tags>
+  </metadata>
+</package>

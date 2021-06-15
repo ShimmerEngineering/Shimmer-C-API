@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ShimmerAPI")]
-[assembly: AssemblyDescription("The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware.")]
+[assembly: AssemblyTitle("DummyAPI")]
+[assembly: AssemblyDescription("The Dummy API to test Github Action build and package publish.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Shimmer Research Ltd.")]
 [assembly: AssemblyProduct("ShimmerAPI")]
