@@ -6,7 +6,7 @@ on:
       - CA-28_2 # Default release branch
 
 env:
-  PROJECT_PATH: 'Shimmer-C-API/DummyAPI/DummyAPI/DummyAPI.csproj'
+  PROJECT_PATH: DummyAPI/DummyAPI/DummyAPI.csproj
   PACKAGE_OUTPUT_DIRECTORY: DummyAPI/DummyAPI/Output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
