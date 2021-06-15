@@ -6,8 +6,8 @@ on:
       - CA-28_2 # Default release branch
 
 env:
-  PROJECT_PATH: ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj
-  PACKAGE_OUTPUT_DIRECTORY: ShimmerAPI/ShimmerAPI/Output
+  PROJECT_PATH: DummyAPI/DummyAPI/DummyAPI.csproj
+  PACKAGE_OUTPUT_DIRECTORY: DummyAPI/DummyAPI/Output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
 jobs:
