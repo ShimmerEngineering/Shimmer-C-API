@@ -7,8 +7,8 @@
     <ProjectGuid>{428CB744-8E79-4F56-9D71-B9027F4113DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShimmerAPI</RootNamespace>
-    <AssemblyName>ShimmerAPI</AssemblyName>
+    <RootNamespace>DummyAPI</RootNamespace>
+    <AssemblyName>DummyAPI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -35,11 +35,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ShimmerAPIBasic|AnyCPU'">
-    <OutputPath>bin\ShimmerAPIBasic\</OutputPath>
+    <OutputPath>bin\DummyAPIBasic\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ShimmerAPI|AnyCPU'">
-    <OutputPath>bin\ShimmerAPI\</OutputPath>
+    <OutputPath>bin\DummyAPI\</OutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>

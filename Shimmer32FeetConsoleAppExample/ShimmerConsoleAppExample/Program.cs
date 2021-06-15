@@ -24,7 +24,7 @@ namespace ShimmerConsoleAppExample
             int enabledSensors = ((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL);
 
             //shimmer = new Shimmer32Feet("ShimmerID1", "00:06:66:66:96:86");
-            shimmer = new ShimmerLogAndStream32Feet("ShimmerID1", "00:06:66:66:96:A9", 102.4, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
+            shimmer = new ShimmerLogAndStream32Feet("ShimmerID1", "00:06:66:BA:D1:E5", 102.4, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
 
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();
