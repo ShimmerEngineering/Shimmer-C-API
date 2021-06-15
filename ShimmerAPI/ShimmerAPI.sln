@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShimmerAPI", "ShimmerAPI\ShimmerAPI.csproj", "{428CB744-8E79-4F56-9D71-B9027F4113DA}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShimmerPPGHRGSRConsoleAppExample", "..\ShimmerPPGHRGSRConsoleAppExample\ShimmerConsoleAppExample\ShimmerPPGHRGSRConsoleAppExample.csproj", "{41BBBE0F-FCD2-4035-A182-2601E6DD4503}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSerialPort", "TestSerialPort\TestSerialPort.csproj", "{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimmer32FeetAPI", "..\Shimmer32FeetAPI\Shimmer32FeetAPI.csproj", "{843A9807-2D14-42D4-866C-F898F46056E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -278,8 +280,35 @@ Global
 		{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}.ShimmerAPIBasic|x64.Build.0 = Release|Any CPU
 		{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}.ShimmerAPIBasic|x86.ActiveCfg = Release|Any CPU
 		{941AE87E-4DEE-406D-9BB0-6CC120EBEC0D}.ShimmerAPIBasic|x86.Build.0 = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Debug|x64.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Debug|x86.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Release|x64.ActiveCfg = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Release|x64.Build.0 = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Release|x86.ActiveCfg = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.Release|x86.Build.0 = Release|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPI|Any CPU.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPI|Any CPU.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPI|x64.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPI|x64.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPI|x86.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPI|x86.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPIBasic|Any CPU.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPIBasic|Any CPU.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPIBasic|x64.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPIBasic|x64.Build.0 = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPIBasic|x86.ActiveCfg = Debug|Any CPU
+		{843A9807-2D14-42D4-866C-F898F46056E4}.ShimmerAPIBasic|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0118CC67-3FFA-4D59-B6DD-22E5138CDBBC}
 	EndGlobalSection
 EndGlobal
