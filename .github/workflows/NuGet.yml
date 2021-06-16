@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: 'Add dependencies'
-      run: dotnet add ${{ env.PROJECT_PATH }} package Grpc --version 1.6.1 --framework net45
+      run: dotnet add ${{ env.PROJECT_PATH }} package 32feet.NET --version 3.5.0.0 --framework net46
 
     - name: 'Build project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
