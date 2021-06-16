@@ -26,6 +26,9 @@ jobs:
     - name: 'Restore packages'
       run: dotnet restore ${{ env.PROJECT_PATH }}
 
+    - name: Add dependencies
+      run: dotnet add ${{ env.PROJECT_PATH }} package Grpc.Core --version 1.6.1 --framework net45
+
     - name: 'Build project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
 
