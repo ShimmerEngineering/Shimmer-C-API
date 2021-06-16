@@ -34,11 +34,11 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ShimmerAPIBasic|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DummyAPIBasic|AnyCPU'">
     <OutputPath>bin\DummyAPIBasic\</OutputPath>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ShimmerAPI|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DummyAPI|AnyCPU'">
     <OutputPath>bin\DummyAPI\</OutputPath>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>

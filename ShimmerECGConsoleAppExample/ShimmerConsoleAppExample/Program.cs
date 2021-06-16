@@ -1,4 +1,4 @@
-﻿using ShimmerAPI;
+﻿using DummyAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,7 @@ namespace ShimmerConsoleAppExample
             //byte[] defaultECGReg2 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x47, 0x00, 0x00, 0x00, 0x02, 0x01 }; //see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2
             byte[] defaultECGReg1 = ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG1 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG1
             byte[] defaultECGReg2 = ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG2 && ShimmerBluetooth.SHIMMER3_DEFAULT_EMG_REG2
-            //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
+                                                                                //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
             shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM169", samplingRate, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();
@@ -53,19 +53,20 @@ namespace ShimmerConsoleAppExample
                     System.Console.Write(shimmer.GetEXG2RegisterContents()[i] + " ");
                 }
                 System.Console.WriteLine("\n");
-                
+
                 //Note the data rate of the EXG chips (exgrate) is automatically set via writesamplingrate(). For a sampling rate of 512Hz, the exgrate is set to 0x03, which corresponds to 1000 SPS. 
                 //The exgrate can be set to a different settting afterwards, e.g. to 2000 SPS:
                 shimmer.WriteEXGRate(4);
 
                 //The gain of the EXG chips is also configurable. The default gain = 4 (0x04). Now the gain is set to 0x05, which corresponds to a gain of 8:
                 shimmer.WriteEXGGain(5);
-                
+
                 shimmer.ReadEXGConfigurations(1);
                 shimmer.ReadEXGConfigurations(2);
                 System.Console.WriteLine("EXG CONFIGURATION AFTER MANUALLY SETTING THE VALUES (RATE and GAIN)");
                 System.Console.WriteLine("EXG CHIP 1 CONFIGURATION");
-                for (int i = 0; i < 10; i++) {
+                for (int i = 0; i < 10; i++)
+                {
                     System.Console.Write(shimmer.GetEXG1RegisterContents()[i] + " ");
                 }
                 System.Console.WriteLine("\nEXG CHIP 2 CONFIGURATION");

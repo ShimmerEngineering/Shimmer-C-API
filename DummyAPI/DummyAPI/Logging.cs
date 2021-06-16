@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 
-namespace ShimmerAPI
+namespace DummyAPI
 {
     public class Logging
     {

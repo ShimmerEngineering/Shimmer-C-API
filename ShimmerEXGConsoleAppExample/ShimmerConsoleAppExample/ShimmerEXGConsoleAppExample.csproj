@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DummyAPI">
+      <HintPath>..\..\DummyAPI\DummyAPI\bin\Debug\DummyAPI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="libs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\DummyAPI\packages\NuGet.Build.Tasks.Pack.5.9.1\build\NuGet.Build.Tasks.Pack.targets" Condition="Exists('..\..\DummyAPI\packages\NuGet.Build.Tasks.Pack.5.9.1\build\NuGet.Build.Tasks.Pack.targets')" />

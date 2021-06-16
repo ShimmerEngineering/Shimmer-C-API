@@ -1,4 +1,4 @@
-﻿using ShimmerAPI;
+﻿using DummyAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace ShimmerConsoleAppExample
             //byte[] defaultECGReg2 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x47, 0x00, 0x00, 0x00, 0x02, 0x01 }; //see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2
             byte[] defaultECGReg1 = ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG1; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1
             byte[] defaultECGReg2 = ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG2; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2
-            //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
+                                                                                 //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
             shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM12", 1, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
             shimmer.UICallback += this.HandleEvent;
             shimmer.Connect();

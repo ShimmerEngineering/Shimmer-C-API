@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("The Dummy API to test Github Action build and package publish.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Shimmer Research Ltd.")]
-[assembly: AssemblyProduct("ShimmerAPI")]
+[assembly: AssemblyProduct("DummyAPI")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

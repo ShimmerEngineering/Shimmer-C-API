@@ -73,7 +73,7 @@ using System.Globalization;
 using System.Timers;
 using System.ComponentModel;
 
-namespace ShimmerAPI
+namespace DummyAPI
 {
     public abstract class ShimmerBluetooth
     {

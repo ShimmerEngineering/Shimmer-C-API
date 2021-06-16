@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace ShimmerAPI
+namespace DummyAPI
 {
     public class GradDes3DOrientation
     {

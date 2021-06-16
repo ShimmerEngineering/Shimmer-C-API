@@ -95,6 +95,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DummyAPI">
+      <HintPath>..\..\DummyAPI\DummyAPI\bin\Debug\DummyAPI.dll</HintPath>
+    </Reference>
     <Reference Include="ExceptionReporter.WinForms">
       <HintPath>libs\ExceptionReporter.WinForms.dll</HintPath>
     </Reference>
@@ -124,9 +127,6 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ShimmerAPI, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ShimmerAPI.0.0.1\lib\net45\ShimmerAPI.dll</HintPath>
-    </Reference>
     <Reference Include="ShimmerClosedLibraryRev0_5, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>libs\ShimmerClosedLibraryRev0_5.dll</HintPath>

@@ -44,7 +44,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace ShimmerAPI
+namespace DummyAPI
 {
     [System.Obsolete] //Moving the serial port controls to the highest implementing class so code is more concise and extendible for use with 32 feet/xamarin/etc
     public abstract class Shimmer : ShimmerBluetooth

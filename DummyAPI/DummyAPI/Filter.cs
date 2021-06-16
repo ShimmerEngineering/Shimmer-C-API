@@ -24,7 +24,7 @@ using System.IO;
  * 
  */
 
-namespace ShimmerAPI
+namespace DummyAPI
 {
     public class Filter
     {
