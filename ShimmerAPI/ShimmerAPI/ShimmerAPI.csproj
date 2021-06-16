@@ -92,19 +92,10 @@
     <Compile Include="ShimmerSDBT.cs" />
     <Compile Include="ShimmerSDBT32Feet.cs" />
   </ItemGroup>
-	<!--ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>-->
 	<ItemGroup>
-		<PackageReference Include="32feet.NET" Version="3.5.0.0" />
-		<PackageReference Include="Google.Protobuf" Version="3.4.1" />
-		<PackageReference Include="Grpc" Version="1.6.1" />
-		<PackageReference Include="Grpc.Core" Version="1.6.1" />
-		<PackageReference Include="Grpc.Tools" Version="1.6.1" />
-		<PackageReference Include="MathNet.Numerics" Version="3.20.0" />
-		<PackageReference Include="System.Interactive.Async" Version="3.1.1" />
+		<None Include="packages.config">
+			<SubType>Designer</SubType>
+		</None>
 	</ItemGroup>
   <ItemGroup />
   <ItemGroup>
