@@ -22,12 +22,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
-
-    - name: 'Add dependencies'
-      run: dotnet add ${{ env.PROJECT_PATH }} package Grpc --version 1.6.1 --framework net45
     
     - name: 'Restore packages'
       run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: 'Add dependencies'
+      run: dotnet add ${{ env.PROJECT_PATH }} package Grpc --version 1.6.1 --framework net45
 
     - name: 'Build project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
