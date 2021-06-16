@@ -30,14 +30,14 @@ jobs:
       run: dotnet add ${{ env.PROJECT_PATH }} package Grpc.Core --version 1.6.1 --framework net45
 
     - name: 'Build project'
-      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+      run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release
 
     - name: 'Get Version'
       id: version
       uses: battila7/get-version-action@v2
 
     - name: 'Pack project'
-      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+      run: dotnet pack ${{ env.PROJECT_PATH }} --configuration Release --include-symbols -p:PackageVersion=${{ steps.version.outputs.version-without-v }} --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
     - name: 'Push package'
       run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s ${{ env.NUGET_SOURCE_URL }}
