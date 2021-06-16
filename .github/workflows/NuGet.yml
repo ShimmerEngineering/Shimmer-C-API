@@ -6,7 +6,7 @@ on:
       - CA-28_2 # Default release branch
 
 env:
-  PROJECT_PATH: DummyAPI/DummyAPI/DummyAPI.csproj
+  PROJECT_PATH: ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
@@ -25,6 +25,9 @@ jobs:
 
     - name: 'Restore packages'
       run: dotnet restore ${{ env.PROJECT_PATH }}
+
+    - name: Add dependencies
+      run: dotnet add package Grpc.Core --version 1.6.1 --framework net45
 
     - name: 'Build project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
