@@ -24,7 +24,7 @@ jobs:
         dotnet-version: '3.1.x'
 
     - name: 'Add dependencies'
-      run: NuGet.CommandLine.XPlat.dll package add --project ${{ env.PROJECT_PATH }} --package Grpc.Core --version 1.6.1 --framework net45
+      run: package add --project ${{ env.PROJECT_PATH }} --package Grpc.Core --version 1.6.1 --framework net45
     
     - name: 'Restore packages'
       run: dotnet restore ${{ env.PROJECT_PATH }}
