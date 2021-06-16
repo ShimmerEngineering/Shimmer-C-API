@@ -9,4 +9,6 @@
     <PackageReference Include="Grpc" Version="2.38.0" />
   </ItemGroup>
 
+	<Target Name="Pack"></Target>
+
 </Project>
