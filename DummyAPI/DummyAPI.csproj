@@ -1,5 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+		<ProjectGuid>{EACC69C1-D37A-4459-B539-86141261137E}</ProjectGuid>
+		<OutputType>Library</OutputType>
+		<AppDesignerFolder>Properties</AppDesignerFolder>
+		<RootNamespace>DummyAPI</RootNamespace>
+		<AssemblyName>DummyAPI</AssemblyName>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<FileAlignment>512</FileAlignment>
+		<TargetFrameworkProfile />
+		<NuGetPackageImportStamp>
+		</NuGetPackageImportStamp>
+	</PropertyGroup>
+	
+	
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -10,6 +27,10 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc" Version="2.38.0" />
+    <PackageReference Include="NuGet.Build.Tasks.Pack" Version="5.10.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 	<Target Name="Pack"></Target>
