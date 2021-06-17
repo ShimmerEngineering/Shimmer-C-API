@@ -29,5 +29,5 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore ShimmerAPI/ShimmerAPI.sln
 
-    - name: Build the Solution
-      run: msbuild ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj
+    - name: 'Build project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
