@@ -30,4 +30,4 @@ jobs:
       run: nuget restore ShimmerAPI/ShimmerAPI.sln
 
     - name: Build the Solution
-      run: msbuild ShimmerAPI/ShimmerAPI.sln
+      run: msbuild ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj
