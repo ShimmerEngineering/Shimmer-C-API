@@ -4,7 +4,7 @@
 	<PropertyGroup>
 		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
 		<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-		<ProjectGuid>{EACC69C1-D37A-4459-B539-86141261137E}</ProjectGuid>
+		<ProjectGuid>{6C197E2B-57AA-4B4E-8154-37AB6007B5BE}</ProjectGuid>
 		<OutputType>Library</OutputType>
 		<AppDesignerFolder>Properties</AppDesignerFolder>
 		<RootNamespace>DummyAPI</RootNamespace>
