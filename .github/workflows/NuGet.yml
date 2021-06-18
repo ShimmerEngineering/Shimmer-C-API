@@ -6,7 +6,7 @@ on:
       - CA-28_MA # Default release branch
 
 env:
-  PROJECT_PATH: 'DotNetFrameworkAPI/DotNetFrameworkAPI.csproj'
+  PROJECT_PATH: 'ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
@@ -27,17 +27,14 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - name: Restore NuGet packages
-      run: nuget restore DummyAPI/DummyAPI.sln
+      run: nuget restore ShimmerAPI/ShimmerAPI.sln
 
-    - name: 'Build project'
-      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
+    - name: Build Solution
+      run: |
+       msbuild.exe ShimmerAPI.sln /p:platform="Any CPU" /p:configuration="Release"
 
-    - name: 'Get Version'
-      id: version
-      uses: battila7/get-version-action@v2
-
-    - name: 'Pack project'
-      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=0.0.1 --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
-
-    - name: 'Push package'
-      run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s ${{ env.NUGET_SOURCE_URL }} --skip-duplicate 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+       name: ShimmerAPI
+       path: "./_build"
