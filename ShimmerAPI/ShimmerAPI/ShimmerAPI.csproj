@@ -14,6 +14,12 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+	<RepositoryUrl>[https://github.com/[user-or-group-name]/ProjectName]</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<PackageOutputPath>bin\debug\</PackageOutputPath>
+	<Version>0.0.2</Version>
+	<Authors>Shimmer</Authors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
