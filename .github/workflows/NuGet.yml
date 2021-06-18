@@ -27,10 +27,10 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - run: msbuild -t:restore
-      working-directory: ${{ env.PROJECT_PATH }}
+      working-directory: ShimmerAPI/ShimmerAPI
 
     - run: msbuild -t:build
-      working-directory: ${{ env.PROJECT_PATH }}
+      working-directory: ShimmerAPI/ShimmerAPI
 
     - name: Nuget Add Source
       run: nuget sources Add -Name "github" -Source https://nuget.pkg.github.com/masazalya@shimmersensing.com/index.json -UserName masazalya@shimmersensing.com -Password ${{ secrets.MA_GITHUB_TOKEN }}
