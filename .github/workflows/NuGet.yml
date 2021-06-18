@@ -31,4 +31,4 @@ jobs:
 
     - name: Build Solution
       run: |
-       msbuild ${{ env.PROJECT_PATH }} /p:platform="Any CPU" /p:configuration="Release"
+       msbuild ShimmerAPI/ShimmerAPI.sln /p:platform="Any CPU" /p:configuration="Release"
