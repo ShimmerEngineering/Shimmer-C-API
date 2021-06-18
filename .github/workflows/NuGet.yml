@@ -6,7 +6,7 @@ on:
       - CA-28_MA # Default release branch
 
 env:
-  PROJECT_PATH: 'DummyLibrary/DummyLibrary.csproj'
+  PROJECT_PATH: 'ShimmerAPI/ShimmerAPI/ShimmerAPI.csproj'
   PACKAGE_OUTPUT_DIRECTORY: ${{ github.workspace }}\output
   NUGET_SOURCE_URL: 'https://api.nuget.org/v3/index.json'
 
@@ -15,16 +15,19 @@ jobs:
     name: 'Deploy'
     runs-on: 'windows-latest'
     steps:
-    - name: 'Checkout'
+    - name: Checkout
       uses: actions/checkout@v2
 
-    - name: 'Install dotnet'
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: '3.1.x'
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
 
-    - name: 'Restore packages'
-      run: dotnet restore ${{ env.PROJECT_PATH }}
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
+    - name: Restore NuGet packages
+      run: nuget restore ShimmerAPI/ShimmerAPI.sln
 
     - name: 'Build project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
@@ -34,7 +37,7 @@ jobs:
       uses: battila7/get-version-action@v2
 
     - name: 'Pack project'
-      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=1.0.1 --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=0.0.2 --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
 
     - name: 'Push package'
       run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s ${{ env.NUGET_SOURCE_URL }}
