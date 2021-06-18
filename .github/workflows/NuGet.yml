@@ -27,7 +27,7 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - name: Restore NuGet packages
-      run: nuget restore ${{ env.PROJECT_PATH }}
+      run: nuget restore DummyAPI/DummyAPI.sln
 
     - name: 'Build project'
       run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
