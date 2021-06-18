@@ -27,17 +27,20 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - name: Create Build Directory
-      run: mkdir _build
+      run: mkdir output
 
     - name: Restore NuGet packages
       run: nuget restore ShimmerAPI/ShimmerAPI.sln
 
-    - name: Build Solution
-      run: |
-       msbuild ShimmerAPI/ShimmerAPI.sln /p:platform="Any CPU" /p:configuration="Release"
+    - name: 'Build project'
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-        name: ShimmerAPI
-        path: "./_build"    
+    - name: 'Get Version'
+      id: version
+      uses: battila7/get-version-action@v2
+
+    - name: 'Pack project'
+      run: dotnet pack ${{ env.PROJECT_PATH }} --no-restore --no-build --configuration Release --include-symbols -p:PackageVersion=0.0.2 --output ${{ env.PACKAGE_OUTPUT_DIRECTORY }}
+
+    - name: 'Push package'
+      run: dotnet nuget push ${{ env.PACKAGE_OUTPUT_DIRECTORY }}\*.nupkg -k ${{ secrets.NUGET_API_KEY }} -s ${{ env.NUGET_SOURCE_URL }}
