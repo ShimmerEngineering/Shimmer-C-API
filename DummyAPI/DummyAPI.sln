@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyAPI", "DummyAPI.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyLibrary", "..\DummyLibrary\DummyLibrary.csproj", "{02FC075E-0579-47C2-BE80-7582E8BFBF37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyDotNetFramework", "..\DummyDotNetFramework\DummyDotNetFramework.csproj", "{7F423FB7-186B-46F4-8A0E-88FDA1129BB2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotNetFrameworkAPI", "..\DotNetFrameworkAPI\DotNetFrameworkAPI.csproj", "{F5D133C4-2EAD-4C52-84C5-31B683FEB6C9}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{02FC075E-0579-47C2-BE80-7582E8BFBF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02FC075E-0579-47C2-BE80-7582E8BFBF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02FC075E-0579-47C2-BE80-7582E8BFBF37}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F423FB7-186B-46F4-8A0E-88FDA1129BB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F423FB7-186B-46F4-8A0E-88FDA1129BB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F423FB7-186B-46F4-8A0E-88FDA1129BB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F423FB7-186B-46F4-8A0E-88FDA1129BB2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F5D133C4-2EAD-4C52-84C5-31B683FEB6C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F5D133C4-2EAD-4C52-84C5-31B683FEB6C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5D133C4-2EAD-4C52-84C5-31B683FEB6C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
