@@ -31,10 +31,4 @@ jobs:
 
     - name: Build Solution
       run: |
-       msbuild.exe ShimmerAPI/ShimmerAPI.sln /p:platform="Any CPU" /p:configuration="Release"
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v1.0.0
-      with:
-       name: ShimmerAPI
-       path: "./_build"
+       msbuild ${{ env.PROJECT_PATH }} /p:platform="Any CPU" /p:configuration="Release"
