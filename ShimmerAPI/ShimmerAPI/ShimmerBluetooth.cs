@@ -73,10 +73,11 @@ using System.Globalization;
 using System.Timers;
 using System.ComponentModel;
 using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
+using ShimmerAPI.Utilities;
 
 namespace ShimmerAPI
 {
-    public abstract class ShimmerBluetooth
+    public abstract class ShimmerBluetooth:ShimmerDevice
     {
         public const int SHIMMER_STATE_STREAMING = 3;
         public const int SHIMMER_STATE_CONNECTED = 2;
@@ -93,7 +94,7 @@ namespace ShimmerAPI
         public const int GSR_RANGE_680K_4700K = 3;
         public const int GSR_RANGE_AUTO = 4;
         protected int ShimmerState = SHIMMER_STATE_NONE;
-        public EventHandler UICallback; //this is to be used by other classes to communicate with the c# API
+
         protected bool mWaitingForStartStreamingACK = false;
         private int StreamTimeOutCount = 0;
         protected bool StreamingACKReceived = false;
@@ -109,8 +110,6 @@ namespace ShimmerAPI
         public bool LowPowerGyroEnabled = false;
         public int InternalExpPower = -1;
         protected int magSamplingRate;
-        protected int ADCRawSamplingRateValue;
-        protected double SamplingRate;
         protected int NumberofChannels;
         protected int BufferSize;
         private int FirmwareMajor;
@@ -131,7 +130,6 @@ namespace ShimmerAPI
         protected int Mpu9150SamplingRate;
         protected long ConfigSetupByte0; // for Shimmer2
         protected int GSRRange;
-        protected int HardwareVersion = 0;
         protected int mTempIntValue;
         protected int AccelHRBit = 0;
         protected int AccelLPBit = 0;
@@ -145,8 +143,6 @@ namespace ShimmerAPI
         protected double BatteryVoltage;
         protected int ChargingStatus;
 
-        protected int TimeStampPacketByteSize = 2;
-        protected int TimeStampPacketRawMaxValue = 65536;// 16777216 or 65536 
 
         List<double> HRMovingAVGWindow = new List<double>(4);
         String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
@@ -205,14 +201,8 @@ namespace ShimmerAPI
         public double GainSGHigh = 551;
         public double OffsetSGLow = 1950;
         public double GainSGLow = 183.7;
-        protected double LastReceivedTimeStamp = 0;
-        protected double CurrentTimeStampCycle = 0;
-        protected double LastReceivedCalibratedTimeStamp = -1;
-        protected double CalTimeStart;
-        public long PacketLossCount = 0;
-        public double PacketReceptionRate = 100;
+       
         public int LastKnownHeartRate = 0;
-        public Boolean FirstTimeCalTime = true;
         public bool FirstSystemTimestamp = true;
         public double FirstSystemTimeStampValue;
         public bool DefaultAccelParams = true;
@@ -243,14 +233,6 @@ namespace ShimmerAPI
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         protected long ShimmerRealWorldClock = 0;
-
-        public enum ShimmerVersion
-        {
-            SHIMMER1 = 0,
-            SHIMMER2 = 1,
-            SHIMMER2R = 2,
-            SHIMMER3 = 3
-        }
 
         public enum ShimmerIdentifier
         {
@@ -2840,7 +2822,7 @@ namespace ShimmerAPI
                     int iAccelY = getSignalIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y); //find index
                     int iAccelZ = getSignalIndex(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel);
                     string units;
                     if (DefaultAccelParams)
                     {
@@ -2866,7 +2848,7 @@ namespace ShimmerAPI
                     int iAccelY = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y); //find index
                     int iAccelZ = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel2, SensitivityMatrixAccel2, OffsetVectorAccel2);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel2, SensitivityMatrixAccel2, OffsetVectorAccel2);
                     string units;
                     if (DefaultWRAccelParams)
                     {
@@ -2894,7 +2876,7 @@ namespace ShimmerAPI
                     int iGyroY = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_Y);
                     int iGyroZ = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_Z);
                     double[] datatemp = new double[3] { newPacket[iGyroX], newPacket[iGyroY], newPacket[iGyroZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixGyro, SensitivityMatrixGyro, OffsetVectorGyro);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixGyro, SensitivityMatrixGyro, OffsetVectorGyro);
                     string units;
                     if (DefaultGyroParams)
                     {
@@ -2950,7 +2932,7 @@ namespace ShimmerAPI
                     int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y);
                     int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z);
                     double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
                     string units;
                     if (DefaultMagParams)
                     {
@@ -3334,7 +3316,7 @@ namespace ShimmerAPI
                     int iAccelY = getSignalIndex(Shimmer2Configuration.SignalNames.ACCELEROMETER_Y); //find index
                     int iAccelZ = getSignalIndex(Shimmer2Configuration.SignalNames.ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel);
                     string units;
                     if (DefaultAccelParams)
                     {
@@ -3361,7 +3343,7 @@ namespace ShimmerAPI
                     int iGyroY = getSignalIndex(Shimmer2Configuration.SignalNames.GYROSCOPE_Y);
                     int iGyroZ = getSignalIndex(Shimmer2Configuration.SignalNames.GYROSCOPE_Z);
                     double[] datatemp = new double[3] { newPacket[iGyroX], newPacket[iGyroY], newPacket[iGyroZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixGyro, SensitivityMatrixGyro, OffsetVectorGyro);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixGyro, SensitivityMatrixGyro, OffsetVectorGyro);
                     string units;
                     if (DefaultGyroParams)
                     {
@@ -3417,7 +3399,7 @@ namespace ShimmerAPI
                     int iMagY = getSignalIndex(Shimmer2Configuration.SignalNames.MAGNETOMETER_Y);
                     int iMagZ = getSignalIndex(Shimmer2Configuration.SignalNames.MAGNETOMETER_Z);
                     double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
-                    datatemp = CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
                     string units;
                     if (DefaultMagParams)
                     {
@@ -4791,11 +4773,6 @@ namespace ShimmerAPI
             }
         }
 
-        public double GetPacketReceptionRate()
-        {
-            return PacketReceptionRate;
-        }
-
         /// <summary>
         /// ToggleLED (Shimmer2R/Shimmer3)
         /// </summary>
@@ -5887,68 +5864,6 @@ namespace ShimmerAPI
 
         }
 
-        protected double CalibrateTimeStamp(double timeStamp)
-        {
-            //first convert to continuous time stamp
-            double calibratedTimeStamp = 0;
-            if (LastReceivedTimeStamp > (timeStamp + (TimeStampPacketRawMaxValue * CurrentTimeStampCycle)))
-            {
-                CurrentTimeStampCycle = CurrentTimeStampCycle + 1;
-            }
-
-            LastReceivedTimeStamp = (timeStamp + (TimeStampPacketRawMaxValue * CurrentTimeStampCycle));
-            calibratedTimeStamp = LastReceivedTimeStamp / 32768 * 1000;   // to convert into mS
-            if (FirstTimeCalTime)
-            {
-                FirstTimeCalTime = false;
-                CalTimeStart = calibratedTimeStamp;
-            }
-            if (LastReceivedCalibratedTimeStamp != -1)
-            {
-                double timeDifference = calibratedTimeStamp - LastReceivedCalibratedTimeStamp;
-                double clockConstant = 1024;
-                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2)
-                {
-                    clockConstant = 1024;
-                }
-                else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
-                {
-                    clockConstant = 32768;
-                }
-
-                double expectedTimeDifference = (1 / SamplingRate) * 1000; //in ms
-                double adjustedETD = expectedTimeDifference + (expectedTimeDifference * 0.1);
-
-                //if (timeDifference > (1 / ((clockConstant / ADCRawSamplingRateValue) - 1)) * 1000)
-                if (timeDifference > adjustedETD)
-                {
-                    //calculate the estimated packet loss within that time period
-                    int numberOfLostPackets = ((int)Math.Ceiling(timeDifference / expectedTimeDifference))-1;
-                    PacketLossCount = PacketLossCount + numberOfLostPackets;
-                    //PacketLossCount = PacketLossCount + 1;
-                    long mTotalNumberofPackets = (long)((calibratedTimeStamp - CalTimeStart) / (1 / (clockConstant / ADCRawSamplingRateValue) * 1000));
-                    mTotalNumberofPackets = (long)((calibratedTimeStamp - CalTimeStart) / expectedTimeDifference);
-                  
-                    PacketReceptionRate = (double)((mTotalNumberofPackets - PacketLossCount) / (double)mTotalNumberofPackets) * 100;
-
-                    if (PacketReceptionRate < 99)
-                    {
-                        //System.Console.WriteLine("PRR: " + PacketReceptionRate);
-                    }
-                }
-            }
-
-            EventHandler handler = UICallback;
-            if (handler != null)
-            {
-                CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_PACKET_RECEPTION_RATE, (object)GetPacketReceptionRate());
-                handler(this, newEventArgs);
-            }
-
-            LastReceivedCalibratedTimeStamp = calibratedTimeStamp;
-            return calibratedTimeStamp - CalTimeStart; // make it start at zero
-        }
-
         protected double CalibrateGsrData(double gsrUncalibratedData, double p1, double p2)
         {
             gsrUncalibratedData = (double)((int)gsrUncalibratedData & 4095);
@@ -6055,54 +5970,6 @@ namespace ShimmerAPI
             return calibratedData;
         }
 
-        protected double[] CalibrateInertialSensorData(double[] data, double[,] AM, double[,] SM, double[,] OV)
-        {
-            /*  Based on the theory outlined by Ferraris F, Grimaldi U, and Parvis M.  
-               in "Procedure for effortless in-field calibration of three-axis rate gyros and accelerometers" Sens. Mater. 1995; 7: 311-30.            
-               C = [R^(-1)] .[K^(-1)] .([U]-[B])
-                where.....
-                [C] -> [3 x n] Calibrated Data Matrix 
-                [U] -> [3 x n] Uncalibrated Data Matrix
-                [B] ->  [3 x n] Replicated Sensor Offset Vector Matrix 
-                [R^(-1)] -> [3 x 3] Inverse Alignment Matrix
-                [K^(-1)] -> [3 x 3] Inverse Sensitivity Matrix
-                n = Number of Samples
-                */
-            double[] tempdata = data;
-            double[,] data2d = new double[3, 1];
-            data2d[0, 0] = data[0];
-            data2d[1, 0] = data[1];
-            data2d[2, 0] = data[2];
-            data2d = MatrixMultiplication(MatrixMultiplication(MatrixInverse3x3(AM), MatrixInverse3x3(SM)), MatrixMinus(data2d, OV));
-            tempdata[0] = data2d[0, 0];
-            tempdata[1] = data2d[1, 0];
-            tempdata[2] = data2d[2, 0];
-            return tempdata;
-        }
-
-        protected double[,] MatrixMultiplication(double[,] a, double[,] b)
-        {
-
-            int aRows = a.GetLength(0),
-                aColumns = a.GetLength(1),
-                 bRows = b.GetLength(0),
-                 bColumns = b.GetLength(1);
-            double[,] resultant = new double[aRows, bColumns];
-
-            for (int i = 0; i < aRows; i++)
-            { // aRow
-                for (int j = 0; j < bColumns; j++)
-                { // bColumn
-                    for (int k = 0; k < aColumns; k++)
-                    { // aColumn
-                        resultant[i, j] += a[i, k] * b[k, j];
-                    }
-                }
-            }
-
-            return resultant;
-        }
-
         public double getBatteryVoltage()
         {
             return BatteryVoltage;
@@ -6123,52 +5990,6 @@ namespace ShimmerAPI
         {
             double calibratedData = (uncalibratedData - offset) * (((vRefP * 1000) / gain) / 4095);
             return calibratedData;
-        }
-
-        protected double[,] MatrixInverse3x3(double[,] data)
-        {
-            double a, b, c, d, e, f, g, h, i;
-            a = data[0, 0];
-            b = data[0, 1];
-            c = data[0, 2];
-            d = data[1, 0];
-            e = data[1, 1];
-            f = data[1, 2];
-            g = data[2, 0];
-            h = data[2, 1];
-            i = data[2, 2];
-            //
-            double deter = a * e * i + b * f * g + c * d * h - c * e * g - b * d * i - a * f * h;
-            double[,] answer = new double[3, 3];
-            answer[0, 0] = (1 / deter) * (e * i - f * h);
-
-            answer[0, 1] = (1 / deter) * (c * h - b * i);
-            answer[0, 2] = (1 / deter) * (b * f - c * e);
-            answer[1, 0] = (1 / deter) * (f * g - d * i);
-            answer[1, 1] = (1 / deter) * (a * i - c * g);
-            answer[1, 2] = (1 / deter) * (c * d - a * f);
-            answer[2, 0] = (1 / deter) * (d * h - e * g);
-            answer[2, 1] = (1 / deter) * (g * b - a * h);
-            answer[2, 2] = (1 / deter) * (a * e - b * d);
-            return answer;
-        }
-
-        protected double[,] MatrixMinus(double[,] a, double[,] b)
-        {
-
-            int aRows = a.GetLength(0),
-            aColumns = a.GetLength(1),
-            bRows = b.GetLength(0),
-            bColumns = b.GetLength(1);
-            double[,] resultant = new double[aRows, bColumns];
-            for (int i = 0; i < aRows; i++)
-            { // aRow
-                for (int k = 0; k < aColumns; k++)
-                { // aColumn
-                    resultant[i, k] = a[i, k] - b[i, k];
-                }
-            }
-            return resultant;
         }
 
         protected double GetStandardDeviation(List<double> doubleList)
