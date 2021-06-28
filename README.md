@@ -31,8 +31,8 @@ NOTE: The ShimmerClosedLibrary provides
 
 **NOTE:** 
 **- Currently we are in the process of updating to the use of .net standard **
-**- (NET3.5)[https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET3.5] **
-**- (NET4.5)[https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET4.5] **
+**- [NET3.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET3.5) **
+**- [NET4.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET4.5) **
 
 
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
