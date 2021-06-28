@@ -35,6 +35,8 @@ NOTE: Currently we are in the process of updating to the use of .net standard, p
 
 
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
+# Rev 1.0.2
+- Prior to switching to the use of the .net standard
 
 # Rev 1.0.1
 - Bugfix for #14 (internal reference: CCF18-036)
