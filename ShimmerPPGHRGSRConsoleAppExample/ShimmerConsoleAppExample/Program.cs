@@ -49,7 +49,7 @@ namespace ShimmerConsoleAppExample
             //int enabledSensors = ((int)Shimmer.SensorBitmapShimmer3.SENSOR_A_ACCEL | (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG1_24BIT | (int)Shimmer.SensorBitmapShimmer3.SENSOR_EXG2_24BIT); 
 
             //shimmer = new Shimmer("ShimmerID1", "COM17");
-            Shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM12", SamplingRate, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
+            Shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM11", SamplingRate, 0, ShimmerBluetooth.GSR_RANGE_AUTO, enabledSensors, false, false, false, 1, 0, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP1, Shimmer3Configuration.EXG_EMG_CONFIGURATION_CHIP2, true);
 
             Shimmer.UICallback += this.HandleEvent;
             Shimmer.Connect();
