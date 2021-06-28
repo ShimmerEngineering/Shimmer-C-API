@@ -29,10 +29,9 @@ NOTE: The ShimmerClosedLibrary provides
 - ECG to Heart Rate/Inter Beat Interval(IBI) algorithm
 - PPG to Heart Rate/Inter Beat Interval(IBI) algorithm
 
-**NOTE:** 
-**- Currently we are in the process of updating to the use of .net standard **
-**- [NET3.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET3.5) **
-**- [NET4.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET4.5) **
+NOTE: Currently we are in the process of updating to the use of .net standard, previous .net framework versions can be found in the links below
+- [NET3.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET3.5) 
+- [NET4.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET4.5)
 
 
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
