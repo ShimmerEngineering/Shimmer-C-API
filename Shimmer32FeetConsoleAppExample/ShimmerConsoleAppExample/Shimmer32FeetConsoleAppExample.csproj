@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Shimmer32FeetConsoleAppExample</RootNamespace>
     <AssemblyName>Shimmer32FeetConsoleAppExample</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -61,7 +61,7 @@
       <Name>Shimmer32FeetAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj">
-      <Project>{428cb744-8e79-4f56-9d71-b9027f4113da}</Project>
+      <Project>{6e320423-1d88-47ee-97ba-51113e538d33}</Project>
       <Name>ShimmerAPI</Name>
     </ProjectReference>
   </ItemGroup>

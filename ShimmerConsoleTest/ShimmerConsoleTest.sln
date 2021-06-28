@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShimmerConsoleTest", "ShimmerConsoleAppExample\ShimmerConsoleTest.csproj", "{4D2B71B9-1E21-4266-9090-D883D0FCA63B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShimmerConsoleTest", "ShimmerConsoleAppExample\ShimmerConsoleTest.csproj", "{E5667F2F-4E48-4F0B-BB4E-08420B468AAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4D2B71B9-1E21-4266-9090-D883D0FCA63B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4D2B71B9-1E21-4266-9090-D883D0FCA63B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4D2B71B9-1E21-4266-9090-D883D0FCA63B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4D2B71B9-1E21-4266-9090-D883D0FCA63B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5667F2F-4E48-4F0B-BB4E-08420B468AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5667F2F-4E48-4F0B-BB4E-08420B468AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5667F2F-4E48-4F0B-BB4E-08420B468AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5667F2F-4E48-4F0B-BB4E-08420B468AAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A3BE9C9D-3B35-488D-A500-00011ABF023D}
 	EndGlobalSection
 EndGlobal
