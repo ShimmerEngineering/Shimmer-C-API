@@ -54,8 +54,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ShimmerCSharpAPI\ShimmerAPI.csproj">
-      <Project>{5fa85c7c-e3fc-4c30-aa87-5ea37ad4eeda}</Project>
+    <ProjectReference Include="..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj">
+      <Project>{6e320423-1d88-47ee-97ba-51113e538d33}</Project>
       <Name>ShimmerAPI</Name>
     </ProjectReference>
   </ItemGroup>

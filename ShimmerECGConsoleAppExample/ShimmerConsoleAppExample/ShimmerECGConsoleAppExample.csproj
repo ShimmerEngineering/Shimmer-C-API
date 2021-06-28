@@ -58,13 +58,13 @@
     <Folder Include="libs\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ShimmerCSharpAPI\ShimmerAPI.csproj">
-      <Project>{5fa85c7c-e3fc-4c30-aa87-5ea37ad4eeda}</Project>
-      <Name>ShimmerAPI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\ShimmerCSharpAPI\ShimmerCSharpAPI.csproj">
       <Project>{a7c6d82e-8bce-4055-afd9-51bd3271d724}</Project>
       <Name>ShimmerCSharpAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj">
+      <Project>{6e320423-1d88-47ee-97ba-51113e538d33}</Project>
+      <Name>ShimmerAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
