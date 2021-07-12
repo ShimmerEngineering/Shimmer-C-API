@@ -92,7 +92,8 @@ namespace ShimmerBluetoothTests
         public void TestPacketParserIncorrectStartingByteAndRepeatZeroInPacketByteArray()
         {
             sbrd.byteDataIndex = 3;
-            sbrd.data = new byte[]{ 0, 1, 2, 3, 0, 5, 6, 7, 8, 9, 10 };
+            sbrd.data = new byte[]{ 0, 1, 2, 3, 0, 0, 6, 7, 8, 9, 0};
+            sbrd.mEnableTimeStampAlignmentCheck = true;
             sbrd.start();
             while (ojcArray.Count < 10)
             {
@@ -110,6 +111,7 @@ namespace ShimmerBluetoothTests
                     {
                         if (ojc.packet[j] == 1)
                         {
+                            
                         }
                         else
                         {

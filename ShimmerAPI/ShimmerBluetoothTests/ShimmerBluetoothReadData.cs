@@ -28,6 +28,17 @@ namespace ShimmerBluetoothTests
             throwException = exception;
         }
 
+        public override bool packetTimeStampChecker(int timeStamp2, int timeStamp1)
+        {
+            if (timeStamp1 == 1 && timeStamp2 == 1)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
         public ShimmerBluetoothReadData(String name) : base(name)
         {
           
@@ -52,6 +63,7 @@ namespace ShimmerBluetoothTests
         protected override ObjectCluster BuildMsg(List<byte> packet)
         {
             ObjectClusterByteArray ojc = new ObjectClusterByteArray("","");
+            ojc.RawTimeStamp= packet[0];
             ojc.packet = packet;
             return ojc;
         }
