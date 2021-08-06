@@ -12,7 +12,7 @@ namespace ShimmerAPI
         //Note you may need to change some of the code to migrate it from Java to C#
         public static List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
 
-        private static List<byte[]> listOfTraceColorsDefault = new List<byte[]>()
+        public static List<byte[]> listOfTraceColorsDefault = new List<byte[]>()
         {
             //TODO fill in colors here, see AbstractPlotManager.java
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerOrange,
