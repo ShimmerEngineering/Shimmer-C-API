@@ -7,10 +7,13 @@ namespace ShimmerAPI
 {
     public abstract class AbstractPlotManager
     {
-        //Add the methods from https://github.com/ShimmerEngineering/Shimmer-Java-Android-API/blob/Dev/ShimmerDriver/src/main/java/com/shimmerresearch/guiUtilities/AbstractPlotManager.java
-        //Into this class
-        //Note you may need to change some of the code to migrate it from Java to C#
-        public static List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
+        public List<string[]> ListOfPropertiesToPlot = new List<string[]>();
+
+        protected Dictionary<string, string[]> MapOfXAxis = new Dictionary<string, string[]>();
+
+        protected Dictionary<string, double> MapofXAxisGeneratedValue = new Dictionary<string, double>();
+
+        public List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
 
         public static List<byte[]> listOfTraceColorsDefault = new List<byte[]>()
         {
@@ -24,5 +27,32 @@ namespace ShimmerAPI
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerGrey,
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerBlue
         };
+
+        public AbstractPlotManager()
+        {
+
+        }
+
+        public AbstractPlotManager(List<String[]> propertiestoPlot)
+        {
+            ListOfPropertiesToPlot = propertiestoPlot;
+            ListOfTraceColorsCurrentlyUsed = generateRandomColorList(ListOfPropertiesToPlot.Count);
+        }
+
+        public AbstractPlotManager(List<String[]> propertiestoPlot, List<int[]> listOfColors)
+        {
+            ListOfPropertiesToPlot = propertiestoPlot;
+            ListOfTraceColorsCurrentlyUsed = listOfColors;
+        }
+
+        protected void RemoveSignal(int index)
+        {
+            ListOfPropertiesToPlot.RemoveAt(index);
+            if (ListOfTraceColorsCurrentlyUsed.Count > index)
+            {
+                ListOfTraceColorsCurrentlyUsed.RemoveAt(index);
+            }
+        }
+
     }
 }
