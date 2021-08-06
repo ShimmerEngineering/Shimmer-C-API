@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ShimmerAPI.Utilities
 {
-    class UtilShimmer
+    public class UtilShimmer
     {
 		public static class SHIMMER_DEFAULT_COLOURS
 		{
