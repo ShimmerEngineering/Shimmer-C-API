@@ -1,35 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ShimmerAPI.Utilities;
 using OxyPlot;
-using OxyPlot.Xamarin.Forms;
 using OxyPlot.Axes;
-using OxyPlot.Reporting;
 using OxyPlot.Series;
-using OxyPlot.Annotations;
+using OxyPlot.Xamarin.Forms;
 
 namespace ShimmerAPI
 {
-    class PlotManager : AbstractPlotManager
+    class PlotManager
     {
+        public static List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
+
+        private static List<byte[]> listOfTraceColorsDefault = new List<byte[]>()
+        {
+            //TODO fill in colors here, see AbstractPlotManager.java
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerOrange,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourBrown,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourCyanAqua,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourPurple,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourMaroon,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourGreen,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerGrey,
+            UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerBlue
+        };
+
         LineSeries PLOT_LINE_STYLE_X = new LineSeries
         {
             Title = "X",
-            Color = OxyColors.Red,
+            Color = OxyColor.FromRgb(listOfTraceColorsDefault[0][0], listOfTraceColorsDefault[0][1], listOfTraceColorsDefault[0][2]),
             StrokeThickness = 1.5,
         };
 
         LineSeries PLOT_LINE_STYLE_Y = new LineSeries
         {
             Title = "Y",
-            Color = OxyColors.Green,
+            Color = OxyColor.FromRgb(listOfTraceColorsDefault[5][0], listOfTraceColorsDefault[5][1], listOfTraceColorsDefault[5][2]),
             StrokeThickness = 1.5,
         };
 
         LineSeries PLOT_LINE_STYLE_Z = new LineSeries
         {
             Title = "Z",
-            Color = OxyColors.Blue,
+            Color = OxyColor.FromRgb(listOfTraceColorsDefault[7][0], listOfTraceColorsDefault[7][1], listOfTraceColorsDefault[7][2]),
             StrokeThickness = 1.5,
         };
 
@@ -58,8 +72,6 @@ namespace ShimmerAPI
             plotModel.Axes.Add(secondLinearAxis);
 
             plotView.Model = plotModel;
-
-            PlotModel plotViewModel = plotView.Model;
         }
 
         public void AddSignalGenerateRandomColor(string[] channelStringArray)
@@ -71,6 +83,7 @@ namespace ShimmerAPI
         public void FilterDataAndPlot(PlotView plotView)
         {
             //TODO fill in logic here, see BasicPlotManagerPC.java
+            PlotModel plotViewModel = plotView.Model;
 
             DataPoint xPoint = new DataPoint(timestampMilis, xAxes);
             DataPoint yPoint = new DataPoint(timestampMilis, yAxes);
@@ -103,16 +116,6 @@ namespace ShimmerAPI
             plotViewModel.Series.Add(PLOT_LINE_STYLE_Z);
 
             plotViewModel.InvalidatePlot(true);
-
-            //PLOT_LINE_STYLE_X.Points.Add(xPoint);
-            //PLOT_LINE_STYLE_Y.Points.Add(yPoint);
-            //PLOT_LINE_STYLE_Z.Points.Add(zPoint);
-
-            //plotViewModel.Series.Add(PLOT_LINE_STYLE_X);
-            //plotViewModel.Series.Add(PLOT_LINE_STYLE_Y);
-            //plotViewModel.Series.Add(PLOT_LINE_STYLE_Z);
-
-            //plotViewModel.InvalidatePlot(true);
         }
 
         private void AddSignal(string[] channelStringArray)
