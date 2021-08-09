@@ -6122,6 +6122,7 @@ namespace ShimmerAPI
         {
             public static readonly String TIMESTAMP = "Timestamp";
             public static readonly String SYSTEM_TIMESTAMP = "System Timestamp";
+            public static readonly String SYSTEM_TIMESTAMP_PLOT = "System Timestamp Plot";
         }
         public class SignalFormats
         {
