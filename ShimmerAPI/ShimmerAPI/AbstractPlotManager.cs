@@ -81,6 +81,22 @@ namespace ShimmerAPI
             ListOfPropertiesToPlot.Add(channelStringArray);
         }
 
+        public List<string[]> GetAllSignalPropertiesFromOjc(ObjectCluster ojc)
+        {
+            List<string[]> signals = new List<string[]>();
+            for(var i=0; i<ojc.GetNames().Count; i++)
+            {
+                string[] signal = new string[5];
+                signal[0] = ojc.GetShimmerID();
+                signal[1] = ojc.GetNames()[i];
+                signal[2] = ojc.GetFormats()[i];
+                signal[3] = ojc.GetUnits()[i];
+                signal[4] = "*";
+                signals.Add(signal);
+            }
+            return signals;
+        }
+
         public void AddXAxis(string[] channelStringArray)
         {
             string deviceName = channelStringArray[0];
