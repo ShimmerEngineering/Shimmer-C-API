@@ -5,6 +5,7 @@ using ShimmerAPI.Utilities;
 
 namespace ShimmerAPI
 {
+    //TODO JY: Investigate if concurrent modification is likely to occur
     public abstract class AbstractPlotManager
     {
         public List<string[]> ListOfPropertiesToPlot = new List<string[]>();
