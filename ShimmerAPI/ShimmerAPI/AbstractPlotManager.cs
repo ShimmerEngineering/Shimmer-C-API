@@ -33,13 +33,13 @@ namespace ShimmerAPI
 
         }
 
-        public AbstractPlotManager(List<String[]> propertiestoPlot)
+        public AbstractPlotManager(List<string[]> propertiestoPlot)
         {
             ListOfPropertiesToPlot = propertiestoPlot;
             ListOfTraceColorsCurrentlyUsed = GenerateRandomColorList(ListOfPropertiesToPlot.Count);
         }
 
-        public AbstractPlotManager(List<String[]> propertiestoPlot, List<int[]> listOfColors)
+        public AbstractPlotManager(List<string[]> propertiestoPlot, List<int[]> listOfColors)
         {
             ListOfPropertiesToPlot = propertiestoPlot;
             ListOfTraceColorsCurrentlyUsed = listOfColors;
