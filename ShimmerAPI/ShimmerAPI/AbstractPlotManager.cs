@@ -15,7 +15,7 @@ namespace ShimmerAPI
 
         public List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
 
-        public static List<byte[]> listOfTraceColorsDefault = new List<byte[]>()
+        public static List<byte[]> ListOfTraceColorsDefault = new List<byte[]>()
         {
             //TODO fill in colors here, see AbstractPlotManager.java
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerOrange,
@@ -36,7 +36,7 @@ namespace ShimmerAPI
         public AbstractPlotManager(List<String[]> propertiestoPlot)
         {
             ListOfPropertiesToPlot = propertiestoPlot;
-            //ListOfTraceColorsCurrentlyUsed = generateRandomColorList(ListOfPropertiesToPlot.Count);
+            ListOfTraceColorsCurrentlyUsed = GenerateRandomColorList(ListOfPropertiesToPlot.Count);
         }
 
         public AbstractPlotManager(List<String[]> propertiestoPlot, List<int[]> listOfColors)
@@ -52,6 +52,61 @@ namespace ShimmerAPI
             {
                 ListOfTraceColorsCurrentlyUsed.RemoveAt(index);
             }
+        }
+
+        protected void RemoveAllSignals()
+        {
+            ListOfPropertiesToPlot.Clear();
+            ListOfTraceColorsCurrentlyUsed.Clear();
+        }
+
+        protected void AddSignalGenerateRandomColor(string[] channelStringArray)
+        {
+            AddSignalAndUseFixedColor(channelStringArray, GenerateRandomColor());
+        }
+
+        protected void AddSignalAndUseFixedColor(string[] channelStringArray, int[] rgb)
+        {
+            AddSignal(channelStringArray);
+            ListOfTraceColorsCurrentlyUsed.Add(rgb);
+        }
+
+        protected void AddSignalAndColor(string[] channelStringArray, int[] color)
+        {
+            AddSignalAndUseFixedColor(channelStringArray, color);
+        }
+
+        protected void AddSignal(string[] channelStringArray)
+        {
+            ListOfPropertiesToPlot.Add(channelStringArray);
+        }
+
+        public void AddXAxis(string[] channelStringArray)
+        {
+            string deviceName = channelStringArray[0];
+            MapOfXAxis.Add(deviceName, channelStringArray);
+        }
+
+        public static int[] GenerateRandomColor()
+        {
+            Random rand = new Random();
+            int min = 0;
+            int max = 255;
+            int[] rgb = new int[3];
+            rgb[0] = rand.Next((max - min) + 1) + min;
+            rgb[1] = rand.Next((max - min) + 1) + min;
+            rgb[2] = rand.Next((max - min) + 1) + min;
+            return rgb;
+        }
+
+        protected static List<int[]> GenerateRandomColorList(int size)
+        {
+            List<int[]> listofSignalColors = new List<int[]>();
+            for (int i = 0; i < size; i++)
+            {
+                listofSignalColors.Add(GenerateRandomColor());
+            }
+            return listofSignalColors;
         }
 
     }
