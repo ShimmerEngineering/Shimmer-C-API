@@ -10,8 +10,12 @@ namespace ShimmerAPI
         public List<string[]> ListOfPropertiesToPlot = new List<string[]>();
 
         protected Dictionary<string, string[]> MapOfXAxis = new Dictionary<string, string[]>();
+        protected Dictionary<string, string[]> MapOfYAxis = new Dictionary<string, string[]>();
+        protected Dictionary<string, string[]> MapOfZAxis = new Dictionary<string, string[]>();
 
         protected Dictionary<string, double> MapofXAxisGeneratedValue = new Dictionary<string, double>();
+        protected Dictionary<string, double> MapofYAxisGeneratedValue = new Dictionary<string, double>();
+        protected Dictionary<string, double> MapofZAxisGeneratedValue = new Dictionary<string, double>();
 
         public List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
 
@@ -101,6 +105,18 @@ namespace ShimmerAPI
         {
             string deviceName = channelStringArray[0];
             MapOfXAxis.Add(deviceName, channelStringArray);
+        }
+
+        public void AddYAxis(string[] channelStringArray)
+        {
+            string deviceName = channelStringArray[0];
+            MapOfYAxis.Add(deviceName, channelStringArray);
+        }
+
+        public void AddZAxis(string[] channelStringArray)
+        {
+            string deviceName = channelStringArray[0];
+            MapOfZAxis.Add(deviceName, channelStringArray);
         }
 
         public static int[] GenerateRandomColor()
