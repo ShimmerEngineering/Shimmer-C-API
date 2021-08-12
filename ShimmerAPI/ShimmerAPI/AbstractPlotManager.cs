@@ -10,13 +10,13 @@ namespace ShimmerAPI
     {
         public List<string[]> ListOfPropertiesToPlot = new List<string[]>();
 
-        protected Dictionary<string, string[]> MapOfXAxis = new Dictionary<string, string[]>();
-        protected Dictionary<string, string[]> MapOfYAxis = new Dictionary<string, string[]>();
-        protected Dictionary<string, string[]> MapOfZAxis = new Dictionary<string, string[]>();
+        //protected Dictionary<string, string[]> MapOfXAxis = new Dictionary<string, string[]>();
+        //protected Dictionary<string, string[]> MapOfYAxis = new Dictionary<string, string[]>();
+        //protected Dictionary<string, string[]> MapOfZAxis = new Dictionary<string, string[]>();
 
-        protected Dictionary<string, double> MapofXAxisGeneratedValue = new Dictionary<string, double>();
-        protected Dictionary<string, double> MapofYAxisGeneratedValue = new Dictionary<string, double>();
-        protected Dictionary<string, double> MapofZAxisGeneratedValue = new Dictionary<string, double>();
+        //protected Dictionary<string, double> MapofXAxisGeneratedValue = new Dictionary<string, double>();
+        //protected Dictionary<string, double> MapofYAxisGeneratedValue = new Dictionary<string, double>();
+        //protected Dictionary<string, double> MapofZAxisGeneratedValue = new Dictionary<string, double>();
 
         public List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
 
@@ -32,6 +32,15 @@ namespace ShimmerAPI
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerGrey,
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerBlue
         };
+
+        public enum SignalArrayIndex
+        {
+            ShimmerID = 0,
+            Name = 1,
+            Format = 2,
+            Unit = 3,
+            Calibration = 4
+        }
 
         public AbstractPlotManager()
         {
@@ -91,34 +100,34 @@ namespace ShimmerAPI
             List<string[]> signals = new List<string[]>();
             for(var i=0; i<ojc.GetNames().Count; i++)
             {
-                string[] signal = new string[5];
-                signal[0] = ojc.GetShimmerID();
-                signal[1] = ojc.GetNames()[i];
-                signal[2] = ojc.GetFormats()[i];
-                signal[3] = ojc.GetUnits()[i];
-                signal[4] = "*";
+                string[] signal = new string[Enum.GetNames(typeof(SignalArrayIndex)).Length];
+                signal[(int)SignalArrayIndex.ShimmerID] = ojc.GetShimmerID();
+                signal[(int)SignalArrayIndex.Name] = ojc.GetNames()[i];
+                signal[(int)SignalArrayIndex.Format] = ojc.GetFormats()[i];
+                signal[(int)SignalArrayIndex.Unit] = ojc.GetUnits()[i];
+                //signal[(int)SignalArrayIndex.Calibration] = "*";
                 signals.Add(signal);
             }
             return signals;
         }
 
-        public void AddXAxis(string[] channelStringArray)
-        {
-            string deviceName = channelStringArray[0];
-            MapOfXAxis.Add(deviceName, channelStringArray);
-        }
+        //public void AddXAxis(string[] channelStringArray)
+        //{
+        //    string deviceName = channelStringArray[0];
+        //    MapOfXAxis.Add(deviceName, channelStringArray);
+        //}
 
-        public void AddYAxis(string[] channelStringArray)
-        {
-            string deviceName = channelStringArray[0];
-            MapOfYAxis.Add(deviceName, channelStringArray);
-        }
+        //public void AddYAxis(string[] channelStringArray)
+        //{
+        //    string deviceName = channelStringArray[0];
+        //    MapOfYAxis.Add(deviceName, channelStringArray);
+        //}
 
-        public void AddZAxis(string[] channelStringArray)
-        {
-            string deviceName = channelStringArray[0];
-            MapOfZAxis.Add(deviceName, channelStringArray);
-        }
+        //public void AddZAxis(string[] channelStringArray)
+        //{
+        //    string deviceName = channelStringArray[0];
+        //    MapOfZAxis.Add(deviceName, channelStringArray);
+        //}
 
         public static int[] GenerateRandomColor()
         {
