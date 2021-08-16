@@ -1,28 +1,20 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 using ShimmerAPI.Utilities;
 
 namespace ShimmerAPI
 {
-    //TODO JY: Investigate if concurrent modification is likely to occur
     public abstract class AbstractPlotManager
     {
-        public List<string[]> ListOfPropertiesToPlot = new List<string[]>();
+        public SynchronizedCollection<string[]> ListOfPropertiesToPlot = new SynchronizedCollection<string[]>();
 
-        //protected Dictionary<string, string[]> MapOfXAxis = new Dictionary<string, string[]>();
-        //protected Dictionary<string, string[]> MapOfYAxis = new Dictionary<string, string[]>();
-        //protected Dictionary<string, string[]> MapOfZAxis = new Dictionary<string, string[]>();
+        protected ConcurrentDictionary<string, string[]> DictOfXAxis = new ConcurrentDictionary<string, string[]>();
 
-        //protected Dictionary<string, double> MapofXAxisGeneratedValue = new Dictionary<string, double>();
-        //protected Dictionary<string, double> MapofYAxisGeneratedValue = new Dictionary<string, double>();
-        //protected Dictionary<string, double> MapofZAxisGeneratedValue = new Dictionary<string, double>();
-
-        public List<int[]> ListOfTraceColorsCurrentlyUsed = new List<int[]>();
+        public SynchronizedCollection<int[]> ListOfTraceColorsCurrentlyUsed = new SynchronizedCollection<int[]>();
 
         public static List<byte[]> ListOfTraceColorsDefault = new List<byte[]>()
         {
-            //TODO fill in colors here, see AbstractPlotManager.java
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerOrange,
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourBrown,
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourCyanAqua,
@@ -47,17 +39,17 @@ namespace ShimmerAPI
 
         }
 
-        public AbstractPlotManager(List<string[]> propertiestoPlot)
-        {
-            ListOfPropertiesToPlot = propertiestoPlot;
-            ListOfTraceColorsCurrentlyUsed = GenerateRandomColorList(ListOfPropertiesToPlot.Count);
-        }
+        //public AbstractPlotManager(List<string[]> propertiestoPlot)
+        //{
+        //    ListOfPropertiesToPlot = propertiestoPlot;
+        //    ListOfTraceColorsCurrentlyUsed = GenerateRandomColorList(ListOfPropertiesToPlot.Count);
+        //}
 
-        public AbstractPlotManager(List<string[]> propertiestoPlot, List<int[]> listOfColors)
-        {
-            ListOfPropertiesToPlot = propertiestoPlot;
-            ListOfTraceColorsCurrentlyUsed = listOfColors;
-        }
+        //public AbstractPlotManager(List<string[]> propertiestoPlot, List<int[]> listOfColors)
+        //{
+        //    ListOfPropertiesToPlot = propertiestoPlot;
+        //    ListOfTraceColorsCurrentlyUsed = listOfColors;
+        //}
 
         protected void RemoveSignal(int index)
         {
@@ -72,6 +64,7 @@ namespace ShimmerAPI
         {
             ListOfPropertiesToPlot.Clear();
             ListOfTraceColorsCurrentlyUsed.Clear();
+            DictOfXAxis.Clear();
         }
 
         protected void AddSignalGenerateRandomColor(string[] channelStringArray)
@@ -135,6 +128,25 @@ namespace ShimmerAPI
             ListOfPropertiesToPlot.Add(channelStringArray);
         }
 
+        protected void AddXAxis(string[] channelStringArray)
+        {
+            string deviceName = channelStringArray[(int)SignalArrayIndex.ShimmerID];
+            bool res = DictOfXAxis.TryAdd(deviceName, channelStringArray);
+            if(!res)
+            {
+                Console.WriteLine("WARNING: Unable to add X axis as it already exists for key: " + deviceName);
+            }
+        }
+
+        protected void RemoveXAxis(string key)
+        {
+            bool res = DictOfXAxis.TryRemove(key, out var val); 
+            if (!res)
+            {
+                Console.WriteLine("WARNING: Unable to remove X axis for key: " + key);
+            }
+        }
+
         public List<string[]> GetAllSignalPropertiesFromOjc(ObjectCluster ojc)
         {
             List<string[]> signals = new List<string[]>();
@@ -150,24 +162,6 @@ namespace ShimmerAPI
             }
             return signals;
         }
-
-        //public void AddXAxis(string[] channelStringArray)
-        //{
-        //    string deviceName = channelStringArray[0];
-        //    MapOfXAxis.Add(deviceName, channelStringArray);
-        //}
-
-        //public void AddYAxis(string[] channelStringArray)
-        //{
-        //    string deviceName = channelStringArray[0];
-        //    MapOfYAxis.Add(deviceName, channelStringArray);
-        //}
-
-        //public void AddZAxis(string[] channelStringArray)
-        //{
-        //    string deviceName = channelStringArray[0];
-        //    MapOfZAxis.Add(deviceName, channelStringArray);
-        //}
 
         public static int[] GenerateRandomColor()
         {
