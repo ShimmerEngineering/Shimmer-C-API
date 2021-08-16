@@ -85,6 +85,46 @@ namespace ShimmerAPI
             ListOfTraceColorsCurrentlyUsed.Add(rgb);
         }
 
+        protected void AddSignalUseDefaultColors(string[] channelStringArray)
+        {
+            AddSignal(channelStringArray);
+            bool mFound = false;
+            int[] newColorToAdd = null;
+            if (ListOfTraceColorsCurrentlyUsed.Count > 0)
+            {
+                IEnumerator<int[]> entries = (IEnumerator<int[]>)ListOfTraceColorsCurrentlyUsed;
+                while (entries.MoveNext())
+                {
+                    int[] rgbdefaultC = entries.Current;
+                    mFound = false;
+
+                    foreach (int[] rgbp in ListOfTraceColorsCurrentlyUsed)
+                    {
+                        if (rgbdefaultC[0] == rgbp[0] && rgbdefaultC[1] == rgbp[1] && rgbdefaultC[2] == rgbp[2])
+                        {
+                            mFound = true;
+                        }
+                    }
+
+                    if (mFound != true)
+                    {
+                        newColorToAdd = rgbdefaultC;
+                    }
+                }
+            } else 
+            {
+                newColorToAdd = ListOfTraceColorsCurrentlyUsed[0];
+            }
+
+            if (newColorToAdd != null) 
+            {
+                ListOfTraceColorsCurrentlyUsed.Add(newColorToAdd);
+            }else
+            {
+                ListOfTraceColorsCurrentlyUsed.Add(GenerateRandomColor());
+            }
+        }
+
         protected void AddSignalAndColor(string[] channelStringArray, int[] color)
         {
             AddSignalAndUseFixedColor(channelStringArray, color);
