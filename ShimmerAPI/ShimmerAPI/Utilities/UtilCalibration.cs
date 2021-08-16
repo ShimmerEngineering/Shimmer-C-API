@@ -8,8 +8,15 @@ namespace ShimmerAPI.Utilities
 {
     public class UtilCalibration
     {
-
-
+        public static double NudgeDouble(double value, double min, double max)
+        {
+            /*
+             * def nudgeDouble(valToNudge, minVal, maxVal):
+             *    return math.max(minVal, math.min(maxVal, valToNudge))
+             */
+            return Math.Max(min, Math.Min(max, value));
+        }
+        
         public static double[] CalibrateInertialSensorData(double[] data, double[,] AM, double[,] SM, double[,] OV)
         {
             /*  Based on the theory outlined by Ferraris F, Grimaldi U, and Parvis M.  
