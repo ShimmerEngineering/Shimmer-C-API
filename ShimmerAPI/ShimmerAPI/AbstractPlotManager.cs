@@ -66,41 +66,50 @@ namespace ShimmerAPI
 
         protected void AddSignalUseDefaultColors(string[] channelStringArray)
         {
-            AddSignal(channelStringArray);
-            bool mFound = false;
-            int[] newColorToAdd = null;
-            if (ListOfTraceColorsCurrentlyUsed.Count > 0)
+            try
             {
-                IEnumerator<int[]> entries = (IEnumerator<int[]>)ListOfTraceColorsCurrentlyUsed;
-                while (entries.MoveNext())
+                AddSignal(channelStringArray);
+                bool mFound = false;
+                int[] newColorToAdd = null;
+                if (ListOfTraceColorsCurrentlyUsed.Count > 0)
                 {
-                    int[] rgbdefaultC = entries.Current;
-                    mFound = false;
-
-                    foreach (int[] rgbp in ListOfTraceColorsCurrentlyUsed)
+                    IEnumerator<byte[]> entries = ListOfTraceColorsDefault.GetEnumerator();
+                    while (entries.MoveNext())
                     {
-                        if (rgbdefaultC[0] == rgbp[0] && rgbdefaultC[1] == rgbp[1] && rgbdefaultC[2] == rgbp[2])
+                        int[] rgbdefaultC = Array.ConvertAll(entries.Current, c => (int)c);
+                        mFound = false;
+
+                        foreach (int[] rgbp in ListOfTraceColorsCurrentlyUsed)
                         {
-                            mFound = true;
+                            if (rgbdefaultC[0] == rgbp[0] && rgbdefaultC[1] == rgbp[1] && rgbdefaultC[2] == rgbp[2])
+                            {
+                                mFound = true;
+                            }
+                        }
+
+                        if (mFound != true)
+                        {
+                            newColorToAdd = rgbdefaultC;
                         }
                     }
-
-                    if (mFound != true)
-                    {
-                        newColorToAdd = rgbdefaultC;
-                    }
                 }
-            } else 
-            {
-                newColorToAdd = ListOfTraceColorsCurrentlyUsed[0];
-            }
+                else
+                {
+                    newColorToAdd = Array.ConvertAll(ListOfTraceColorsDefault[0], c => (int)c);
+                }
 
-            if (newColorToAdd != null) 
+                if (newColorToAdd != null)
+                {
+                    ListOfTraceColorsCurrentlyUsed.Add(newColorToAdd);
+                }
+                else
+                {
+                    ListOfTraceColorsCurrentlyUsed.Add(GenerateRandomColor());
+                }
+            }
+            catch(Exception e)
             {
-                ListOfTraceColorsCurrentlyUsed.Add(newColorToAdd);
-            }else
-            {
-                ListOfTraceColorsCurrentlyUsed.Add(GenerateRandomColor());
+                System.Diagnostics.Debug.WriteLine(e.ToString());
             }
         }
 
@@ -114,7 +123,7 @@ namespace ShimmerAPI
             ListOfPropertiesToPlot.Add(channelStringArray);
         }
 
-        protected void AddXAxis(string[] channelStringArray)
+        public void AddXAxis(string[] channelStringArray)
         {
             string deviceName = channelStringArray[(int)SignalArrayIndex.ShimmerID];
             bool res = DictOfXAxis.TryAdd(deviceName, channelStringArray);
@@ -124,7 +133,7 @@ namespace ShimmerAPI
             }
         }
 
-        protected void RemoveXAxis(string key)
+        public void RemoveXAxis(string key)
         {
             bool res = DictOfXAxis.TryRemove(key, out var val); 
             if (!res)
