@@ -8,11 +8,9 @@ namespace ShimmerAPI
     public abstract class AbstractPlotManager
     {
         public SynchronizedCollection<string[]> ListOfPropertiesToPlot = new SynchronizedCollection<string[]>();
-
         protected ConcurrentDictionary<string, string[]> DictOfXAxis = new ConcurrentDictionary<string, string[]>();
-
+        
         public SynchronizedCollection<int[]> ListOfTraceColorsCurrentlyUsed = new SynchronizedCollection<int[]>();
-
         public static List<byte[]> ListOfTraceColorsDefault = new List<byte[]>()
         {
             UtilShimmer.SHIMMER_DEFAULT_COLOURS.colourShimmerOrange,
@@ -38,18 +36,6 @@ namespace ShimmerAPI
         {
 
         }
-
-        //public AbstractPlotManager(List<string[]> propertiestoPlot)
-        //{
-        //    ListOfPropertiesToPlot = propertiestoPlot;
-        //    ListOfTraceColorsCurrentlyUsed = GenerateRandomColorList(ListOfPropertiesToPlot.Count);
-        //}
-
-        //public AbstractPlotManager(List<string[]> propertiestoPlot, List<int[]> listOfColors)
-        //{
-        //    ListOfPropertiesToPlot = propertiestoPlot;
-        //    ListOfTraceColorsCurrentlyUsed = listOfColors;
-        //}
 
         protected void RemoveSignal(int index)
         {
