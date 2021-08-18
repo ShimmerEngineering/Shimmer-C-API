@@ -133,6 +133,12 @@ namespace ShimmerAPI
             }
         }
 
+        public int FindSignalIndex(string[] signalToFind)
+        {
+            int res = ListOfPropertiesToPlot.IndexOf(signalToFind);
+            return res;
+        }
+
         public List<string[]> GetAllSignalPropertiesFromOjc(ObjectCluster ojc)
         {
             List<string[]> signals = new List<string[]>();
