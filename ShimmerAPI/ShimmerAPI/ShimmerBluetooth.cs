@@ -6145,6 +6145,7 @@ namespace ShimmerAPI
             public static readonly String Local_DefaultCal = "local*";
             public static readonly String KiloOhms = "kOhms";
             public static readonly String MicroSiemens = "uSiemens";
+            public static readonly String NanoAmpere = "nA";
         }
     }
 
