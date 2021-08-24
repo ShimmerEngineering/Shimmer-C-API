@@ -6062,14 +6062,9 @@ namespace ShimmerAPI
         {
             if (gsrRangeSetting != 4)
             {
-                return NudgeDouble(gsrResistanceKOhms, SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting, 0], SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting, 1]);
+                return UtilCalibration.NudgeDouble(gsrResistanceKOhms, SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting, 0], SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting, 1]);
             }
             return gsrResistanceKOhms;
-        }
-
-        protected double NudgeDouble(double valToNudge, double minVal, double maxVal)
-        {
-            return Math.Max(minVal, Math.Min(maxVal, valToNudge));
         }
 
     }
