@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShimmerAPI;
+using ShimmerAPI.Utilities;
 
 namespace ShimmerBluetoothTests
 {
@@ -27,12 +28,12 @@ namespace ShimmerBluetoothTests
         [TestMethod]
         public void TestNudgeDouble()
         {
-            Assert.AreEqual(NudgeDouble(1000, 0, 500), 500);
-            System.Console.WriteLine(NudgeDouble(1000, 0, 500));
-            Assert.AreEqual(NudgeDouble(-10, 10, 500), 10);
-            System.Console.WriteLine(NudgeDouble(-10, 10, 500));
-            Assert.AreEqual(NudgeDouble(50, 10, 500), 50);
-            System.Console.WriteLine(NudgeDouble(50, 10, 500));
+            Assert.AreEqual(UtilCalibration.NudgeDouble(1000, 0, 500), 500);
+            System.Console.WriteLine(UtilCalibration.NudgeDouble(1000, 0, 500));
+            Assert.AreEqual(UtilCalibration.NudgeDouble(-10, 10, 500), 10);
+            System.Console.WriteLine(UtilCalibration.NudgeDouble(-10, 10, 500));
+            Assert.AreEqual(UtilCalibration.NudgeDouble(50, 10, 500), 50);
+            System.Console.WriteLine(UtilCalibration.NudgeDouble(50, 10, 500));
         }
 
         [TestMethod]

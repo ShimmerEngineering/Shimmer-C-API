@@ -8,7 +8,10 @@ namespace ShimmerAPI.Utilities
 {
     public class UtilCalibration
     {
-
+        public static double NudgeDouble(double valToNudge, double minVal, double maxVal)
+        {
+            return Math.Max(minVal, Math.Min(maxVal, valToNudge));
+        }
 
         public static double[] CalibrateInertialSensorData(double[] data, double[,] AM, double[,] SM, double[,] OV)
         {
