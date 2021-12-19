@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             x:Class="shimmer.App"
+             xmlns:const="clr-namespace:shimmer.Helpers">
+    <Application.Resources>
+
+        <ResourceDictionary>
+
+            <!-- FONTS -->
+            
+            <x:String x:Key="FontRobotoBlack">Roboto-Black.ttf#Roboto-Black</x:String>
+            <x:String x:Key="FontRobotoBlackItalic">Roboto-BlackItalic.ttf#Roboto-BlackItalic</x:String>
+            <x:String x:Key="FontRobotoBold">Roboto-Bold.ttf#Roboto-Bold</x:String>
+            <x:String x:Key="FontRobotoBoldItalic">Roboto-BoldItalic.ttf#Roboto-BoldItalic</x:String>
+            <x:String x:Key="FontRobotoItalic">Roboto-Italic.ttf#Roboto-Italic</x:String>
+            <x:String x:Key="FontRobotoLight">Roboto-Light.ttf#Roboto-Light</x:String>
+            <x:String x:Key="FontRobotoLightItalic">Roboto-LightItalic.ttf#Roboto-LightItalic</x:String>
+            <x:String x:Key="FontRobotoMedium">Roboto-Medium.ttf#Roboto-Medium</x:String>
+            <x:String x:Key="FontRobotoMediumItalic">Roboto-MediumItalic.ttf#Roboto-MediumItalic</x:String>
+            <x:String x:Key="FontRobotoRegular">Roboto-Regular.ttf#Roboto-Regular</x:String>
+            <x:String x:Key="FontRobotoThin">Roboto-Thin.ttf#Roboto-Thin</x:String>
+            <x:String x:Key="FontRobotoThinItalic">Roboto-ThinItalic.ttf#Roboto-ThinItalic</x:String>
+
+            <!-- COLORS -->
+            <x:String x:Key="ColorBaseDarkGray">#3684C2</x:String>
+            <x:String x:Key="ColorBaseGray">#979797</x:String>
+            <x:String x:Key="ColorBaseLightGray">#DFE6EE</x:String>
+            <x:String x:Key="ColorBaseWhite">#FFFFFF</x:String>
+            <x:String x:Key="ColorBaseGreen">#2FD83A</x:String>
+
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="{Binding BarBackgroundColor, Source={x:Static const:ProjectSettings.Data}}"/>
+                <!--<Setter Property="BarTextColor" Value="{Binding BarTextColor, Source={x:Static const:ProjectSettings.Data}}"/>-->
+            </Style>
+            
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="{StaticResource FontRobotoRegular}" />
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="FontFamily" Value="{StaticResource FontRobotoRegular}" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
