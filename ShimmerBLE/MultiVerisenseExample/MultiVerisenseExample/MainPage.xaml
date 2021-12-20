@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
+             x:Class="MultiShimmerExample.MainPage">
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+            <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+        </Frame>
+        <Grid>
+            <ScrollView Orientation="Horizontal">
+                <StackLayout Orientation="Horizontal">
+                    <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" WidthRequest="150" HeightRequest="50" Text="Connect Devices"></Button>
+                    <Button Clicked="startStreamingButton_Clicked" x:Name="startStreamingButton" WidthRequest="150" HeightRequest="50" Text="Start Streaming"></Button>
+                    <Button Clicked="stopStreamingButton_Clicked" x:Name="stopStreamingButton" WidthRequest="150" HeightRequest="50" Text="Stop Streaming"></Button>
+                    <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" WidthRequest="150" HeightRequest="50" Text="Disconnect Devices"></Button>
+                    <Button Clicked="syncDevicesButton_Clicked" x:Name="syncDevicesButton" WidthRequest="100" HeightRequest="50" Text="Sync Devices"></Button>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+        <ScrollView>
+            <StackLayout x:Name="PlotViewList">
+                <oxyPlotView:PlotView x:Name = "plotView" VerticalOptions = "FillAndExpand" HorizontalOptions = "FillAndExpand" HeightRequest="500"/>
+            </StackLayout>
+        </ScrollView>
+    </StackLayout>
+</ContentPage>
