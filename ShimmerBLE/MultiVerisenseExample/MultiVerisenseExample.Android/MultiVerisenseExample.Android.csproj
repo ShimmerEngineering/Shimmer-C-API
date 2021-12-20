@@ -64,6 +64,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalFolderService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +100,10 @@
     <Content Include="Libs\Plugin.BLE.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
+      <Project>{2B423ED5-9DB8-40FE-8C0C-DCDAFE0E6229}</Project>
+      <Name>ShimmerBLEAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MultiVerisenseExample\MultiVerisenseExample.csproj">
       <Project>{dd54040d-e677-4533-b953-2aedf0b3a55e}</Project>
       <Name>MultiShimmerExample</Name>

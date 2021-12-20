@@ -6,6 +6,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Android;
 
 namespace MultiShimmerExample.Droid
 {
@@ -18,11 +19,38 @@ namespace MultiShimmerExample.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
+            CheckPermissions();
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             OxyPlot.Xamarin.Forms.Platform.Android.PlotViewRenderer.Init();
             LoadApplication(new App());
+        }
+
+        private readonly string[] Permissions =
+        {
+            Manifest.Permission.Bluetooth,
+            Manifest.Permission.BluetoothAdmin,
+            Manifest.Permission.ReadExternalStorage,
+            Manifest.Permission.WriteExternalStorage
+        };
+
+        private void CheckPermissions()
+        {
+            bool minimumPermissionsGranted = true;
+
+            foreach (string permission in Permissions)
+            {
+                if (CheckSelfPermission(permission) != Permission.Granted)
+                {
+                    minimumPermissionsGranted = false;
+                }
+            }
+
+            if (!minimumPermissionsGranted)
+            {
+                RequestPermissions(Permissions, 0);
+            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
