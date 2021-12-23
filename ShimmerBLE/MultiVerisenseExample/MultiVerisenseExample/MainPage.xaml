@@ -5,8 +5,35 @@
              x:Class="MultiShimmerExample.MainPage">
     <StackLayout>
         <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+            <StackLayout Orientation="Vertical">
+                <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
+            </StackLayout>
         </Frame>
+        <ListView
+            x:Name="deviceList"
+            HasUnevenRows="True"
+            SeparatorVisibility="Default"
+            SeparatorColor="Gray"
+            HeightRequest="100"
+            CachingStrategy="RecycleElement">
+            <ListView.ItemTemplate>
+                <DataTemplate x:Name="temp">
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                            <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Medium" />
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Status}" TextColor="#2196F3" FontSize="Small"/>
+                                <Label Text="{Binding TransferSpeed}" TextColor="#2196F3" FontSize="Small"/>
+                                <Label Text="{Binding PayloadIndex}" TextColor="#2196F3" FontSize="Small"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding BinFilePath}" TextColor="#2196F3" FontSize="Micro"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Grid>
             <ScrollView Orientation="Horizontal">
                 <StackLayout Orientation="Horizontal">
