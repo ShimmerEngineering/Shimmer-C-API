@@ -22,12 +22,12 @@
                         <StackLayout Orientation="Vertical" VerticalOptions="Center">
                             <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Medium" />
                             <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Status}" TextColor="White" FontSize="Small"/>
-                                <Label Text="{Binding TransferSpeed}" TextColor="White" FontSize="Small"/>
-                                <Label Text="{Binding PayloadIndex}" TextColor="White" FontSize="Small"/>
+                                <Label Text="{Binding Status}" TextColor="Blue" FontSize="Small"/>
+                                <Label Text="{Binding TransferSpeed}" TextColor="Blue" FontSize="Small"/>
+                                <Label Text="{Binding PayloadIndex}" TextColor="Blue" FontSize="Small"/>
                             </StackLayout>
                             <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding BinFilePath}" TextColor="White" FontSize="Micro"/>
+                                <Label Text="{Binding BinFilePath}" TextColor="Blue" FontSize="Micro"/>
                             </StackLayout>
                         </StackLayout>
                     </ViewCell>

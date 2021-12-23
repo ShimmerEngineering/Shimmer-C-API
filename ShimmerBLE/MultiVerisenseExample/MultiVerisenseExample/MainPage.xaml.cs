@@ -1,5 +1,6 @@
 ﻿using ShimmerBLEAPI;
 using ShimmerBLEAPI.Devices;
+using ShimmerBLEAPI.Communications;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -86,7 +87,10 @@ namespace MultiShimmerExample
             foreach (string uuid in uuids)
             {
                 VerisenseBLEDevice device = new VerisenseBLEDevice(uuid, "");
-                Devices.Add(uuid, device);
+                if (!Devices.ContainsKey(uuid))
+                {
+                    Devices.Add(uuid, device);
+                }
                 device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 bool result = await device.Connect(true);
                 if (result)
