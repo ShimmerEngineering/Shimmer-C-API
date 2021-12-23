@@ -53,7 +53,12 @@ namespace MultiShimmerExample
         private Dictionary<string, bool> IsFirstOjcForDevice = new Dictionary<string, bool>();
         private PlotManager PlotManager;
 
-        List<DeviceInfo> deviceInfos = new List<DeviceInfo>();
+        List<DeviceInfo> deviceInfos = new List<DeviceInfo>()
+        {
+            new DeviceInfo("00000000-0000-0000-0000-d02b463da2bb"),
+            new DeviceInfo("00000000-0000-0000-0000-e7ec37a0d234"),
+        };
+
         List<string> uuids = new List<string>()
         {
             //"00000000-0000-0000-0000-e1ec063f5c80",
@@ -73,6 +78,7 @@ namespace MultiShimmerExample
             PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
             plotView.Model = PlotManager.BuildPlotModel();
             deviceList.ItemsSource = deviceInfos;
+            
         }
 
         public async void ConnectDevices()
@@ -81,7 +87,6 @@ namespace MultiShimmerExample
             {
                 VerisenseBLEDevice device = new VerisenseBLEDevice(uuid, "");
                 Devices.Add(uuid, device);
-                deviceInfos.Add(new DeviceInfo(uuid));
                 device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 bool result = await device.Connect(true);
                 if (result)
