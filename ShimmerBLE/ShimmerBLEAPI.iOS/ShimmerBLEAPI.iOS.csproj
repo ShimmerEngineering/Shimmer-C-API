@@ -19,10 +19,10 @@
 
   <ItemGroup>
     <Reference Update="Plugin.BLE">
-      <HintPath>Libs\Plugin.BLE .dll</HintPath>
+      <HintPath>Libs\Plugin.BLE.dll</HintPath>
     </Reference>
     <Reference Update="Plugin.BLE.Abstractions">
-      <HintPath>Libs\Plugin.BLE.Abstractions .dll</HintPath>
+      <HintPath>Libs\Plugin.BLE.Abstractions.dll</HintPath>
     </Reference>
   </ItemGroup>
 
