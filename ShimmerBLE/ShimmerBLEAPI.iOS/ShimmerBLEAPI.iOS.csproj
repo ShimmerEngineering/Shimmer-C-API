@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShimmerBLEAPI\ShimmerBLEAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Libs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Plugin.BLE" />
+    <Reference Include="Plugin.BLE.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Update="Plugin.BLE">
+      <HintPath>Libs\Plugin.BLE .dll</HintPath>
+    </Reference>
+    <Reference Update="Plugin.BLE.Abstractions">
+      <HintPath>Libs\Plugin.BLE.Abstractions .dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
