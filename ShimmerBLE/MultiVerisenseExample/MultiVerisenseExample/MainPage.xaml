@@ -14,22 +14,24 @@
             HasUnevenRows="True"
             SeparatorVisibility="Default"
             SeparatorColor="Gray"
-            HeightRequest="100"
+            HeightRequest="200"
             CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout Orientation="Vertical" VerticalOptions="Center">
-                            <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Medium" />
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Status}" TextColor="Blue" FontSize="Small"/>
-                                <Label Text="{Binding TransferSpeed}" TextColor="Blue" FontSize="Small"/>
-                                <Label Text="{Binding PayloadIndex}" TextColor="Blue" FontSize="Small"/>
+                        <ScrollView Orientation="Vertical">
+                            <StackLayout Orientation="Vertical" VerticalOptions="Center" HeightRequest="100">
+                                <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Medium" />
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Status}" TextColor="Blue" FontSize="Small"/>
+                                    <Label Text="{Binding TransferSpeed}" TextColor="Blue" FontSize="Small"/>
+                                    <Label Text="{Binding PayloadIndex}" TextColor="Blue" FontSize="Small"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding BinFilePath}" TextColor="Blue" FontSize="Micro"/>
+                                </StackLayout>
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding BinFilePath}" TextColor="Blue" FontSize="Micro"/>
-                            </StackLayout>
-                        </StackLayout>
+                        </ScrollView>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>

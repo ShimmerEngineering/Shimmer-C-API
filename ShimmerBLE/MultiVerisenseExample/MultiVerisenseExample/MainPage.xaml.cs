@@ -1,11 +1,11 @@
 ﻿using ShimmerBLEAPI;
 using ShimmerBLEAPI.Devices;
-using ShimmerBLEAPI.Communications;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Xamarin.Forms;
 using shimmer.Sensors;
+using shimmer.Communications;
 using shimmer.Models;
 using ShimmerAPI;
 using System.ComponentModel;
@@ -53,6 +53,7 @@ namespace MultiShimmerExample
         private Dictionary<string, VerisenseBLEDevice> Devices = new Dictionary<string, VerisenseBLEDevice>();
         private Dictionary<string, bool> IsFirstOjcForDevice = new Dictionary<string, bool>();
         private PlotManager PlotManager;
+        //IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
 
         List<DeviceInfo> deviceInfos = new List<DeviceInfo>()
         {
@@ -71,6 +72,9 @@ namespace MultiShimmerExample
             //"00000000-0000-0000-0000-daa619f04ad7"
             "00000000-0000-0000-0000-d02b463da2bb",
             "00000000-0000-0000-0000-e7ec37a0d234",
+            //"04514419-5ab1-6eee-a83d-334220dade3d",
+            //"ad973fda-127f-d52e-e6c7-0b9dd347e90d"
+
         }; 
 
         public MainPage()
@@ -78,6 +82,9 @@ namespace MultiShimmerExample
             InitializeComponent();
             PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
             plotView.Model = PlotManager.BuildPlotModel();
+
+            //var service = DependencyService.Get<IVerisenseBLEManager>();
+            //bleManager.BLEManagerEvent += BLEManager_BLEEvent;
             deviceList.ItemsSource = deviceInfos;
             
         }
@@ -221,6 +228,24 @@ namespace MultiShimmerExample
             }
         }
 
+        private void BLEManager_BLEEvent(object sender, BLEManagerEvent e)
+        {
+
+            if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.ScanCompleted)
+            {
+
+            }
+            else if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.DevicePaired)
+            {
+
+            }
+            else if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.DeviceDiscovered)
+            {
+                
+            }
+        }
+
+
         public async void StopStreamingDevices()
         {
             PlotManager.RemoveAllSignalsFromPlot();
@@ -257,6 +282,11 @@ namespace MultiShimmerExample
         //------------------------------------------------------------------------------------------
 
         //GUI Functionality
+        //private void scanDevicesButton_Clicked(object sender, EventArgs e)
+        //{
+        //    bleManager.StartScanForDevices();
+        //}
+
         private void connectDevicesButton_Clicked(object sender, EventArgs e)
         {
             ConnectDevices();
