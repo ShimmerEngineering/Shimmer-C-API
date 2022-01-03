@@ -55,25 +55,19 @@ namespace MultiShimmerExample
         private PlotManager PlotManager;
         //IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
 
-        List<DeviceInfo> deviceInfos = new List<DeviceInfo>()
-        {
-            new DeviceInfo("00000000-0000-0000-0000-d02b463da2bb"),
-            new DeviceInfo("00000000-0000-0000-0000-e7ec37a0d234"),
-            //new DeviceInfo("04514419-5ab1-6eee-a83d-334220dade3d"),
-            //new DeviceInfo("ad973fda-127f-d52e-e6c7-0b9dd347e90d"),
-        };
+        List<DeviceInfo> deviceInfos = new List<DeviceInfo>();
 
-        List<string> uuids = new List<string>()
+        List<string> uuids = new List<string>() //at some stage this should be retrieved from the OS, any verisense device
         {
             //"00000000-0000-0000-0000-e1ec063f5c80",
             //"00000000-0000-0000-0000-daa56d898b02"
             //"00000000-0000-0000-0000-e7452c6d6f14",
             //"00000000-0000-0000-0000-c96117537402",
             //"def7b570-bb64-5167-aa2c-76f634454258",
-            //"7b3eba6c-026c-0861-bb0d-45d23d4dad64"
-            //"00000000-0000-0000-0000-daa619f04ad7"
-            "00000000-0000-0000-0000-d02b463da2bb",
-            "00000000-0000-0000-0000-e7ec37a0d234",
+            "7b3eba6c-026c-0861-bb0d-45d23d4dad64",
+            "00000000-0000-0000-0000-daa619f04ad7",
+            //"00000000-0000-0000-0000-d02b463da2bb",
+            //"00000000-0000-0000-0000-e7ec37a0d234",
             //"04514419-5ab1-6eee-a83d-334220dade3d",
             //"ad973fda-127f-d52e-e6c7-0b9dd347e90d"
 
@@ -82,6 +76,10 @@ namespace MultiShimmerExample
         public MainPage()
         {
             InitializeComponent();
+            foreach (String uuid in uuids)
+            {
+                deviceInfos.Add(new DeviceInfo(uuid));
+            }
             PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
             plotView.Model = PlotManager.BuildPlotModel();
 
