@@ -59,6 +59,8 @@ namespace MultiShimmerExample
         {
             new DeviceInfo("00000000-0000-0000-0000-d02b463da2bb"),
             new DeviceInfo("00000000-0000-0000-0000-e7ec37a0d234"),
+            //new DeviceInfo("04514419-5ab1-6eee-a83d-334220dade3d"),
+            //new DeviceInfo("ad973fda-127f-d52e-e6c7-0b9dd347e90d"),
         };
 
         List<string> uuids = new List<string>()
@@ -94,7 +96,12 @@ namespace MultiShimmerExample
             foreach (string uuid in uuids)
             {
                 VerisenseBLEDevice device = new VerisenseBLEDevice(uuid, "");
-                if (!Devices.ContainsKey(uuid))
+                if (Devices.ContainsKey(uuid))
+                {
+                    Devices.Remove(uuid);
+                    Devices.Add(uuid, device);
+                }
+                else
                 {
                     Devices.Add(uuid, device);
                 }
