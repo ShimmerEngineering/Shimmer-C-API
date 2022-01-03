@@ -44,20 +44,27 @@ namespace ShimmerBLEAPI.iOS.Communications
 
         public async Task<bool> StartScanForDevices()
         {
-            BLEManagerEvent += BLEManager_BLEEvent;
+            try
+            {
+                BLEManagerEvent += BLEManager_BLEEvent;
 
-            RequestTCS = new TaskCompletionSource<bool>();
-            ListOfScannedKnownDevices = new List<VerisenseBLEScannedDevice>();
-            Adapter.ScanMode = ScanMode.LowLatency;
-            Adapter.DeviceAdvertised += Adapter_DeviceAdvertised;
+                //RequestTCS = new TaskCompletionSource<bool>();
+                ListOfScannedKnownDevices = new List<VerisenseBLEScannedDevice>();
+                Adapter.ScanMode = ScanMode.LowLatency;
+                Adapter.DeviceAdvertised += Adapter_DeviceAdvertised;
 
-            //Adapter.DeviceDiscovered += (s, a) => deviceList.Add(a.Device); 
-            await Adapter.StartScanningForDevicesAsync();
-            Adapter.DeviceAdvertised -= Adapter_DeviceAdvertised;
+                //Adapter.DeviceDiscovered += (s, a) => deviceList.Add(a.Device); 
+                await Adapter.StartScanningForDevicesAsync();
+                Adapter.DeviceAdvertised -= Adapter_DeviceAdvertised;
 
-            if (BLEManagerEvent != null)
-                BLEManagerEvent.Invoke(null, new BLEManagerEvent { CurrentEvent = shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.ScanCompleted });
-            return RequestTCS.TrySetResult(true);
+                if (BLEManagerEvent != null)
+                    BLEManagerEvent.Invoke(null, new BLEManagerEvent { CurrentEvent = shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.ScanCompleted });
+                //return RequestTCS.TrySetResult(true); //commented out as currently this does nothing
+                return true;
+            } catch (Exception e)
+            {
+                return false;
+            }
         }
 
         private static void Adapter_DeviceAdvertised(object sender, Plugin.BLE.Abstractions.EventArgs.DeviceEventArgs e)
@@ -79,7 +86,7 @@ namespace ShimmerBLEAPI.iOS.Communications
                     RSSI = e.Device.Rssi,
                     Uuid = e.Device.Id,
                     IsConnectable = e.Device.Name.Contains("Verisense") ? true : false,
-                    //IsPaired = GetBondingStatus(uuid),
+                    //IsPaired = GetBondingStatus(uuid), //unable to get bonding status in ios
                     IsPaired = false,
                     DeviceInfo = e.Device
                 }); ;
