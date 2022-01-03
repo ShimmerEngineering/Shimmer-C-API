@@ -4,17 +4,38 @@
              xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              x:Class="MultiShimmerExample.MainPage">
     <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+        <Frame BackgroundColor="#2196F3" Padding="10" CornerRadius="0">
+            <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
         </Frame>
+        <ListView
+            x:Name="deviceList"
+            HasUnevenRows="True"
+            HeightRequest="100"
+            CachingStrategy="RecycleElement">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                            <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Small" />
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Status}" TextColor="Blue" FontSize="Micro"/>
+                                <Label Text="{Binding TransferSpeed}" TextColor="Blue" FontSize="Micro"/>
+                                <Label Text="{Binding PayloadIndex}" TextColor="Blue" FontSize="Micro"/>
+                            </StackLayout>
+                            <Label Text="{Binding BinFilePath}" TextColor="Blue" FontSize="Micro"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Grid>
             <ScrollView Orientation="Horizontal">
                 <StackLayout Orientation="Horizontal">
-                    <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" WidthRequest="150" HeightRequest="50" Text="Connect Devices"></Button>
-                    <Button Clicked="startStreamingButton_Clicked" x:Name="startStreamingButton" WidthRequest="150" HeightRequest="50" Text="Start Streaming"></Button>
-                    <Button Clicked="stopStreamingButton_Clicked" x:Name="stopStreamingButton" WidthRequest="150" HeightRequest="50" Text="Stop Streaming"></Button>
-                    <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" WidthRequest="150" HeightRequest="50" Text="Disconnect Devices"></Button>
-                    <Button Clicked="syncDevicesButton_Clicked" x:Name="syncDevicesButton" WidthRequest="100" HeightRequest="50" Text="Sync Devices"></Button>
+                    <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" WidthRequest="150" HeightRequest="60" Text="Connect Devices"></Button>
+                    <Button Clicked="startStreamingButton_Clicked" x:Name="startStreamingButton" WidthRequest="150" HeightRequest="60" Text="Start Streaming"></Button>
+                    <Button Clicked="stopStreamingButton_Clicked" x:Name="stopStreamingButton" WidthRequest="150" HeightRequest="60" Text="Stop Streaming"></Button>
+                    <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" WidthRequest="150" HeightRequest="60" Text="Disconnect Devices"></Button>
+                    <Button Clicked="syncDevicesButton_Clicked" x:Name="syncDevicesButton" WidthRequest="100" HeightRequest="60" Text="Sync Devices"></Button>
                 </StackLayout>
             </ScrollView>
         </Grid>
