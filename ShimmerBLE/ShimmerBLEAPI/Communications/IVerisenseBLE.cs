@@ -43,6 +43,7 @@ namespace shimmer.Communications
         Connected,
         Streaming,
         StreamingLoggedData,
-        Limited
+        Limited,
+        NotPairedAndDisconnected
     }
 }

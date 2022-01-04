@@ -34,6 +34,7 @@ namespace ShimmerBLEAPI.Devices
         int TimerCount;
         int TaskCount;
         int MaximumNumberOfBytesPerBinFile = 100000000; // 100MB limit
+        int iOSConnectCount;
         public int GallCallBackErrorCount = 0;
 
         protected const string LogObject = "VerisenseBLEDevice";
@@ -1671,6 +1672,29 @@ namespace ShimmerBLEAPI.Devices
             }
             else
             {
+                if (Device.RuntimePlatform == Device.iOS)
+                {
+                    //test sensor connection state for pairing cancelled/failed or sensor just paired
+                    var sresult = await ExecuteRequest(RequestType.ReadStatus);
+                    if (sresult == null)
+                    {
+                        if (iOSConnectCount > 0)
+                        {
+                            iOSConnectCount = 0;
+                            await Disconnect();
+                            StateChange(ShimmerDeviceBluetoothState.NotPairedAndDisconnected);
+                            return false;
+                        }
+                        else
+                        {
+                            await Disconnect();
+                            iOSConnectCount++;
+                            await Connect(true);
+                            return true;
+                        }
+                     
+                    }
+                }
                 if (initialize)
                 {
                     var sresult = await ExecuteRequest(RequestType.ReadStatus);
