@@ -196,7 +196,7 @@ namespace shimmer.Communications
 
                 if (ConnectedASM != null)
                 {
-                    var timeout = 5000; //might need a longer period for windows
+                    var timeout = 10000; //might need a longer period for windows
                     var task = adapter.DisconnectDeviceAsync(ConnectedASM);
 
                     AdvanceLog(nameof(RadioPluginBLE), "Disconnect Device", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
