@@ -37,19 +37,12 @@ namespace ShimmerBLEAPI.Devices
                     return true;
                 } else
                 {
-                    Debug.WriteLine("Failed Char at pairing " +  i);
+                    Debug.WriteLine("Pairing Failed: " +  i);
                 }
                 Thread.Sleep(100);
             }
             await Disconnect();
             return false;
-        }
-        protected void UartRX_ValueUpdated_ForPairing(object sender, ByteLevelCommunicationEvent comEvent)
-        {
-            if (comEvent.Event == ByteLevelCommunicationEvent.CommEvent.NewBytes)
-            {
-
-            }
         }
     }
 }
