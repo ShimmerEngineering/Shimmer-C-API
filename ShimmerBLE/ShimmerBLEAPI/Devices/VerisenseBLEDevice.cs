@@ -1672,29 +1672,6 @@ namespace ShimmerBLEAPI.Devices
             }
             else
             {
-                if (Device.RuntimePlatform == Device.iOS)
-                {
-                    //test sensor connection state for pairing cancelled/failed or sensor just paired
-                    var sresult = await ExecuteRequest(RequestType.ReadStatus);
-                    if (sresult == null)
-                    {
-                        if (iOSConnectCount > 0)
-                        {
-                            iOSConnectCount = 0;
-                            await Disconnect();
-                            StateChange(ShimmerDeviceBluetoothState.NotPairedAndDisconnected);
-                            return false;
-                        }
-                        else
-                        {
-                            await Disconnect();
-                            iOSConnectCount++;
-                            await Connect(true);
-                            return true;
-                        }
-                     
-                    }
-                }
                 if (initialize)
                 {
                     var sresult = await ExecuteRequest(RequestType.ReadStatus);
@@ -1710,7 +1687,7 @@ namespace ShimmerBLEAPI.Devices
                             }
                             opConfig = UpdateDefaultDeviceConfigBytes(deviceOpConfig, configuration.GetOperationalConfigurationBytes());
                         }
-                       
+
                         var wopcresult = await ExecuteRequest(RequestType.WriteOperationalConfig, opConfig);
                         if (wopcresult == null)
                         {
