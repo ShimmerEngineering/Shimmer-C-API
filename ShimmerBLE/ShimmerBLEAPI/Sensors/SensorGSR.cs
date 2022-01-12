@@ -332,7 +332,7 @@ namespace shimmer.Sensors
             var gsr_ref_voltage = 0.5;
             if (DeviceHardwareIdentifier.Equals(VerisenseDevice.HardwareIdentifier.VERISENSE_PULSE_PLUS))
             {
-                gsr_ref_voltage = 0.498;
+                gsr_ref_voltage = 0.4986;
             }
             var rSource = rFeedback / ((volts / gsr_ref_voltage) - 1.0);
             return rSource;
