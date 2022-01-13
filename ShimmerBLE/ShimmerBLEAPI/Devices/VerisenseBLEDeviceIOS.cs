@@ -19,7 +19,7 @@ namespace ShimmerBLEAPI.Devices
         public async Task<bool> PairDeviceAsync()
         {
             var result = await Connect(false);
-           
+
             /*
             InitializeRadio();
             BLERadio.Asm_uuid = Asm_uuid;

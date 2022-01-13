@@ -2,6 +2,7 @@
 using Plugin.BLE.Abstractions.Contracts;
 using shimmer.Communications;
 using ShimmerBLEAPI.Communications;
+using ShimmerBLEAPI.Devices;
 using ShimmerBLEAPI.iOS.Communications;
 using ShimmerBLEAPI.Models;
 using System;
@@ -34,7 +35,7 @@ namespace ShimmerBLEAPI.iOS.Communications
             }
             else if (e.CurrentEvent == shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.DevicePaired)
             {
-                Console.WriteLine(((VerisenseBLEScannedDevice)e.objMsg).Uuid.ToString() + " is paired.");
+                Console.WriteLine(((VerisenseBLEDeviceIOS)e.objMsg).Asm_uuid.ToString() + " is paired.");
             }
         }
         public List<VerisenseBLEScannedDevice> GetListOfScannedDevices()
@@ -102,9 +103,15 @@ namespace ShimmerBLEAPI.iOS.Communications
 
             return isBonded;
         }
-        public Task<bool> PairVerisenseDevice(object Device, IBLEPairingKeyGenerator generator)
+        public async Task<bool> PairVerisenseDevice(object Device, IBLEPairingKeyGenerator generator)
         {
-            throw new NotImplementedException();
+            var pairingResult = await ((VerisenseBLEDeviceIOS)Device).PairDeviceAsync();
+            if (pairingResult)
+            {
+                if (BLEManagerEvent != null)
+                    BLEManagerEvent.Invoke(null, new BLEManagerEvent { CurrentEvent = shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.DevicePaired, objMsg = (VerisenseBLEDeviceIOS)Device, message = "Device Is Successfully Paired" });
+            }
+            return pairingResult;
         }
 
         public void StopScanForDevices()

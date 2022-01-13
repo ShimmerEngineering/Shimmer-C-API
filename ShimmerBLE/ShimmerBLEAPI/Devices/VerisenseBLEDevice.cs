@@ -1686,7 +1686,7 @@ namespace ShimmerBLEAPI.Devices
                             }
                             opConfig = UpdateDefaultDeviceConfigBytes(deviceOpConfig, configuration.GetOperationalConfigurationBytes());
                         }
-                       
+
                         var wopcresult = await ExecuteRequest(RequestType.WriteOperationalConfig, opConfig);
                         if (wopcresult == null)
                         {
