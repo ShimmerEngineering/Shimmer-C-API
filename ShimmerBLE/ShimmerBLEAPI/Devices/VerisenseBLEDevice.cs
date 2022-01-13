@@ -34,7 +34,6 @@ namespace ShimmerBLEAPI.Devices
         int TimerCount;
         int TaskCount;
         int MaximumNumberOfBytesPerBinFile = 100000000; // 100MB limit
-        int iOSConnectCount;
         public int GallCallBackErrorCount = 0;
 
         protected const string LogObject = "VerisenseBLEDevice";
