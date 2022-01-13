@@ -35,7 +35,7 @@ namespace ShimmerBLEAPI.iOS.Communications
             }
             else if (e.CurrentEvent == shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.DevicePaired)
             {
-                Console.WriteLine(((VerisenseBLEDeviceIOS)e.objMsg).Asm_uuid.ToString() + " is paired.");
+                Console.WriteLine(((VerisenseBLEScannedDevice)e.objMsg).Uuid.ToString() + " is paired.");
             }
         }
         public List<VerisenseBLEScannedDevice> GetListOfScannedDevices()
@@ -105,11 +105,12 @@ namespace ShimmerBLEAPI.iOS.Communications
         }
         public async Task<bool> PairVerisenseDevice(object Device, IBLEPairingKeyGenerator generator)
         {
-            var pairingResult = await ((VerisenseBLEDeviceIOS)Device).PairDeviceAsync();
+            VerisenseBLEDeviceIOS verisenseBLEDevice = new VerisenseBLEDeviceIOS(((VerisenseBLEScannedDevice)Device).Uuid.ToString(), "");
+            var pairingResult = await verisenseBLEDevice.PairDeviceAsync();
             if (pairingResult)
             {
                 if (BLEManagerEvent != null)
-                    BLEManagerEvent.Invoke(null, new BLEManagerEvent { CurrentEvent = shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.DevicePaired, objMsg = (VerisenseBLEDeviceIOS)Device, message = "Device Is Successfully Paired" });
+                    BLEManagerEvent.Invoke(null, new BLEManagerEvent { CurrentEvent = shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.DevicePaired, objMsg = (VerisenseBLEScannedDevice)Device, message = "Device Is Successfully Paired" });
             }
             return pairingResult;
         }
