@@ -104,20 +104,6 @@ namespace MultiShimmerExample
                     Devices.Add(uuid, device);
                 }
 
-                if (Device.RuntimePlatform == Device.iOS)
-                {
-                    device = new VerisenseBLEDeviceIOS(uuid, "");
-                    var pairingResult = await ((VerisenseBLEDeviceIOS)device).PairDeviceAsync();
-                    if (pairingResult)
-                    {
-
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-
                 device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 bool result = await device.Connect(true);
                 if (result)
