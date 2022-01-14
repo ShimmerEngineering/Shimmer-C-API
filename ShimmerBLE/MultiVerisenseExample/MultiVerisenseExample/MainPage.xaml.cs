@@ -65,7 +65,7 @@ namespace MultiShimmerExample
             //"00000000-0000-0000-0000-c96117537402",
             //"def7b570-bb64-5167-aa2c-76f634454258",
             "7b3eba6c-026c-0861-bb0d-45d23d4dad64",
-            "00000000-0000-0000-0000-daa619f04ad7",
+            //"00000000-0000-0000-0000-daa619f04ad7",
             //"00000000-0000-0000-0000-d02b463da2bb",
             //"00000000-0000-0000-0000-e7ec37a0d234",
             //"04514419-5ab1-6eee-a83d-334220dade3d",
@@ -103,6 +103,7 @@ namespace MultiShimmerExample
                 {
                     Devices.Add(uuid, device);
                 }
+
                 device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 bool result = await device.Connect(true);
                 if (result)

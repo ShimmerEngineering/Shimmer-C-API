@@ -71,7 +71,7 @@ namespace ShimmerBLEAPI.Android.Communications
             {
                 BLEManagerEvent += BLEManager_BLEEvent;
 
-                RequestTCS = new TaskCompletionSource<bool>();
+                //RequestTCS = new TaskCompletionSource<bool>();
                 ListOfScannedKnownDevices = new List<VerisenseBLEScannedDevice>();
 
                 adapter.ScanMode = Plugin.BLE.Abstractions.Contracts.ScanMode.LowLatency;
@@ -81,7 +81,8 @@ namespace ShimmerBLEAPI.Android.Communications
                 adapter.DeviceAdvertised -= Adapter_DeviceAdvertised;
                 if (BLEManagerEvent != null)
                     BLEManagerEvent.Invoke(null, new BLEManagerEvent { CurrentEvent = shimmer.Communications.BLEManagerEvent.BLEAdapterEvent.ScanCompleted });
-                return RequestTCS.TrySetResult(true);
+                //return RequestTCS.TrySetResult(true); //commented out as currently this does nothing
+                return true;
 
             }
             catch (Exception ex)

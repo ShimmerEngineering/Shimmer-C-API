@@ -1,4 +1,4 @@
-# Shimmer C# BLE API
+# Shimmer C# BLE API (Alpha Release)
 
 ## Current Limitations
 ### Verisense Pairing Key
