@@ -97,7 +97,12 @@ Note the purpose of this demo is to give users an idea how to interact with the 
 Place the json file in the localstate folder of your package, if you are not sure where the location is, just run the app and you will be greeted with the following warning.
 ![2021-07-28_22h41_51](https://user-images.githubusercontent.com/2862032/127342579-39797cf1-292a-45ed-9848-1bff48bff329.png)
 ## Android
+
 ## iOS
+Place the VerisenseAPIDemoSettings.json file in the application folder right before launching the app. 
+![image](https://user-images.githubusercontent.com/2862032/149460315-76b4318f-a376-4bd7-b822-1996435a8bef.png)
+![image](https://user-images.githubusercontent.com/2862032/149460539-e4701257-9d2a-4cdb-9a2a-9d1ef3e8bca5.png)
+
 
 ## Demo Video
 The video below shows the full demo process where
