@@ -80,17 +80,17 @@ namespace ShimmerBLEAPI.Devices
 
         #region Read Request props
 
-        byte[] ReadStatusRequest = new byte[] { 0x11, 0x00, 0x00 };
-        byte[] ReadDataRequest = new byte[] { 0x12, 0x00, 0x00 };
-        byte[] StreamDataRequest = new byte[] { 0x2A, 0x01, 0x00, 0x01 };
-        byte[] StopStreamRequest = new byte[] { 0x2A, 0x01, 0x00, 0x02 };
-        byte[] ReadProdConfigRequest = new byte[] { 0x13, 0x00, 0x00 };
-        byte[] ReadOpConfigRequest = new byte[] { 0x14, 0x00, 0x00 };
-        byte[] ReadTimeRequest = new byte[] { 0x15, 0x00, 0x00 };
-        byte[] ReadPendingEventsRequest = new byte[] { 0x17, 0x00, 0x00 };
-        byte[] DFUCommand = new byte[] { 0x26, 0x00, 0x00 };
-        byte[] DisconnectRequest = new byte[] { 0x2B, 0x00, 0x00 };
-        byte[] EraseSensorData = new byte[] { 0x29, 0x01, 0x00, 0x0A };
+        protected byte[] ReadStatusRequest = new byte[] { 0x11, 0x00, 0x00 };
+        protected byte[] ReadDataRequest = new byte[] { 0x12, 0x00, 0x00 };
+        protected byte[] StreamDataRequest = new byte[] { 0x2A, 0x01, 0x00, 0x01 };
+        protected byte[] StopStreamRequest = new byte[] { 0x2A, 0x01, 0x00, 0x02 };
+        protected byte[] ReadProdConfigRequest = new byte[] { 0x13, 0x00, 0x00 };
+        protected byte[] ReadOpConfigRequest = new byte[] { 0x14, 0x00, 0x00 };
+        protected byte[] ReadTimeRequest = new byte[] { 0x15, 0x00, 0x00 };
+        protected byte[] ReadPendingEventsRequest = new byte[] { 0x17, 0x00, 0x00 };
+        protected byte[] DFUCommand = new byte[] { 0x26, 0x00, 0x00 };
+        protected byte[] DisconnectRequest = new byte[] { 0x2B, 0x00, 0x00 };
+        protected byte[] EraseSensorData = new byte[] { 0x29, 0x01, 0x00, 0x0A };
 
         #endregion
 
@@ -1686,7 +1686,7 @@ namespace ShimmerBLEAPI.Devices
                             }
                             opConfig = UpdateDefaultDeviceConfigBytes(deviceOpConfig, configuration.GetOperationalConfigurationBytes());
                         }
-                       
+
                         var wopcresult = await ExecuteRequest(RequestType.WriteOperationalConfig, opConfig);
                         if (wopcresult == null)
                         {
