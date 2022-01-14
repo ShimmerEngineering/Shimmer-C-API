@@ -80,7 +80,7 @@ verisenseBLEDevice.ExecuteRequest(RequestType.WriteOperationalConfig, opconfigBy
 ```
 
 # Demo
-Note the purpose of this demo is to give users an idea how to interact with the various components required to develop a succesful application which can leverage the verisense device. In order for the demo to work you will require an S3 account and bucket for the binary files to be uploaded to. Once the binary file is succesfully uploaded the binary file will be parsed into a csv file and placed in the same S3 bucket. To setup an S3 account with binary file parsing capabilities please contact us for further details. We have future plans to make use of the FWVersion, but for now this is just a placeholder.
+Note the purpose of this demo is to give users an idea how to interact with the various components required to develop a succesful application which can leverage the verisense device. In order for the demo to work you will require an S3 account and bucket for the binary files to be uploaded to. Once the binary file is succesfully uploaded the binary file will be parsed into a csv file and placed in the same S3 bucket. To setup an S3 account with binary file parsing capabilities please contact us for further details. We have future plans to make use of the FWVersion, but for now this is just a placeholder. The file name should be VerisenseAPIDemoSettings.json
 ```
 {
 	"S3CloudInfo": {
