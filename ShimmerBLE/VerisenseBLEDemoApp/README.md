@@ -5,15 +5,10 @@ This demonstrates the use of the ShimmerBLEAPI. The following dlls are to be not
 VerisenseBLEDemoApp project
 - Plugin.BLE.Abstractions.dll
 - Plugin.BLE.dll (_note this is different from the file listed below_)
-- ShimmerBLEAPI.dll
-- ShimmerBLEAPI.UWP.dll (_this is to be obtained from Shimmer and not to be distributed to anyone, place this dll in the Libs folder_)
-- ShimmerAPI.dll
 
 VerisenseBLEDemoApp.UWP project
 - Plugin.BLE.Abstractions.dll
 - Plugin.BLE.dll (_note this is different from the file listed above_)
-- ShimmerBLEAPI.dll
-- ShimmerBLEAPI.UWP.dll (_this is to be obtained from Shimmer and not to be distributed to anyone, place this dll in the Libs folder_)
 
 Also note the nuget packages in the demo, among the important ones are:-
 - Microsoft.Toolkit.Uwp.Connectivity
@@ -98,9 +93,13 @@ Note the purpose of this demo is to give users an idea how to interact with the 
 	"FWVersion" : "1.2.72"    
 }
 ```
+## Windows
 Place the json file in the localstate folder of your package, if you are not sure where the location is, just run the app and you will be greeted with the following warning.
 ![2021-07-28_22h41_51](https://user-images.githubusercontent.com/2862032/127342579-39797cf1-292a-45ed-9848-1bff48bff329.png)
+## Android
+## iOS
 
+## Demo Video
 The video below shows the full demo process where
 1) First a Bluetooth scan is done
 2) The closest (RSS) Verisense device is paired to
