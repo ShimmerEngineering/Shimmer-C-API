@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
+             x:Class="ConnectionTest.MainPage">
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+            <Label Text="Verisense Connection Test" HorizontalTextAlignment="Center" TextColor="White" FontSize="30"/>
+        </Frame>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ScrollView Grid.Row="1">
+                <StackLayout Orientation="Vertical" Padding="6,18,6,18" Spacing="10">
+                    <StackLayout Orientation="Vertical" Padding="6,18,6,18" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="UUID : " WidthRequest="60" HorizontalTextAlignment="Start"/>
+                            <Entry x:Name="uuidEntry" FontSize="Micro">
+                                <Entry.WidthRequest>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS">280</On>
+                                        <On Platform="UWP,WPF">400</On>
+                                    </OnPlatform>
+                                </Entry.WidthRequest>
+                            </Entry>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Device Model : " WidthRequest="60" HorizontalTextAlignment="Start"/>
+                            <Entry x:Name="deviceModelEntry" FontSize="Small">
+                                <Entry.WidthRequest>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS">280</On>
+                                        <On Platform="UWP,WPF">400</On>
+                                    </OnPlatform>
+                                </Entry.WidthRequest>
+                            </Entry>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Padding="6,6,6,6" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Test Iterations : " WidthRequest="180" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="totalIterationEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Bt Connection Attempt Interval(s) : " WidthRequest="270" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="intervalEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Retry Count Limit : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="retryCountLimitEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Padding="6,6,6,6" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Shimmer Status : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="statusEntry" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Retry Count : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="retryCountEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Firmware : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="firmwareEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Padding="6,6,6,6" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Test Progress : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="testProgressEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Success : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="successCountEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Fail : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="failureCountEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Total Retries : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="totalRetriesEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <Button Margin="0,10,0,0" Clicked="startTestButton_Clicked" x:Name="startTestButton" WidthRequest="100" HeightRequest="40" Text="Start Test"></Button>
+                    <Button Margin="0,0,0,0" Clicked="stopTestButton_Clicked" x:Name="stopTestButton" WidthRequest="100" HeightRequest="40" Text="Stop Test"></Button>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </StackLayout>
+</ContentPage>
