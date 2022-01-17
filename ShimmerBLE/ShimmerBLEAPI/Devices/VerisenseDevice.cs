@@ -534,7 +534,7 @@ namespace ShimmerBLEAPI.Devices
 
         public byte[] GetProductionConfigByteArray()
         {
-            return BitHelper.MSBByteArray(ProdConfig.Payload).ToArray();
+            return BitHelper.MSBByteArray(ProdConfig.Payload.Replace("-", "")).ToArray();
         }
 
         public StatusPayload GetStatus()

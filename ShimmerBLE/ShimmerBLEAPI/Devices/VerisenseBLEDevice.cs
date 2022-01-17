@@ -604,6 +604,18 @@ namespace ShimmerBLEAPI.Devices
                         request = await CreateWriteOpConfigRequest();
                     }
                     break;
+                case RequestType.WriteProductionConfig:
+                    if (additionalBytesToWrite != null)
+                    {
+                        //needs a header
+                        request = new byte[additionalBytesToWrite.Length + 3];
+                        Array.Copy(additionalBytesToWrite, 0, request, 3, additionalBytesToWrite.Length);
+                        var lengthb = BitHelper.LSBByteArray(additionalBytesToWrite.Length.ToString("X4"));
+                        request[0] = 0x23;
+                        request[1] = lengthb[0];
+                        request[2] = lengthb[1];
+                    }
+                    break;
                 case RequestType.ReadRTC:
                     request = ReadTimeRequest;
                     break;
@@ -684,6 +696,28 @@ namespace ShimmerBLEAPI.Devices
                         if (ShimmerBLEEvent != null)
                         {
                             ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.WriteOperationalConfig });
+                        }
+                        RequestTCS.TrySetResult(true);
+                    }
+                    else
+                    {
+                        if (ShimmerBLEEvent != null)
+                        {
+                            ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponseFail, ObjMsg = RequestType.WriteOperationalConfig });
+                        }
+                        RequestTCS.TrySetResult(false);
+                    }
+                    return WriteResponse;
+                case RequestType.WriteProductionConfig:
+                    var prodData = new ProdConfigPayload();
+                    var prodResult = prodData.ProcessPayload(request);
+                    if (prodResult)
+                    {
+                        ProdConfig = prodData;
+                        UpdateDeviceAndSensorConfiguration();
+                        if (ShimmerBLEEvent != null)
+                        {
+                            ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.WriteProductionConfig });
                         }
                         RequestTCS.TrySetResult(true);
                     }

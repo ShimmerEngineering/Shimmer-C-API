@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
+             x:Class="PasskeyConfigurationApp.MainPage">
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="10" CornerRadius="0">
+            <Label Text="PasskeyConfigurationApp" HorizontalTextAlignment="Center" TextColor="White" FontSize="20"/>
+        </Frame>
+        <StackLayout Orientation="Vertical" Padding="10,10,10,10">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Device Selected : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry FontSize="Small" x:Name="deviceName" WidthRequest="230" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Device State : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry FontSize="Small" x:Name="deviceState" WidthRequest="230" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Advertising Name Prefix : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry Text="Verisense" FontSize="Small" x:Name="deviceAdvertisingNamePrefix" WidthRequest="230" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Passkey ID : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Picker x:Name="passkeyId" WidthRequest="230" SelectedIndex="0" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Passkey : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry Text="123456" FontSize="Small" WidthRequest="230" x:Name="passkey" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Button Clicked="scanDevicesButton_Clicked" x:Name="scanDevicesButton" HeightRequest="60" Text="Scan Devices">
+                    <Button.WidthRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">110</On>
+                            <On Platform="UWP,WPF">150</On>
+                        </OnPlatform>
+                    </Button.WidthRequest>
+                    <Button.FontSize>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">12</On>
+                            <On Platform="UWP,WPF">14</On>
+                        </OnPlatform>
+                    </Button.FontSize>
+                </Button>
+                <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" HeightRequest="60" Text="Connect Devices">
+                    <Button.WidthRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">110</On>
+                            <On Platform="UWP,WPF">150</On>
+                        </OnPlatform>
+                    </Button.WidthRequest>
+                    <Button.FontSize>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">12</On>
+                            <On Platform="UWP,WPF">14</On>
+                        </OnPlatform>
+                    </Button.FontSize>
+                </Button>
+                <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" HeightRequest="60" Text="Disconnect Devices">
+                    <Button.WidthRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">110</On>
+                            <On Platform="UWP,WPF">150</On>
+                        </OnPlatform>
+                    </Button.WidthRequest>
+                    <Button.FontSize>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">12</On>
+                            <On Platform="UWP,WPF">14</On>
+                        </OnPlatform>
+                    </Button.FontSize>
+                </Button>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Button Clicked="writePasskeyConfigurationButton_Clicked" x:Name="writePasskeyConfigurationButton" HeightRequest="60" Text="Write Passkey Configuration">
+                    <Button.WidthRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">165</On>
+                            <On Platform="UWP,WPF">225</On>
+                        </OnPlatform>
+                    </Button.WidthRequest>
+                    <Button.FontSize>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">12</On>
+                            <On Platform="UWP,WPF">14</On>
+                        </OnPlatform>
+                    </Button.FontSize>
+                </Button>
+                <Button Clicked="readPasskeyConfigurationButton_Clicked" x:Name="readPasskeyConfigurationButton" HeightRequest="60" Text="Read Passkey Configuration">
+                    <Button.WidthRequest>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">165</On>
+                            <On Platform="UWP,WPF">225</On>
+                        </OnPlatform>
+                    </Button.WidthRequest>
+                    <Button.FontSize>
+                        <OnPlatform x:TypeArguments="x:Double">
+                            <On Platform="Android,iOS">12</On>
+                            <On Platform="UWP,WPF">14</On>
+                        </OnPlatform>
+                    </Button.FontSize>
+                </Button>
+            </StackLayout>
+        </StackLayout>
+
+        <ListView
+            x:Name="deviceList"
+            HasUnevenRows="True"
+            HeightRequest="100"
+            ItemSelected="OnSelectedItem"
+            SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+            CachingStrategy="RecycleElement">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" VerticalOptions="Center">
+                            <Label Text="{Binding Name, StringFormat='{0}'}" FontSize="Small" />
+                            <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Small" />
+                            <Label Text="Is Paired" FontSize="Small" IsVisible="{Binding IsPaired}"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

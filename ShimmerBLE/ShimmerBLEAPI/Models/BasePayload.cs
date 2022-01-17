@@ -52,6 +52,7 @@ namespace shimmer.Models
         ReadProductionConfig = 13,
         ReadOperationalConfig = 14,
         WriteOperationalConfig = 24,
+        WriteProductionConfig = 23,
         ReadRTC = 15,
         WriteRTC = 25,
         ReadPendingEvents = 17,
