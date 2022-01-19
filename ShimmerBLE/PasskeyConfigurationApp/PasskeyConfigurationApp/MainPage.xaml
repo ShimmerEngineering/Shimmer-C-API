@@ -22,11 +22,15 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                 <Label Text="Passkey ID : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
-                <Picker x:Name="passkeyId" WidthRequest="230" SelectedIndex="0" VerticalTextAlignment="Center"/>
+                <Entry Text="01" FontSize="Small" x:Name="passkeyId" WidthRequest="230" VerticalTextAlignment="Center"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                 <Label Text="Passkey : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
                 <Entry Text="123456" FontSize="Small" WidthRequest="230" x:Name="passkey" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Set To Clinical Trial : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <CheckBox x:Name="isSetToClinicalTrial" CheckedChanged="IsSetToClinicalTrial_CheckedChanged" WidthRequest="30" />
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                 <Button Clicked="scanDevicesButton_Clicked" x:Name="scanDevicesButton" HeightRequest="60" Text="Scan Devices">

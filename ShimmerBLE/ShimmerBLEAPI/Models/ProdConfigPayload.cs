@@ -24,6 +24,85 @@ namespace shimmer.Models
         public string Passkey { get; set; }
         public string AdvertisingNamePrefix { get; set; }
 
+        public ProdConfigPayload(string payload)
+        {
+            Payload = payload;
+            ProcessPayload(GetPayload());
+        }
+
+        public ProdConfigPayload()
+        {
+
+        }
+
+        public void SetPasskeyID(string passkeyId)
+        {
+            byte[] payloadArray = GetPayload();
+            if (string.IsNullOrEmpty(passkeyId))
+            {
+                for (int i = 18; i <= 19; i++)
+                {
+                    payloadArray[i] = 0xFF;
+                }
+            }
+            else if (passkeyId.Length == 2)
+            {
+                byte[] passkeyIdArray = Encoding.UTF8.GetBytes(passkeyId);
+                for (int i = 0; i < passkeyIdArray.Length; i++)
+                {
+                    payloadArray[i + 18] = passkeyIdArray[i];
+                }
+            }
+            Payload = BitConverter.ToString(payloadArray);
+        }
+
+        public void SetPasskey(string passkey)
+        {
+            byte[] payloadArray = GetPayload();
+            if (string.IsNullOrEmpty(passkey))
+            {
+                for (int i = 20; i <= 25; i++)
+                {
+                    payloadArray[i] = 0xFF;
+                }
+            }
+            else if (passkey.Length == 6)
+            {
+                byte[] passkeyArray = Encoding.UTF8.GetBytes(passkey);
+                for (int i = 0; i < passkeyArray.Length; i++)
+                {
+                    payloadArray[i + 20] = passkeyArray[i];
+                }
+            }
+            Payload = BitConverter.ToString(payloadArray);
+        }
+        
+        public void SetAdvertisingNamePrefix(string advertisingNamePrefix)
+        {
+            byte[] payloadArray = GetPayload();
+            if (string.IsNullOrEmpty(advertisingNamePrefix))
+            {
+                for (int i = 26; i <= 57; i++)
+                {
+                    payloadArray[i] = 0xFF;
+                }
+            }
+            else if (advertisingNamePrefix.Length <= 32)
+            {
+                byte[] advertisingNamePrefixByteArray = Encoding.UTF8.GetBytes(advertisingNamePrefix);
+                for (int i = 0; i < advertisingNamePrefixByteArray.Length; i++)
+                {
+                    payloadArray[i + 26] = advertisingNamePrefixByteArray[i];
+                }
+                for (int i = advertisingNamePrefixByteArray.Length + 26; i <= 57; i++)
+                {
+                    //set the remaining bytes to 0xFF
+                    payloadArray[i] = 0xFF;
+                }
+            }
+            Payload = BitConverter.ToString(payloadArray);
+        }
+
         public new bool ProcessPayload(byte[] response)
         {
             try
@@ -71,7 +150,7 @@ namespace shimmer.Models
                     }
                     else
                     {
-                        PasskeyID = Encoding.Default.GetString(passkeyIdArray);
+                        PasskeyID = Encoding.UTF8.GetString(passkeyIdArray);
                     }
 
                     byte[] passkeyArray = reader.ReadBytes(6);
@@ -81,7 +160,7 @@ namespace shimmer.Models
                     }
                     else
                     {
-                        Passkey = Encoding.Default.GetString(passkeyArray);
+                        Passkey = Encoding.UTF8.GetString(passkeyArray);
                     }
 
                     byte[] advertisingNamePrefixArrayOriginal = reader.ReadBytes(32);
@@ -98,7 +177,7 @@ namespace shimmer.Models
                         }
                         byte[] advertisingNamePrefixArray = new byte[endIndex];
                         Array.Copy(advertisingNamePrefixArrayOriginal, 0, advertisingNamePrefixArray, 0, endIndex);
-                        AdvertisingNamePrefix = Encoding.Default.GetString(advertisingNamePrefixArray);
+                        AdvertisingNamePrefix = Encoding.UTF8.GetString(advertisingNamePrefixArray);
                     }
                 }
 

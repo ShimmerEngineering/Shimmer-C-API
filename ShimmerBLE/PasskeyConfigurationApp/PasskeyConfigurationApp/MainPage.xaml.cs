@@ -6,6 +6,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 using shimmer.Sensors;
 using shimmer.Communications;
 using shimmer.Models;
@@ -30,15 +31,27 @@ namespace PasskeyConfigurationApp
             var service = DependencyService.Get<IVerisenseBLEManager>();
             bleManager.BLEManagerEvent += BLEManager_BLEEvent;
             deviceList.ItemsSource = ListOfScannedDevices;
-
-            List<string> passkeyIds = new List<string>() { "00", "01", "02", "03" };
-            passkeyId.ItemsSource = passkeyIds;
-            passkeyId.SelectedIndex = 0;
         }
 
         public async void ScanDevices()
         {
             await bleManager.StartScanForDevices();
+        }
+
+        public void IsSetToClinicalTrial_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        {
+            if (e.Value)
+            {
+                deviceAdvertisingNamePrefix.IsEnabled = false;
+                passkeyId.IsEnabled = false;
+                passkey.IsEnabled = false; 
+            }
+            else
+            {
+                deviceAdvertisingNamePrefix.IsEnabled = true;
+                passkeyId.IsEnabled = true;
+                passkey.IsEnabled = true;
+            }
         }
 
         public void OnSelectedItem(object sender, SelectedItemChangedEventArgs e)
@@ -68,7 +81,10 @@ namespace PasskeyConfigurationApp
         {
             if (e.CurrentEvent == VerisenseBLEEvent.StateChange)
             {
-                deviceState.Text = device.GetVerisenseBLEState().ToString();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    deviceState.Text = device.GetVerisenseBLEState().ToString();
+                });
             }
         }
 
@@ -76,14 +92,23 @@ namespace PasskeyConfigurationApp
         {
             if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.ScanCompleted)
             {
-                List<VerisenseBLEScannedDevice> devices = new List<VerisenseBLEScannedDevice>();
-
                 foreach (VerisenseBLEScannedDevice device in bleManager.GetListOfScannedDevices())
                 {
-                    if (device.Name.Contains("Veri") && device.IsConnectable)
+                    if (device.IsConnectable && device.IsPaired)
                     {
-                        //devices.Add(device);
-                        //AddOrUpdateDevice(device);
+                        bool added = false;
+                        foreach (VerisenseBLEScannedDevice a in ListOfScannedDevices)
+                        {
+                            if (a.ID == device.ID)
+                            {
+                                added = true;
+                                break;
+                            }
+                        }
+                        if (!added)
+                        {
+                            ListOfScannedDevices.Add(device);
+                        }
                     }
                 }
             }
@@ -121,57 +146,50 @@ namespace PasskeyConfigurationApp
 
         public async void WritePasskeyConfigurationButton()
         {
-            string errorString = "";
-            if(passkey.Text.ToString().Length != 6)
-            {
-                errorString += "Passkey should have exactly six characters\n";
-            }
-            if(passkeyId.SelectedItem == null)
-            {
-                errorString += "Please select a passkey id\n";
-            }
-            if(deviceAdvertisingNamePrefix.Text.ToString().Length > 32)
-            {
-                errorString += "Advertising name prefix cannot have more than 32 characters\n";
-            }
-            if(errorString != "")
-            {
-                await DisplayAlert("Error!", errorString, "OK");
-                return;
-            }
+            ProdConfigPayload prodConfig = new ProdConfigPayload(BitConverter.ToString(device.GetProductionConfigByteArray()));
+            byte[] prodConfigByteArray = new byte[55];
 
-            byte[] passkeyIdArray;
-            byte[] passkeyArray;
-            byte[] advertisingNamePrefixByteArray;
-            byte[] prodConfig = new byte[55];
-            Array.Copy(device.GetProductionConfigByteArray(), 3, prodConfig, 0, 55);
-            if (passkey.Text.ToString().Length == 6 &&
-                passkeyId.SelectedItem != null &&
-                deviceAdvertisingNamePrefix.Text.ToString().Length <= 32)
+            if (isSetToClinicalTrial.IsChecked)
             {
-                passkeyIdArray = Encoding.UTF8.GetBytes(passkeyId.SelectedItem.ToString());
-                for (int i = 0; i < passkeyIdArray.Length; i++)
+                prodConfig.SetPasskey("");
+                prodConfig.SetPasskeyID("");
+                prodConfig.SetAdvertisingNamePrefix("");
+                Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
+                await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
+            }
+            else
+            {
+                string errorString = "";
+                if (passkey.Text.Length != 0)
                 {
-                    prodConfig.SetValue(passkeyIdArray[i], i + 15);
+                    if (passkey.Text.Length != 6)
+                    {
+                        errorString += "Passkey should have exactly six characters\n";
+                    }
+                    else if (!int.TryParse(passkey.Text, out _))
+                    {
+                        errorString += "Passkey should consist of only numerical values\n";
+                    }
+                }
+                if (passkeyId.Text.Length != 2 && passkeyId.Text.Length != 0)
+                {
+                    errorString += "Passkey ID should have exactly two characters\n";
+                }
+                if (deviceAdvertisingNamePrefix.Text.ToString().Length > 32)
+                {
+                    errorString += "Advertising name prefix cannot have more than 32 characters\n";
+                }
+                if (errorString != "")
+                {
+                    await DisplayAlert("Error!", errorString, "OK");
+                    return;
                 }
 
-                passkeyArray = Encoding.UTF8.GetBytes(passkey.Text.ToString());
-                for (int i = 0; i < passkeyArray.Length; i++)
-                {
-                    prodConfig.SetValue(passkeyArray[i], i + 17);
-                }
-
-                advertisingNamePrefixByteArray = Encoding.UTF8.GetBytes(deviceAdvertisingNamePrefix.Text.ToString());
-                for (int i = 0; i < advertisingNamePrefixByteArray.Length; i++)
-                {
-                    prodConfig.SetValue(advertisingNamePrefixByteArray[i], i + 23);
-                }
-                for (int i = advertisingNamePrefixByteArray.Length + 23; i < 55; i++)
-                {
-                    //set the remaining bytes to 0xFF
-                    prodConfig.SetValue((byte)255, i);
-                }
-                var result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfig);
+                prodConfig.SetPasskey(passkey.Text);
+                prodConfig.SetPasskeyID(passkeyId.Text);
+                prodConfig.SetAdvertisingNamePrefix(deviceAdvertisingNamePrefix.Text);
+                Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
+                await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
             }
         }
 
@@ -179,7 +197,7 @@ namespace PasskeyConfigurationApp
         {
             var result = await device.ExecuteRequest(RequestType.ReadProductionConfig);
             deviceAdvertisingNamePrefix.Text = ((ProdConfigPayload)result).AdvertisingNamePrefix;
-            passkeyId.SelectedItem = ((ProdConfigPayload)result).PasskeyID;
+            passkeyId.Text = ((ProdConfigPayload)result).PasskeyID;
             passkey.Text = ((ProdConfigPayload)result).Passkey;
         }
 
@@ -188,6 +206,7 @@ namespace PasskeyConfigurationApp
         //GUI Functionality
         private void scanDevicesButton_Clicked(object sender, EventArgs e)
         {
+            ListOfScannedDevices.Clear();
             ScanDevices();
         }
         

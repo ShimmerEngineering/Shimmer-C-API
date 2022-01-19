@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using shimmer.Helpers;
 
 namespace shimmer.Models
 {
@@ -40,6 +41,11 @@ namespace shimmer.Models
             }
 
             return true;
+        }
+
+        public byte[] GetPayload()
+        {
+            return BitHelper.MSBByteArray(Payload.Replace("-", "")).ToArray();
         }
     }
 
