@@ -94,21 +94,18 @@ namespace PasskeyConfigurationApp
             {
                 foreach (VerisenseBLEScannedDevice device in bleManager.GetListOfScannedDevices())
                 {
-                    if (device.IsConnectable && device.IsPaired)
+                    bool added = false;
+                    foreach (VerisenseBLEScannedDevice a in ListOfScannedDevices)
                     {
-                        bool added = false;
-                        foreach (VerisenseBLEScannedDevice a in ListOfScannedDevices)
+                        if (a.ID == device.ID)
                         {
-                            if (a.ID == device.ID)
-                            {
-                                added = true;
-                                break;
-                            }
+                            added = true;
+                            break;
                         }
-                        if (!added)
-                        {
-                            ListOfScannedDevices.Add(device);
-                        }
+                    }
+                    if (!added)
+                    {
+                        ListOfScannedDevices.Add(device);
                     }
                 }
             }
