@@ -196,8 +196,11 @@ namespace shimmer.Communications
 
                 if (ConnectedASM != null)
                 {
-                    var timeout = 5000; //might need a longer period for windows
+                    var timeout = 10000; //might need a longer period for windows
                     var task = adapter.DisconnectDeviceAsync(ConnectedASM);
+
+                    AdvanceLog(nameof(RadioPluginBLE), "Disconnect Device", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
+
                     if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
                     {
                         // task completed within timeout
@@ -207,10 +210,9 @@ namespace shimmer.Communications
                     {
                         state = ConnectivityState.Limited;
                     }
-                    //state = GetConnectivityStateFromDevice(ConnectedASM);
 
-                    AdvanceLog(nameof(RadioPluginBLE), "Disconnect Device", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
-                    AdvanceLog(nameof(RadioPluginBLE), "ASM Connection Status", ConnectedASM.State.ToString(), Asm_uuid.ToString());
+                    AdvanceLog(nameof(RadioPluginBLE), "ASM Connection Status", state.ToString(), Asm_uuid.ToString());
+                    //state = GetConnectivityStateFromDevice(ConnectedASM);
                 }
                 //StateChange(ShimmerDeviceBluetoothState.Disconnected);
                 AdvanceLog(nameof(RadioPluginBLE), "Disconnect", "Success", Asm_uuid.ToString());
