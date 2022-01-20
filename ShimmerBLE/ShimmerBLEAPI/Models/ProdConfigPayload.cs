@@ -52,6 +52,10 @@ namespace shimmer.Models
         {
             try
             {   
+                if (advertisingName.Equals("Verisense"))
+                {
+                    advertisingName = "";
+                }
                 SetAdvertisingNamePrefix(advertisingName);
                 SetPasskey("");
                 SetPasskeyID(passkeyID);
@@ -66,6 +70,10 @@ namespace shimmer.Models
         {
             try
             {
+                if (advertisingName.Equals("Verisense"))
+                {
+                    advertisingName = "";
+                }
                 SetAdvertisingNamePrefix(advertisingName);
                 SetPasskey("123456");
                 SetPasskeyID(passkeyID);
@@ -244,7 +252,7 @@ namespace shimmer.Models
                     byte[] advertisingNamePrefixArrayOriginal = reader.ReadBytes(32);
                     if (IsAllFFs(advertisingNamePrefixArrayOriginal))
                     {
-                        AdvertisingNamePrefix = "";
+                        AdvertisingNamePrefix = "Verisense";
                     }
                     else
                     {
