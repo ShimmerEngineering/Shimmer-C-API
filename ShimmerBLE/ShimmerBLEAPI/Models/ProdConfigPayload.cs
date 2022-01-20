@@ -35,7 +35,47 @@ namespace shimmer.Models
 
         }
 
-        public void SetPasskeyID(string passkeyId)
+        public void EnableClinicalTrialPasskey()
+        {
+            try
+            {
+                SetAdvertisingNamePrefix("");
+                SetPasskey("");
+                SetPasskeyID("");
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void EnableNoPasskey(string advertisingName, string passkeyID)
+        {
+            try
+            {   
+                SetAdvertisingNamePrefix(advertisingName);
+                SetPasskey("");
+                SetPasskeyID(passkeyID);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public void EnableDefaultPasskey(string advertisingName, string passkeyID)
+        {
+            try
+            {
+                SetAdvertisingNamePrefix(advertisingName);
+                SetPasskey("123456");
+                SetPasskeyID(passkeyID);
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+}
+
+        protected void SetPasskeyID(string passkeyId)
         {
             byte[] payloadArray = GetPayload();
             if (string.IsNullOrEmpty(passkeyId))
@@ -48,6 +88,10 @@ namespace shimmer.Models
             else if (passkeyId.Length == 2)
             {
                 byte[] passkeyIdArray = Encoding.UTF8.GetBytes(passkeyId);
+                if (HasAnFF(passkeyIdArray))
+                {
+                    throw new Exception("Passkey ID has a byte value of 0xFF which is not permitted");
+                }
                 for (int i = 0; i < passkeyIdArray.Length; i++)
                 {
                     payloadArray[i + 18] = passkeyIdArray[i];
@@ -56,7 +100,7 @@ namespace shimmer.Models
             Payload = BitConverter.ToString(payloadArray);
         }
 
-        public void SetPasskey(string passkey)
+        protected void SetPasskey(string passkey)
         {
             byte[] payloadArray = GetPayload();
             if (string.IsNullOrEmpty(passkey))
@@ -68,6 +112,11 @@ namespace shimmer.Models
             }
             else if (passkey.Length == 6)
             {
+                if (!int.TryParse(passkey, out _))
+                {
+                    throw new Exception("Passkey Must Be Numeric Values");
+                }
+                
                 byte[] passkeyArray = Encoding.UTF8.GetBytes(passkey);
                 for (int i = 0; i < passkeyArray.Length; i++)
                 {
@@ -75,9 +124,10 @@ namespace shimmer.Models
                 }
             }
             Payload = BitConverter.ToString(payloadArray);
+
         }
         
-        public void SetAdvertisingNamePrefix(string advertisingNamePrefix)
+        protected void SetAdvertisingNamePrefix(string advertisingNamePrefix)
         {
             byte[] payloadArray = GetPayload();
             if (string.IsNullOrEmpty(advertisingNamePrefix))
@@ -90,6 +140,10 @@ namespace shimmer.Models
             else if (advertisingNamePrefix.Length <= 32)
             {
                 byte[] advertisingNamePrefixByteArray = Encoding.UTF8.GetBytes(advertisingNamePrefix);
+                if (HasAnFF(advertisingNamePrefixByteArray))
+                {
+                    throw new Exception("Advertising name has a byte value of 0xFF which is not permitted");
+                }
                 for (int i = 0; i < advertisingNamePrefixByteArray.Length; i++)
                 {
                     payloadArray[i + 26] = advertisingNamePrefixByteArray[i];
@@ -101,6 +155,30 @@ namespace shimmer.Models
                 }
             }
             Payload = BitConverter.ToString(payloadArray);
+        }
+
+        protected bool IsAllFFs(byte[] byteArray)
+        {
+            foreach (byte b in byteArray)
+            {
+                if (b != 0xFF)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        protected bool HasAnFF(byte[] byteArray)
+        {
+            foreach (byte b in byteArray)
+            {
+                if (b == 0xFF)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public new bool ProcessPayload(byte[] response)
@@ -144,7 +222,7 @@ namespace shimmer.Models
                     REV_HW_INTERNAL = BitConverter.ToUInt16(hwInternalArray, 0);
 
                     byte[] passkeyIdArray = reader.ReadBytes(2);
-                    if (passkeyIdArray[0] == 0xFF)
+                    if (IsAllFFs(passkeyIdArray))
                     {
                         PasskeyID = "";
                     }
@@ -154,7 +232,7 @@ namespace shimmer.Models
                     }
 
                     byte[] passkeyArray = reader.ReadBytes(6);
-                    if (passkeyArray[0] == 0xFF || passkeyArray[0] == 0x00)
+                    if (IsAllFFs(passkeyArray) || passkeyArray[0] == 0x00)
                     {
                         Passkey = "";
                     }
@@ -164,7 +242,7 @@ namespace shimmer.Models
                     }
 
                     byte[] advertisingNamePrefixArrayOriginal = reader.ReadBytes(32);
-                    if (advertisingNamePrefixArrayOriginal[0] == 0xFF)
+                    if (IsAllFFs(advertisingNamePrefixArrayOriginal))
                     {
                         AdvertisingNamePrefix = "";
                     }
