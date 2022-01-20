@@ -33,7 +33,7 @@
                 <CheckBox x:Name="isSetToClinicalTrial" CheckedChanged="IsSetToClinicalTrial_CheckedChanged" WidthRequest="30" />
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                <Button Clicked="scanDevicesButton_Clicked" x:Name="scanDevicesButton" HeightRequest="60" Text="Scan Devices">
+                <Button Clicked="scanDevicesButton_Clicked" x:Name="scanDevicesButton" HeightRequest="60" Text="Scan Device">
                     <Button.WidthRequest>
                         <OnPlatform x:TypeArguments="x:Double">
                             <On Platform="Android,iOS">110</On>
@@ -47,7 +47,7 @@
                         </OnPlatform>
                     </Button.FontSize>
                 </Button>
-                <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" HeightRequest="60" Text="Connect Devices">
+                <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" HeightRequest="60" Text="Connect Device">
                     <Button.WidthRequest>
                         <OnPlatform x:TypeArguments="x:Double">
                             <On Platform="Android,iOS">110</On>
@@ -61,7 +61,7 @@
                         </OnPlatform>
                     </Button.FontSize>
                 </Button>
-                <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" HeightRequest="60" Text="Disconnect Devices">
+                <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" HeightRequest="60" Text="Disconnect Device">
                     <Button.WidthRequest>
                         <OnPlatform x:TypeArguments="x:Double">
                             <On Platform="Android,iOS">110</On>
