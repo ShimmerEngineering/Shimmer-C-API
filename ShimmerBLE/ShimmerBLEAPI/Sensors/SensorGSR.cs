@@ -267,8 +267,8 @@ namespace shimmer.Sensors
             GSREnabled = enabled;
             if (enabled)
             {
-                SetOversamplingRate(ADCOversamplingRate.ADC_Oversampling_64x);
                 BattEnabled = false;
+                SetOversamplingRate(ADCOversamplingRate.ADC_Oversampling_64x);
             }
             else
             {
