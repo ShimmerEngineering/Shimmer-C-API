@@ -148,9 +148,7 @@ namespace PasskeyConfigurationApp
 
             if (isSetToClinicalTrial.IsChecked)
             {
-                prodConfig.SetPasskey("");
-                prodConfig.SetPasskeyID("");
-                prodConfig.SetAdvertisingNamePrefix("");
+                prodConfig.EnableClinicalTrialPasskey();
                 Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
                 await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
             }
@@ -181,10 +179,21 @@ namespace PasskeyConfigurationApp
                     await DisplayAlert("Error!", errorString, "OK");
                     return;
                 }
-
-                prodConfig.SetPasskey(passkey.Text);
-                prodConfig.SetPasskeyID(passkeyId.Text);
-                prodConfig.SetAdvertisingNamePrefix(deviceAdvertisingNamePrefix.Text);
+                try
+                {
+                    if (String.IsNullOrEmpty(passkey.Text))
+                    {
+                        prodConfig.EnableNoPasskey(deviceAdvertisingNamePrefix.Text, passkeyId.Text);
+                    }
+                    else
+                    {
+                        prodConfig.EnableDefaultPasskey(deviceAdvertisingNamePrefix.Text, passkeyId.Text);
+                    }
+                } catch (Exception ex)
+                {
+                    await DisplayAlert("Error!", ex.Message, "OK");
+                }
+                
                 Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
                 await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
             }
