@@ -21,6 +21,7 @@ namespace PasskeyConfigurationApp
     {
         private VerisenseBLEDevice device;
         private VerisenseBLEScannedDevice SelectedDevice;
+        private ProdConfigPayload prodConfig;
         IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
 
@@ -31,6 +32,7 @@ namespace PasskeyConfigurationApp
             var service = DependencyService.Get<IVerisenseBLEManager>();
             bleManager.BLEManagerEvent += BLEManager_BLEEvent;
             deviceList.ItemsSource = ListOfScannedDevices;
+            useAdvance.IsChecked = false;
         }
 
         public async void ScanDevices()
@@ -38,19 +40,55 @@ namespace PasskeyConfigurationApp
             await bleManager.StartScanForDevices();
         }
 
-        public void IsSetToClinicalTrial_CheckedChanged(object sender, CheckedChangedEventArgs e)
+        public void UseAdvance_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
             if (e.Value)
-            {
-                deviceAdvertisingNamePrefix.IsEnabled = false;
-                passkeyId.IsEnabled = false;
-                passkey.IsEnabled = false; 
-            }
-            else
             {
                 deviceAdvertisingNamePrefix.IsEnabled = true;
                 passkeyId.IsEnabled = true;
                 passkey.IsEnabled = true;
+                passkeySettings.IsVisible = false;
+                passkeySettingsLabel.IsVisible = false;
+            }
+            else
+            {
+                deviceAdvertisingNamePrefix.IsEnabled = false;
+                passkeyId.IsEnabled = false;
+                passkey.IsEnabled = false;
+                passkeySettings.IsVisible = true;
+                passkeySettingsLabel.IsVisible = true;
+            }
+        }
+
+        public void PasskeySettings_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (passkeySettings.SelectedIndex)
+            {
+                // no passkey
+                case 0:
+                    deviceAdvertisingNamePrefix.Text = prodConfig.AdvertisingNamePrefix;
+                    passkeyId.Text = "00";
+                    passkey.Text = "";
+                    break;
+                // default passkey
+                case 1:
+                    deviceAdvertisingNamePrefix.Text = prodConfig.AdvertisingNamePrefix;
+                    passkeyId.Text = "01";
+                    passkey.Text = "123456";
+                    break;
+                // clinical trial passkey
+                case 2: 
+                    deviceAdvertisingNamePrefix.Text = prodConfig.AdvertisingNamePrefix;
+                    passkeyId.Text = "";
+                    passkey.Text = "";
+                    break;
+                // custom
+                case 3:
+                    deviceAdvertisingNamePrefix.Text = "";
+                    passkeyId.Text = "";
+                    passkey.Text = "";
+                    break;
+                default: break;
             }
         }
 
@@ -65,8 +103,39 @@ namespace PasskeyConfigurationApp
             device = new VerisenseBLEDevice(SelectedDevice.Uuid.ToString(), "");
             device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             bool result = await device.Connect(true);
+            
             if (result)
             {
+                prodConfig = device.GetProductionConfig();
+                int index = 3;
+                if (prodConfig.AdvertisingNamePrefix == "Verisense")
+                {
+                    if(prodConfig.PasskeyID == "")
+                    {
+                        index = 2;
+                    }
+                    else if(prodConfig.PasskeyID == "00")
+                    {
+                        index = 0;
+                    }
+                    else if (prodConfig.PasskeyID == "01")
+                    {
+                        index = 1;
+                    }
+                }
+                else
+                {
+                    if (prodConfig.PasskeyID == "" || prodConfig.PasskeyID == "00")
+                    {
+                        index = 0;
+                    }
+                    else if (prodConfig.PasskeyID == "01")
+                    {
+                        index = 1;
+                    }
+                }
+                passkeySettings.SelectedIndex = index;
+
                 Debug.WriteLine("Device Version: " + device.GetProductionConfig().REV_HW_MAJOR + "." + device.GetProductionConfig().REV_HW_MINOR);
                 Debug.WriteLine("Firmware Version: " + device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL);
                 Debug.WriteLine("\nBT state: " + device.GetVerisenseBLEState() + "\nUUID: " + device.Asm_uuid + "\nBattery: " + device.GetStatus().BatteryPercent + "%");
@@ -143,42 +212,35 @@ namespace PasskeyConfigurationApp
 
         public async void WritePasskeyConfigurationButton()
         {
-            ProdConfigPayload prodConfig = new ProdConfigPayload(BitConverter.ToString(device.GetProductionConfigByteArray()));
             byte[] prodConfigByteArray = new byte[55];
+            var result;
 
-            if (isSetToClinicalTrial.IsChecked)
+            if (!useAdvance.IsChecked)
             {
-                prodConfig.EnableClinicalTrialPasskey();
+                switch (passkeySettings.SelectedIndex)
+                {
+                    // no passkey
+                    case 0:
+                        prodConfig.EnableNoPasskey("", "00");
+                        break;
+                    // default passkey
+                    case 1:
+                        prodConfig.EnableDefaultPasskey("", "01");
+                        break;
+                    // clinical trial passkey
+                    case 2:
+                        prodConfig.EnableClinicalTrialPasskey();
+                        break;
+                    // custom
+                    case 3:
+                        break;
+                    default: break;
+                }
                 Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
-                await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
+                result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
             }
             else
             {
-                string errorString = "";
-                if (passkey.Text.Length != 0)
-                {
-                    if (passkey.Text.Length != 6)
-                    {
-                        errorString += "Passkey should have exactly six characters\n";
-                    }
-                    else if (!int.TryParse(passkey.Text, out _))
-                    {
-                        errorString += "Passkey should consist of only numerical values\n";
-                    }
-                }
-                if (passkeyId.Text.Length != 2 && passkeyId.Text.Length != 0)
-                {
-                    errorString += "Passkey ID should have exactly two characters\n";
-                }
-                if (deviceAdvertisingNamePrefix.Text.ToString().Length > 32)
-                {
-                    errorString += "Advertising name prefix cannot have more than 32 characters\n";
-                }
-                if (errorString != "")
-                {
-                    await DisplayAlert("Error!", errorString, "OK");
-                    return;
-                }
                 try
                 {
                     if (String.IsNullOrEmpty(passkey.Text))
@@ -195,7 +257,12 @@ namespace PasskeyConfigurationApp
                 }
                 
                 Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
-                await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
+                result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
+
+                if (result)
+                {
+                    await DisplayAlert("Success!", "", "OK");
+                }
             }
         }
 
