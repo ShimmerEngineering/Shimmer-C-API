@@ -105,6 +105,10 @@ namespace shimmer.Models
                     payloadArray[i + 18] = passkeyIdArray[i];
                 }
             }
+            else
+            {
+                throw new Exception("Passkey ID should have exactly two characters");
+            }
             Payload = BitConverter.ToString(payloadArray);
         }
 
@@ -130,6 +134,10 @@ namespace shimmer.Models
                 {
                     payloadArray[i + 20] = passkeyArray[i];
                 }
+            }
+            else
+            {
+                throw new Exception("Passkey should have exactly six characters");
             }
             Payload = BitConverter.ToString(payloadArray);
 
@@ -161,6 +169,10 @@ namespace shimmer.Models
                     //set the remaining bytes to 0xFF
                     payloadArray[i] = 0xFF;
                 }
+            }
+            else
+            {
+                throw new Exception("Advertising name prefix cannot have more than 32 characters");
             }
             Payload = BitConverter.ToString(payloadArray);
         }
