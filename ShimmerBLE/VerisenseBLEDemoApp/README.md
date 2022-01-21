@@ -40,6 +40,8 @@ BLEManagerEvent.BLEAdapterEvent.ScanCompleted
 BLEManagerEvent.BLEAdapterEvent.DevicePaired
 
 ```
+## Specifying the pairing key
+The pairing key can be updated via VerisenseBLEPairingKeyGenerator.cs
 Note in the example on the app layer the Verisense Device with the largest RSS will be selected for pairing.
 
 # IVerisenseBLE
@@ -113,7 +115,7 @@ Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 ```
 ![image](https://user-images.githubusercontent.com/2862032/149460315-76b4318f-a376-4bd7-b822-1996435a8bef.png)
 ![image](https://user-images.githubusercontent.com/2862032/149460539-e4701257-9d2a-4cdb-9a2a-9d1ef3e8bca5.png)
-
+_Note you will require entering the pairing key manually_
 
 ## Demo Video
 The video below shows the full demo process where
