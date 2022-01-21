@@ -2,7 +2,7 @@
 
 ## Current Limitations
 ### Verisense Pairing Key
-When using the verisense device you will require pairing the device manually, please get in touch with us to obtain said pairing key. On our road map we plan to release a version of the device which uses a default pairing key.
+When using the verisense device you will require knowing what the pairing key is and updating the [code](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/VCBA-96/ShimmerBLE/VerisenseBLEDemoApp/VerisenseBLEDemoApp/VerisenseBLEDemoApp/VerisenseBLEDemoApp/Advance/VerisenseBLEPairingKeyGenerator.cs) to use said key. Typically you will be allowed to specify whether you want to use the default passkey of 123456 on purchase. Should you have any inquiries contact support. 
 
 ### Android
 - requires the use of VS 2019 we've had compatibility issues with VS 2022
