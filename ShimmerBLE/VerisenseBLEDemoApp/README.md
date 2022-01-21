@@ -40,9 +40,9 @@ BLEManagerEvent.BLEAdapterEvent.ScanCompleted
 BLEManagerEvent.BLEAdapterEvent.DevicePaired
 
 ```
+Note in the example on the app layer the Verisense Device with the largest RSS will be selected for pairing.
 ## Specifying the pairing key
 The pairing key can be updated via VerisenseBLEPairingKeyGenerator.cs
-Note in the example on the app layer the Verisense Device with the largest RSS will be selected for pairing.
 
 # IVerisenseBLE
 This interface determines how communication with the Verisense sensor will be conducted over Bluetooth Low Energy. In the example this interface is implemented by VerisenseBLEDevice. Key events to take note off are
