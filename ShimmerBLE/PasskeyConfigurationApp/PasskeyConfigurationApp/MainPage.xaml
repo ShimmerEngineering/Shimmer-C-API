@@ -28,19 +28,15 @@
                 <Label Text="Passkey : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
                 <Entry Text="123456" FontSize="Small" WidthRequest="230" x:Name="passkey" VerticalTextAlignment="Center"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                <Label Text="Use Advance : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
-                <CheckBox x:Name="useAdvance" CheckedChanged="UseAdvance_CheckedChanged" WidthRequest="30" IsChecked="True" />
-            </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Passkey Settings : " x:Name="passkeySettingsLabel" FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
                 <Picker x:Name="passkeySettings" WidthRequest="230" SelectedIndexChanged="PasskeySettings_SelectedIndexChanged">
                     <Picker.ItemsSource>
                         <x:Array Type="{x:Type x:String}">
-                            <x:String>no passkey (Verisense-00-XXXXXXXX)</x:String>
-                            <x:String>default passkey (Verisense-01-XXXXXXXX)</x:String>
-                            <x:String>clinical trial passkey (Verisense-XXXXXXX)</x:String>
-                            <x:String>custom (for anything else)</x:String>
+                            <x:String>no passkey</x:String>
+                            <x:String>default passkey</x:String>
+                            <x:String>clinical trial passkey</x:String>
+                            <x:String>custom</x:String>
                         </x:Array>
                     </Picker.ItemsSource>
                 </Picker>
