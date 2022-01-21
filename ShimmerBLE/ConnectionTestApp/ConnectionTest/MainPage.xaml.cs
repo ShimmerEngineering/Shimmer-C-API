@@ -13,6 +13,8 @@ using static ShimmerBLEAPI.AbstractPlotManager;
 using shimmer.Communications;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using ShimmerBLEAPI.Models;
 
 
 namespace ConnectionTest
@@ -20,9 +22,9 @@ namespace ConnectionTest
     public partial class MainPage : ContentPage
     {
         VerisenseBLEDevice device;
-        String uuid = "00000000-0000-0000-0000-d02b463da2bb";
-        //String uuid = "00000000-0000-0000-0000-e7ec37a0d234";
-        //String uuid = "04514419-5AB1-6EEE-A83D-334220DADE3D";
+        IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
+        VerisenseBLEScannedDevice selectedDevice;
+        ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
 
         private int interval = 1;
         private int successCount = 0;
@@ -39,6 +41,8 @@ namespace ConnectionTest
         public MainPage()
         {
             InitializeComponent();
+            bleManager.BLEManagerEvent += BLEManager_BLEEvent;
+            deviceList.ItemsSource = ListOfScannedDevices;
 
             Device.BeginInvokeOnMainThread(() =>
             {
@@ -63,7 +67,6 @@ namespace ConnectionTest
                 retryCountEntry.Text = retryCount.ToString();
                 retryCountLimitEntry.Text = retryCountLimit.ToString();
                 deviceModelEntry.Text = DeviceInfo.Manufacturer + " " + DeviceInfo.Model;
-                uuidEntry.Text = uuid;
             });
         }
 
@@ -75,6 +78,12 @@ namespace ConnectionTest
         public async void DisconnectDevices()
         {
             var result = await device.Disconnect();
+        }
+
+        public void OnSelectedItem(object sender, SelectedItemChangedEventArgs e)
+        {
+            selectedDevice = (VerisenseBLEScannedDevice)e.SelectedItem;
+            uuidEntry.Text = selectedDevice.Uuid.ToString();
         }
 
         private async void ShimmerDevice_BLEEvent(object sender, ShimmerBLEEventData e)
@@ -96,7 +105,7 @@ namespace ConnectionTest
                         successCountEntry.Text = successCount.ToString();
                         firmwareEntry.Text = device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL;
                     });
-                    
+                    await Task.Delay(1000);
                     try
                     {
                         await device.Disconnect();
@@ -157,6 +166,51 @@ namespace ConnectionTest
             }
         }
 
+        private void BLEManager_BLEEvent(object sender, BLEManagerEvent e)
+        {
+            if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.ScanCompleted)
+            {
+                foreach (VerisenseBLEScannedDevice device in bleManager.GetListOfScannedDevices())
+                {
+                    if (device.IsConnectable)
+                    {
+                        bool added = false;
+                        foreach (VerisenseBLEScannedDevice a in ListOfScannedDevices)
+                        {
+                            if (a.ID == device.ID)
+                            {
+                                added = true;
+                                break;
+                            }
+                        }
+                        if (!added)
+                        {
+                            ListOfScannedDevices.Add(device);
+                        }
+                    }
+                }
+            }
+            else if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.DeviceDiscovered)
+            {
+                VerisenseBLEScannedDevice dev = (VerisenseBLEScannedDevice)e.objMsg;
+                if (dev.IsConnectable)
+                {
+                    bool added = false;
+                    foreach (VerisenseBLEScannedDevice a in ListOfScannedDevices)
+                    {
+                        if (a.ID == dev.ID)
+                        {
+                            added = true;
+                            break;
+                        }
+                    }
+                    if (!added)
+                    {
+                        ListOfScannedDevices.Add(dev);
+                    }
+                }
+            }
+        }
 
         public async void ConnectTask()
         {
@@ -192,6 +246,10 @@ namespace ConnectionTest
                 }
             }
         }
+        public async void ScanDevices()
+        {
+            await bleManager.StartScanForDevices();
+        }
 
         //------------------------------------------------------------------------------------------
 
@@ -208,7 +266,7 @@ namespace ConnectionTest
                 }
                 else
                 {
-                    device = new VerisenseBLEDevice(uuid, "");
+                    device = new VerisenseBLEDevice(selectedDevice.Uuid.ToString(), "");
                     device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 }
                 Device.BeginInvokeOnMainThread(() =>
@@ -251,6 +309,12 @@ namespace ConnectionTest
                 ResultMap.Clear();
                 isTestStarted = false;
             }
+        }
+
+        private void scanDeviceButton_Clicked(object sender, EventArgs e)
+        {
+            ListOfScannedDevices.Clear();
+            ScanDevices();
         }
     }
 }
