@@ -22,6 +22,7 @@ namespace PasskeyConfigurationApp
         private VerisenseBLEDevice device;
         private VerisenseBLEScannedDevice SelectedDevice;
         private ProdConfigPayload prodConfig;
+        private bool useAdvance = false;
         IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
 
@@ -32,21 +33,9 @@ namespace PasskeyConfigurationApp
             var service = DependencyService.Get<IVerisenseBLEManager>();
             bleManager.BLEManagerEvent += BLEManager_BLEEvent;
             deviceList.ItemsSource = ListOfScannedDevices;
-            useAdvance.IsChecked = false;
-        }
 
-        public async void ScanDevices()
-        {
-            await bleManager.StartScanForDevices();
-        }
-
-        public void UseAdvance_CheckedChanged(object sender, CheckedChangedEventArgs e)
-        {
-            if (e.Value)
+            if (useAdvance)
             {
-                deviceAdvertisingNamePrefix.IsEnabled = true;
-                passkeyId.IsEnabled = true;
-                passkey.IsEnabled = true;
                 passkeySettings.IsVisible = false;
                 passkeySettingsLabel.IsVisible = false;
             }
@@ -55,9 +44,12 @@ namespace PasskeyConfigurationApp
                 deviceAdvertisingNamePrefix.IsEnabled = false;
                 passkeyId.IsEnabled = false;
                 passkey.IsEnabled = false;
-                passkeySettings.IsVisible = true;
-                passkeySettingsLabel.IsVisible = true;
             }
+        }
+
+        public async void ScanDevices()
+        {
+            await bleManager.StartScanForDevices();
         }
 
         public void PasskeySettings_SelectedIndexChanged(object sender, EventArgs e)
@@ -66,19 +58,19 @@ namespace PasskeyConfigurationApp
             {
                 // no passkey
                 case 0:
-                    deviceAdvertisingNamePrefix.Text = prodConfig.AdvertisingNamePrefix;
+                    deviceAdvertisingNamePrefix.Text = prodConfig != null ? prodConfig.AdvertisingNamePrefix : "Verisense";
                     passkeyId.Text = "00";
                     passkey.Text = "";
                     break;
                 // default passkey
                 case 1:
-                    deviceAdvertisingNamePrefix.Text = prodConfig.AdvertisingNamePrefix;
+                    deviceAdvertisingNamePrefix.Text = prodConfig != null ? prodConfig.AdvertisingNamePrefix : "Verisense";
                     passkeyId.Text = "01";
                     passkey.Text = "123456";
                     break;
                 // clinical trial passkey
                 case 2: 
-                    deviceAdvertisingNamePrefix.Text = prodConfig.AdvertisingNamePrefix;
+                    deviceAdvertisingNamePrefix.Text = prodConfig != null ? prodConfig.AdvertisingNamePrefix : "Verisense";
                     passkeyId.Text = "";
                     passkey.Text = "";
                     break;
@@ -213,9 +205,8 @@ namespace PasskeyConfigurationApp
         public async void WritePasskeyConfigurationButton()
         {
             byte[] prodConfigByteArray = new byte[55];
-            var result;
 
-            if (!useAdvance.IsChecked)
+            if (!useAdvance)
             {
                 switch (passkeySettings.SelectedIndex)
                 {
@@ -236,8 +227,6 @@ namespace PasskeyConfigurationApp
                         break;
                     default: break;
                 }
-                Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
-                result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
             }
             else
             {
@@ -255,14 +244,12 @@ namespace PasskeyConfigurationApp
                 {
                     await DisplayAlert("Error!", ex.Message, "OK");
                 }
-                
-                Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
-                result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
-
-                if (result)
-                {
-                    await DisplayAlert("Success!", "", "OK");
-                }
+            }
+            Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
+            var result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
+            if (result != null)
+            {
+                await DisplayAlert("Write success!", "Please power cycle, unpair the sensor and pair it again", "OK");
             }
         }
 
