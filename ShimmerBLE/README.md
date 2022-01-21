@@ -2,7 +2,7 @@
 
 ## Current Limitations
 ### Verisense Pairing Key
-When using the verisense device you will require knowing what the pairing key is and updating the [code](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/VCBA-96/ShimmerBLE/VerisenseBLEDemoApp/VerisenseBLEDemoApp/VerisenseBLEDemoApp/VerisenseBLEDemoApp/Advance/VerisenseBLEPairingKeyGenerator.cs) to use said key. Typically you will be allowed to specify whether you want to use the default passkey of 123456 on purchase. Should you have any inquiries contact support. 
+When using the verisense device you will require knowing what the pairing key. Some examples already expect that the verisense devices are already paired. In others where the BLEManager is used, it will provide some support for pairing. Typically you will be allowed to specify whether you want to use the default passkey of 123456 on purchase. Should you have any inquiries contact support. 
 
 ### Android
 - requires the use of VS 2019 we've had compatibility issues with VS 2022
@@ -14,6 +14,7 @@ When using the verisense device you will require knowing what the pairing key is
 - note that uuid value for the same sensor on different iOS devices can be different
 - to retrieve the uuid on iOS an app such as Blue - Bluetooth & developers can be used to retrieve the uuid as highlighted below 
 ![image](https://user-images.githubusercontent.com/2862032/149056918-270fe963-42e2-470a-9dd7-3e6b7be7eeb0.png)
+- will require manual entry of the pairing key by the user
 
 
 ### Binary File Parsing
