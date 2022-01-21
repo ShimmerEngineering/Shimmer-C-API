@@ -107,6 +107,10 @@
       <Project>{dd54040d-e677-4533-b953-2aedf0b3a55e}</Project>
       <Name>MultiVerisenseExample</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ShimmerBLEAPI.Android\ShimmerBLEAPI.Android.csproj">
+      <Project>{381507d7-64e0-464d-a100-1f981c6a5235}</Project>
+      <Name>ShimmerBLEAPI.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConnectionTest\ConnectionTest.csproj">
       <Project>{74f63cdd-7c87-4227-b517-8b7226a2b4e9}</Project>
       <Name>ConnectionTest</Name>
