@@ -48,7 +48,7 @@ namespace shimmer.Models
             }
         }
 
-        public void EnableNoPasskey(string advertisingName, string passkeyID)
+        public void EnableNoPasskey(string advertisingName)
         {
             try
             {   
@@ -58,7 +58,7 @@ namespace shimmer.Models
                 }
                 SetAdvertisingNamePrefix(advertisingName);
                 SetPasskey("");
-                SetPasskeyID(passkeyID);
+                SetPasskeyID("");
             }
             catch (Exception ex)
             {
