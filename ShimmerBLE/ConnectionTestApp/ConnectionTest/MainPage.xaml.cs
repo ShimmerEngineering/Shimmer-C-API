@@ -105,7 +105,6 @@ namespace ConnectionTest
                         successCountEntry.Text = successCount.ToString();
                         firmwareEntry.Text = device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL;
                     });
-                    await Task.Delay(1000);
                     try
                     {
                         await device.Disconnect();
@@ -127,16 +126,16 @@ namespace ConnectionTest
                     {
                         if (retryCount < retryCountLimit)
                         {
-                            retryCount++;
-                            totalRetries++;
                             Device.BeginInvokeOnMainThread(() =>
                             {
+                                retryCount++;
+                                totalRetries++;
                                 retryCountEntry.Text = retryCount.ToString();
                                 totalRetriesEntry.Text = totalRetries.ToString();
+                                Thread.Sleep(3000);
+                                ConnectDevices();
+                                Thread.Sleep(500);
                             });
-                            Thread.Sleep(3000);
-                            ConnectDevices();
-                            Thread.Sleep(500);
                         }
                         else
                         {
@@ -157,11 +156,11 @@ namespace ConnectionTest
                             }
                         }
                     }
-                    else if (state == ShimmerDeviceBluetoothState.Limited)
-                    {
-                        DisconnectDevices();
-                        Thread.Sleep(3000);
-                    }
+                }
+                else if (state == ShimmerDeviceBluetoothState.Limited)
+                {
+                    DisconnectDevices();
+                    Thread.Sleep(3000);
                 }
             }
         }
