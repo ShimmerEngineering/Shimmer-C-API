@@ -212,7 +212,7 @@ namespace PasskeyConfigurationApp
                 {
                     // no passkey
                     case 0:
-                        prodConfig.EnableNoPasskey("", "00");
+                        prodConfig.EnableNoPasskey("");
                         break;
                     // default passkey
                     case 1:
@@ -234,7 +234,7 @@ namespace PasskeyConfigurationApp
                 {
                     if (String.IsNullOrEmpty(passkey.Text))
                     {
-                        prodConfig.EnableNoPasskey(deviceAdvertisingNamePrefix.Text, passkeyId.Text);
+                        prodConfig.EnableNoPasskey(deviceAdvertisingNamePrefix.Text);
                     }
                     else
                     {
