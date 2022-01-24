@@ -24,6 +24,13 @@ namespace shimmer.Models
         public string Passkey { get; set; }
         public string AdvertisingNamePrefix { get; set; }
 
+        public enum ConfigurationBytesIndexName
+        {
+            PASSKEY_ID = 15,
+            PASSKEY = 17,
+            ADVERTISING_NAME_PREFIX = 23
+        }
+
         public ProdConfigPayload(string payload)
         {
             Payload = payload;
@@ -58,7 +65,7 @@ namespace shimmer.Models
                 }
                 SetAdvertisingNamePrefix(advertisingName);
                 SetPasskey("");
-                SetPasskeyID("");
+                SetPasskeyID("00");
             }
             catch (Exception ex)
             {
@@ -85,12 +92,12 @@ namespace shimmer.Models
 
         protected void SetPasskeyID(string passkeyId)
         {
-            byte[] payloadArray = GetPayload();
+            byte[] payloadArrayWithoutHeader = GetPayload();
             if (string.IsNullOrEmpty(passkeyId))
             {
-                for (int i = 18; i <= 19; i++)
+                for (int i = 0; i < 2; i++)
                 {
-                    payloadArray[i] = 0xFF;
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.PASSKEY_ID + i] = 0xFF;
                 }
             }
             else if (passkeyId.Length == 2)
@@ -100,26 +107,28 @@ namespace shimmer.Models
                 {
                     throw new Exception("Passkey ID has a byte value of 0xFF which is not permitted");
                 }
-                for (int i = 0; i < passkeyIdArray.Length; i++)
+                for (int i = 0; i < 2; i++)
                 {
-                    payloadArray[i + 18] = passkeyIdArray[i];
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.PASSKEY_ID + i] = passkeyIdArray[i];
                 }
             }
             else
             {
                 throw new Exception("Passkey ID should have exactly two characters");
             }
-            Payload = BitConverter.ToString(payloadArray);
+            byte[] payloadArrayWithHeader = GetPayloadWithHeader();
+            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, 55);
+            Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
 
         protected void SetPasskey(string passkey)
         {
-            byte[] payloadArray = GetPayload();
+            byte[] payloadArrayWithoutHeader = GetPayload();
             if (string.IsNullOrEmpty(passkey))
             {
-                for (int i = 20; i <= 25; i++)
+                for (int i = 0; i < 6; i++)
                 {
-                    payloadArray[i] = 0xFF;
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.PASSKEY + i] = 0xFF;
                 }
             }
             else if (passkey.Length == 6)
@@ -130,27 +139,28 @@ namespace shimmer.Models
                 }
                 
                 byte[] passkeyArray = Encoding.UTF8.GetBytes(passkey);
-                for (int i = 0; i < passkeyArray.Length; i++)
+                for (int i = 0; i < 6; i++)
                 {
-                    payloadArray[i + 20] = passkeyArray[i];
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.PASSKEY + i] = passkeyArray[i];
                 }
             }
             else
             {
                 throw new Exception("Passkey should have exactly six characters");
             }
-            Payload = BitConverter.ToString(payloadArray);
-
+            byte[] payloadArrayWithHeader = GetPayloadWithHeader();
+            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, 55);
+            Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
         
         protected void SetAdvertisingNamePrefix(string advertisingNamePrefix)
         {
-            byte[] payloadArray = GetPayload();
+            byte[] payloadArrayWithoutHeader = GetPayload();
             if (string.IsNullOrEmpty(advertisingNamePrefix))
             {
-                for (int i = 26; i <= 57; i++)
+                for (int i = 0; i < 32; i++)
                 {
-                    payloadArray[i] = 0xFF;
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.ADVERTISING_NAME_PREFIX + i] = 0xFF;
                 }
             }
             else if (advertisingNamePrefix.Length <= 32)
@@ -162,19 +172,21 @@ namespace shimmer.Models
                 }
                 for (int i = 0; i < advertisingNamePrefixByteArray.Length; i++)
                 {
-                    payloadArray[i + 26] = advertisingNamePrefixByteArray[i];
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.ADVERTISING_NAME_PREFIX + i] = advertisingNamePrefixByteArray[i];
                 }
-                for (int i = advertisingNamePrefixByteArray.Length + 26; i <= 57; i++)
+                for (int i = advertisingNamePrefixByteArray.Length; i < 32; i++)
                 {
                     //set the remaining bytes to 0xFF
-                    payloadArray[i] = 0xFF;
+                    payloadArrayWithoutHeader[(int)ConfigurationBytesIndexName.ADVERTISING_NAME_PREFIX + i] = 0xFF;
                 }
             }
             else
             {
                 throw new Exception("Advertising name prefix cannot have more than 32 characters");
             }
-            Payload = BitConverter.ToString(payloadArray);
+            byte[] payloadArrayWithHeader = GetPayloadWithHeader();
+            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, 55);
+            Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
 
         protected bool IsAllFFs(byte[] byteArray)

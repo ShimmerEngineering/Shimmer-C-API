@@ -45,6 +45,13 @@ namespace shimmer.Models
 
         public byte[] GetPayload()
         {
+            byte[] payloadWithoutHeader = new byte[55];
+            Array.Copy(GetPayloadWithHeader(), 3, payloadWithoutHeader, 0, 55);
+            return payloadWithoutHeader;
+        }
+
+        public byte[] GetPayloadWithHeader()
+        {
             return BitHelper.MSBByteArray(Payload.Replace("-", "")).ToArray();
         }
     }

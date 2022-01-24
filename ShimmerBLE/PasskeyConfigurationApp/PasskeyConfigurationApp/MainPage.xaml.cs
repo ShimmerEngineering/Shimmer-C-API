@@ -204,8 +204,6 @@ namespace PasskeyConfigurationApp
 
         public async void WritePasskeyConfigurationButton()
         {
-            byte[] prodConfigByteArray = new byte[55];
-
             if (!useAdvance)
             {
                 switch (passkeySettings.SelectedIndex)
@@ -245,8 +243,7 @@ namespace PasskeyConfigurationApp
                     await DisplayAlert("Error!", ex.Message, "OK");
                 }
             }
-            Array.Copy(prodConfig.GetPayload(), 3, prodConfigByteArray, 0, 55);
-            var result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfigByteArray);
+            var result = await device.ExecuteRequest(RequestType.WriteProductionConfig, prodConfig.GetPayload());
             if (result != null)
             {
                 await DisplayAlert("Write success!", "Please power cycle, unpair the sensor and pair it again", "OK");
