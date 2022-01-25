@@ -229,9 +229,9 @@ namespace shimmer.Models
 
                 Header = BitConverter.ToString(reader.ReadBytes(1));
 
-                var lenthBytes = reader.ReadBytes(2);
-                Array.Reverse(lenthBytes);
-                Length = BitConverter.ToInt16(lenthBytes, 0);
+                var lengthBytes = reader.ReadBytes(2);
+                Array.Reverse(lengthBytes);
+                Length = int.Parse(BitConverter.ToString(lengthBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
                 ConfigHeader = BitConverter.ToString(reader.ReadBytes(1));
 
