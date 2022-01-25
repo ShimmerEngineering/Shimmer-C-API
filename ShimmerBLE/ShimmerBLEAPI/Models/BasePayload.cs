@@ -45,8 +45,9 @@ namespace shimmer.Models
 
         public byte[] GetPayload()
         {
-            byte[] payloadWithoutHeader = new byte[55];
-            Array.Copy(GetPayloadWithHeader(), 3, payloadWithoutHeader, 0, 55);
+            byte[] payloadWithHeader = GetPayloadWithHeader();
+            byte[] payloadWithoutHeader = new byte[payloadWithHeader.Length-3];
+            Array.Copy(GetPayloadWithHeader(), 3, payloadWithoutHeader, 0, payloadWithoutHeader.Length);
             return payloadWithoutHeader;
         }
 
