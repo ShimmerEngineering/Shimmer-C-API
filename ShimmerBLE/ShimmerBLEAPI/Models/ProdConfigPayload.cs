@@ -117,7 +117,7 @@ namespace shimmer.Models
                 throw new Exception("Passkey ID should have exactly two characters");
             }
             byte[] payloadArrayWithHeader = GetPayloadWithHeader();
-            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, 55);
+            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, payloadArrayWithoutHeader.Length);
             Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
 
@@ -149,7 +149,7 @@ namespace shimmer.Models
                 throw new Exception("Passkey should have exactly six characters");
             }
             byte[] payloadArrayWithHeader = GetPayloadWithHeader();
-            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, 55);
+            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, payloadArrayWithoutHeader.Length);
             Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
         
@@ -185,7 +185,7 @@ namespace shimmer.Models
                 throw new Exception("Advertising name prefix cannot have more than 32 characters");
             }
             byte[] payloadArrayWithHeader = GetPayloadWithHeader();
-            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, 55);
+            Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, payloadArrayWithoutHeader.Length);
             Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
 
