@@ -257,7 +257,7 @@ namespace shimmer.Models
                     byte[] hwInternalArray = reader.ReadBytes(2);
                     REV_HW_INTERNAL = BitConverter.ToUInt16(hwInternalArray, 0);
 
-                    byte[] passkeyIdArray = reader.ReadBytes(2);
+                    byte[] passkeyIdArray = reader.ReadBytes(PasskeyIDLength);
                     if (IsAllFFs(passkeyIdArray))
                     {
                         PasskeyID = "";
@@ -267,7 +267,7 @@ namespace shimmer.Models
                         PasskeyID = Encoding.UTF8.GetString(passkeyIdArray);
                     }
 
-                    byte[] passkeyArray = reader.ReadBytes(6);
+                    byte[] passkeyArray = reader.ReadBytes(PasskeyLength);
                     if (IsAllFFs(passkeyArray) || passkeyArray[0] == 0x00)
                     {
                         Passkey = "";
@@ -277,7 +277,7 @@ namespace shimmer.Models
                         Passkey = Encoding.UTF8.GetString(passkeyArray);
                     }
 
-                    byte[] advertisingNamePrefixArrayOriginal = reader.ReadBytes(32);
+                    byte[] advertisingNamePrefixArrayOriginal = reader.ReadBytes(AdvertisingNameLength);
                     if (IsAllFFs(advertisingNamePrefixArrayOriginal))
                     {
                         AdvertisingNamePrefix = "Verisense";
@@ -285,9 +285,9 @@ namespace shimmer.Models
                     else
                     {
                         int endIndex = Array.IndexOf(advertisingNamePrefixArrayOriginal, (byte)0xFF);
-                        if (endIndex == -1)
+                        if (endIndex == -1) //index not found
                         {
-                            endIndex = 32;
+                            endIndex = AdvertisingNameLength;
                         }
                         byte[] advertisingNamePrefixArray = new byte[endIndex];
                         Array.Copy(advertisingNamePrefixArrayOriginal, 0, advertisingNamePrefixArray, 0, endIndex);
