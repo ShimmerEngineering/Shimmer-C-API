@@ -154,13 +154,17 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerBLEAPI.UWP\ShimmerBLEAPI.UWP.csproj">
+      <Project>{76908925-02bb-433b-a9e5-bb07edfcb9c9}</Project>
+      <Name>ShimmerBLEAPI.UWP</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
       <Project>{2b423ed5-9db8-40fe-8c0c-dcdafe0e6229}</Project>
       <Name>ShimmerBLEAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\MultiVerisenseExample\MultiVerisenseExample.csproj">
       <Project>{dd54040d-e677-4533-b953-2aedf0b3a55e}</Project>
-      <Name>MultiShimmerExample</Name>
+      <Name>MultiVerisenseExample</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

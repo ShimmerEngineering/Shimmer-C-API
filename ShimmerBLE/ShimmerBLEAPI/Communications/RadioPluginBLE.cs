@@ -150,7 +150,7 @@ namespace shimmer.Communications
 
         private async void Adapter_DeviceDisconnected(object sender, DeviceEventArgs e)
         {
-            if (CommunicationEvent != null)
+            if (CommunicationEvent != null && e.Device.Id == ConnectedASM.Id)
             {
                 CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Event = Communications.ByteLevelCommunicationEvent.CommEvent.Disconnected });
                 if (ConnectedASM != null)
@@ -162,7 +162,7 @@ namespace shimmer.Communications
 
         private void Adapter_DeviceConnectionLost(object sender, DeviceEventArgs e)
         {
-            if (CommunicationEvent != null)
+            if (CommunicationEvent != null && e.Device.Id == ConnectedASM.Id)
             {
                 CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Event = Communications.ByteLevelCommunicationEvent.CommEvent.Disconnected });
             }
