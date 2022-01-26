@@ -78,8 +78,7 @@ namespace shimmer.Models
 
                 var lengthBytes = reader.ReadBytes(2);
                 Array.Reverse(lengthBytes);
-                Length = BitConverter.ToInt16(lengthBytes, 0);
-                //Length = int.Parse(BitConverter.ToString(lengthBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+                Length = int.Parse(BitConverter.ToString(lengthBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
                 ConfigurationBytes = reader.ReadBytes(response.Length - 3);
                 ConfigBody = BitConverter.ToString(ConfigurationBytes).Replace("-", string.Empty);
 
