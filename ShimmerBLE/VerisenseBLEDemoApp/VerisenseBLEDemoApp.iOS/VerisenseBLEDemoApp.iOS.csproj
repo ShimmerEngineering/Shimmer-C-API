@@ -138,11 +138,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ShimmerBLEAPI.iOS\ShimmerBLEAPI.iOS.csproj">
+    <ProjectReference Include="..\..\ShimmerBLEAPI.iOS\ShimmerBLEAPI.iOS.csproj">
       <Project>{7384146a-cbdd-4e65-a20f-cb9597378b26}</Project>
       <Name>ShimmerBLEAPI.iOS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
+    <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
       <Project>{2b423ed5-9db8-40fe-8c0c-dcdafe0e6229}</Project>
       <Name>ShimmerBLEAPI</Name>
     </ProjectReference>
