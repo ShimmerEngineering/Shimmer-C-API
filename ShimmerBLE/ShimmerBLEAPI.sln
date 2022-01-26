@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31829.152
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShimmerBLEAPI.UWP", "ShimmerBLEAPI.UWP\ShimmerBLEAPI.UWP.csproj", "{76908925-02BB-433B-A9E5-BB07EDFCB9C9}"
 EndProject
@@ -2106,7 +2106,9 @@ Global
 		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|ARM.Build.0 = Debug|ARM
 		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|ARM.Deploy.0 = Debug|ARM
 		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|ARM64.ActiveCfg = Debug|x86
-		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|iPhone.ActiveCfg = Debug|x86
+		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|iPhone.ActiveCfg = Debug|x64
+		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|iPhone.Build.0 = Debug|x64
+		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|iPhone.Deploy.0 = Debug|x64
 		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|iPhoneSimulator.ActiveCfg = Debug|x86
 		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|x64.ActiveCfg = Debug|x64
 		{868988AC-8699-41C5-9B8F-62B30EA3AB52}.Debug|x64.Build.0 = Debug|x64
@@ -2203,6 +2205,7 @@ Global
 		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|ARM64.ActiveCfg = Debug|iPhoneSimulator
 		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|iPhone.Build.0 = Debug|iPhone
+		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|iPhone.Deploy.0 = Debug|iPhone
 		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
 		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
 		{C3D9FA82-DF50-4CCA-9CCC-975B4F2E9631}.Debug|x64.ActiveCfg = Debug|iPhoneSimulator
