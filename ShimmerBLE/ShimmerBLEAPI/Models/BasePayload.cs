@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using shimmer.Helpers;
 
 namespace shimmer.Models
 {
@@ -41,6 +42,19 @@ namespace shimmer.Models
 
             return true;
         }
+
+        public byte[] GetPayload()
+        {
+            byte[] payloadWithHeader = GetPayloadWithHeader();
+            byte[] payloadWithoutHeader = new byte[payloadWithHeader.Length-3];
+            Array.Copy(GetPayloadWithHeader(), 3, payloadWithoutHeader, 0, payloadWithoutHeader.Length);
+            return payloadWithoutHeader;
+        }
+
+        public byte[] GetPayloadWithHeader()
+        {
+            return BitHelper.MSBByteArray(Payload.Replace("-", "")).ToArray();
+        }
     }
 
     public enum RequestType
@@ -52,6 +66,7 @@ namespace shimmer.Models
         ReadProductionConfig = 13,
         ReadOperationalConfig = 14,
         WriteOperationalConfig = 24,
+        WriteProductionConfig = 23,
         ReadRTC = 15,
         WriteRTC = 25,
         ReadPendingEvents = 17,
