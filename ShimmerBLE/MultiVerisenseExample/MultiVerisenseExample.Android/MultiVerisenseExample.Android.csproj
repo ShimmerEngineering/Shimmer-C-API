@@ -106,7 +106,7 @@
     </ProjectReference>
     <ProjectReference Include="..\MultiVerisenseExample\MultiVerisenseExample.csproj">
       <Project>{dd54040d-e677-4533-b953-2aedf0b3a55e}</Project>
-      <Name>MultiShimmerExample</Name>
+      <Name>MultiVerisenseExample</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
