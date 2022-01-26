@@ -750,7 +750,6 @@ namespace VerisenseBLEDemoApp
                 }
 
                 LBLPairing.Text = "Pairing...";
-                verisenseBLEDevice.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 var result = await bleManager.PairVerisenseDevice(DeviceToBePaired, new VerisenseBLEPairingKeyGenerator());
                 if (!result)
                 {
