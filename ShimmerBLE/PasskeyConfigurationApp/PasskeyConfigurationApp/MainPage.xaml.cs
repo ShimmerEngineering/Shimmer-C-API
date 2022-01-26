@@ -146,6 +146,14 @@ namespace PasskeyConfigurationApp
                 {
                     deviceState.Text = device.GetVerisenseBLEState().ToString();
                 });
+                if(device.GetVerisenseBLEState() == ShimmerDeviceBluetoothState.Connected)
+                {
+                    if (device.GetProductionConfig().REV_FW_INTERNAL < 99)
+                    {
+                        DisconnectDevices();
+                        DisplayAlert("Error!", "Firmware below 1.02.99 is not supported\nYour device will now be disconnect", "OK");
+                    }
+                }
             }
         }
 
