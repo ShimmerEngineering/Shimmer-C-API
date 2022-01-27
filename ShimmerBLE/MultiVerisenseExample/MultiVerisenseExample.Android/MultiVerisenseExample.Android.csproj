@@ -100,6 +100,10 @@
     <Content Include="Libs\Plugin.BLE.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerBLEAPI.Android\ShimmerBLEAPI.Android.csproj">
+      <Project>{381507d7-64e0-464d-a100-1f981c6a5235}</Project>
+      <Name>ShimmerBLEAPI.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
       <Project>{2B423ED5-9DB8-40FE-8C0C-DCDAFE0E6229}</Project>
       <Name>ShimmerBLEAPI</Name>
