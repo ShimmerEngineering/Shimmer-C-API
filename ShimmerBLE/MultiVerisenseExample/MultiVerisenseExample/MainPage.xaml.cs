@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 
 namespace MultiShimmerExample
 {
-    public partial class MainPage : ContentPage, INotifyPropertyChanged
+    public partial class MainPage : ContentPage
     {
         public class DeviceInfo : INotifyPropertyChanged
         {
@@ -106,20 +106,6 @@ namespace MultiShimmerExample
                 }
             }
             return null;
-        }
-
-        public async void PairDevices()
-        {
-            foreach (VerisenseBLEScannedDevice device in ScannedDevices)
-            {
-                if (GetDeviceInfoFromUUID(device.Uuid.ToString()).IsSelected)
-                {
-                    var service = DependencyService.Get<IVerisenseBLEManager>();
-                    //var pairing = await service.PairVerisenseDevice(device, null);
-                    //device.IsPaired = pairing;
-                    //GetDeviceInfoFromUUID(device.Uuid.ToString()).IsPaired = pairing ? "Is Paired" : "Not Paired";
-                }
-            }
         }
 
         public async void ScanDevices()
@@ -376,11 +362,6 @@ namespace MultiShimmerExample
         //------------------------------------------------------------------------------------------
 
         //GUI Functionality
-        private void pairDevicesButton_Clicked(object sender, EventArgs e)
-        {
-            PairDevices();
-        }
-
         private void scanDevicesButton_Clicked(object sender, EventArgs e)
         {
             ScanDevices();
