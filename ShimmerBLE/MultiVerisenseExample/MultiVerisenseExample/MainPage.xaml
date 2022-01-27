@@ -45,7 +45,6 @@
         <Grid>
             <ScrollView Orientation="Horizontal">
                 <StackLayout Orientation="Horizontal">
-                    <Button Clicked="pairDevicesButton_Clicked" x:Name="pairDevicesButton" WidthRequest="150" HeightRequest="60" Text="Pair Devices"></Button>
                     <Button Clicked="connectDevicesButton_Clicked" x:Name="connectDevicesButton" WidthRequest="150" HeightRequest="60" Text="Connect Devices"></Button>
                     <Button Clicked="startStreamingButton_Clicked" x:Name="startStreamingButton" WidthRequest="150" HeightRequest="60" Text="Start Streaming"></Button>
                     <Button Clicked="stopStreamingButton_Clicked" x:Name="stopStreamingButton" WidthRequest="150" HeightRequest="60" Text="Stop Streaming"></Button>
