@@ -47,18 +47,23 @@ namespace VerisenseBLEDemoApp.Droid
 
             if (minimumPermissionsGranted)
             {
-                LoadApplication(new App());
-
-                bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-                BroadcastReceiverPairingRequest = new BroadcastReceiverPairingRequest();
-                BroadcastReceiverBondStateChanged = new BroadcastReceiverBondStateChanged();
-
-                IntentFilter filterPairingRequest = new IntentFilter(BluetoothDevice.ActionPairingRequest);
-                filterPairingRequest.Priority = (int)Android.Content.IntentFilterPriority.HighPriority;
-                RegisterReceiver(BroadcastReceiverPairingRequest, filterPairingRequest);
-                IntentFilter filterBondStateChanged = new IntentFilter(BluetoothDevice.ActionBondStateChanged);
-                RegisterReceiver(BroadcastReceiverBondStateChanged, filterBondStateChanged);
+                LoadAppAndRegisterReceiver();
             }
+        }
+
+        private void LoadAppAndRegisterReceiver()
+        {
+            LoadApplication(new App());
+
+            bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+            BroadcastReceiverPairingRequest = new BroadcastReceiverPairingRequest();
+            BroadcastReceiverBondStateChanged = new BroadcastReceiverBondStateChanged();
+
+            IntentFilter filterPairingRequest = new IntentFilter(BluetoothDevice.ActionPairingRequest);
+            filterPairingRequest.Priority = (int)Android.Content.IntentFilterPriority.HighPriority;
+            RegisterReceiver(BroadcastReceiverPairingRequest, filterPairingRequest);
+            IntentFilter filterBondStateChanged = new IntentFilter(BluetoothDevice.ActionBondStateChanged);
+            RegisterReceiver(BroadcastReceiverBondStateChanged, filterBondStateChanged);
         }
         protected override void OnDestroy()
         {
@@ -97,17 +102,7 @@ namespace VerisenseBLEDemoApp.Droid
             
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            LoadApplication(new App());
-
-            bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
-            BroadcastReceiverPairingRequest = new BroadcastReceiverPairingRequest();
-            BroadcastReceiverBondStateChanged = new BroadcastReceiverBondStateChanged();
-
-            IntentFilter filterPairingRequest = new IntentFilter(BluetoothDevice.ActionPairingRequest);
-            filterPairingRequest.Priority = (int)Android.Content.IntentFilterPriority.HighPriority;
-            RegisterReceiver(BroadcastReceiverPairingRequest, filterPairingRequest);
-            IntentFilter filterBondStateChanged = new IntentFilter(BluetoothDevice.ActionBondStateChanged);
-            RegisterReceiver(BroadcastReceiverBondStateChanged, filterBondStateChanged);
+            LoadAppAndRegisterReceiver();
         }
     }
 }
