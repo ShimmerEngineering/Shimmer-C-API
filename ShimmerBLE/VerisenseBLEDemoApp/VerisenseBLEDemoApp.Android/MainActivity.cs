@@ -35,10 +35,30 @@ namespace VerisenseBLEDemoApp.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             base.OnCreate(savedInstanceState);
-            CheckPermissions();
+            bool minimumPermissionsGranted = CheckPermissions();
+
+            if (!minimumPermissionsGranted)
+            {
+                RequestPermissions(Permissions, 0);
+            }
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+
+            if (minimumPermissionsGranted)
+            {
+                LoadApplication(new App());
+
+                bluetoothAdapter = BluetoothAdapter.DefaultAdapter;
+                BroadcastReceiverPairingRequest = new BroadcastReceiverPairingRequest();
+                BroadcastReceiverBondStateChanged = new BroadcastReceiverBondStateChanged();
+
+                IntentFilter filterPairingRequest = new IntentFilter(BluetoothDevice.ActionPairingRequest);
+                filterPairingRequest.Priority = (int)Android.Content.IntentFilterPriority.HighPriority;
+                RegisterReceiver(BroadcastReceiverPairingRequest, filterPairingRequest);
+                IntentFilter filterBondStateChanged = new IntentFilter(BluetoothDevice.ActionBondStateChanged);
+                RegisterReceiver(BroadcastReceiverBondStateChanged, filterBondStateChanged);
+            }
         }
         protected override void OnDestroy()
         {
@@ -60,22 +80,16 @@ namespace VerisenseBLEDemoApp.Droid
             }
             base.OnDestroy();
         }
-        private void CheckPermissions()
+        private bool CheckPermissions()
         {
-            bool minimumPermissionsGranted = true;
-
             foreach (string permission in Permissions)
             {
                 if (CheckSelfPermission(permission) != Permission.Granted)
                 {
-                    minimumPermissionsGranted = false;
+                    return false;
                 }
             }
-
-            if (!minimumPermissionsGranted)
-            {
-                RequestPermissions(Permissions, 0);
-            }
+            return true;
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
