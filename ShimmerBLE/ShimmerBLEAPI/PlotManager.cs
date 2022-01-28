@@ -126,8 +126,8 @@ namespace ShimmerBLEAPI
                         lineSeries.Points.RemoveAt(0);
                         lineSeries.Points.Add(new DataPoint(ts, yData));
                     }
-                    count++;
                 }
+                count++;
             }
             PlotModel.InvalidatePlot(true);
             Thread.Sleep(25);
