@@ -38,7 +38,7 @@ namespace shimmer.Models
         public ProdConfigPayload(string payload)
         {
             Payload = payload;
-            ProcessPayload(GetPayload());
+            ProcessPayload(GetPayloadWithHeader());
         }
 
         public ProdConfigPayload()
