@@ -14,6 +14,26 @@
             </Grid.RowDefinitions>
             <ScrollView Grid.Row="1">
                 <StackLayout Orientation="Vertical" Padding="6,18,6,18" Spacing="10">
+                    <Button Margin="0,10,0,0" Clicked="scanDeviceButton_Clicked" x:Name="scanDeviceButton" HeightRequest="40" Text="Scan Device"></Button>
+                    <ListView
+                        x:Name="deviceList"
+                        HasUnevenRows="True"
+                        HeightRequest="100"
+                        ItemSelected="OnSelectedItem"
+                        SelectedItem="{Binding selectedDevice, Mode=TwoWay}"
+                        HorizontalOptions="Center"
+                        CachingStrategy="RecycleElement">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Label Text="{Binding Name, StringFormat='{0}'}" FontSize="Small" />
+                                        <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Small" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                     <StackLayout Orientation="Vertical" Padding="6,18,6,18" Spacing="10" HorizontalOptions="Center">
                         <StackLayout Orientation="Horizontal">
                             <Label Text="UUID : " WidthRequest="60" HorizontalTextAlignment="Start"/>
@@ -84,8 +104,8 @@
                             <Entry x:Name="totalRetriesEntry" HorizontalTextAlignment="Center"/>
                         </StackLayout>
                     </StackLayout>
-                    <Button Margin="0,10,0,0" Clicked="startTestButton_Clicked" x:Name="startTestButton" WidthRequest="100" HeightRequest="40" Text="Start Test"></Button>
-                    <Button Margin="0,0,0,0" Clicked="stopTestButton_Clicked" x:Name="stopTestButton" WidthRequest="100" HeightRequest="40" Text="Stop Test"></Button>
+                    <Button Margin="0,10,0,0" Clicked="startTestButton_Clicked" x:Name="startTestButton" HeightRequest="40" Text="Start Test"></Button>
+                    <Button Margin="0,0,0,0" Clicked="stopTestButton_Clicked" x:Name="stopTestButton" HeightRequest="40" Text="Stop Test"></Button>
                 </StackLayout>
             </ScrollView>
         </Grid>
