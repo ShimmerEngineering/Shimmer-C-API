@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              x:Class="MultiShimmerExample.MainPage">
+    <ScrollView Orientation="Vertical">
     <StackLayout>
         <Frame BackgroundColor="#2196F3" Padding="10" CornerRadius="0">
             <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
@@ -59,4 +60,5 @@
             </StackLayout>
         </ScrollView>
     </StackLayout>
+    </ScrollView>
 </ContentPage>
