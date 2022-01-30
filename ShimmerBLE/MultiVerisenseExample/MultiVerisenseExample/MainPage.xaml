@@ -3,20 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              x:Class="MultiShimmerExample.MainPage">
+    <ScrollView Orientation="Vertical">
     <StackLayout>
         <Frame BackgroundColor="#2196F3" Padding="10" CornerRadius="0">
             <Label Text="MultiVerisenseExample" HorizontalTextAlignment="Center" TextColor="White" FontSize="24"/>
         </Frame>
+        <StackLayout Orientation="Horizontal">
+            <Button Clicked="scanDevicesButton_Clicked" x:Name="scanDevicesButton" WidthRequest="150" HeightRequest="50" Text="Scan Devices"></Button>
+        </StackLayout>
         <ListView
             x:Name="deviceList"
             HasUnevenRows="True"
             HeightRequest="100"
+            SelectionMode="None"
             CachingStrategy="RecycleElement">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Vertical" VerticalOptions="Center">
-                            <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Small" />
+                            <StackLayout.HeightRequest>
+                                <OnPlatform x:TypeArguments="x:Double">
+                                    <On Platform="iOS">130</On>
+                                    <On Platform="Android,UWP">-1</On>
+                                </OnPlatform>
+                            </StackLayout.HeightRequest>
+                            <StackLayout Orientation="Horizontal">
+                                <CheckBox IsChecked="{Binding IsSelected}"></CheckBox>
+                                <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Micro" />
+                                <Label Text="{Binding IsPaired}" Margin="50, 0, 0, 0" FontSize="Micro" />
+                            </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{Binding Status}" TextColor="Blue" FontSize="Micro"/>
                                 <Label Text="{Binding TransferSpeed}" TextColor="Blue" FontSize="Micro"/>
@@ -45,4 +60,5 @@
             </StackLayout>
         </ScrollView>
     </StackLayout>
+    </ScrollView>
 </ContentPage>
