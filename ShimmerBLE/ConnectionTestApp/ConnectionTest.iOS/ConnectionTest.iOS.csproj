@@ -159,13 +159,13 @@
     <Content Include="Libs\Plugin.BLE.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerBLEAPI.iOS\ShimmerBLEAPI.iOS.csproj">
+      <Project>{7384146a-cbdd-4e65-a20f-cb9597378b26}</Project>
+      <Name>ShimmerBLEAPI.iOS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
       <Project>{2b423ed5-9db8-40fe-8c0c-dcdafe0e6229}</Project>
       <Name>ShimmerBLEAPI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\MultiVerisenseExample\MultiVerisenseExample\MultiVerisenseExample.csproj">
-      <Project>{dd54040d-e677-4533-b953-2aedf0b3a55e}</Project>
-      <Name>MultiVerisenseExample</Name>
     </ProjectReference>
     <ProjectReference Include="..\ConnectionTest\ConnectionTest.csproj">
       <Project>{74f63cdd-7c87-4227-b517-8b7226a2b4e9}</Project>

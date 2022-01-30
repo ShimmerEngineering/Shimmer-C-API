@@ -1,5 +1,6 @@
 ﻿using ShimmerBLEAPI;
 using ShimmerBLEAPI.Devices;
+using ShimmerBLEAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,12 +12,14 @@ using ShimmerAPI;
 using System.ComponentModel;
 using static shimmer.Models.ShimmerBLEEventData;
 using static ShimmerBLEAPI.AbstractPlotManager;
+using shimmer.Services;
+using System.Linq;
+using System.Collections.ObjectModel;
 
 namespace MultiShimmerExample
 {
     public partial class MainPage : ContentPage
     {
-
         public class DeviceInfo : INotifyPropertyChanged
         {
             public event PropertyChangedEventHandler PropertyChanged;
@@ -42,74 +45,82 @@ namespace MultiShimmerExample
             public string TransferSpeed { get { return _transferSpeed; } set { _transferSpeed = value; NotifyPropertyChanged("TransferSpeed"); } }
             private string _binFilePath { get; set; }
             public string BinFilePath { get { return _binFilePath; } set { _binFilePath = value; NotifyPropertyChanged("BinFilePath"); } }
+            private bool _isSelected { get; set; }
+            public bool IsSelected { get { return _isSelected; } set { _isSelected = value; NotifyPropertyChanged("IsSelected"); } }
+            private string _isPaired { get; set; }
+            public string IsPaired { get { return _isPaired; } set { _isPaired = value; NotifyPropertyChanged("IsPaired"); } }
+            public List<string[]> Signals { get; set; }
 
             public DeviceInfo(string uuid)
             {
                 Uuid = uuid;
+                Signals = new List<string[]>();
             }
         }
-        
+
         private Dictionary<string, VerisenseBLEDevice> ConnectedDevices = new Dictionary<string, VerisenseBLEDevice>();
-        private Dictionary<string, VerisenseBLEDevice> Devices = new Dictionary<string, VerisenseBLEDevice>();
         private Dictionary<string, bool> IsFirstOjcForDevice = new Dictionary<string, bool>();
         private PlotManager PlotManager;
-        //IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
-
-        List<DeviceInfo> deviceInfos = new List<DeviceInfo>();
-
-        List<string> uuids = new List<string>() //at some stage this should be retrieved from the OS, any verisense device
-        {
-            //"00000000-0000-0000-0000-e1ec063f5c80",
-            //"00000000-0000-0000-0000-daa56d898b02"
-            //"00000000-0000-0000-0000-e7452c6d6f14",
-            //"00000000-0000-0000-0000-c96117537402",
-            //"def7b570-bb64-5167-aa2c-76f634454258",
-            "7b3eba6c-026c-0861-bb0d-45d23d4dad64",
-            //"00000000-0000-0000-0000-daa619f04ad7",
-            //"00000000-0000-0000-0000-d02b463da2bb",
-            //"00000000-0000-0000-0000-e7ec37a0d234",
-            //"04514419-5ab1-6eee-a83d-334220dade3d",
-            //"ad973fda-127f-d52e-e6c7-0b9dd347e90d"
-
-        }; 
+        IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
+        ObservableCollection<DeviceInfo> deviceInfos = new ObservableCollection<DeviceInfo>();
+        List<string> uuids = new List<string>();
+        List<VerisenseBLEScannedDevice> ScannedDevices = new List<VerisenseBLEScannedDevice>();
 
         public MainPage()
         {
             InitializeComponent();
-            foreach (String uuid in uuids)
-            {
-                deviceInfos.Add(new DeviceInfo(uuid));
-            }
             PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
             plotView.Model = PlotManager.BuildPlotModel();
-
-            //var service = DependencyService.Get<IVerisenseBLEManager>();
-            //bleManager.BLEManagerEvent += BLEManager_BLEEvent;
+            if (bleManager != null)
+            {
+                bleManager.BLEManagerEvent += BLEManager_BLEEvent;
+            }
             deviceList.ItemsSource = deviceInfos;
-            
+        }
+
+        //public async void GetListOfVerisenseDevicesFromOS()
+        //{
+        //    //DeviceInformationCollection PairedBluetoothDevices = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(true));
+        //    DeviceInformationCollection PairedBluetoothDevices = await DeviceInformation.FindAllAsync();
+        //    foreach (DeviceInformation deviceInfo in PairedBluetoothDevices)
+        //    {
+        //        if (deviceInfo.Name.Contains("Verisense"))
+        //        {
+        //            String uuid = "00000000-0000-0000-0000-" + deviceInfo.Id.Split('#')[1].Replace("Dev_", "").Split('_').Last();
+        //            if (!uuids.Contains(uuid))
+        //            {
+        //                uuids.Add(uuid);
+        //                deviceInfos.Add(new DeviceInfo(uuid));
+        //            }
+        //        }
+        //    }
+        //}
+
+        public DeviceInfo GetDeviceInfoFromUUID(string uuid)
+        {
+            for (int i = 0; i < deviceInfos.Count; i++)
+            {
+                if (uuid == deviceInfos[i].Uuid)
+                {
+                    return deviceInfos[i];
+                }
+            }
+            return null;
+        }
+
+        public async void ScanDevices()
+        {
+            await bleManager.StartScanForDevices();
         }
 
         public async void ConnectDevices()
         {
             foreach (string uuid in uuids)
             {
-                VerisenseBLEDevice device = new VerisenseBLEDevice(uuid, "");
-                if (Devices.ContainsKey(uuid))
+                if (GetDeviceInfoFromUUID(uuid).IsSelected)
                 {
-                    Devices.Remove(uuid);
-                    Devices.Add(uuid, device);
-                }
-                else
-                {
-                    Devices.Add(uuid, device);
-                }
-
-                device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
-                bool result = await device.Connect(true);
-                if (result)
-                {
-                    Debug.WriteLine("Device Version: " + device.GetProductionConfig().REV_HW_MAJOR + "." + device.GetProductionConfig().REV_HW_MINOR);
-                    Debug.WriteLine("Firmware Version: " + device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL);
+                    VerisenseBLEDevice device = new VerisenseBLEDevice(uuid, "");
+                    // to get the connecting status
                     if (ConnectedDevices.ContainsKey(uuid))
                     {
                         ConnectedDevices.Remove(uuid);
@@ -119,12 +130,32 @@ namespace MultiShimmerExample
                     {
                         ConnectedDevices.Add(uuid, device);
                     }
-                    Debug.WriteLine("\nBT state: " + device.GetVerisenseBLEState() + "\nUUID: " + device.Asm_uuid + "\nBattery: " + device.GetStatus().BatteryPercent + "%");
-                    ConfigureDevice(device);
-                }
-                else
-                {
-                    Debug.WriteLine("Failed to connect device! UUID: " + uuid);
+                    device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
+                    bool result = await device.Connect(true);
+                    if (result)
+                    {
+                        Debug.WriteLine("Device Version: " + device.GetProductionConfig().REV_HW_MAJOR + "." + device.GetProductionConfig().REV_HW_MINOR);
+                        Debug.WriteLine("Firmware Version: " + device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL);
+                        if (ConnectedDevices.ContainsKey(uuid))
+                        {
+                            ConnectedDevices.Remove(uuid);
+                            ConnectedDevices.Add(uuid, device);
+                        }
+                        else if (!ConnectedDevices.ContainsKey(uuid))
+                        {
+                            ConnectedDevices.Add(uuid, device);
+                        }
+                        Debug.WriteLine("\nBT state: " + device.GetVerisenseBLEState() + "\nUUID: " + device.Asm_uuid + "\nBattery: " + device.GetStatus().BatteryPercent + "%");
+                        ConfigureDevice(device);
+                    }
+                    else
+                    {
+                        if (ConnectedDevices.ContainsKey(uuid))
+                        {
+                            ConnectedDevices.Remove(uuid);
+                        }
+                        Debug.WriteLine("Failed to connect device! UUID: " + uuid);
+                    }
                 }
             }
         }
@@ -152,18 +183,21 @@ namespace MultiShimmerExample
         {
             foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
             {
-                var streamResult = await device.ExecuteRequest(RequestType.StartStreaming);
-                Debug.WriteLine("Stream Status: " + streamResult);
-                if (device != null)
+                if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
                 {
-                    if (!IsFirstOjcForDevice.ContainsKey(device.Asm_uuid.ToString()))
+                    var streamResult = await device.ExecuteRequest(RequestType.StartStreaming);
+                    Debug.WriteLine("Stream Status: " + streamResult);
+                    if (device != null)
                     {
-                        IsFirstOjcForDevice.Add(device.Asm_uuid.ToString(), true);
-                    }
+                        if (!IsFirstOjcForDevice.ContainsKey(device.Asm_uuid.ToString()))
+                        {
+                            IsFirstOjcForDevice.Add(device.Asm_uuid.ToString(), true);
+                        }
 
-                    device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
+                        device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
+                    }
+                    device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 }
-                device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             }
         }
 
@@ -171,13 +205,16 @@ namespace MultiShimmerExample
         {
             foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
             {
-                var syncResult = device.ExecuteRequest(RequestType.TransferLoggedData);
-                Debug.WriteLine("Sync Status: " + syncResult);
-                if (device != null)
+                if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
                 {
-                    device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
+                    var syncResult = device.ExecuteRequest(RequestType.TransferLoggedData);
+                    Debug.WriteLine("Sync Status: " + syncResult);
+                    if (device != null)
+                    {
+                        device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
+                    }
+                    device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 }
-                device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             }
         }
 
@@ -185,10 +222,10 @@ namespace MultiShimmerExample
         {
             if (e.CurrentEvent == VerisenseBLEEvent.StateChange)
             {
-                int index = deviceInfos.FindIndex(x => x.Uuid == e.ASMID);
-                if (index >= 0)
+                DeviceInfo deviceInfo = GetDeviceInfoFromUUID(e.ASMID);
+                if (deviceInfo != null && ConnectedDevices.ContainsKey(e.ASMID))
                 {
-                    deviceInfos[index].Status = Devices[e.ASMID].GetVerisenseBLEState().ToString();
+                    deviceInfo.Status = ConnectedDevices[e.ASMID].GetVerisenseBLEState().ToString();
                 }
             }
             else if (e.CurrentEvent == VerisenseBLEEvent.NewDataPacket)
@@ -205,6 +242,7 @@ namespace MultiShimmerExample
                         if (signal[(int)SignalArrayIndex.Format].Equals(ShimmerConfiguration.SignalFormats.CAL) && signal[(int)SignalArrayIndex.Name].Contains("Accel"))
                         {
                             PlotManager.AddSignalToPlotDefaultColors(signal);
+                            GetDeviceInfoFromUUID(e.ASMID).Signals.Add(signal);
                         }
                         else if (signal[(int)SignalArrayIndex.Name].Equals(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP))
                         {
@@ -224,58 +262,94 @@ namespace MultiShimmerExample
             else if (e.CurrentEvent == VerisenseBLEEvent.SyncLoggedDataNewPayload)
             {
                 string[] words = e.Message.Split('(');
-                int index = deviceInfos.FindIndex(x => x.Uuid == e.ASMID);
-                if (index >= 0)
+                DeviceInfo deviceInfo = GetDeviceInfoFromUUID(e.ASMID);
+                if (deviceInfo != null)
                 {
-                    deviceInfos[index].TransferSpeed = words[0];
-                    deviceInfos[index].PayloadIndex = words[1].Remove(words[1].Length - 1);
-                    deviceInfos[index].BinFilePath = Devices[e.ASMID].dataFilePath;
+                    deviceInfo.TransferSpeed = words[0];
+                    deviceInfo.PayloadIndex = words[1].Remove(words[1].Length - 1);
+                    deviceInfo.BinFilePath = ConnectedDevices[e.ASMID].dataFilePath;
                 }
             }
         }
 
         private void BLEManager_BLEEvent(object sender, BLEManagerEvent e)
         {
-
             if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.ScanCompleted)
             {
-
+                foreach (VerisenseBLEScannedDevice device in bleManager.GetListOfScannedDevices())
+                {
+                    if (device.Name.Contains("Verisense") && device.IsConnectable && GetDeviceInfoFromUUID(device.Uuid.ToString()) == null)
+                    {
+                        uuids.Add(device.Uuid.ToString());
+                        deviceInfos.Add(new DeviceInfo(device.Uuid.ToString()));
+                        GetDeviceInfoFromUUID(device.Uuid.ToString()).IsPaired = device.IsPaired ? "Is Paired" : "Not Paired";
+                        if (!ScannedDevices.Contains(device))
+                        {
+                            ScannedDevices.Add(device);
+                        }
+                    }
+                }
             }
             else if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.DevicePaired)
             {
-
+                VerisenseBLEScannedDevice dev = (VerisenseBLEScannedDevice)e.objMsg;
+                if (GetDeviceInfoFromUUID(dev.Uuid.ToString()) != null)
+                {
+                    GetDeviceInfoFromUUID(dev.Uuid.ToString()).IsPaired = dev.IsPaired ? "Is Paired" : "Not Paired";
+                }
             }
             else if (e.CurrentEvent == BLEManagerEvent.BLEAdapterEvent.DeviceDiscovered)
             {
-                
+                VerisenseBLEScannedDevice dev = (VerisenseBLEScannedDevice)e.objMsg;
+                if (dev.Name.Contains("Verisense") && dev.IsConnectable && GetDeviceInfoFromUUID(dev.Uuid.ToString()) == null)
+                {
+                    uuids.Add(dev.Uuid.ToString());
+                    deviceInfos.Add(new DeviceInfo(dev.Uuid.ToString()));
+                    GetDeviceInfoFromUUID(dev.Uuid.ToString()).IsPaired = dev.IsPaired ? "Is Paired" : "Not Paired";
+                    if (!ScannedDevices.Contains(dev))
+                    {
+                        ScannedDevices.Add(dev);
+                    }
+                }
             }
         }
 
-
         public async void StopStreamingDevices()
         {
-            PlotManager.RemoveAllSignalsFromPlot();
             foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
             {
-                var result = await device.ExecuteRequest(RequestType.StopStreaming);
-                IsFirstOjcForDevice[device.Asm_uuid.ToString()] = true;
-                Debug.WriteLine("\nUUID: " + device.Asm_uuid + " stop streaming request \nResult: " + result + "\n");
+                if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
+                {
+                    foreach (string[] signal in GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).Signals)
+                    {
+                        PlotManager.RemoveSignalFromPlot(signal);
+                    }
+                    var result = await device.ExecuteRequest(RequestType.StopStreaming);
+                    IsFirstOjcForDevice[device.Asm_uuid.ToString()] = true;
+                    Debug.WriteLine("\nUUID: " + device.Asm_uuid + " stop streaming request \nResult: " + result + "\n");
+                }
             }
         }
 
         public async void DisconnectDevices()
         {
-            PlotManager.RemoveAllSignalsFromPlot();
             List<string> listOfDisconnectedUuids = new List<string>();
             foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
             {
-                var result = await device.Disconnect();
-                if (result)
+                if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
                 {
-                    listOfDisconnectedUuids.Add(device.Asm_uuid.ToString());
-                }
+                    foreach (string[] signal in GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).Signals)
+                    {
+                        PlotManager.RemoveSignalFromPlot(signal);
+                    }
+                    var result = await device.Disconnect();
+                    if (result)
+                    {
+                        listOfDisconnectedUuids.Add(device.Asm_uuid.ToString());
+                    }
 
-                Debug.WriteLine("\nUUID: " + device.Asm_uuid + " attempt disconnect \nResult: " + result + "\nNew BLE Status: " + device.GetVerisenseBLEState());
+                    Debug.WriteLine("\nUUID: " + device.Asm_uuid + " attempt disconnect \nResult: " + result + "\nNew BLE Status: " + device.GetVerisenseBLEState());
+                }
             }
 
             //Remove disconnected devices from the Dictionary
@@ -288,10 +362,10 @@ namespace MultiShimmerExample
         //------------------------------------------------------------------------------------------
 
         //GUI Functionality
-        //private void scanDevicesButton_Clicked(object sender, EventArgs e)
-        //{
-        //    bleManager.StartScanForDevices();
-        //}
+        private void scanDevicesButton_Clicked(object sender, EventArgs e)
+        {
+            ScanDevices();
+        }
 
         private void connectDevicesButton_Clicked(object sender, EventArgs e)
         {
@@ -313,7 +387,7 @@ namespace MultiShimmerExample
             DisconnectDevices();
         }
 
-        private void syncDevicesButton_Clicked(object sender,EventArgs e)
+        private void syncDevicesButton_Clicked(object sender, EventArgs e)
         {
             StartDataSync();
         }

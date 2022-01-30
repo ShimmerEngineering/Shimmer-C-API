@@ -272,6 +272,80 @@ namespace ShimmerBLETests
         }
 
         [Test]
+        public async Task StreamDataGSRUsingVerisensePulsePlus()
+        {
+            //Byte and bit index starts with 0
+            //Disable all sensors (Byte 1 = 0b00010111 = 0x17)
+            //Enable GSR (Byte 2 = 0b10000000 = 0x80)
+            //Enable Batt (Byte 3 = 0b00000010 = 0x02)
+            byte[] defaultBytes = new byte[] { 0x5A, 0x17, 0x80, 0x02, 0x00, 0x30, 0x20, 0x00, 0x7F, 0x00, 0xD8, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xF4, 0x18, 0x3C, 0x00, 0x0A, 0x0F, 0x00, 0x18, 0x3C, 0x00, 0x0A, 0x0F, 0x00, 0x18, 0x3C, 0x00, 0x0A, 0x0F, 0x00, 0xFF, 
+            //GSR AUTO RANGE BYTE 51 = 0x04    
+                0x04, 0xAA, 0x01, 0x03, 0x3C, 0x00, 0x0E, 0x00, 0x00, 0x63, 0x28, 0xCC, 0xCC, 0x1E, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01 };
+            byte[] prodConfigBytes = new byte[] { 51, 13, 0, 90, 230, 132, 1, 39, 8, 33, 68, 7, 1, 2, 98, 0 };
+
+            Boolean packetCorrectValue = true;
+            Boolean packetReceived = false;
+            TestVerisenseBLEDevice VerisenseBLEDevice = new TestVerisenseBLEDevice(uuid, "", defaultBytes, prodConfigBytes);
+            VerisenseBLEDevice.ShimmerBLEEvent += delegate (object sender, ShimmerBLEEventData e)
+            {
+                if (e.CurrentEvent == VerisenseBLEEvent.StateChange)
+                {
+                    Trace.WriteLine("Shimmer State: " + VerisenseBLEDevice.GetVerisenseBLEState().ToString());
+                };
+
+                if (e.CurrentEvent == VerisenseBLEEvent.NewDataPacket)
+                {
+                    ObjectCluster ojc = ((ObjectCluster)e.ObjMsg);
+                    var gsrOhms = ojc.GetData(SensorGSR.ObjectClusterSensorName.GSR, ShimmerConfiguration.SignalFormats.CAL, "kOhms").Data;
+                    var gsrSiemens = ojc.GetData(SensorGSR.ObjectClusterSensorName.GSR, ShimmerConfiguration.SignalFormats.CAL, "uSiemens").Data;
+                    var batt = ojc.GetData(SensorGSR.ObjectClusterSensorName.Batt, ShimmerConfiguration.SignalFormats.CAL).Data;
+                    packetReceived = true;
+                    double gsrOhmsExpectedValue = 58593.08594329789;
+                    double gsrSiemensExpectedValue = 0.017066860089392236;
+                    double battExpectedValue = 1240;
+                    if (Math.Abs(gsrOhms - gsrOhmsExpectedValue) < 1
+                    && Math.Abs(gsrSiemens - gsrSiemensExpectedValue) < .3
+                    && Math.Abs(batt - battExpectedValue) < 1)
+                    {
+                        packetCorrectValue = true;
+                    }
+                    else
+                    {
+                        packetCorrectValue = false;
+                    }
+
+                };
+            };
+
+            var result = await VerisenseBLEDevice.Connect(false);
+            if (result && VerisenseBLEDevice.GetVerisenseBLEState() == shimmer.Communications.ShimmerDeviceBluetoothState.Connected)
+            {
+                await VerisenseBLEDevice.ExecuteRequest(RequestType.StartStreaming);
+
+                if (VerisenseBLEDevice.GetVerisenseBLEState() == shimmer.Communications.ShimmerDeviceBluetoothState.Streaming)
+                {
+                    try
+                    {
+                        ((TestVerisenseBLEDevice)VerisenseBLEDevice).InjectRawPacketGSRVerisensePulsePlus();
+                    }
+                    catch (Exception ex)
+                    {
+                        Assert.Fail();
+                    }
+                }
+            }
+
+            if (packetCorrectValue && packetReceived)
+            {
+                Assert.Pass();
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
         public async Task StreamDataPPG()
         {
             //Byte and bit index starts with 0
