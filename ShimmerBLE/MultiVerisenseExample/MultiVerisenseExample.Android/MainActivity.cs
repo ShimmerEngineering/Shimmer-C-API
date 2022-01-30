@@ -32,7 +32,9 @@ namespace MultiShimmerExample.Droid
             Manifest.Permission.Bluetooth,
             Manifest.Permission.BluetoothAdmin,
             Manifest.Permission.ReadExternalStorage,
-            Manifest.Permission.WriteExternalStorage
+            Manifest.Permission.WriteExternalStorage,
+            Manifest.Permission.AccessCoarseLocation,
+            Manifest.Permission.AccessFineLocation,
         };
 
         private void CheckPermissions()

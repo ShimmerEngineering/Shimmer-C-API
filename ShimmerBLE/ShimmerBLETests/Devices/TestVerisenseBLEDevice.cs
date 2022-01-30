@@ -25,6 +25,17 @@ namespace ShimmerBLETests.Communications
             Array.Copy(opconfigbytes, OpConfig.ConfigurationBytes, opconfigbytes.Length); //deep copy
             UpdateDeviceAndSensorConfiguration();
         }
+
+        public TestVerisenseBLEDevice(string id, string name, byte[] opconfigbytes, byte[] prodconfigbytes) : base(id, name)
+        {
+            OpConfig = new OpConfigPayload();
+            OpConfig.ConfigurationBytes = new byte[opconfigbytes.Length];
+            ProdConfig = new ProdConfigPayload();
+            ProdConfig.ProcessPayload(prodconfigbytes);
+            Array.Copy(opconfigbytes, OpConfig.ConfigurationBytes, opconfigbytes.Length); //deep copy
+            UpdateDeviceAndSensorConfiguration();
+        }
+
         protected override void InitializeRadio()
         {
             BLERadio = new TestByteRadio();
@@ -83,6 +94,11 @@ namespace ShimmerBLETests.Communications
         public void InjectRawPacketGSR()
         {
             ((TestByteRadio)BLERadio).InjectRawPacketGSR();
+        }
+
+        public void InjectRawPacketGSRVerisensePulsePlus()
+        {
+            ((TestByteRadio)BLERadio).InjectRawPacketGSRVerisensePulsePlus();
         }
 
         public void InjectRawPacketPPG()
