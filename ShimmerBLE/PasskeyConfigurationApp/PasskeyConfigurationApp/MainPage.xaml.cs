@@ -54,6 +54,7 @@ namespace PasskeyConfigurationApp
 
         public void PasskeySettings_SelectedIndexChanged(object sender, EventArgs e)
         {
+            writePasskeyConfigurationButton.IsEnabled = true;
             switch (passkeySettings.SelectedIndex)
             {
                 // no passkey
@@ -76,6 +77,7 @@ namespace PasskeyConfigurationApp
                     break;
                 // custom
                 case 3:
+                    writePasskeyConfigurationButton.IsEnabled = false;
                     deviceAdvertisingNamePrefix.Text = "";
                     passkeyId.Text = "";
                     passkey.Text = "";
@@ -230,7 +232,7 @@ namespace PasskeyConfigurationApp
                         break;
                     // custom
                     case 3:
-                        break;
+                        return;
                     default: break;
                 }
             }
