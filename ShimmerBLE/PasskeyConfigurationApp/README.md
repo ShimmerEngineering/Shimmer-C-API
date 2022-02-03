@@ -25,5 +25,5 @@ _Note: Scanning can take a moment, and there are currently no UI indicators that
 ## Requirements
 Verisense FW Version >=1.2.99, using an incorrect version will lead to the following error as shown here in the
 [Video Demo](https://user-images.githubusercontent.com/2862032/152299942-ee2135d3-2854-4e19-bd4a-365e66508d72.mp4)
-
+If you require updating the firmware on your Verisense device, please contact Shimmer.
 
