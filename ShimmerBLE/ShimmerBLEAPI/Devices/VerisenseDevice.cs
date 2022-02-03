@@ -600,6 +600,30 @@ namespace ShimmerBLEAPI.Devices
             public string GetDescription() { return Description; }
         }
 
+        /// <summary>
+        /// Returns true if the input version is smaller or equal
+        /// </summary>
+        /// <param name="compMajor"></param>
+        /// <param name="compMinor"></param>
+        /// <param name="compInternal"></param>
+        /// <returns></returns>
+        public bool MeetsMinimumFWRequirement(int compMajor, int compMinor, int compInternal)
+        {
+            if (ProdConfig != null)
+            {
+                if ((compMajor < ProdConfig.REV_FW_MAJOR)
+                        || (ProdConfig.REV_FW_MAJOR == compMajor && compMinor < ProdConfig.REV_FW_MINOR)
+                        || (ProdConfig.REV_FW_MAJOR == compMajor && ProdConfig.REV_FW_MINOR == compMinor && compInternal <= ProdConfig.REV_FW_INTERNAL))
+                {
+                    return true; // if the version is smaller or equal 
+                }
+            } else
+            {
+                throw new Exception("Production Config Unknown");
+            }
+            return false; // if less
+        }
+
         public static DeviceByteSetting GetDeviceSettingFromConfigurationValue(DeviceByteSetting[] settings, int value)
         {
             foreach (DeviceByteSetting setting in settings)

@@ -54,6 +54,7 @@ namespace PasskeyConfigurationApp
 
         public void PasskeySettings_SelectedIndexChanged(object sender, EventArgs e)
         {
+            writePasskeyConfigurationButton.IsEnabled = true;
             switch (passkeySettings.SelectedIndex)
             {
                 // no passkey
@@ -76,6 +77,7 @@ namespace PasskeyConfigurationApp
                     break;
                 // custom
                 case 3:
+                    writePasskeyConfigurationButton.IsEnabled = false;
                     deviceAdvertisingNamePrefix.Text = "";
                     passkeyId.Text = "";
                     passkey.Text = "";
@@ -146,6 +148,14 @@ namespace PasskeyConfigurationApp
                 {
                     deviceState.Text = device.GetVerisenseBLEState().ToString();
                 });
+                if(device.GetVerisenseBLEState() == ShimmerDeviceBluetoothState.Connected)
+                {
+                    if (!device.MeetsMinimumFWRequirement(1,2,99)) // check if meets minimum requirement of 1.2.99
+                    {
+                        DisconnectDevices();
+                        DisplayAlert("Error!", "Firmware below 1.02.99 is not supported\nYour device will now be disconnect", "OK");
+                    }
+                }
             }
         }
 
@@ -222,7 +232,7 @@ namespace PasskeyConfigurationApp
                         break;
                     // custom
                     case 3:
-                        break;
+                        return;
                     default: break;
                 }
             }

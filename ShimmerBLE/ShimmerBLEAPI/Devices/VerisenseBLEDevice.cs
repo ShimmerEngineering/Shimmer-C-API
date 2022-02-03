@@ -607,6 +607,19 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.WriteProductionConfig:
                     if (additionalBytesToWrite != null)
                     {
+                        if (additionalBytesToWrite.Length >= 55)
+                        {
+                            byte[] passkeyBytes = new byte[ProdConfig.PasskeyLength];
+                            Array.Copy(additionalBytesToWrite, (int)ProdConfigPayload.ConfigurationBytesIndexName.PASSKEY, passkeyBytes, 0, passkeyBytes.Length);
+                            for (int i = 0; i < passkeyBytes.Length; i++)
+                            {
+                                if (passkeyBytes[i] != 0xFF && !int.TryParse(Encoding.UTF8.GetString(passkeyBytes, i, 1), out _))
+                                {
+                                    throw new Exception("Passkey Must Be Numeric Values");
+                                }
+                            }
+                        }
+                        
                         //needs a header
                         request = new byte[additionalBytesToWrite.Length + 3];
                         Array.Copy(additionalBytesToWrite, 0, request, 3, additionalBytesToWrite.Length);
