@@ -31,9 +31,9 @@ namespace shimmer.Models
             ADVERTISING_NAME_PREFIX = 23
         }
 
-        readonly int PasskeyIDLength = 2;
-        readonly int PasskeyLength = 6;
-        readonly int AdvertisingNameLength = 32;
+        public readonly int PasskeyIDLength = 2;
+        public readonly int PasskeyLength = 6;
+        public readonly int AdvertisingNameLength = 32;
 
         public ProdConfigPayload(string payload)
         {
@@ -137,9 +137,12 @@ namespace shimmer.Models
             }
             else if (passkey.Length == PasskeyLength)
             {
-                if (!int.TryParse(passkey, out _))
+                for (int i = 0; i < PasskeyLength; i++)
                 {
-                    throw new Exception("Passkey Must Be Numeric Values");
+                    if (!int.TryParse(passkey[i].ToString(), out _))
+                    {
+                        throw new Exception("Passkey Must Be Numeric Values");
+                    }
                 }
                 
                 byte[] passkeyArray = Encoding.UTF8.GetBytes(passkey);
