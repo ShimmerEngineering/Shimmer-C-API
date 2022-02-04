@@ -1,6 +1,9 @@
 # MultiVerisenseExample
 The MultiVerisenseExample is used to connect and stream data from Verisense device(s) via Bluetooth. 
-**Please make sure ShimmerAPI and ShimmerBLEAPI are built successfully before run MultiVerisenseExample**.
+
+## Prerequisites
+Your Verisense device is already paired with the OS
+**Please make sure ShimmerAPI and ShimmerBLEAPI are built successfully before running MultiVerisenseExample**.
 
 MultiVerisenseExample is broken into the following projects, please refer to the Readme of each project for further info
 
@@ -10,7 +13,7 @@ MultiVerisenseExample is broken into the following projects, please refer to the
 
       3.	MultiVerisenseExample.UWP
 
-NOTE: So far only the UWP and Android project has been tested and confirmed to run, the other projects may require extra development to get functional.
+
 
 NOTE: The MultiVerisenseExample provides 
 - Connect to Verisense device(s)
