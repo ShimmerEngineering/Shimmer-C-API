@@ -19,6 +19,9 @@ using System.Diagnostics;
 
 namespace ShimmerBLEAPI.Devices
 {
+    /// <summary>
+    /// Each instance of this class represent a single Verisense Device. It is used to communicate with said device via Bluetooth Low Energy
+    /// </summary>
     public class VerisenseBLEDevice : VerisenseDevice, IDisposable, IVerisenseBLE
     {
         #region Comm Props
@@ -100,10 +103,10 @@ namespace ShimmerBLEAPI.Devices
 
         #endregion
         /// <summary>
-        /// 
+        /// Created a verisese ble device of which to connect/configure/stream/sync
         /// </summary>
-        /// <param name="id">eg "00000000-0000-0000-0000-e7452c6d6f14"</param>
-        /// <param name="name">eg "190226016F14"</param>
+        /// <param name="id">the uuid for the address of which is used to connect to via BLE "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ </param>
+        /// <param name="name">and arbitrary/custom name eg "190226016F14"</param>
         public VerisenseBLEDevice(string id, string name)
         {
             ASMName = name;
@@ -119,6 +122,13 @@ namespace ShimmerBLEAPI.Devices
 
         #region Device Connection
 
+        /// <summary>
+        /// This is to give an option to log advance data if required
+        /// </summary>
+        /// <param name="ObjectName"></param>
+        /// <param name="Action"></param>
+        /// <param name="Data"></param>
+        /// <param name="asmid"></param>
         public virtual void AdvanceLog(string ObjectName, string Action, object Data, string asmid)
         {
             //Just print to console
@@ -126,6 +136,10 @@ namespace ShimmerBLEAPI.Devices
             Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
         }
 
+        /// <summary>
+        /// The duration in milliseconds since the last time the instance has received data successfully from a Verisense Device
+        /// </summary>
+        /// <returns>Duration in milliseconds</returns>
         public long DurationSinceLastRX()
         {
             return (DateHelper.GetTimestamp(DateTime.Now) - DateHelper.GetTimestamp(LastRX));
