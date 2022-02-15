@@ -11,11 +11,17 @@ using static shimmer.Models.OpConfigPayload;
 
 namespace ShimmerBLEAPI.Devices
 {
+    /// <summary>
+    /// todo
+    /// </summary>
     [Serializable]
     public abstract class VerisenseDevice
     {
         public static readonly DeviceByteSetting Unknown_Device_Setting = new DeviceByteSetting("Unknown", -1, "Unknown");
 
+        /// <summary>
+        /// todo
+        /// </summary>
         public class DefaultVerisenseConfiguration
         {
             public static readonly DeviceByteArraySettings Unknown_Device_OpConfig_Setting = new DeviceByteArraySettings("Unknown", null, "Unknown");
@@ -88,7 +94,7 @@ namespace ShimmerBLEAPI.Devices
         /// <summary>
         /// To clone a device
         /// </summary>
-        /// <param name="device"></param>
+        /// <param name="device">an existing verisense device that provides the operational config bytes</param>
         public VerisenseDevice(VerisenseDevice device)
         {
             OpConfig = new OpConfigPayload();
@@ -98,6 +104,9 @@ namespace ShimmerBLEAPI.Devices
             UpdateDeviceAndSensorConfiguration();
         }
 
+        /// <summary>
+        /// To create a new device
+        /// </summary>
         public VerisenseDevice()
         {
             CreateSensorMap();
@@ -144,6 +153,10 @@ namespace ShimmerBLEAPI.Devices
             return opConfigToWrite;
         }
 
+        /// <summary>
+        /// To set the PASSKEY_DISABLE bit in GEN_CFG_2 byte
+        /// </summary>
+        /// <param name="enabled">the value that is used to set the bit value</param>
         public void setPasskeyEnabled(bool enabled)
         {
             if(enabled)
