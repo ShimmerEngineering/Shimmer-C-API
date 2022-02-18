@@ -156,18 +156,6 @@ namespace ShimmerBLEAPI.Devices
             return opConfigToWrite;
         }
 
-        public void setPasskeyEnabled(bool enabled)
-        {
-            if(enabled)
-            {
-                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b11111011);
-            }
-            else
-            {
-                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)((OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | 0b00000100) & 0b11110111);
-            }
-        }
-
         /// <summary>
         /// Turns on/off the logging of data
         /// </summary>
@@ -637,22 +625,6 @@ namespace ShimmerBLEAPI.Devices
                 throw new Exception("Configuration Bytes Unknown");
             }
             if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00000010) == 2)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool IsPasskeyEnabled()
-        {
-            if (OpConfig.ConfigurationBytes == null)
-            {
-                throw new Exception("Configuration Bytes Unknown");
-            }
-            if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00000100) == 0)
             {
                 return true;
             }
