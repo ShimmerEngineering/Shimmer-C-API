@@ -8,6 +8,9 @@ using static shimmer.Models.OpConfigPayload;
 
 namespace shimmer.Sensors
 {
+	/// <summary>
+	/// This class contains the configuration settings for sensor accel1. Every sensor should belong to a device
+	/// </summary>
 	public class SensorLIS2DW12 : Sensor //ACCEL ONLY
 	{
 		protected bool Enabled;
@@ -35,6 +38,9 @@ namespace shimmer.Sensors
 		public static readonly double[,] DEFAULT_SENSITIVITY_MATRIX_LIS2DW12_8G = { { 417.916480729, 0, 0 }, { 0, 417.916480729, 0 }, { 0, 0, 417.916480729 } };
 		public static readonly double[,] DEFAULT_SENSITIVITY_MATRIX_LIS2DW12_16G = { { 208.958240364, 0, 0 }, { 0, 208.958240364, 0 }, { 0, 0, 208.958240364 } };
 
+		/// <summary>
+		/// This is used to store and retrieve the sensor data in the object cluster
+		/// </summary>
 		public static class ObjectClusterSensorName
 		{
 			public static String LIS2DW12_ACC_X = SensorName + "_X";
@@ -42,6 +48,9 @@ namespace shimmer.Sensors
 			public static String LIS2DW12_ACC_Z = SensorName + "_Z";
 		}
 		//ACCEL1_CFG_1
+		/// <summary>
+		/// The configuration of the full-scale range in accel1
+		/// </summary>
 		public static class AccelRange
 		{
 			/*
@@ -61,6 +70,9 @@ namespace shimmer.Sensors
 		}
 
 		//ACCEL1_CFG_0
+		/// <summary>
+		/// The configuration of high performance mode sampling rate in accel1
+		/// </summary>
 		public static class HighPerformanceAccelSamplingRate
 		{
 			public static readonly SensorSetting Rate_Unknown = Sensor.UnknownSetting;
@@ -76,6 +88,9 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = {Rate_Unknown, Power_Down, Freq_12_5Hz, Freq_25Hz, Freq_50Hz, Freq_100Hz, Freq_200Hz, Freq_400Hz, Freq_800Hz, Freq_1600Hz};
 		}
 		//ACCEL1_CFG_0
+		/// <summary>
+		/// The configuration of low power mode sampling rate in accel1
+		/// </summary>
 		public static class LowPerformanceAccelSamplingRate
 		{
 			public static readonly SensorSetting Rate_Unknown = Sensor.UnknownSetting;
@@ -89,6 +104,9 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = {Rate_Unknown, Power_Down, Freq_1_6Hz, Freq_12_5Hz, Freq_25Hz, Freq_50Hz, Freq_100Hz, Freq_200Hz};
 		}
 		//ACCEL1_CFG_0
+		/// <summary>
+		/// The configuration of the mode in accel1
+		/// </summary>
 		public static class Mode
 		{
 			public static readonly SensorSetting Mode_Unknown = Sensor.UnknownSetting;
@@ -99,6 +117,9 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = { Mode_Unknown, Low_Power_Mode, High_Performance_Mode, On_Demand, Reserved };
 		}
 		//ACCEL1_CFG_0
+		/// <summary>
+		/// The configuration of the lower power mode in accel1
+		/// </summary>
 		public static class LowPowerMode
 		{
 			public static readonly SensorSetting Mode_Unknown = Sensor.UnknownSetting;
@@ -109,6 +130,9 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = { Mode_Unknown, Low_Power_Mode_1, Low_Power_Mode_2, Low_Power_Mode_3, Low_Power_Mode_4 };
 		}
 		//ACCEL1_CFG_1
+		/// <summary>
+		/// The configuration of the high performance mode digital filter cut-off frequency / bandwidth in accel1
+		/// </summary>
 		public static class HighPerformanceBandwidthFilter
 		{
 			public static readonly SensorSetting Bandwidth_Unknown = Sensor.UnknownSetting;
@@ -119,6 +143,9 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = { Bandwidth_Unknown, Bandwidth_Filter_1, Bandwidth_Filter_2, Bandwidth_Filter_3, Bandwidth_Filter_4 };
 		}
 		//ACCEL1_CFG_1
+		/// <summary>
+		/// The configuration of the low power mode digital filter cut-off frequency / bandwidth in accel1
+		/// </summary>
 		public static class LowPerformanceBandwidthFilter
 		{
 			public static readonly SensorSetting Bandwidth_Unknown = Sensor.UnknownSetting;
@@ -129,6 +156,9 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = { Bandwidth_Unknown, Bandwidth_Filter_1, Bandwidth_Filter_2, Bandwidth_Filter_3, Bandwidth_Filter_4 };
 		}
 		//ACCEL1_CFG_3
+		/// <summary>
+		/// The configuration of the FIFO memory buffer in accel1
+		/// </summary>
 		public static class FMode
 		{
 			public static readonly SensorSetting FMode_Unknown = Sensor.UnknownSetting;
@@ -140,85 +170,159 @@ namespace shimmer.Sensors
 			public static readonly SensorSetting[] Settings = { FMode_Unknown, FMode_1, FMode_2, FMode_3, FMode_4, FMode_5 };
 		}
 
+		/// <summary>
+		/// Return the configuration of the digital filter cut-off frequency / bandwidth in accel1
+		/// </summary>
+		/// <returns></returns>
 		public SensorSetting GetAccelBandwidthFilter()
 		{
 			return BWFilterSetting;
 		}
+		/// <summary>
+		/// Set the configuration of the digital filter cut-off frequency / bandwidth in accel1
+		/// </summary>
+		/// <param name="bandwidth"><see cref="HighPerformanceBandwidthFilter"/> or <see cref="LowPerformanceBandwidthFilter"/></param>
 		public void SetBandwidthFilter(SensorSetting bandwidth)
 		{
 			BWFilterSetting = bandwidth;
 		}
+		/// <summary>
+		/// Return the configuration of the FIFO memory buffer in accel1
+		/// </summary>
+		/// <returns></returns>
 		public SensorSetting GetAccelFMode()
 		{
 			return FModeSetting;
 		}
+		/// <summary>
+		/// Set the configuration of the FIFO memory buffer in accel1
+		/// </summary>
+		/// <param name="fmode"><see cref="FMode"/></param>
 		public void SetAccelFMode(SensorSetting fmode)
 		{
 			FModeSetting = fmode;
 		}
+		/// <summary>
+		/// Returns the FIFO threshold level setting in accel1
+		/// </summary>
+		/// <returns></returns>
 		public int GetAccelFIFOThreshold()
 		{
 			return FIFOThresholdSetting;
 		}
+		/// <summary>
+		/// Set the FIFO threshold level setting in accel1
+		/// </summary>
+		/// <param name="threshold"></param>
 		public void SetAccelFIFOThreshold(int threshold)
 		{
 			FIFOThresholdSetting = threshold;
 		}
+		/// <summary>
+		/// Returns true if high pass data filter is enabled
+		/// </summary>
+		/// <returns></returns>
 		public bool IsHighPassFilterEnabled()
 		{
 			return HighPassFilterEnabled;
 		}
+		/// <summary>
+		/// Set whether a high or low pass data filter is selected.
+		/// </summary>
+		/// <param name="enable"></param>
 		public void SetHighPassFilterEnabled(bool enable)
 		{
 			HighPassFilterEnabled = enable;
 		}
+		/// <summary>
+		/// Returns true if low-noise configuration is enabled
+		/// </summary>
 		public bool IsLowNoiseEnabled()
 		{
 			return LowNoiseEnabled;
 		}
+		/// <summary>
+		/// Enable or disable the low-noise configuration
+		/// </summary>
 		public void SetLowNoiseEnabled(bool enable)
 		{
 			LowNoiseEnabled = enable;
 		}
-
+		/// <summary>
+		/// Returns true if high pass filter reference mode is enabled
+		/// </summary>
+		/// <returns></returns>
 		public bool IsHighPassFilterRefModeEnabled()
 		{
 			return HighPassFilterRefModeEnabled;
 		}
+		/// <summary>
+		/// Enable or disable the high pass filter reference mode
+		/// </summary>
+		/// <param name="enable"></param>
 		public void SetHighPassFilterRefModeEnabled(bool enable)
 		{
 			HighPassFilterRefModeEnabled = enable;
 		}
-
+		/// <summary>
+		/// Returns the configuration of the full-scale range in accel1
+		/// </summary>
+		/// <returns></returns>
 		public SensorSetting GetAccelRange()
         {
 			return RangeSetting;
         }
-
+		/// <summary>
+		/// Set the configuration of the full-scale range in accel1
+		/// </summary>
+		/// <param name="range"><see cref="AccelRange"/></param>
 		public void SetAccelRange(SensorSetting range)
         {
 			RangeSetting = range;
         }
+		/// <summary>
+		/// Returns the configuration of sampling rate in accel1
+		/// </summary>
 		public override SensorSetting GetSamplingRate()
         {
 			return RateSetting;
         }
+		/// <summary>
+		/// Set the configuration of the mode in accel1
+		/// </summary>
+		/// <param name="mode"><see cref="Mode"/></param>
 		public void SetMode(SensorSetting mode)
         {
 			ModeSetting = mode;
         }
+		/// <summary>
+		/// Returns the configuration of the mode in accel1
+		/// </summary>
+		/// <returns></returns>
 		public SensorSetting GetMode()
 		{
 			return ModeSetting;
 		}
+		/// <summary>
+		/// Set the configuration of the lower power mode in accel1
+		/// </summary>
+		/// <param name="lpmode"><see cref="LowPowerMode"/></param>
 		public void SetLPMode(SensorSetting lpmode)
         {
 			LPModeSetting = lpmode;
         }
+		/// <summary>
+		/// Returns the configuration of the lower power mode in accel1
+		/// </summary>
+		/// <returns></returns>
 		public SensorSetting GetLowPowerMode()
 		{
 			return LPModeSetting;
 		}
+		/// <summary>
+		/// Set the configuration of sampling rate in accel1
+		/// </summary>
+		/// <param name="rate"><see cref="HighPerformanceAccelSamplingRate"/> or <see cref="LowPerformanceAccelSamplingRate"/></param>
 		public override void SetSamplingRate(SensorSetting rate)
         {
 			RateSetting = rate;
@@ -251,28 +355,44 @@ namespace shimmer.Sensors
 		}
 		*/
 
+		/// <summary>
+		/// Create a new sensor accel1 and initialize the sensor configuration settings
+		/// </summary>
+		/// <param name="operationalConfigBytes"></param>
 		public SensorLIS2DW12(byte[] operationalConfigBytes) : base()
 		{
 			InitializeUsingOperationConfig(operationalConfigBytes);
 
 		}
-
+		/// <summary>
+		/// Turns on/off data collection from the primary accelerometer
+		/// </summary>
+		/// <param name="enable"></param>
 		public void SetAccelEnabled(bool enable)
         {
 			Enabled = enable;
         }
-
+		/// <summary>
+		/// Returns true if the data collection from the primary accelerometer is enabled
+		/// </summary>
+		/// <returns></returns>
 		public bool IsAccelEnabled()
         {
 			return Enabled;
         }
-
-        public SensorLIS2DW12():base()
+		/// <summary>
+		/// Create a new sensor accel1
+		/// </summary>
+		public SensorLIS2DW12():base()
         {
 
 		}
-
-        public override ObjectCluster ParseSensorData(byte[] sample, ObjectCluster ojc)
+		/// <summary>
+		/// Parse the sample of data and store in the object cluster provided
+		/// </summary>
+		/// <param name="ojc"></param>
+		/// <param name="sample">one set of data</param>
+		public override ObjectCluster ParseSensorData(byte[] sample, ObjectCluster ojc)
         {
 			var accelx = BitConverter.ToInt16(sample, 0);
 			var accely = BitConverter.ToInt16(sample, 2);
@@ -306,8 +426,12 @@ namespace shimmer.Sensors
 
 			return ojc;
 		}
-
-        public override byte[] GenerateOperationConfig(byte[] operationalConfigBytes)
+		/// <summary>
+		/// Update the operational configuration byte array based on current sensor configuration
+		/// </summary>
+		/// <param name="operationalConfigBytes">byte array to be update</param>
+		/// <returns></returns>
+		public override byte[] GenerateOperationConfig(byte[] operationalConfigBytes)
         {
             if (Enabled)
             {
@@ -362,8 +486,13 @@ namespace shimmer.Sensors
 
 			return operationalConfigBytes;
         }
-
-        public override List<ObjectCluster> ParsePayloadData(byte[] payload, String deviceID)
+		/// <summary>
+		/// Parse the raw payload data received to other format for streaming
+		/// </summary>
+		/// <param name="payload">the payload data that is received from the sensor</param>
+		/// <param name="deviceID">the uuid for the address of which is used to connect to via BLE "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ</param>
+		/// <returns></returns>
+		public override List<ObjectCluster> ParsePayloadData(byte[] payload, String deviceID)
         {
             var numberofBytesPerSample = 6;
 			var numberofSamples = payload.Length / numberofBytesPerSample;
@@ -383,8 +512,11 @@ namespace shimmer.Sensors
 			}
 			return listOfOJCs;
 		}
-
-        public override void InitializeUsingOperationConfig(byte[] operationalConfigBytes)
+		/// <summary>
+		/// Initialize the configuration settings using the operational config bytes provided
+		/// </summary>
+		/// <param name="operationalConfigBytes"></param>
+		public override void InitializeUsingOperationConfig(byte[] operationalConfigBytes)
         {
 			if ((operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] >>7) == 1)
 			{
@@ -446,8 +578,11 @@ namespace shimmer.Sensors
 
 			FIFOThresholdSetting = (operationalConfigBytes[(int)ConfigurationBytesIndexName.ACCEL1_CFG_3]) & 0b00011111;
 		}
-
-        public override string GetSensorName()
+		/// <summary>
+		/// Returns the sensor name
+		/// </summary>
+		/// <returns></returns>
+		public override string GetSensorName()
         {
 			return SensorName;
         }
