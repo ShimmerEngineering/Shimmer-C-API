@@ -115,6 +115,10 @@ namespace ShimmerBLEAPI.Devices
             
         }
 
+        /// <summary>
+        /// Create a clone of the verisese ble device
+        /// </summary>
+        /// <param name="verisenseBLEDevice">an existing verisense ble device</param>
         public VerisenseBLEDevice(VerisenseBLEDevice verisenseBLEDevice) : base(verisenseBLEDevice)
         {
 
@@ -145,10 +149,6 @@ namespace ShimmerBLEAPI.Devices
             return (DateHelper.GetTimestamp(DateTime.Now) - DateHelper.GetTimestamp(LastRX));
         }
 
-        /// <summary>
-        /// This me
-        /// </summary>
-        /// <returns></returns>
         protected async Task<bool> GetKnownDevice()
         {
             LastRX = DateTime.Now;
@@ -175,6 +175,10 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        /// <summary>
+        /// Returns the current bluetooth state
+        /// </summary>
+        /// <returns></returns>
         public ShimmerDeviceBluetoothState GetVerisenseBLEState()
         {
             return CurrentBluetoothState;
@@ -546,6 +550,12 @@ namespace ShimmerBLEAPI.Devices
 
         #region Execute Requests
 
+        /// <summary>
+        /// Write bytes to the BLE device based on the request type
+        /// </summary>
+        /// <param name="reqObjects">1st parameter must be a request type, second parameter is optional and must be a byte array</param>
+        /// <exception>Thrown if 1st parameter is not a request type or second parameter is not a byte array</exception>
+        /// <returns>return payload that varies based on request type</returns>
         public async Task<IBasePayload> ExecuteRequest(params Object[] reqObjects)
         {
 
@@ -893,6 +903,10 @@ namespace ShimmerBLEAPI.Devices
         }
 
         bool WaitingForStopStreamingCommand = false;
+
+        /// <summary>
+        /// Stop streaming
+        /// </summary>
         public async void SendStopStreamRequestCommandOnMainThread()
         {
             try
@@ -964,16 +978,26 @@ namespace ShimmerBLEAPI.Devices
             return ParticipantID;
         }
 
+        /// <summary>
+        /// For more advance API/App which associate sensors to trials
+        /// </summary>
+        /// <returns></returns>
         public virtual string GetTrialName()
         {
             return TrialName;
         }
 
+        /// <summary>
+        /// For more advance API/App which associate sensors to trials
+        /// </summary>
         public virtual void SetTrialName(string trialName)
         {
             TrialName = trialName;
         }
 
+        /// <summary>
+        /// For more advance API/App which associate sensors to participants
+        /// </summary>
         public virtual void SetParticipantID(string participantID)
         {
             ParticipantID = participantID;
@@ -1381,6 +1405,12 @@ namespace ShimmerBLEAPI.Devices
 
         }
 
+        /// <summary>
+        /// Append a new byte to a byte array
+        /// </summary>
+        /// <param name="bArray"></param>
+        /// <param name="newByte"></param>
+        /// <returns></returns>
         public byte[] addByteToArray(byte[] bArray, byte newByte)
         {
             byte[] newArray = new byte[bArray.Length + 1];
@@ -1641,7 +1671,6 @@ namespace ShimmerBLEAPI.Devices
         //to override
         protected async virtual Task<byte[]> CreateWriteOpConfigRequestOnUnpairing()
         {
-
             return null;
         }
         #endregion
@@ -1672,6 +1701,10 @@ namespace ShimmerBLEAPI.Devices
 
         #endregion
 
+        /// <summary>
+        /// Create write time request using current time
+        /// </summary>
+        /// <returns></returns>
         public static byte[] CreateWriteTimeRequest()
         {
             //see ASM-DES04 section: Real-World Clock Synchronisation Format
@@ -1776,11 +1809,20 @@ namespace ShimmerBLEAPI.Devices
             return false;
         }
 
+        /// <summary>
+        /// To intitialize a ble connection with the verisense device
+        /// </summary>
+        /// <param name="initialize">this will read the status, production configuration, operation configuration and set the time</param>
+        /// <returns></returns>
         public async Task<bool> Connect(bool initialize)
         {
             return await Connect(initialize, DefaultVerisenseConfiguration.Unknown_Device_OpConfig_Setting, false);
         }
 
+        /// <summary>
+        /// To disconnect the verisense device
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> Disconnect()
         {   
             var result = await BLERadio.Disconnect();
@@ -1798,6 +1840,10 @@ namespace ShimmerBLEAPI.Devices
             return true;
         }
 
+        /// <summary>
+        /// Write and read the operation configuration
+        /// </summary>
+        /// <returns>operational config payload</returns>
         public async Task<IBasePayload> WriteAndReadOperationalConfiguration(byte[] operationalConfiguration)
         {
             await ExecuteRequest(RequestType.WriteOperationalConfig, operationalConfiguration);
@@ -1805,6 +1851,10 @@ namespace ShimmerBLEAPI.Devices
             return result;
         }
 
+        /// <summary>
+        /// Convert mac address to ulong
+        /// </summary>
+        /// <returns></returns>
         public static ulong ConvertMACAddress(string macAddress)
         {
             string hex = macAddress.Replace(":", "");
@@ -1818,6 +1868,5 @@ namespace ShimmerBLEAPI.Devices
                 sensor.ResetTimestamps();
             }
         }
-
     }
 }
