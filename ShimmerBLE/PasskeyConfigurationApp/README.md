@@ -10,13 +10,15 @@ The API has a fully configurable advertising ids, passkey ids, and passkey value
 The following 
 [Video Demo](https://user-images.githubusercontent.com/2862032/152300234-737ad996-80f8-4b37-9b13-a34c420e3137.mp4)
 is an example of changing the sensor to default passkey from clinical passkey, note that the sensor has to be paired prior. Once the settings have been changed remember to power cycle and unpair --> pair the device.
-For the purpose of this example we are defaulting to the following for the advertising ID
+We are defaulting to the following for the advertising ID, and we would recommend customers do the same. In particular paying attention to the Passkey ID definitions below
 
 Verisense-00-XXXXXXXXXXXX : No Passkey
 
 Verisense-01-XXXXXXXXXXXX : Default Passkey (123456)
 
 Verisense-XXXXXXXXXXXX : Clinical Passkey 
+
+Verisense-02-XXXXXXXXXXXX : Clinical Passkey (reserved for future if required)
 
 The Clinical Passkey can be retrieved by contacting Shimmer if required.
 
