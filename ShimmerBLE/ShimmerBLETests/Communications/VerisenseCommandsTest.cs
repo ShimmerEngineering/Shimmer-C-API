@@ -654,49 +654,6 @@ namespace ShimmerBLETests
             Assert.Pass();
         }
 
-        [Test]
-        public void TestIsPasskeyEnabled()
-        {
-            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
-            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
-            //passkey is enabled by default
-            if (bleDevice.IsPasskeyEnabled())
-            {
-                Assert.Pass();
-            }
-            else
-            {
-                Assert.Fail();
-            }
-        }
-
-        [Test]
-        public void TestIsPasskeyDisabled()
-        {
-            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
-            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
-            //disable passkey
-            bleDevice.setPasskeyEnabled(false);
-            if (!bleDevice.IsPasskeyEnabled())
-            {
-
-            }
-            else
-            {
-                Assert.Fail();
-            }
-            //check if bits 2 and 3 equal 01
-            if ((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2]).Equals(4))
-            {
-
-            }
-            else
-            {
-                Assert.Fail();
-            }
-
-            Assert.Pass();
-        }
         private byte[] CopyDefaultBytes()
         {
             var bytes = new byte[defaultBytes.Length];
