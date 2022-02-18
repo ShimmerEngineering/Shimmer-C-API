@@ -7,8 +7,14 @@ using static ShimmerBLEAPI.Devices.VerisenseDevice;
 
 namespace shimmer.Sensors
 {
+    /// <summary>
+    /// This is the base class for other sensor class
+    /// </summary>
     public abstract class Sensor
     {
+        /// <summary>
+		/// Create a new sensor
+		/// </summary>
         public Sensor()
         {
             
@@ -17,8 +23,12 @@ namespace shimmer.Sensors
         /// <summary>
         /// Every sensor should belong to a device
         /// </summary>
-        protected HardwareIdentifier DeviceHardwareIdentifier = HardwareIdentifier.UNKNOWN; 
+        protected HardwareIdentifier DeviceHardwareIdentifier = HardwareIdentifier.UNKNOWN;
 
+        /// <summary>
+        /// Set the hardware identifier of the device
+        /// </summary>
+        /// <param name="id"><see cref="HardwareIdentifier"/></param>
         public void SetDeviceHardwareIdentifier(HardwareIdentifier id)
         {
             DeviceHardwareIdentifier = id;
@@ -52,6 +62,12 @@ namespace shimmer.Sensors
         public abstract string GetSensorName();
         public static SensorSetting UnknownSetting = new SensorSetting("Unknown", -1, -1);
 
+        /// <summary>
+        /// Search for sensor setting using the display name in settings array provided
+        /// </summary>
+        /// <param name="settings">the settings array to be search</param>
+        /// <param name="displayName">the display name</param>
+        /// <returns>return <see cref="UnknownSetting"/> if not found</returns>
         public static SensorSetting GetSensorSettingFromDisplayName(SensorSetting[] settings, string displayName)
         {
             foreach (SensorSetting setting in settings){
@@ -63,6 +79,12 @@ namespace shimmer.Sensors
             return UnknownSetting;
         }
 
+        /// <summary>
+        /// Search for sensor setting using the configuration value in settings array provided
+        /// </summary>
+        /// <param name="settings">the settings array to be search</param>
+        /// <param name="value">the configuration value</param>
+        /// <returns>return <see cref="UnknownSetting"/> if not found</returns>
         public static SensorSetting GetSensorSettingFromConfigurationValue(SensorSetting[] settings, int value)
         {
             foreach (SensorSetting setting in settings)
@@ -75,12 +97,22 @@ namespace shimmer.Sensors
             return Sensor.UnknownSetting;
         }
 
+        /// <summary>
+        /// Each instance of this class represents a sensor setting
+        /// </summary>
         public class SensorSetting
         {
             protected string DisplayName;
             protected int ConfigurationValue;
             protected Object SettingsValue; //can be an integer for ie 100 Hz and can be a string for ie LowPower and a bool for enabled
             protected string Description ="";
+
+            /// <summary>
+            /// Create a new sensor setting
+            /// </summary>
+            /// <param name="displayName"></param>
+            /// <param name="confValue"></param>
+            /// <param name="settingsValue"></param>
             public SensorSetting(string displayName, int confValue, Object settingsValue)
             {
                 DisplayName = displayName;
@@ -88,6 +120,13 @@ namespace shimmer.Sensors
                 SettingsValue = settingsValue;
             }
 
+            /// <summary>
+            /// Create a new sensor setting
+            /// </summary>
+            /// <param name="displayName"></param>
+            /// <param name="confValue"></param>
+            /// <param name="settingsValue"></param>
+            /// <param name="description"></param>
             public SensorSetting(string displayName, int confValue, Object settingsValue, string description)
             {
                 DisplayName = displayName;
@@ -108,6 +147,7 @@ namespace shimmer.Sensors
         /// Unwraps the Shimmer internal clock timestamp in ticks, to milliseconds
         /// </summary>
         /// <param name="ticks"></param>
+        /// <param name="systemTimestamp"></param>
         public double GetShimmerTimestampUnwrapped(double ticks, double systemTimestamp)
         {
             var timestampUnwrappedTicks = UnwrapTimestamp(ticks);
@@ -159,6 +199,9 @@ namespace shimmer.Sensors
             ojc.Add(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP_PLOT, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliSeconds, systemTsPlotMillis);
         }
 
+        /// <summary>
+        /// Reset timestamps
+        /// </summary>
         public void ResetTimestamps()
         {
             LastReceivedTimestampTicksUnwrapped = 0;
