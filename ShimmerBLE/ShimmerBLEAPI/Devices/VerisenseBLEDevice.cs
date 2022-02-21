@@ -1841,7 +1841,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Write and read the operation configuration
+        /// Write and read the operation configuration. The read can be used to verify what was written.
         /// </summary>
         /// <returns>operational config payload</returns>
         public async Task<IBasePayload> WriteAndReadOperationalConfiguration(byte[] operationalConfiguration)
