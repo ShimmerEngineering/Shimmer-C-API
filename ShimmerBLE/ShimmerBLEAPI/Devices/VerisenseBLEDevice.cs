@@ -1810,9 +1810,9 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// To intitialize a ble connection with the verisense device
+        /// To attempt a ble connection with the verisense device
         /// </summary>
-        /// <param name="initialize">this will read the status, production configuration, operation configuration and set the time</param>
+        /// <param name="initialize">if a BLE connection is successful setting this to true will read the status, production configuration, operation configuration and set the time</param>
         /// <returns></returns>
         public async Task<bool> Connect(bool initialize)
         {
