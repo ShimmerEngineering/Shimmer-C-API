@@ -105,7 +105,7 @@ namespace ShimmerBLEAPI.Devices
         /// <summary>
         /// Created a verisese ble device of which to connect/configure/stream/sync
         /// </summary>
-        /// <param name="id">the uuid for the address of which is used to connect to via BLE "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ </param>
+        /// <param name="id">the uuid for the address of which is used to connect to via BLE e.g. "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ </param>
         /// <param name="name">and arbitrary/custom name eg "190226016F14"</param>
         public VerisenseBLEDevice(string id, string name)
         {
