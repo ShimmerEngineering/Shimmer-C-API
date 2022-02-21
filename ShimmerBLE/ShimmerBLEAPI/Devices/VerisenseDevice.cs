@@ -12,7 +12,7 @@ using static shimmer.Models.OpConfigPayload;
 namespace ShimmerBLEAPI.Devices
 {
     /// <summary>
-    /// This class contains the device level settings of a verisense device
+    /// This class represents a basic verisense device. It contains the device level settings. 
     /// </summary>
     [Serializable]
     public abstract class VerisenseDevice
