@@ -21,6 +21,4 @@ When using the verisense device you will require knowing what the pairing key. S
 For solutions to parse your binary files please get in touch with us, at the moment the release of a binary file open source solution is not on our roadmap. 
 
 ### Examples
-While not provided at the moment it is on our roadmap to provide the following examples
-- ble manager (e.g. scanning, and ble auto pairing where applicable (uwp and android))
-- s3 cloud manager (e.g. to upload the binary files to the cloud)
+We would recommend reading through the [readme](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE/VerisenseBLEDemoApp/README.md) of VerisenseBLEDemoApp before proceeding to using any of the examples within this repository.
