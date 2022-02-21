@@ -95,7 +95,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// To clone a device
+        /// To clone a device, this is used for configuring the device. The idea will be to create a 'clone' of the verisense device, update the sensor/setting within the clone. Generate the operation config bytes and transmit said bytes to the physical Verisense device.
         /// </summary>
         /// <param name="device">an existing verisense device that provides the operational config bytes</param>
         public VerisenseDevice(VerisenseDevice device)

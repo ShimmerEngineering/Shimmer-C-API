@@ -106,7 +106,7 @@ namespace ShimmerBLEAPI.Devices
         /// Created a verisese ble device of which to connect/configure/stream/sync
         /// </summary>
         /// <param name="id">the uuid for the address of which is used to connect to via BLE e.g. "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ </param>
-        /// <param name="name">and arbitrary/custom name eg "190226016F14"</param>
+        /// <param name="name">and arbitrary/custom name e.g. "190226016F14"</param>
         public VerisenseBLEDevice(string id, string name)
         {
             ASMName = name;
@@ -116,7 +116,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Create a clone of the verisese ble device
+        /// Create a clone of the verisese ble device. The idea will be to create a 'clone' of the verisense device, update the sensor/setting within the clone. Generate the operation config bytes and transmit said bytes to the physical Verisense device.
         /// </summary>
         /// <param name="verisenseBLEDevice">an existing verisense ble device</param>
         public VerisenseBLEDevice(VerisenseBLEDevice verisenseBLEDevice) : base(verisenseBLEDevice)
