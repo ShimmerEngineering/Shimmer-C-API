@@ -172,7 +172,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Turns on/off the sensor
+        /// Disable/Enable the Verisense Device
         /// </summary>
         /// <param name="enabled"></param>
         public void setDeviceEnabled(bool enabled)
