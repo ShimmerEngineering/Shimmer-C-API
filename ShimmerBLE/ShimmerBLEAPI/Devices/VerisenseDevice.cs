@@ -241,10 +241,10 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Converts a Unix time in minutes to local time
+        /// Converts a Unix time in minutes to UTC+0 time
         /// </summary>
         /// <param name="unixTimeStampInMinute">Unix time in minute</param>
-        /// <returns></returns>
+        /// <returns>UTC+0 time</returns>
         public DateTime ConvertUnixTSInMinuteIntoDateTime(int unixTimeStampInMinute)
         {
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStampInMinute*60);
@@ -252,10 +252,10 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Converts a local time to Unix time in minutes
+        /// Converts a date time to Unix time in minutes
         /// </summary>
-        /// <param name="datetime">The local time</param>
-        /// <returns></returns>
+        /// <param name="datetime"></param>
+        /// <returns>Unix time in minutes</returns>
         public long ConvertDateTimeIntoUnixTSInMinute(DateTime datetime)
         {
             var date = new DateTime(1970, 1, 1, 0, 0, 0, datetime.Kind);
