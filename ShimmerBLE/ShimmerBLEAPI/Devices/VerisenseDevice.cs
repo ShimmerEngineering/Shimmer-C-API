@@ -334,7 +334,7 @@ namespace ShimmerBLEAPI.Devices
         /// <summary>
         /// Data transfer start time in minutes
         /// </summary>
-        /// <returns>start time in minutes</returns>
+        /// <returns>start time in minutes eg 540 if start time is 9:00am</returns>
         public int GetDataTransferStartTime()
         {
             byte[] minutesUntilStart = new byte[4];
@@ -362,7 +362,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Data transfer retry interval in minutes
+        /// The number of minute's interval the ASM sensor will wait before re-trying to transfer its data in the event of a previous data transfer failure.
         /// </summary>
         /// <param name="interval">retry interval in minutes</param>
         public void SetDataTransferRetryInterval(int interval)
@@ -374,7 +374,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Data transfer retry interval in minutes
+        /// The number of minute's interval the ASM sensor will wait before re-trying to transfer its data in the event of a previous data transfer failure.
         /// </summary>
         /// <returns>retry interval in minutes</returns>
         public int GetDataTransferRetryInterval()
@@ -386,7 +386,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Status transfer interval in hours
+        /// The number of hours interval between each of the status report.
         /// </summary>
         /// <param name="interval">interval in hours</param>
         public void SetStatusInterval(int interval)
@@ -395,7 +395,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Status transfer interval in hours
+        /// The number of hours interval between each of the status report.
         /// </summary>
         /// <returns>interval in hours</returns>
         public int GetStatusInterval()
@@ -404,7 +404,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Status transfer start time in minutes
+        /// The time that the status is sent by the sensor
         /// </summary>
         /// <param name="time">start time in minutes eg 540 if start time is 9:00am</param>
         public void SetStatusStartTime(int time)
@@ -416,9 +416,9 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Status transfer start time in minutes
+        /// The time that the status is sent by the sensor
         /// </summary>
-        /// <returns>start time in minutes</returns>
+        /// <returns>start time in minutes eg 540 if start time is 9:00am</returns>
         public int GetStatusStartTime()
         {
             byte[] startTime = new byte[4];
@@ -446,7 +446,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Status transfer retry interval in minutes
+        /// The number of minute's interval the ASM sensor will wait before re-trying to send its status in the event of a previous data transfer failure
         /// </summary>
         /// <param name="interval">retry interval in minutes</param>
         public void SetStatusRetryInterval(int interval)
@@ -458,7 +458,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Status transfer retry interval in minutes
+        /// The number of minute's interval the ASM sensor will wait before re-trying to send its status in the event of a previous data transfer failure
         /// </summary>
         /// <returns>retry interval in minutes</returns>
         public int GetStatusRetryInterval()
@@ -470,7 +470,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// RTC Synchronisation interval in hours
+        /// Real-world clock synchronisation interval in hours
         /// </summary>
         /// <param name="interval">interval in hours</param>
         public void SetRTCSyncInterval(int interval)
@@ -479,7 +479,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// RTC Synchronisation interval in hours
+        /// Real-world clock synchronisation interval in hours
         /// </summary>
         /// <returns>interval in hours</returns>
         public int GetRTCSyncInterval()
@@ -488,7 +488,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// RTC Synchronisation start time in minutes
+        /// Real-world clock synchronisation start time in minutes
         /// </summary>
         /// <param name="time">start time in minutes eg 540 if start time is 9:00am</param>
         public void SetRTCSyncTime(int time)
@@ -500,9 +500,9 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// RTC Synchronisation start time in minutes
+        /// Real-world clock synchronisation start time in minutes
         /// </summary>
-        /// <returns>start time in minutes</returns>
+        /// <returns>start time in minutes eg 540 if start time is 9:00am</returns>
         public int GetRTCSyncTime()
         {
             byte[] startTime = new byte[4];
@@ -512,7 +512,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// The duration in minutes for the device to wait for a connection for RTC synchronisation
+        /// The duration in minutes for the device to wait for a connection for real-world clock synchronisation
         /// </summary>
         /// <param name="duration">duration in minutes</param>
         public void SetRTCSyncDuration(int duration)
@@ -521,7 +521,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// The duration in minutes for the device to wait for a connection
+        /// The duration in minutes for the device to wait for a connection for real-world clock synchronisation
         /// </summary>
         /// <returns>duration in minutes</returns>
         public int GetRTCSyncDuration()
@@ -530,7 +530,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// RTC Synchronisation retry interval in minutes
+        /// The number of minute's interval the ASM sensor will wait before re-trying real-world clock synchronisation in the event of a previous real-world clock synchronisation failure
         /// </summary>
         /// <param name="interval">interval in minutes</param>
         public void SetRTCSyncRetryInterval(int interval)
@@ -542,7 +542,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// RTC Synchronisation retry interval in minutes
+        /// The number of minute's interval the ASM sensor will wait before re-trying real-world clock synchronisation in the event of a previous real-world clock synchronisation failure
         /// </summary>
         /// <returns>interval in minutes</returns>
         public int GetRTCSyncRetryInterval()
@@ -554,9 +554,9 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Adaptive scheduler interval in minutes
+        /// The number of minute’s interval the ASM sensor will wait after a failed connection attempt before turning on the scheduler again
         /// </summary>
-        /// <param name="interval">interval in minutes</param>
+        /// <param name="interval">interval in minutes, if this value is set to either 0 or 65535 then the adaptive scheduler will never be turned on</param>
         public void SetAdaptiveSchedulerInterval(int interval)
         {
             byte[] adaptiveSchedulerInterval = new byte[2];
@@ -566,7 +566,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Adaptive scheduler interval in minutes
+        /// The number of minute’s interval the ASM sensor will wait after a failed connection attempt before turning on the scheduler again
         /// </summary>
         /// <returns>interval in minutes</returns>
         public int GetAdaptiveSchedulerInterval()
@@ -578,17 +578,20 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Adaptive scheduler maximum fail count
+        /// Each time the sensor fails to clear all pending events during a scheduled wake-up event, a fail counter is incremented. 
+        /// When the fail counter reaches the adaptive scheduler maximum fail count, the sensor will turn on the adaptive scheduler and the scheduler will be set to wake-up in <see cref="GetAdaptiveSchedulerInterval"/> minutes
         /// </summary>
-        /// <param name="count"></param>
+        /// <param name="count">adaptive scheduler maximum fail count</param>
         public void SetAdaptiveSchedulerMaxFailCount(int count)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.ADAPTIVE_SCHEDULER_FAILCOUNT_MAX] = (byte)count;
         }
 
         /// <summary>
-        /// Adaptive scheduler maximum fail count
+        /// Each time the sensor fails to clear all pending events during a scheduled wake-up event, a fail counter is incremented. 
+        /// When the fail counter reaches the adaptive scheduler maximum fail count, the sensor will turn on the adaptive scheduler and the scheduler will be set to wake-up in <see cref="GetAdaptiveSchedulerInterval"/> minutes
         /// </summary>
+        /// <returns>adaptive scheduler maximum fail count</returns>
         public int GetAdaptiveSchedulerMaxFailCount()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.ADAPTIVE_SCHEDULER_FAILCOUNT_MAX];
