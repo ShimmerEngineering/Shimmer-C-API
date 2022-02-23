@@ -499,14 +499,14 @@ namespace shimmer.Sensors
             PPG_MA_MAX_GREEN_BLUE = maxLEDPulseAmplitudeGreenBlue;
         }
         /// <summary>
-        /// Returns the target average offset of the PPG channels within the ADC range in percent
+        /// Used by the auto-gain driver to set the target average offset of the PPG channels within the ADC range. Units are %.
         /// </summary>
         public int GetAGCTargetRange()
         {
             return PPG_AGC_TARGET_PERCENT_OF_RANGE;
         }
         /// <summary>
-        /// Set the target average offset of the PPG channels within the ADC range in percent
+        /// Used by the auto-gain driver to set the target average offset of the PPG channels within the ADC range. Units are %.
         /// </summary>
         public void SetAGCTargetRange(int targetRange)
         {
@@ -527,70 +527,70 @@ namespace shimmer.Sensors
             PPG_MA_LED_PILOT = amplitude;
         }
         /// <summary>
-        /// Get the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public int GetDAC1CROSSTALK()
         {
             return PPG_XTALK_DAC1;
         }
         /// <summary>
-        /// Set the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public void SetDAC1CROSSTALK(int value)
         {
             PPG_XTALK_DAC1 = value;
         }
         /// <summary>
-        /// Get the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public int GetDAC2CROSSTALK()
         {
             return PPG_XTALK_DAC2;
         }
         /// <summary>
-        /// Set the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public void SetDAC2CROSSTALK(int value)
         {
             PPG_XTALK_DAC2 = value;
         }
         /// <summary>
-        /// Get the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public int GetDAC3CROSSTALK()
         {
             return PPG_XTALK_DAC3;
         }
         /// <summary>
-        /// Set the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public void SetDAC3CROSSTALK(int value)
         {
             PPG_XTALK_DAC3 = value;
         }
         /// <summary>
-        /// Get the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public int GetDAC4CROSSTALK()
         {
             return PPG_XTALK_DAC4;
         }
         /// <summary>
-        /// Set the crosstalk cancellation DAC code used in ADC
+        /// Crosstalk cancellation DAC code used in ADC
         /// </summary>
         public void SetDAC4CROSSTALK(int value)
         {
             PPG_XTALK_DAC4 = value;
         }
         /// <summary>
-        /// Returns the proximity Detection mode
+        /// Enables or disables firmware functionality for managing the individual PPG LED brightness levels.
         /// </summary>
         public SensorSetting GetProxAGCMode()
         {
             return PROX_AGC_MODE;
         }
         /// <summary>
-        /// Set the proximity Detection mode
+        /// Enables or disables firmware functionality for managing the individual PPG LED brightness levels.
         /// </summary>
         /// <param name="value"><see cref="ProxAGCMode"/></param>
         public void SetProxAGCMode(SensorSetting value)
