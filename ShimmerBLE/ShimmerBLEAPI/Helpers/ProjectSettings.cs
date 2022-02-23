@@ -5,6 +5,9 @@ using System.Text;
 
 namespace shimmer.Helpers
 {
+    /// <summary>
+    /// This class contains project settings
+    /// </summary>
     [AddINotifyPropertyChangedInterface]
     public class ProjectSettings
     {
@@ -15,6 +18,9 @@ namespace shimmer.Helpers
         double _scaleFontSize = 1;
         double _displayScaleFactor = 1;
 
+        /// <summary>
+        /// Property for bar background color
+        /// </summary>
         public string BarBackgroundColor
         {
             get
@@ -27,6 +33,9 @@ namespace shimmer.Helpers
             }
         }
 
+        /// <summary>
+        /// Property for bar text color
+        /// </summary>
         public string BarTextColor
         {
             get
@@ -39,6 +48,9 @@ namespace shimmer.Helpers
             }
         }
 
+        /// <summary>
+        /// Property for scale font size
+        /// </summary>
         public double ScaleFontSize
         {
             get
@@ -51,6 +63,9 @@ namespace shimmer.Helpers
             }
         }
 
+        /// <summary>
+        /// Property for display scale factor
+        /// </summary>
         public double DisplayScaleFactor
         {
             get
@@ -63,11 +78,17 @@ namespace shimmer.Helpers
             }
         }
 
+        /// <summary>
+        /// Set bar background color to #3684C2
+        /// </summary>
         public void SetStockBarBackgroundColor()
         {
             BarBackgroundColor = "#3684C2";
         }
 
+        /// <summary>
+        /// Set bar text color to #FFFFFF
+        /// </summary>
         public void SetStockBarTextColor()
         {
             BarTextColor = "#FFFFFF";

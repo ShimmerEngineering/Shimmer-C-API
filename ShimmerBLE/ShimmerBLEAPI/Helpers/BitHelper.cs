@@ -6,6 +6,9 @@ using shimmer.Models;
 
 namespace shimmer.Helpers
 {
+    /// <summary>
+    /// This class contains bit related methods
+    /// </summary>
     public static class BitHelper
     {
         public readonly static long MaxFourByteUnsignedValue = 4294967295; //2^32 -1
@@ -14,6 +17,11 @@ namespace shimmer.Helpers
         // Using Lists here is not accidental, concatenating arrays results in IEnumerable
         // This does not work in obvious ways and would break byte order
 
+        /// <summary>
+        /// Convert hexString into List<byte> starts from MSB
+        /// </summary>
+        /// <param name="hexString">string consists of 0-9, a-f and A-F</param>
+        /// <returns>Returns null if the length of hexString is odd</returns>
         public static List<byte> MSBByteArray(string hexString)
         {
             if (hexString.Length % 2 != 0)
@@ -31,6 +39,11 @@ namespace shimmer.Helpers
             return data.ToList();
         }
 
+        /// <summary>
+        /// Convert hexString into List<byte> starts from LSB
+        /// </summary>
+        /// <param name="hexString">string consists of 0-9, a-f and A-F</param>
+        /// <returns>Returns null if the length of hexString is odd</returns>
         public static List<byte> LSBByteArray(string hexString)
         {
             if (hexString.Length % 2 != 0)
@@ -51,6 +64,11 @@ namespace shimmer.Helpers
         static int initialValue = 0xFFFF;   // initial value
         static int polynomial = 0x1021;
 
+        /// <summary>
+        /// Validate data with CRC check
+        /// </summary>
+        /// <param name="payload">payload to be check</param>
+        /// <returns></returns>
         public static CRCCheckResponse CheckCRC(byte[] payload)
         {
             var response = new CRCCheckResponse();
