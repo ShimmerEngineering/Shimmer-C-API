@@ -6,6 +6,9 @@ using static ShimmerBLEAPI.Devices.VerisenseDevice;
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// This class contains methods to parse and assemble the production configuration payload and store the parsed data
+    /// </summary>
     public class ProdConfigPayload : BasePayload
     {
         // ASM Props
@@ -35,17 +38,27 @@ namespace shimmer.Models
         public readonly int PasskeyLength = 6;
         public readonly int AdvertisingNameLength = 32;
 
+        /// <summary>
+        /// Create a new prod config payload and initialize the payload
+        /// </summary>
+        /// <param name="payload">payload with header</param>
         public ProdConfigPayload(string payload)
         {
             Payload = payload;
             ProcessPayload(GetPayloadWithHeader());
         }
 
+        /// <summary>
+        /// Create a new prod config payload
+        /// </summary>
         public ProdConfigPayload()
         {
 
         }
 
+        /// <summary>
+        /// Enable clinical trial passkey for verisense device eg "Verisense-190226016F14"
+        /// </summary>
         public void EnableClinicalTrialPasskey()
         {
             try
@@ -59,6 +72,10 @@ namespace shimmer.Models
             }
         }
 
+        /// <summary>
+        /// Enable no passkey for verisense device eg "Example1-00-190226016F14"
+        /// </summary>
+        /// <param name="advertisingName">must have less than 32 characters eg "Example1"</param>
         public void EnableNoPasskey(string advertisingName)
         {
             try
@@ -77,6 +94,11 @@ namespace shimmer.Models
             }
         }
 
+        /// <summary>
+        /// Enable default passkey for verisense device eg "Example1-01-190226016F14"
+        /// </summary>
+        /// <param name="advertisingName">must have less than 32 characters eg "Example1"</param>
+        /// <param name="passkeyID">must have exactly two characters eg "01"</param>
         public void EnableDefaultPasskey(string advertisingName, string passkeyID)
         {
             try
@@ -92,7 +114,7 @@ namespace shimmer.Models
             {
                 throw ex;
             }
-}
+        }
 
         protected void SetPasskeyID(string passkeyId)
         {
@@ -220,6 +242,10 @@ namespace shimmer.Models
             return false;
         }
 
+        /// <summary>
+        /// Parse and store the payload data
+        /// </summary>
+        /// <param name="response">prod config payload</param>
         public new bool ProcessPayload(byte[] response)
         {
             try

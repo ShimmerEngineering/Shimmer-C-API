@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ShimmerBLEAPI.Models
 {
+    /// <summary>
+    /// This class is used to store S3 cloud information
+    /// </summary>
     public class S3CloudInfo
     {
         public string S3AccessKey { get; set; }

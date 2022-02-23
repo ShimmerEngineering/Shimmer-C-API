@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ShimmerBLEAPI.Models
 {
+    /// <summary>
+    /// Each instance of this class represent a scanned Verisense BLE Device. It is used to store the information of the device
+    /// </summary>
     public class VerisenseBLEScannedDevice
     {
         public string Name { get; set; }
