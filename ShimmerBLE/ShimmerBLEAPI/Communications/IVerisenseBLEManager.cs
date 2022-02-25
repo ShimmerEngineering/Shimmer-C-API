@@ -19,6 +19,9 @@ namespace shimmer.Communications
         
     }
 
+    /// <summary>
+    /// Store the event data
+    /// </summary>
     public class BLEManagerEvent
     {
         public enum BLEAdapterEvent

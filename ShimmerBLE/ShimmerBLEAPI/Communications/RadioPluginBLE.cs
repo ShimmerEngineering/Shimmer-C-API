@@ -12,6 +12,9 @@ using Xamarin.Forms;
 
 namespace shimmer.Communications
 {
+    /// <summary>
+    /// Each instance of this class represents a ble radio that is used to communicate with a verisense device
+    /// </summary>
     public class RadioPluginBLE : IVerisenseByteCommunication
     {
         public int GallCallBackErrorCount = 0;
@@ -24,6 +27,9 @@ namespace shimmer.Communications
         IService ServiceTXRX { get; set; }
         ConnectivityState StateOfConnectivity = ConnectivityState.Unknown;
 
+        /// <summary>
+        /// Initialize a new radio plugin ble
+        /// </summary>
         public RadioPluginBLE(){
             adapter.DeviceConnected += Adapter_DeviceConnected;
             adapter.DeviceDisconnected += Adapter_DeviceDisconnected;
@@ -34,6 +40,10 @@ namespace shimmer.Communications
             cancel.Cancel();
         }
         CancellationTokenSource cancel = new CancellationTokenSource();
+        /// <summary>
+        /// Connect to a device using <see cref="Asm_uuid"/> and get the characteristics
+        /// </summary>
+        /// <returns><see cref="ConnectivityState"/></returns>
         public async Task<ConnectivityState> Connect()
         {
             var localTask = new TaskCompletionSource<bool>();
@@ -174,6 +184,10 @@ namespace shimmer.Communications
             }
         }
 
+        /// <summary>
+        /// Disconnect from the device
+        /// </summary>
+        /// <returns>Disconnected or Limited <see cref="ConnectivityState"/></returns>
         public async Task<ConnectivityState> Disconnect()
         {
             
@@ -238,6 +252,11 @@ namespace shimmer.Communications
             return state;
         }
 
+        /// <summary>
+        /// Write characteristic to the device
+        /// </summary>
+        /// <param name="bytes">bytes array to be written</param>
+        /// <returns>Returns true if success</returns>
         public async Task<bool> WriteBytes(byte[] bytes)
         {
             var writeTCS = new TaskCompletionSource<bool>();
@@ -270,6 +289,10 @@ namespace shimmer.Communications
         }
 
         private bool disposedValue = false;
+        /// <summary>
+        /// Dispose the characteristics and connected ASM
+        /// </summary>
+        /// <param name="disposing"></param>
         public void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -316,11 +339,22 @@ namespace shimmer.Communications
                 disposedValue = true;
             }
         }
+        /// <summary>
+        /// Return current connectivity state
+        /// </summary>
+        /// <returns><see cref="ConnectivityState"/></returns>
         public ConnectivityState GetConnectivityState()
         {
             return StateOfConnectivity;
         }
 
+        /// <summary>
+        /// This is to give an option to log advance data if required
+        /// </summary>
+        /// <param name="ObjectName"></param>
+        /// <param name="Action"></param>
+        /// <param name="Data"></param>
+        /// <param name="asmid"></param>
         public virtual void AdvanceLog(string ObjectName, string Action, object Data, string asmid)
         {
             //Just print to console
