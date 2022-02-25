@@ -15,6 +15,9 @@ using Xamarin.Forms;
 
 namespace shimmer.Services
 {
+    /// <summary>
+    /// Speed test service
+    /// </summary>
     public class SpeedTestService : IObservable<String>
     {
         public IDevice ConnectedASM { get; set; }
@@ -32,6 +35,10 @@ namespace shimmer.Services
         private long TSsub = DateHelper.GetTimestamp(DateTime.UtcNow);
 
         //override
+        /// <summary>
+        /// Create a SpeedTestService instance
+        /// </summary>
+        /// <param name="id">the uuid for the address of which is used to connect to via BLE e.g. "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ </param>
         public SpeedTestService(string id)
         {
             Asm_uuid = id;
@@ -47,6 +54,10 @@ namespace shimmer.Services
 
         }
         //override
+        /// <summary>
+        /// Connects to the verisense device using <see cref="Asm_uuid"/>
+        /// </summary>
+        /// <returns>Returns true if successful</returns>
         public async Task<bool> GetKnownDevice()
         {
             var localTask = new TaskCompletionSource<bool>();
@@ -130,6 +141,9 @@ namespace shimmer.Services
         }
 
         //override
+        /// <summary>
+        /// Disconnects the verisense device
+        /// </summary>
         public async Task Disconnect()
         {
             EventDisconnect();
@@ -167,6 +181,9 @@ namespace shimmer.Services
             }
         }
 
+        /// <summary>
+        /// Excute request <see cref="ReadMemoryLookupTableRequest"/>
+        /// </summary>
         public async Task ExecuteMemoryLookupTableCommand()
         {
             Device.BeginInvokeOnMainThread(async () =>
@@ -208,6 +225,9 @@ namespace shimmer.Services
 
         }
 
+        /// <summary>
+        /// Characteristic value updated event
+        /// </summary>
         public void UartRX_ValueUpdated(object sender, Plugin.BLE.Abstractions.EventArgs.CharacteristicUpdatedEventArgs e)
         {
             ResponseBuffer = e.Characteristic.Value;
@@ -426,6 +446,9 @@ namespace shimmer.Services
             }
         }
         private List<IObserver<String>> observers = new List<IObserver<String>>();
+        /// <summary>
+        /// Observer subscribe to the speed test eg transfer rate
+        /// </summary>
         public IDisposable Subscribe(IObserver<String> observer)
         {
             // Check whether observer is already registered. If not, add it
