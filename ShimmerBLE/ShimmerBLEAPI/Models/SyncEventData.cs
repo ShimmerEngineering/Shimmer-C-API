@@ -4,6 +4,9 @@ using System.Text;
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// Store the event data for sync event
+    /// </summary>
     public class SyncEventData
     {
         public string ASMID { get; set; }
