@@ -11,11 +11,17 @@ using static shimmer.Models.OpConfigPayload;
 
 namespace ShimmerBLEAPI.Devices
 {
+    /// <summary>
+    /// This class represents a basic verisense device. It contains the device level settings. 
+    /// </summary>
     [Serializable]
     public abstract class VerisenseDevice
     {
         public static readonly DeviceByteSetting Unknown_Device_Setting = new DeviceByteSetting("Unknown", -1, "Unknown");
 
+        /// <summary>
+        /// Each variable represents a group of operational configuration settings <see cref="DeviceByteArraySettings"/>
+        /// </summary>
         public class DefaultVerisenseConfiguration
         {
             public static readonly DeviceByteArraySettings Unknown_Device_OpConfig_Setting = new DeviceByteArraySettings("Unknown", null, "Unknown");
@@ -38,6 +44,9 @@ namespace ShimmerBLEAPI.Devices
             VERISENSE_PULSE_PLUS = 68
         }
 
+        /// <summary>
+        /// Each variable represents a Bluetooth 5 power level setting
+        /// </summary>
         public static class BT5RadioOutputPower
         {
             public static readonly DeviceByteSetting Power_Unknown = new DeviceByteSetting("Unknown", -1, -1);
@@ -86,9 +95,9 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// To clone a device
+        /// To clone a device, this is used for configuring the device. The idea will be to create a 'clone' of the verisense device, update the sensor/setting within the clone. Generate the operation config bytes and transmit said bytes to the physical Verisense device.
         /// </summary>
-        /// <param name="device"></param>
+        /// <param name="device">an existing verisense device that provides the operational config bytes</param>
         public VerisenseDevice(VerisenseDevice device)
         {
             OpConfig = new OpConfigPayload();
@@ -98,6 +107,9 @@ namespace ShimmerBLEAPI.Devices
             UpdateDeviceAndSensorConfiguration();
         }
 
+        /// <summary>
+        /// To create a new device
+        /// </summary>
         public VerisenseDevice()
         {
             CreateSensorMap();
@@ -144,6 +156,10 @@ namespace ShimmerBLEAPI.Devices
             return opConfigToWrite;
         }
 
+        /// <summary>
+        /// Turns on/off the logging of data
+        /// </summary>
+        /// <param name="enabled"></param>
         public void setLoggingEnabled(bool enabled)
         {
             if (enabled)
@@ -155,6 +171,10 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        /// <summary>
+        /// Disable/Enable the Verisense Device
+        /// </summary>
+        /// <param name="enabled"></param>
         public void setDeviceEnabled(bool enabled)
         {
             if (enabled)
@@ -182,6 +202,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.START_TIME + 3] = minutesPassed[3];
         }
 
+        /// <summary>
+        /// The clock system on a Verisense sensor is in local time (e.g. unix time expressed in your time zone, e.g. for Kuala Lumpur unixtime + 08:00) 
+        /// </summary>
+        /// <returns></returns>
         public int GetStartTimeinMinutes()
         {
             byte[] minutesPassed = new byte[4];
@@ -190,6 +214,10 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// The clock system on a Verisense sensor is in local time (e.g. unix time expressed in your time zone, e.g. for Kuala Lumpur unixtime + 08:00) 
+        /// </summary>
+        /// <param name="time">The local time</param>
         public void SetEndTimeInMinutes(long time)
         {
             byte[] minutesPassed = new byte[4];
@@ -200,6 +228,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.END_TIME + 3] = minutesPassed[3];
         }
 
+        /// <summary>
+        /// The clock system on a Verisense sensor is in local time (e.g. unix time expressed in your time zone, e.g. for Kuala Lumpur unixtime + 08:00) 
+        /// </summary>
+        /// <returns></returns>
         public int GetEndTimeinMinutes()
         {
             byte[] minutesPassed = new byte[4];
@@ -208,12 +240,22 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// Converts a Unix time in minutes to UTC+0 time
+        /// </summary>
+        /// <param name="unixTimeStampInMinute">Unix time in minute</param>
+        /// <returns>UTC+0 time</returns>
         public DateTime ConvertUnixTSInMinuteIntoDateTime(int unixTimeStampInMinute)
         {
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStampInMinute*60);
             return dateTimeOffset.DateTime;
         }
 
+        /// <summary>
+        /// Converts a date time to Unix time in minutes
+        /// </summary>
+        /// <param name="datetime"></param>
+        /// <returns>Unix time in minutes</returns>
         public long ConvertDateTimeIntoUnixTSInMinute(DateTime datetime)
         {
             var date = new DateTime(1970, 1, 1, 0, 0, 0, datetime.Kind);
@@ -221,22 +263,37 @@ namespace ShimmerBLEAPI.Devices
             return unixTimestamp;
         }
 
+        /// <summary>
+        /// The number of BLE wake-up retries to carry out if there is any pending events
+        /// </summary>
+        /// <param name="count"></param>
         public void SetBLERetryCount(int count)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RETRY_COUNT] = (byte)count;
         }
 
+        /// <summary>
+        /// Returns the number of BLE wake-up retries to carry out if there is any pending events
+        /// </summary>
+        /// <returns></returns>
         public int GetBLERetryCount()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RETRY_COUNT];
         }
 
-        //NOT SURE
+        /// <summary>
+        /// Bluetooth power setting
+        /// </summary>
+        /// <param name="power"></param>
         public void SetBLETXPower(int power)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_TX_POWER] = (byte)power;
         }
 
+        /// <summary>
+        /// Returns Bluetooth power setting
+        /// </summary>
+        /// <returns></returns>
         public DeviceByteSetting GetBLETXPower()
         {
             int power = OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_TX_POWER];
@@ -244,16 +301,28 @@ namespace ShimmerBLEAPI.Devices
             return powerSetting;
         }
 
+        /// <summary>
+        /// Data transfer interval in hours
+        /// </summary>
+        /// <param name="interval">interval in hours</param>
         public void SetDataTransferInterval(int interval)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_DATA_TRANS_WKUP_INT_HRS] = (byte)interval;
         }
 
+        /// <summary>
+        /// Data transfer interval in hours
+        /// </summary>
+        /// <returns>interval in hours</returns>
         public int GetDataTransferInterval()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_DATA_TRANS_WKUP_INT_HRS];
         }
 
+        /// <summary>
+        /// Data transfer start time in minutes
+        /// </summary>
+        /// <param name="startTime">start time in minutes eg 540 if start time is 9:00am</param>
         public void SetDataTransferStartTime(int startTime)
         {
             byte[] minutesUntilStart = new byte[2];
@@ -262,6 +331,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_DATA_TRANS_WKUP_TIME + 1] = minutesUntilStart[1];
         }
 
+        /// <summary>
+        /// Data transfer start time in minutes
+        /// </summary>
+        /// <returns>start time in minutes eg 540 if start time is 9:00am</returns>
         public int GetDataTransferStartTime()
         {
             byte[] minutesUntilStart = new byte[4];
@@ -269,16 +342,29 @@ namespace ShimmerBLEAPI.Devices
             int time = BitConverter.ToInt32(minutesUntilStart, 0);
             return time;
         }
+
+        /// <summary>
+        /// The duration in minutes for the device to wait for a connection for data transfer
+        /// </summary>
+        /// <param name="duration">duration in minutes</param>
         public void SetDataTransferDuration(int duration)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_DATA_TRANS_WKUP_DUR] = (byte)duration;
         }
 
+        /// <summary>
+        /// The duration in minutes for the device to wait for a connection
+        /// </summary>
+        /// <returns>duration in minutes</returns>
         public int GetDataTransferDuration()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_DATA_TRANS_WKUP_DUR];
         }
 
+        /// <summary>
+        /// The number of minute's interval the ASM sensor will wait before re-trying to transfer its data in the event of a previous data transfer failure.
+        /// </summary>
+        /// <param name="interval">retry interval in minutes</param>
         public void SetDataTransferRetryInterval(int interval)
         {
             byte[] retryInterval = new byte[2];
@@ -287,6 +373,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_DATA_TRANS_RETRY_INT + 1] = retryInterval[1];
         }
 
+        /// <summary>
+        /// The number of minute's interval the ASM sensor will wait before re-trying to transfer its data in the event of a previous data transfer failure.
+        /// </summary>
+        /// <returns>retry interval in minutes</returns>
         public int GetDataTransferRetryInterval()
         {
             byte[] retryInterval = new byte[4];
@@ -295,16 +385,28 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// The number of hours interval between each of the status report.
+        /// </summary>
+        /// <param name="interval">interval in hours</param>
         public void SetStatusInterval(int interval)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_STATUS_WKUP_INT_HRS] = (byte)interval;
         }
 
+        /// <summary>
+        /// The number of hours interval between each of the status report.
+        /// </summary>
+        /// <returns>interval in hours</returns>
         public int GetStatusInterval()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_STATUS_WKUP_INT_HRS];
         }
 
+        /// <summary>
+        /// The time that the status is sent by the sensor
+        /// </summary>
+        /// <param name="time">start time in minutes eg 540 if start time is 9:00am</param>
         public void SetStatusStartTime(int time)
         {
             byte[] startTime = new byte[2];
@@ -313,6 +415,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_STATUS_WKUP_TIME + 1] = startTime[1];
         }
 
+        /// <summary>
+        /// The time that the status is sent by the sensor
+        /// </summary>
+        /// <returns>start time in minutes eg 540 if start time is 9:00am</returns>
         public int GetStatusStartTime()
         {
             byte[] startTime = new byte[4];
@@ -321,16 +427,28 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// The duration in minutes for the device to wait for a connection for status transfer
+        /// </summary>
+        /// <param name="interval">duration in minutes</param>
         public void SetStatusDuration(int interval)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_STATUS_WKUP_DUR] = (byte)interval;
         }
 
+        /// <summary>
+        /// The duration in minutes for the device to wait for a connection for status transfer
+        /// </summary>
+        /// <returns>duration in minutes</returns>
         public int GetStatusDuration()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_STATUS_WKUP_DUR];
         }
 
+        /// <summary>
+        /// The number of minute's interval the ASM sensor will wait before re-trying to send its status in the event of a previous data transfer failure
+        /// </summary>
+        /// <param name="interval">retry interval in minutes</param>
         public void SetStatusRetryInterval(int interval)
         {
             byte[] retryInterval = new byte[2];
@@ -339,6 +457,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_STATUS_RETRY_INT + 1] = retryInterval[1];
         }
 
+        /// <summary>
+        /// The number of minute's interval the ASM sensor will wait before re-trying to send its status in the event of a previous data transfer failure
+        /// </summary>
+        /// <returns>retry interval in minutes</returns>
         public int GetStatusRetryInterval()
         {
             byte[] retryInterval = new byte[4];
@@ -347,16 +469,28 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// Real-world clock synchronisation interval in hours
+        /// </summary>
+        /// <param name="interval">interval in hours</param>
         public void SetRTCSyncInterval(int interval)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RTC_SYNC_WKUP_INT_HRS] = (byte)interval;
         }
 
+        /// <summary>
+        /// Real-world clock synchronisation interval in hours
+        /// </summary>
+        /// <returns>interval in hours</returns>
         public int GetRTCSyncInterval()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RTC_SYNC_WKUP_INT_HRS];
         }
 
+        /// <summary>
+        /// Real-world clock synchronisation start time in minutes
+        /// </summary>
+        /// <param name="time">start time in minutes eg 540 if start time is 9:00am</param>
         public void SetRTCSyncTime(int time)
         {
             byte[] startTime = new byte[2];
@@ -365,6 +499,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RTC_SYNC_WKUP_TIME + 1] = startTime[1];
         }
 
+        /// <summary>
+        /// Real-world clock synchronisation start time in minutes
+        /// </summary>
+        /// <returns>start time in minutes eg 540 if start time is 9:00am</returns>
         public int GetRTCSyncTime()
         {
             byte[] startTime = new byte[4];
@@ -373,16 +511,28 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// The duration in minutes for the device to wait for a connection for real-world clock synchronisation
+        /// </summary>
+        /// <param name="duration">duration in minutes</param>
         public void SetRTCSyncDuration(int duration)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RTC_SYNC_WKUP_DUR] = (byte)duration;
         }
 
+        /// <summary>
+        /// The duration in minutes for the device to wait for a connection for real-world clock synchronisation
+        /// </summary>
+        /// <returns>duration in minutes</returns>
         public int GetRTCSyncDuration()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RTC_SYNC_WKUP_DUR];
         }
 
+        /// <summary>
+        /// The number of minute's interval the ASM sensor will wait before re-trying real-world clock synchronisation in the event of a previous real-world clock synchronisation failure
+        /// </summary>
+        /// <param name="interval">interval in minutes</param>
         public void SetRTCSyncRetryInterval(int interval)
         {
             byte[] retryInterval = new byte[2];
@@ -391,6 +541,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.BLE_RTC_SYNC_RETRY_INT + 1] = retryInterval[1];
         }
 
+        /// <summary>
+        /// The number of minute's interval the ASM sensor will wait before re-trying real-world clock synchronisation in the event of a previous real-world clock synchronisation failure
+        /// </summary>
+        /// <returns>interval in minutes</returns>
         public int GetRTCSyncRetryInterval()
         {
             byte[] retryInterval = new byte[4];
@@ -399,6 +553,10 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// The number of minute’s interval the ASM sensor will wait after a failed connection attempt before turning on the scheduler again
+        /// </summary>
+        /// <param name="interval">interval in minutes, if this value is set to either 0 or 65535 then the adaptive scheduler will never be turned on</param>
         public void SetAdaptiveSchedulerInterval(int interval)
         {
             byte[] adaptiveSchedulerInterval = new byte[2];
@@ -407,6 +565,10 @@ namespace ShimmerBLEAPI.Devices
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.ADAPTIVE_SCHEDULER_INT + 1] = adaptiveSchedulerInterval[1];
         }
 
+        /// <summary>
+        /// The number of minute’s interval the ASM sensor will wait after a failed connection attempt before turning on the scheduler again
+        /// </summary>
+        /// <returns>interval in minutes</returns>
         public int GetAdaptiveSchedulerInterval()
         {
             byte[] adaptiveSchedulerInterval = new byte[4];
@@ -415,16 +577,30 @@ namespace ShimmerBLEAPI.Devices
             return time;
         }
 
+        /// <summary>
+        /// Each time the sensor fails to clear all pending events during a scheduled wake-up event, a fail counter is incremented. 
+        /// When the fail counter reaches the adaptive scheduler maximum fail count, the sensor will turn on the adaptive scheduler and the scheduler will be set to wake-up in <see cref="GetAdaptiveSchedulerInterval"/> minutes
+        /// </summary>
+        /// <param name="count">adaptive scheduler maximum fail count</param>
         public void SetAdaptiveSchedulerMaxFailCount(int count)
         {
             OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.ADAPTIVE_SCHEDULER_FAILCOUNT_MAX] = (byte)count;
         }
 
+        /// <summary>
+        /// Each time the sensor fails to clear all pending events during a scheduled wake-up event, a fail counter is incremented. 
+        /// When the fail counter reaches the adaptive scheduler maximum fail count, the sensor will turn on the adaptive scheduler and the scheduler will be set to wake-up in <see cref="GetAdaptiveSchedulerInterval"/> minutes
+        /// </summary>
+        /// <returns>adaptive scheduler maximum fail count</returns>
         public int GetAdaptiveSchedulerMaxFailCount()
         {
             return OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.ADAPTIVE_SCHEDULER_FAILCOUNT_MAX];
         }
 
+        /// <summary>
+        /// Is the logging of data enabled
+        /// </summary>
+        /// <exception cref="Exception">Thrown if op config is null</exception>
         public bool IsLoggingEnabled()
         {
             if (OpConfig.ConfigurationBytes == null)
@@ -441,6 +617,10 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        /// <summary>
+        /// Is the sensor enabled
+        /// </summary>
+        /// <exception cref="Exception">Thrown if op config is null</exception>
         public bool IsDeviceEnabled()
         {
             if (OpConfig.ConfigurationBytes == null)
@@ -457,6 +637,11 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        /// <summary>
+        /// Return sensor based on the sensor name or null if sensor not found
+        /// </summary>
+        /// <param name="key">The sensor name eg "Accel1"</param>
+        /// <returns></returns>
         public Sensor GetSensor(string key)
         {
             foreach (Sensor sensor in SensorList.Values)
@@ -468,6 +653,10 @@ namespace ShimmerBLEAPI.Devices
             }
             return null;
         }
+
+        /// <summary>
+        /// Update device and sensor configuration. It is called when prod config or op config are updated
+        /// </summary>
         public void UpdateDeviceAndSensorConfiguration()
         {
             foreach (Sensor sensor in SensorList.Values)
@@ -486,7 +675,7 @@ namespace ShimmerBLEAPI.Devices
             }
         }
         /// <summary>
-        /// 
+        /// Generate configuration bytes based on current sensors configuration
         /// </summary>
         /// <returns></returns>
         public virtual byte[] GenerateConfigurationBytes()
@@ -499,35 +688,67 @@ namespace ShimmerBLEAPI.Devices
             return configBytes;
         }
 
+        /// <summary>
+        /// Returns operational config byte array
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetOperationalConfigByteArray()
         {
             return OpConfig.ConfigurationBytes;
         }
 
+        /// <summary>
+        /// Returns production config byte array
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetProductionConfigByteArray()
         {
             return BitHelper.MSBByteArray(ProdConfig.Payload.Replace("-", "")).ToArray();
         }
 
+        /// <summary>
+        /// Returns status payload
+        /// </summary>
+        /// <returns></returns>
         public StatusPayload GetStatus()
         {
             return Status;
         }
 
+        /// <summary>
+        /// Returns time payload
+        /// </summary>
         public TimePayload GetLastReceivedRTC()
         {
             return Time;
         }
+
+        /// <summary>
+        /// Returns production config payload
+        /// </summary>
+        /// <returns></returns>
         public ProdConfigPayload GetProductionConfig()
         {
             return ProdConfig;
         }
 
+        /// <summary>
+        /// Calibrate ADC Value to millivolts. Output varies based on id
+        /// </summary>
+        /// <param name="uncalValue"></param>
+        /// <param name="id">the hardware identifier enum</param>
+        /// <returns>Voltage in millivolts</returns>
         public static double CalibrateADCValueToMilliVolts(int uncalValue, HardwareIdentifier id)
         {
             return CalibrateADCValueToVolts(uncalValue, id)*1000;
         }
 
+        /// <summary>
+        /// Calibrate ADC Value to volts. Output varies based on id
+        /// </summary>
+        /// <param name="uncalValue"></param>
+        /// <param name="id">the hardware identifier enum</param>
+        /// <returns>Voltage in volts</returns>
         public static double CalibrateADCValueToVolts(int uncalValue, HardwareIdentifier id)
         {
             var adcRange = Math.Pow(2, 12) - 1;  // 12-bit
@@ -542,6 +763,11 @@ namespace ShimmerBLEAPI.Devices
             return calValue;
         }
 
+        /// <summary>
+        /// Search for settings using the display name in the array provided. Returns <see cref="DefaultVerisenseConfiguration.Unknown_Device_OpConfig_Setting"/> if setting not found
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="displayName">the display name of the setting</param>
         public static DeviceByteArraySettings GetDeviceOpSettingFromDisplayName(DeviceByteArraySettings[] settings, string displayName)
         {
             foreach (DeviceByteArraySettings setting in settings)
@@ -554,12 +780,21 @@ namespace ShimmerBLEAPI.Devices
             return DefaultVerisenseConfiguration.Unknown_Device_OpConfig_Setting;
         }
 
+        /// <summary>
+        /// Each instance of this class represents a group of device settings
+        /// </summary>
         public class DeviceByteArraySettings
         {
             protected string DisplayName;
             protected byte[] OperationalConfigurationBytes;
             protected string Description = "";
-           
+
+            /// <summary>
+            /// Create a device byte array settings
+            /// </summary>
+            /// <param name="displayName"></param>
+            /// <param name="operationalConfigurationBytes"></param>
+            /// <param name="description"></param>
             public DeviceByteArraySettings(string displayName, byte[] operationalConfigurationBytes, string description)
             {
                 DisplayName = displayName;
@@ -567,8 +802,17 @@ namespace ShimmerBLEAPI.Devices
                 Description = description;
             }
 
+            /// <summary>
+            /// Returns the display name
+            /// </summary>
             public string GetDisplayName() { return DisplayName; }
+            /// <summary>
+            /// Returns the operational configuration bytes
+            /// </summary>
             public byte[] GetOperationalConfigurationBytes() { return OperationalConfigurationBytes; }
+            /// <summary>
+            /// Returns the description
+            /// </summary>
             public string GetDescription() { return Description; }
         }
 
@@ -578,6 +822,7 @@ namespace ShimmerBLEAPI.Devices
         /// <param name="compMajor"></param>
         /// <param name="compMinor"></param>
         /// <param name="compInternal"></param>
+        /// <exception cref="Exception">Thrown if prod config is null</exception>
         /// <returns></returns>
         public bool MeetsMinimumFWRequirement(int compMajor, int compMinor, int compInternal)
         {
@@ -596,6 +841,12 @@ namespace ShimmerBLEAPI.Devices
             return false; // if less
         }
 
+        /// <summary>
+        /// Search for setting using the configuration byte in the array provided
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="value">the configuration byte value</param>
+        /// <returns></returns>
         public static DeviceByteSetting GetDeviceSettingFromConfigurationValue(DeviceByteSetting[] settings, int value)
         {
             foreach (DeviceByteSetting setting in settings)
@@ -608,6 +859,12 @@ namespace ShimmerBLEAPI.Devices
             return new DeviceByteSetting("Unknown", -1, -1);
         }
 
+        /// <summary>
+        /// Search for setting using the display name in the array provided
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <param name="displayName"></param>
+        /// <returns></returns>
         public static DeviceByteSetting GetDeviceOpSettingFromDisplayName(DeviceByteSetting[] settings, string displayName)
         {
             foreach (DeviceByteSetting setting in settings)
@@ -620,6 +877,9 @@ namespace ShimmerBLEAPI.Devices
             return Unknown_Device_Setting;
         }
 
+        /// <summary>
+        /// Each instance of this class represents a device setting
+        /// </summary>
         public class DeviceByteSetting
         {
             protected string DisplayName;
@@ -627,6 +887,12 @@ namespace ShimmerBLEAPI.Devices
             protected Object SettingsValue;
             protected string Description = "";
 
+            /// <summary>
+            /// Create a new device setting
+            /// </summary>
+            /// <param name="displayName"></param>
+            /// <param name="operationalConfigurationByte"></param>
+            /// <param name="settingsValue"></param>
             public DeviceByteSetting(string displayName, int operationalConfigurationByte, Object settingsValue)
             {
                 DisplayName = displayName;
@@ -634,9 +900,21 @@ namespace ShimmerBLEAPI.Devices
                 SettingsValue = settingsValue;
             }
 
+            /// <summary>
+            /// Returns display name
+            /// </summary>
             public string GetDisplayName() { return DisplayName; }
+            /// <summary>
+            /// Returns operational configuration byte
+            /// </summary>
             public int GetConfigurationByte() { return OperationalConfigurationByte; }
+            /// <summary>
+            /// Returns setting value
+            /// </summary>
             public Object GetSettingsValue() { return SettingsValue; }
+            /// <summary>
+            /// Returns description
+            /// </summary>
             public string GetDescription() { return Description; }
 
         }

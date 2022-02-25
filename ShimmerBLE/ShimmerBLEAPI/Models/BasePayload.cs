@@ -10,12 +10,19 @@ namespace shimmer.Models
         bool ProcessPayload(byte[] response);
     }
 
+    /// <summary>
+    /// Base class for payload. Each payload has header and length.
+    /// </summary>
     public class BasePayload : IBasePayload
     {
         public string Header { get; set; }
         public int Length { get; set; }
         public string Payload { get; set; }
 
+        /// <summary>
+        /// Parse the payload into header and length
+        /// </summary>
+        /// <param name="response">payload to be parse</param>
         public bool ProcessPayload(byte[] response)
         {
             try
@@ -43,6 +50,10 @@ namespace shimmer.Models
             return true;
         }
 
+        /// <summary>
+        /// Returns payload array without header
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetPayload()
         {
             byte[] payloadWithHeader = GetPayloadWithHeader();
@@ -51,6 +62,10 @@ namespace shimmer.Models
             return payloadWithoutHeader;
         }
 
+        /// <summary>
+        /// Returns payload array with header
+        /// </summary>
+        /// <returns></returns>
         public byte[] GetPayloadWithHeader()
         {
             return BitHelper.MSBByteArray(Payload.Replace("-", "")).ToArray();

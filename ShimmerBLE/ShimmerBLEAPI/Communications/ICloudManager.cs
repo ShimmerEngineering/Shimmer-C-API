@@ -11,6 +11,9 @@ namespace shimmer.Communications
         bool DeleteUploadedBinFile(Object file);
     }
 
+    /// <summary>
+    /// Store the event data
+    /// </summary>
     public class CloudManagerEvent
     {
         public enum CloudEvent

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace shimmer.Helpers
 {
+    /// <summary>
+    /// This class contains file related methods
+    /// </summary>
     public static class FileHelper
     {
         

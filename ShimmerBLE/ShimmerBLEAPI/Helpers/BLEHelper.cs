@@ -7,9 +7,16 @@ using System.Text.RegularExpressions;
 
 namespace shimmer.Helpers
 {
+    /// <summary>
+    /// This class contains BLE related methods
+    /// </summary>
     public class BLEHelper
     {
-
+        /// <summary>
+        /// Convert Guid eg 00000000-0000-0000-0000-19092205A2BB to bluetooth address
+        /// </summary>
+        /// <param name="deviceId">eg 00000000-0000-0000-0000-19092205A2BB</param>
+        /// <returns>Returns bluetooth address as ulong</returns>
         public static ulong ToBluetoothAddress(Guid deviceId)
         {
             var address = deviceId
@@ -27,6 +34,11 @@ namespace shimmer.Helpers
         static readonly Regex macRegex = new Regex("(.{2})(.{2})(.{2})(.{2})(.{2})(.{2})");
         const string REGEX_REPLACE = "$1:$2:$3:$4:$5:$6";
 
+        /// <summary>
+        /// Convert ulong to mac address eg E7:A1:F7:84:2F:17
+        /// </summary>
+        /// <param name="address">bluetooth address in ulong</param>
+        /// <returns>mac address</returns>
         public static string ToMacAddress(ulong address)
         {
             var tempMac = address.ToString("X");
