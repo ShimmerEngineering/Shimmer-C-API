@@ -31,6 +31,12 @@ namespace ShimmerBLEAPI
 
         private double CountDownsample = 0;
 
+        /// <summary>
+        /// Initialize a plot manager
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="yAxisTitle"></param>
+        /// <param name="xAxisTitle"></param>
         public PlotManager(string title, string yAxisTitle, string xAxisTitle)
         {
             PlotTitle = title;
@@ -38,6 +44,13 @@ namespace ShimmerBLEAPI
             XAxisTitle = xAxisTitle;
         }
 
+        /// <summary>
+        /// Initialize a plot manager
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="yAxisTitle"></param>
+        /// <param name="xAxisTitle"></param>
+        /// <param name="displayXAxisAsTime">X axis string format</param>
         public PlotManager(string title, string yAxisTitle, string xAxisTitle, bool displayXAxisAsTime)
         {
             PlotTitle = title;
@@ -79,6 +92,10 @@ namespace ShimmerBLEAPI
             return PlotModel;
         }
 
+        /// <summary>
+        /// If downsampling is enabled, some data will not be plotted
+        /// </summary>
+        /// <param name="ojc">object cluster</param>
         public void FilterDataAndPlot(ObjectCluster ojc)
         {
             if (EnableDownsampling)
@@ -95,6 +112,10 @@ namespace ShimmerBLEAPI
             }
         }
 
+        /// <summary>
+        /// Plot data from the object cluster
+        /// </summary>
+        /// <param name="ojc">object cluster</param>
         private void PlotOjc(ObjectCluster ojc)
         {
             int count = 0;
@@ -133,6 +154,10 @@ namespace ShimmerBLEAPI
             Thread.Sleep(25);
         }
 
+        /// <summary>
+        /// Add signal to plot using random color
+        /// </summary>
+        /// <param name="signal">signal to be add</param>
         public void AddSignalToPlotRandomColor(string[] signal)
         {
             int[] color = GenerateRandomColor();
@@ -148,6 +173,10 @@ namespace ShimmerBLEAPI
             AddSignalAndColor(signal, color);
         }
 
+        /// <summary>
+        /// Add signal to plot using default color
+        /// </summary>
+        /// <param name="signal">signal to be add</param>
         public void AddSignalToPlotDefaultColors(string[] signal)
         {
             AddSignalUseDefaultColors(signal);
@@ -163,6 +192,10 @@ namespace ShimmerBLEAPI
             PlotModel.Series.Add(lineSeries);
         }
 
+        /// <summary>
+        /// Remove signal from plot
+        /// </summary>
+        /// <param name="signal">signal to be remove</param>
         public void RemoveSignalFromPlot(string[] signal)
         {
             int index = FindSignalIndex(signal);
@@ -179,6 +212,9 @@ namespace ShimmerBLEAPI
             }
         }
 
+        /// <summary>
+        /// Empty the plot
+        /// </summary>
         public void RemoveAllSignalsFromPlot()
         {
             ListOfLineSeries.Clear();
@@ -187,91 +223,151 @@ namespace ShimmerBLEAPI
             RemoveAllSignals();
         }
 
+        /// <summary>
+        /// Maximum number of data points on the plot
+        /// </summary>
         public void SetMaxDataPoints(int points)
         {
             DataPointsMax = points;
         }
+        /// <summary>
+        /// Maximum number of data points on the plot
+        /// </summary>
         public int GetMaxDataPoints()
         {
             return DataPointsMax;
         }
 
+        /// <summary>
+        /// Plot title
+        /// </summary>
         public void SetPlotTitle(string title)
         {
             PlotTitle = title;
         }
+        /// <summary>
+        /// Plot title
+        /// </summary>
         public string GetPlotTitle()
         {
             return PlotTitle;
         }
 
+        /// <summary>
+        /// Y axis title
+        /// </summary>
         public void SetYAxisTitleLeft(string title)
         {
             YAxisTitle = title;
         }
+        /// <summary>
+        /// Y axis title
+        /// </summary>
         public string GetYAxisTitleLeft()
         {
             return YAxisTitle;
         }
 
+        /// <summary>
+        /// X axis title
+        /// </summary>
         public void SetXAxisTitleBottom(string title)
         {
             XAxisTitle = title;
         }
+        /// <summary>
+        /// X axis title
+        /// </summary>
         public string GetXAxisTitleBottom()
         {
             return XAxisTitle;
         }
 
+        /// <summary>
+        /// X axis string format
+        /// </summary>
         public void SetXAxisStringFormat(string format)
         {
             XAxisStringFormat = format;
         }
+        /// <summary>
+        /// X axis string format
+        /// </summary>
         public string GetXAxisStringFormat()
         {
             return XAxisStringFormat;
         }
 
+        /// <summary>
+        /// Y axis minimum range
+        /// </summary>
         public void SetYAxisRangeMin(double value)
         {
             YAxisRangeMin = value;
         }
+        /// <summary>
+        /// Y axis minimum range
+        /// </summary>
         public double GetYAxisRangeMin()
         {
             return YAxisRangeMin;
         }
 
+        /// <summary>
+        /// Y axis maximum range
+        /// </summary>
         public void SetYAxisRangeMax(double value)
         {
             YAxisRangeMax = value;
         }
+        /// <summary>
+        /// Y axis maximum range
+        /// </summary>
         public double GetYAxisRangeMax()
         {
             return YAxisRangeMax;
         }
 
+        /// <summary>
+        /// Stroke thickness
+        /// </summary>
         public void SetStrokeThickness(double value)
         {
             StrokeThickness = value;
         }
+        /// <summary>
+        /// Stroke thickness
+        /// </summary>
         public double GetStrokeThickness()
         {
             return StrokeThickness;
         }
 
+        /// <summary>
+        /// Enables or disables downsampling
+        /// </summary>
         public void SetEnableDownsampling(bool value)
         {
             EnableDownsampling = value;
         }
+        /// <summary>
+        /// Enables or disables downsampling
+        /// </summary>
         public bool GetEnableDownsampling()
         {
             return EnableDownsampling;
         }
 
+        /// <summary>
+        /// Downsampling factor
+        /// </summary>
         public void SetDownsamplingFactor(double factor)
         {
             DownsamplingFactor = factor;
         }
+        /// <summary>
+        /// Downsampling factor
+        /// </summary>
         public double GetDownsamplingFactor()
         {
             return DownsamplingFactor;

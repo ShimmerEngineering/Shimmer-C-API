@@ -4,6 +4,9 @@ using System.Text;
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// Store the event data for <see cref="VerisenseBLEEvent"/>
+    /// </summary>
     public class ShimmerBLEEventData
     {
         public string ASMID { get; set; }

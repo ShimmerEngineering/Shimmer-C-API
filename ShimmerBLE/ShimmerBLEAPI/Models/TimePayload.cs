@@ -4,6 +4,9 @@ using System.IO;
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// This class store and parse the time payload
+    /// </summary>
     public class TimePayload : BasePayload
     {
         public readonly double ClockFreqHz = 32768;
@@ -14,6 +17,11 @@ namespace shimmer.Models
         /// This is to be added to the minutes for more accuracy (e.g. convert minutes to seconds and then add this value)
         /// </summary>
         public double RemainingSeconds { get; set; }
+
+        /// <summary>
+        /// Parse the payload into header, length, minutes and ticks
+        /// </summary>
+        /// <param name="response"></param>
         public new bool ProcessPayload(byte[] response)
         {
             try

@@ -7,6 +7,9 @@ using static shimmer.Models.CommunicationState;
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// This class store and parse the status payload
+    /// </summary>
     public class StatusPayload : BasePayload
     {
         public string ASMID { get; set; }
@@ -62,6 +65,11 @@ namespace shimmer.Models
             return new string(charArray);
         }
 
+        /// <summary>
+        /// Parse and store the payload data
+        /// </summary>
+        /// <param name="response">status payload</param>
+        /// <param name="syncMode"><see cref="CommunicationMode"/></param>
         public new bool ProcessPayload(byte[] response, CommunicationMode syncMode)
         {
             try
