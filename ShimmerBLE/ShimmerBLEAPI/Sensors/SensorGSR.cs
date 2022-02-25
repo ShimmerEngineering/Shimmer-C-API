@@ -68,7 +68,7 @@ namespace shimmer.Sensors
             public static readonly SensorSetting[] Settings = { ADC_Oversampling_Unknown, ADC_Oversampling_Disabled, ADC_Oversampling_2x, ADC_Oversampling_4x, ADC_Oversampling_8x, ADC_Oversampling_16x, ADC_Oversampling_32x, ADC_Oversampling_64x, ADC_Oversampling_128x, ADC_Oversampling_256x };
         }
         /// <summary>
-        /// Unknown mean the GSR sensor is disabled, connected means the GSR electrodes are very likely to have contact with the subject, disconnected means the GSR electrodes are unlikely to have contact with the subject
+        /// Unknown means the GSR sensor is disabled, connected means the GSR electrodes are very likely to have contact with the subject, disconnected means the GSR electrodes are unlikely to have contact with the subject
         /// </summary>
         public enum GSRConnectivityLevel
         {
@@ -185,7 +185,7 @@ namespace shimmer.Sensors
         }
 
         /// <summary>
-		/// Parse the raw payload data received to other format for streaming
+		/// Parse the raw payload data received
 		/// </summary>
 		/// <param name="payload">the payload data that is received from the sensor</param>
 		/// <param name="deviceID">the uuid for the address of which is used to connect to via BLE "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ</param>
@@ -216,10 +216,10 @@ namespace shimmer.Sensors
         }
 
         /// <summary>
-		/// Parse the sample of data and store in the object cluster provided
+		/// Parse a single sample. This is typically used to parse all the samples within a payload
 		/// </summary>
 		/// <param name="ojc"></param>
-		/// <param name="sample">one set of data</param>
+		/// <param name="sample">one sample</param>
         public override ObjectCluster ParseSensorData(byte[] sample, ObjectCluster ojc)
         {
             int battStartOfIndex = 0;
@@ -296,7 +296,7 @@ namespace shimmer.Sensors
         }
 
         /// <summary>
-        /// Returns true if the data collection from the gyroscope is enabled
+        /// Returns true if GSR is enabled
         /// </summary>
         public bool IsGSREnabled()
         {
