@@ -216,7 +216,7 @@ namespace shimmer.Sensors
         }
 
         /// <summary>
-		/// Parse a single sample. This is typically used to parse all the samples within a payload
+		/// Parse a single sample and store in the object cluster provided. This is typically used to parse all the samples within a payload. 
 		/// </summary>
 		/// <param name="ojc"></param>
 		/// <param name="sample">one sample</param>
