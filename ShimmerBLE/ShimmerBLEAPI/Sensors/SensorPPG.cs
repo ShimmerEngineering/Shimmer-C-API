@@ -255,7 +255,7 @@ namespace shimmer.Sensors
             PROX_AGC_MODE = GetSensorSettingFromConfigurationValue(ProxAGCMode.Settings, ppgproxagcmode);
         }
         /// <summary>
-		/// Parse the raw payload data received to other format for streaming
+		/// Parse the raw payload data received
 		/// </summary>
 		/// <param name="payload">the payload data that is received from the sensor</param>
 		/// <param name="deviceID">the uuid for the address of which is used to connect to via BLE "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ</param>
@@ -304,7 +304,7 @@ namespace shimmer.Sensors
             return listOfOJCs;
         }
         /// <summary>
-		/// Parse the sample of data and store in the object cluster provided
+		/// Parse a single sample and store in the object cluster provided. This is typically used to parse all the samples within a payload. 
 		/// </summary>
 		/// <param name="ojc"></param>
 		/// <param name="sample">one set of data</param>
