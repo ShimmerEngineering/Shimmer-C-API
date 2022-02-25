@@ -209,9 +209,10 @@ namespace ShimmerBLETests
             byte[] defaultBytes = new byte[] { 0x5A, 0x17, 0x80, 0x02, 0x00, 0x30, 0x20, 0x00, 0x7F, 0x00, 0xD8, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xF4, 0x18, 0x3C, 0x00, 0x0A, 0x0F, 0x00, 0x18, 0x3C, 0x00, 0x0A, 0x0F, 0x00, 0x18, 0x3C, 0x00, 0x0A, 0x0F, 0x00, 0xFF, 
             //GSR AUTO RANGE BYTE 51 = 0x04    
                 0x04, 0xAA, 0x01, 0x03, 0x3C, 0x00, 0x0E, 0x00, 0x00, 0x63, 0x28, 0xCC, 0xCC, 0x1E, 0x00, 0x0A, 0x00, 0x00, 0x00, 0x00, 0x01 };
+            byte[] prodConfigBytes = new byte[] { 51, 13, 0, 90, 187, 162, 1, 37, 9, 25, 62, 0, 1, 2, 99, 0 };
             Boolean packetCorrectValue = true;
             Boolean packetReceived = false;
-            TestVerisenseBLEDevice VerisenseBLEDevice = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            TestVerisenseBLEDevice VerisenseBLEDevice = new TestVerisenseBLEDevice(uuid, "", defaultBytes, prodConfigBytes);
             VerisenseBLEDevice.ShimmerBLEEvent += delegate (object sender, ShimmerBLEEventData e)
             {
                 if (e.CurrentEvent == VerisenseBLEEvent.StateChange)
@@ -226,9 +227,9 @@ namespace ShimmerBLETests
                     var gsrSiemens = ojc.GetData(SensorGSR.ObjectClusterSensorName.GSR, ShimmerConfiguration.SignalFormats.CAL, "uSiemens").Data;
                     var batt = ojc.GetData(SensorGSR.ObjectClusterSensorName.Batt, ShimmerConfiguration.SignalFormats.CAL).Data;
                     packetReceived = true;
-                    double gsrOhmsExpectedValue = 574.06005551349983;
-                    double gsrSiemensExpectedValue = 1.7472527472527475;
-                    double battExpectedValue = 1376.7032967032969;
+                    double gsrOhmsExpectedValue = 279.7704447632712;
+                    double gsrSiemensExpectedValue = 3.5743589743589737;
+                    double battExpectedValue = 2295.238095238095;
                     if (Math.Abs(gsrOhms - gsrOhmsExpectedValue) < 10
                     && Math.Abs(gsrSiemens - gsrSiemensExpectedValue) < .3
                     && Math.Abs(batt - battExpectedValue) < 10)
