@@ -2,6 +2,9 @@
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// Stores data
+    /// </summary>
     public class DataDebugItem
     {
         public DateTime Date { get; set; }

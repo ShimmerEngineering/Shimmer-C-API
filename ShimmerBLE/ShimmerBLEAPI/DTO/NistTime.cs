@@ -2,6 +2,9 @@
 
 namespace shimmer.DTO
 {
+    /// <summary>
+    /// Store the returned xml data from url http://nist.time.gov
+    /// </summary>
     [XmlRoot(ElementName = "timestamp")]
     public class NistTime
     {
