@@ -45,7 +45,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Each variable represents a bluetooth 5 power level setting
+        /// Each variable represents a Bluetooth 5 power level setting
         /// </summary>
         public static class BT5RadioOutputPower
         {
@@ -291,7 +291,7 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
-        /// Returns bluetooth power setting
+        /// Returns Bluetooth power setting
         /// </summary>
         /// <returns></returns>
         public DeviceByteSetting GetBLETXPower()
