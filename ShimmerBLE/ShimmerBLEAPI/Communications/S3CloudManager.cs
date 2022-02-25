@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 namespace ShimmerBLEAPI.UWP.Communications
 {
     /// <summary>
-    /// Contains methods related to S3 Cloud server
+    /// Contains methods related to communicating with the S3 Cloud server
     /// </summary>
     public class S3CloudManager : ICloudManager
     {
         S3CloudInfo S3CloudInfo;
         /// <summary>
-        /// Create a S3CloudManager
+        /// Create an S3CloudManager instance
         /// </summary>
         /// <param name="s3CloudInfo"></param>
         public S3CloudManager(S3CloudInfo s3CloudInfo)
