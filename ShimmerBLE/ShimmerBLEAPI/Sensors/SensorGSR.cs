@@ -11,6 +11,9 @@ using static ShimmerBLEAPI.Devices.VerisenseDevice;
 
 namespace shimmer.Sensors
 {
+    /// <summary>
+	/// This class contains the configuration settings for sensor GSR. Every sensor should belong to a device
+	/// </summary>
     public class SensorGSR : Sensor
     {
 
@@ -21,6 +24,9 @@ namespace shimmer.Sensors
         public const int GSR_UNCAL_LIMIT_RANGE3_SR62 = 683;
         public const int GSR_UNCAL_LIMIT_RANGE3_SR68 = 1134;
 
+        /// <summary>
+        /// GSR range setting
+        /// </summary>
         public static class GSRRange
         {
             public static readonly SensorSetting Range_Unknown = Sensor.UnknownSetting;
@@ -31,6 +37,9 @@ namespace shimmer.Sensors
             public static readonly SensorSetting Range_Auto = new SensorSetting("Auto Range", 4, new double[] { 8.0, 4700.0 }, "8.0kOhm to 4700.0kOhm");
             public static readonly SensorSetting[] Settings = { Range_Unknown, Range_0, Range_1, Range_2, Range_3, Range_Auto };
         }
+        /// <summary>
+        /// GSR sample rate setting
+        /// </summary>
         public static class GSRRate
         {
             public static readonly SensorSetting Rate_Unknown = Sensor.UnknownSetting;
@@ -41,6 +50,9 @@ namespace shimmer.Sensors
             public static readonly SensorSetting Freq_128Hz = new SensorSetting("128Hz", 19, 128);
             public static readonly SensorSetting[] Settings = { Rate_Unknown, Freq_5_12Hz, Freq_10_24Hz, Freq_20_48Hz, Freq_51_2Hz, Freq_128Hz };
         }
+        /// <summary>
+        /// ADC oversampling rate setting
+        /// </summary>
         public static class ADCOversamplingRate
         {
             public static readonly SensorSetting ADC_Oversampling_Unknown = Sensor.UnknownSetting;
@@ -56,7 +68,7 @@ namespace shimmer.Sensors
             public static readonly SensorSetting[] Settings = { ADC_Oversampling_Unknown, ADC_Oversampling_Disabled, ADC_Oversampling_2x, ADC_Oversampling_4x, ADC_Oversampling_8x, ADC_Oversampling_16x, ADC_Oversampling_32x, ADC_Oversampling_64x, ADC_Oversampling_128x, ADC_Oversampling_256x };
         }
         /// <summary>
-        /// Unknown mean the GSR sensor is disabled, connected means the GSR electrodes are very likely to have contact with the subject, disconnected means the GSR electrodes are unlikely to have contact with the subject
+        /// Unknown means the GSR sensor is disabled, connected means the GSR electrodes are very likely to have contact with the subject, disconnected means the GSR electrodes are unlikely to have contact with the subject
         /// </summary>
         public enum GSRConnectivityLevel
         {
@@ -82,13 +94,16 @@ namespace shimmer.Sensors
         public static readonly string SensorName = "GSR";
         private GSRConnectivityLevel ConnectivityCheck = GSRConnectivityLevel.Unknown;
 
+        /// <summary>
+        /// This is used to store and retrieve the sensor data in the object cluster
+        /// </summary>
         public static class ObjectClusterSensorName
         {
             public static String GSR = "GSR";
             public static String Batt = "Batt";
         }
         /// <summary>
-        /// /// Unknown mean the GSR sensor is disabled, connected means the GSR electrodes are very likely to have contact with the subject, disconnected means the GSR electrodes are unlikely to have contact with the subject
+        /// Unknown mean the GSR sensor is disabled, connected means the GSR electrodes are very likely to have contact with the subject, disconnected means the GSR electrodes are unlikely to have contact with the subject
         /// </summary>
         /// <returns></returns>
         public GSRConnectivityLevel GetGSRConnectivityLevel()
@@ -96,6 +111,11 @@ namespace shimmer.Sensors
             return ConnectivityCheck;
         }
 
+        /// <summary>
+		/// Update the operational configuration byte array based on current sensor configuration
+		/// </summary>
+		/// <param name="operationalConfigBytes">byte array to be update</param>
+		/// <returns></returns>
         public override byte[] GenerateOperationConfig(byte[] operationalConfigBytes)
         {
 
@@ -123,11 +143,19 @@ namespace shimmer.Sensors
             return operationalConfigBytes;
         }
 
+        /// <summary>
+		/// Returns the sensor name
+		/// </summary>
+		/// <returns></returns>
         public override string GetSensorName()
         {
             return SensorName;
         }
 
+        /// <summary>
+		/// Initialize the configuration settings using the operational config bytes provided
+		/// </summary>
+		/// <param name="operationalConfigBytes"></param>
         public override void InitializeUsingOperationConfig(byte[] operationalConfigBytes)
         {
             if ((operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_1] >> 7) == 1)
@@ -156,6 +184,12 @@ namespace shimmer.Sensors
             GSROversamplingRateSetting = GetSensorSettingFromConfigurationValue(ADCOversamplingRate.Settings, oversamplingRate);
         }
 
+        /// <summary>
+		/// Parse the raw payload data received
+		/// </summary>
+		/// <param name="payload">the payload data that is received from the sensor</param>
+		/// <param name="deviceID">the uuid for the address of which is used to connect to via BLE "00000000-0000-0000-0000-e7452c6d6f14" note that the uuid across OS (android vs iOS) can differ</param>
+		/// <returns></returns>
         public override List<ObjectCluster> ParsePayloadData(byte[] payload, string deviceID)
         {
             var numberofBytesPerSample = 2;
@@ -181,6 +215,11 @@ namespace shimmer.Sensors
             return listOfOJCs;
         }
 
+        /// <summary>
+		/// Parse a single sample and store in the object cluster provided. This is typically used to parse all the samples within a payload. 
+		/// </summary>
+		/// <param name="ojc"></param>
+		/// <param name="sample">one sample</param>
         public override ObjectCluster ParseSensorData(byte[] sample, ObjectCluster ojc)
         {
             int battStartOfIndex = 0;
@@ -248,10 +287,17 @@ namespace shimmer.Sensors
             return ojc; 
         }
 
+        /// <summary>
+        /// Returns true if battery is enabled
+        /// </summary>
         public bool IsBattEnabled()
         {
             return BattEnabled;
         }
+
+        /// <summary>
+        /// Returns true if GSR is enabled
+        /// </summary>
         public bool IsGSREnabled()
         {
             return GSREnabled;
@@ -287,19 +333,34 @@ namespace shimmer.Sensors
             }
             BattEnabled = enabled;
         }
+        /// <summary>
+        /// Set GSR range setting
+        /// </summary>
+        /// <param name="range"><see cref="GSRRange"/></param>
         public void SetGSRRange(SensorSetting range)
         {
             GSRRangeSetting = range;
         }
+        /// <summary>
+        /// Returns GSR range setting
+        /// </summary>
+        /// <returns></returns>
         public SensorSetting GetGSRRange()
         {
             return GSRRangeSetting;
         }
-
+        /// <summary>
+        /// Set GSR sample rate setting
+        /// </summary>
+        /// <param name="rate"><see cref="GSRRate"/></param>
         public override void SetSamplingRate(SensorSetting rate)
         {
             GSRRateSetting = rate;
         }
+        /// <summary>
+        /// Returns GSR sample rate setting
+        /// </summary>
+        /// <returns></returns>
         public override SensorSetting GetSamplingRate()
         {
             return GSRRateSetting;
@@ -308,7 +369,7 @@ namespace shimmer.Sensors
         /// <summary>
         /// Over sampling rate can only be used when GSR is enabled and Batt is disabled
         /// </summary>
-        /// <param name="rate"></param>
+        /// <param name="rate"><see cref="ADCOversamplingRate"/></param>
         public void SetOversamplingRate(SensorSetting rate)
         {
             if (GSREnabled && BattEnabled && !rate.Equals(ADCOversamplingRate.ADC_Oversampling_Disabled))
@@ -317,11 +378,19 @@ namespace shimmer.Sensors
             }
             GSROversamplingRateSetting = rate;
         }
+        /// <summary>
+        /// Returns over sampling rate setting
+        /// </summary>
         public SensorSetting GetOversamplingRate()
         {
             return GSROversamplingRateSetting;
         }
-
+        /// <summary>
+        /// Calibrate GSR Data to KOhms using the amplifier equation. The output may differs with different hardware
+        /// </summary>
+        /// <param name="range"></param>
+        /// <param name="volts"></param>
+        /// <returns></returns>
         public double CalibrateGsrDataToKOhmsUsingAmplifierEq(double volts, int range)
         {
             var rFeedback = SHIMMER3_GSR_REF_RESISTORS_KOHMS[range];
@@ -344,7 +413,10 @@ namespace shimmer.Sensors
         return UtilFunctions.nudgeDouble(gsrResistanceKOhms, minMax[0], minMax[1])
     return gsrResistanceKOhms
         */
-
+        /// <summary>
+        /// Nudge GSR resistance
+        /// </summary>
+        /// <returns></returns>
         public double NudgeGSRResistance(double gsrResistancekOHMs) 
         {
             if (GSRRangeSetting.GetConfigurationValue() != 4)
@@ -353,7 +425,10 @@ namespace shimmer.Sensors
             }
             return gsrResistancekOHMs;
         }
-
+        /// <summary>
+        /// Converts kOhms To Microsiemens
+        /// </summary>
+        /// <returns></returns>
         public static double ConvertkOhmToUSiemens(double gsrResistanceKOhms)
         {
             return 1000.0 / gsrResistanceKOhms;

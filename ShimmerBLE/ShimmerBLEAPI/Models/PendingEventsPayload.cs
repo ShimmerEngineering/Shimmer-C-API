@@ -10,6 +10,9 @@ namespace shimmer.Models
         Data, Status, Time, Config, OperationalConfigWriteOnUnpairing
     }
 
+    /// <summary>
+    /// This class store and parse the pending events payload
+    /// </summary>
     public class PendingEventsPayload : BasePayload
     {
         public Queue<PendingEvent> Events { get; set; }
@@ -20,6 +23,10 @@ namespace shimmer.Models
         public bool DataEvent { get; set; }
         public bool ConfigEvent { get; set; }
 
+        /// <summary>
+        /// Parse and store the payload data
+        /// </summary>
+        /// <param name="response">pending events payload</param>
         public new bool ProcessPayload(byte[] response)
         {
             PendingEvents = "";

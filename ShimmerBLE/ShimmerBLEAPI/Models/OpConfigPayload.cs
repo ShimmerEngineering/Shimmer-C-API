@@ -4,6 +4,9 @@ using System.IO;
 
 namespace shimmer.Models
 {
+    /// <summary>
+    /// This class store and parse the operational configuration payload
+    /// </summary>
     public class OpConfigPayload : BasePayload
     {
         public string ConfigBody { get; set; }
@@ -64,6 +67,10 @@ namespace shimmer.Models
             PPG_DAC4_CROSSTALK = 70,
             PROX_AGC_MODE = 71
         }
+        /// <summary>
+        /// Parse the payload into header, length and configuration bytes
+        /// </summary>
+        /// <param name="response">op config payload</param>
         public new bool ProcessPayload(byte[] response)
         {
             try

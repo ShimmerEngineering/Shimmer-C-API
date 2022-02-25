@@ -6,6 +6,9 @@ using Xamarin.Forms;
 
 namespace shimmer.Helpers
 {
+    /// <summary>
+    /// Each instance of this class represents a stoppable timer
+    /// </summary>
     public class StoppableTimer
     {
         private readonly TimeSpan timespan;
@@ -13,6 +16,9 @@ namespace shimmer.Helpers
 
         private CancellationTokenSource cancellation;
 
+        /// <summary>
+        /// Create a new instance of the timer
+        /// </summary>
         public StoppableTimer(TimeSpan timespan, Action callback)
         {
             this.timespan = timespan;
@@ -20,6 +26,9 @@ namespace shimmer.Helpers
             this.cancellation = new CancellationTokenSource();
         }
 
+        /// <summary>
+        /// Start the timer
+        /// </summary>
         public void Start()
         {
             CancellationTokenSource cts = this.cancellation; // safe copy
@@ -32,6 +41,9 @@ namespace shimmer.Helpers
             });
         }
 
+        /// <summary>
+        /// Stop the timer
+        /// </summary>
         public void Stop()
         {
             Interlocked.Exchange(ref this.cancellation, new CancellationTokenSource()).Cancel();
