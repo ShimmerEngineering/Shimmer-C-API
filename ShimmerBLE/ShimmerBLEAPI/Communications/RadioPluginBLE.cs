@@ -255,8 +255,8 @@ namespace shimmer.Communications
         /// <summary>
         /// Write characteristic to the device
         /// </summary>
-        /// <param name="bytes">bytes array to be written</param>
-        /// <returns>Returns true if success</returns>
+        /// <param name="bytes">byte array to be written</param>
+        /// <returns>Returns true if successful</returns>
         public async Task<bool> WriteBytes(byte[] bytes)
         {
             var writeTCS = new TaskCompletionSource<bool>();
@@ -290,7 +290,7 @@ namespace shimmer.Communications
 
         private bool disposedValue = false;
         /// <summary>
-        /// Dispose the characteristics and connected ASM
+        /// Disconnect and Dispose Veriense BLE Device
         /// </summary>
         /// <param name="disposing"></param>
         public void Dispose(bool disposing)
