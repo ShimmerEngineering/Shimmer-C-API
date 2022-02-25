@@ -7,7 +7,7 @@ using Xamarin.Forms;
 namespace shimmer.Helpers
 {
     /// <summary>
-    /// todo
+    /// Each instance of this class represents a stoppable timer
     /// </summary>
     public class StoppableTimer
     {

@@ -12,9 +12,16 @@ using System.Threading.Tasks;
 
 namespace ShimmerBLEAPI.UWP.Communications
 {
+    /// <summary>
+    /// Contains methods related to S3 Cloud server
+    /// </summary>
     public class S3CloudManager : ICloudManager
     {
         S3CloudInfo S3CloudInfo;
+        /// <summary>
+        /// Create a S3CloudManager
+        /// </summary>
+        /// <param name="s3CloudInfo"></param>
         public S3CloudManager(S3CloudInfo s3CloudInfo)
         {
             S3CloudInfo = s3CloudInfo;
@@ -24,6 +31,10 @@ namespace ShimmerBLEAPI.UWP.Communications
         public event EventHandler<CloudManagerEvent> CloudManagerEvent;
         public TaskCompletionSource<bool> RequestTCS { get; set; }
         public bool DeleteAfterUpload { get; set; }
+        /// <summary>
+        /// Upload file to the S3 server
+        /// </summary>
+        /// <param name="filePath">location of the file</param>
         public async Task<bool> UploadFile(object filePath)
         {
             AmazonS3Client s3Client = new AmazonS3Client(new BasicAWSCredentials(S3CloudInfo.S3AccessKey, S3CloudInfo.S3SecretKey), RegionEndpoint.GetBySystemName(S3CloudInfo.S3RegionName));
@@ -98,7 +109,10 @@ namespace ShimmerBLEAPI.UWP.Communications
             }
 
         }
-
+        /// <summary>
+        /// Delete the uploaded file in the file path
+        /// </summary>
+        /// <param name="filePath">location of the file</param>
         public bool DeleteUploadedBinFile(object filePath)
         {
             // Delete all files in a directory    

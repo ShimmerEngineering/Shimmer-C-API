@@ -25,6 +25,9 @@ namespace shimmer.Communications
         Limited
     }
 
+    /// <summary>
+    /// Store the event data
+    /// </summary>
     public class ByteLevelCommunicationEvent
     {
         public byte[] Bytes;
