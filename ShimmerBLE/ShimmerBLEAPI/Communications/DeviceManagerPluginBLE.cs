@@ -10,10 +10,16 @@ using System.Threading.Tasks;
 
 namespace shimmer.Communications
 {
+    /// <summary>
+    /// Contains methods related to communicating with the BLE devices
+    /// </summary>
     public class DeviceManagerPluginBLE : IVerisenseBLEManager
     {
         public event EventHandler<BLEManagerEvent> BLEManagerEvent;
         protected readonly IAdapter Adapter;
+        /// <summary>
+        /// Create a DeviceManagerPluginBLE instance
+        /// </summary>
         public DeviceManagerPluginBLE()
         {
             Adapter = CrossBluetoothLE.Current.Adapter;
@@ -42,27 +48,45 @@ namespace shimmer.Communications
             System.Console.WriteLine(args.Device.Name);
         }
 
+        /// <summary>
+        /// Pair with a verisense device
+        /// </summary>
+        /// <param name="Device">device to be paired</param>
+        /// <param name="generator">use to generate the passkey</param>
         public async Task<bool> PairVerisenseDevice(Object Device, IBLEPairingKeyGenerator generator)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Start scanning for BLE devices
+        /// </summary>
         public async Task<bool> StartScanForDevices()
         {
             Adapter.StartScanningForDevicesAsync();
             return true;
         }
 
+        /// <summary>
+        /// Stop scanning for BLE devices
+        /// </summary>
         public void StopScanForDevices()
         {
             Adapter.StopScanningForDevicesAsync();
         }
 
+        /// <summary>
+        /// Return the list of scanned BLE devices
+        /// </summary>
+        /// <returns>list of <see cref="VerisenseBLEScannedDevice"/></returns>
         public List<VerisenseBLEScannedDevice> GetListOfScannedDevices()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns the event handler
+        /// </summary>
         public EventHandler<BLEManagerEvent> GetBLEManagerEvent()
         {
             throw new NotImplementedException();
