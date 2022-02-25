@@ -447,7 +447,7 @@ namespace shimmer.Services
         }
         private List<IObserver<String>> observers = new List<IObserver<String>>();
         /// <summary>
-        /// Observer subscribe to the speed test eg transfer rate
+        /// Observer subscribe to the speed test to receive notifications
         /// </summary>
         public IDisposable Subscribe(IObserver<String> observer)
         {
