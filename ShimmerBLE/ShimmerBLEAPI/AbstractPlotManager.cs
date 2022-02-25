@@ -157,9 +157,9 @@ namespace ShimmerBLEAPI
         }
 
         /// <summary>
-        /// Returns index of signal in <see cref="ListOfPropertiesToPlot"/>
+        /// Returns index of signal properties in <see cref="ListOfPropertiesToPlot"/>
         /// </summary>
-        /// <param name="signalToFind"></param>
+        /// <param name="signalToFind">signal properties</param>
         public int FindSignalIndex(string[] signalToFind)
         {
             int res = ListOfPropertiesToPlot.IndexOf(signalToFind);
@@ -167,9 +167,9 @@ namespace ShimmerBLEAPI
         }
 
         /// <summary>
-        /// Returns true if signal exists in <see cref="ListOfPropertiesToPlot"/>
+        /// Returns true if signal properties exists in <see cref="ListOfPropertiesToPlot"/>
         /// </summary>
-        /// <param name="signal"></param>
+        /// <param name="signal">signal properties</param>
         public bool CheckSignalExists(string[] signal)
         {
             foreach(var property in ListOfPropertiesToPlot)
@@ -204,8 +204,9 @@ namespace ShimmerBLEAPI
         }
 
         /// <summary>
-        /// Returns random color as rgb array
+        /// Returns random rgb color
         /// </summary>
+        /// <returns>integer array with rgb values</returns>
         public static int[] GenerateRandomColor()
         {
             Random rand = new Random();
