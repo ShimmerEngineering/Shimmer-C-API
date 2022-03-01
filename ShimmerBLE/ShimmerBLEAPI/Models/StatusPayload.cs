@@ -34,7 +34,18 @@ namespace shimmer.Models
         public int? StorageFull { get; set; } = null;
         public int? StorageToDel { get; set; } = null;
         public int? StorageBad { get; set; } = null;
-
+        public int? StorageCapacity { get; set; } = null;
+        public int? Metadata_01 { get; set; } = null;
+        public enum BatteryChargerStatus
+        {
+            BadBattery,
+            Charging,
+            ChargingComplete,
+            PowerDown,
+            Unknown
+        }
+        public bool? IsChargerChipPresent { get; set; } = null;
+        BatteryChargerStatus BattChargerStatus = BatteryChargerStatus.Unknown;
         private long ConvertMinuteToMS(long timestamp)
         {
             if (timestamp != BitHelper.MaxFourByteUnsignedValue) //special condition where the sensor/fw returns all FF values
@@ -146,7 +157,9 @@ namespace shimmer.Models
                     AdaptiveScheduler = statusBinary[4].Equals('1');
                     DfuServiceOn = statusBinary[5].Equals('1');
                 }
-
+                var storageFullBytes = new byte[3];
+                var storageToDelBytes = new byte[3];
+                var storageBadBytes = new byte[3];
                 if (Length > 34)  //supported fw for ASM-1329
                 {
                     var statusTimestampTicksBytes = reader.ReadBytes(3);
@@ -175,7 +188,7 @@ namespace shimmer.Models
                     NextSyncAttemptTimestamp = long.Parse(BitConverter.ToString(nextSyncAttemptTimeBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
                     NextSyncAttemptTimestamp = ConvertMinuteToMS((long)NextSyncAttemptTimestamp);
 
-                    var storageFullBytes = reader.ReadBytes(3);
+                    storageFullBytes = reader.ReadBytes(3);
                     Array.Reverse(storageFullBytes);
                     StorageFull = int.Parse(BitConverter.ToString(storageFullBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
                     /* I am moving this to the UI level, because this values might be meaningful in the web DB
@@ -183,13 +196,50 @@ namespace shimmer.Models
                     {
                         StorageFull = App.MaxSensorStorageCapacityKB;
                     }*/
-                    var storageToDelBytes = reader.ReadBytes(3);
+                    storageToDelBytes = reader.ReadBytes(3);
                     Array.Reverse(storageToDelBytes);
                     StorageToDel = int.Parse(BitConverter.ToString(storageToDelBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
-                    var storageBadBytes = reader.ReadBytes(3);
+                    storageBadBytes = reader.ReadBytes(3);
                     Array.Reverse(storageBadBytes);
                     StorageBad = int.Parse(BitConverter.ToString(storageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+                }
+
+                if (Length > 47)  
+                {
+                    var updatedStorageFullBytes = new byte[4];
+                    var updatedStorageToDelBytes = new byte[4];
+                    var updatedStorageBadBytes = new byte[4];
+                    System.Array.Copy(storageFullBytes, 0, updatedStorageFullBytes, 0, 3);
+                    updatedStorageFullBytes[3] = reader.ReadByte();
+                    Array.Reverse(updatedStorageFullBytes);
+                    StorageFull = int.Parse(BitConverter.ToString(updatedStorageFullBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+
+                    System.Array.Copy(storageToDelBytes, 0, updatedStorageToDelBytes, 0, 3);
+                    updatedStorageToDelBytes[3] = reader.ReadByte();
+                    Array.Reverse(updatedStorageToDelBytes);
+                    StorageFull = int.Parse(BitConverter.ToString(updatedStorageToDelBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+
+                    System.Array.Copy(storageBadBytes, 0, updatedStorageBadBytes, 0, 3);
+                    updatedStorageBadBytes[3] = reader.ReadByte();
+                    Array.Reverse(updatedStorageBadBytes);
+                    StorageFull = int.Parse(BitConverter.ToString(updatedStorageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+
+                    var storageCapacity = reader.ReadBytes(4);
+                    Array.Reverse(storageCapacity);
+                    StorageCapacity = int.Parse(BitConverter.ToString(storageCapacity).Replace("-", string.Empty), NumberStyles.HexNumber);
+
+                    var metadata_01 = reader.ReadBytes(4);
+                    Array.Reverse(metadata_01);
+                    Metadata_01 = int.Parse(BitConverter.ToString(metadata_01).Replace("-", string.Empty), NumberStyles.HexNumber);
+                    if ((Metadata_01 & 0b00000001) == 1)
+                    {
+                        IsChargerChipPresent = true;
+                    } else
+                    {
+                        IsChargerChipPresent = false;
+                    }
+                    BattChargerStatus = (BatteryChargerStatus)((Metadata_01 & 0b00000110) >> 1);
                 }
 
                 SyncMode = (int)syncMode;
