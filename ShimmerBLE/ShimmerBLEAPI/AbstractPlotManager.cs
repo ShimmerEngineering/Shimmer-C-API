@@ -7,6 +7,9 @@ using ShimmerAPI.Utilities;
 
 namespace ShimmerBLEAPI
 {
+    /// <summary>
+    /// Base class for plot manager
+    /// </summary>
     public abstract class AbstractPlotManager
     {
         public SynchronizedCollection<string[]> ListOfPropertiesToPlot = new SynchronizedCollection<string[]>();
@@ -126,6 +129,10 @@ namespace ShimmerBLEAPI
             ListOfPropertiesToPlot.Add(channelStringArray);
         }
 
+        /// <summary>
+        /// Add x-axis to <see cref="DictOfXAxis"/> if it does not already exist
+        /// </summary>
+        /// <param name="channelStringArray"></param>
         public void AddXAxis(string[] channelStringArray)
         {
             string deviceName = channelStringArray[(int)SignalArrayIndex.ShimmerID];
@@ -136,6 +143,10 @@ namespace ShimmerBLEAPI
             }
         }
 
+        /// <summary>
+        /// Remove x-axis from <see cref="DictOfXAxis"/>
+        /// </summary>
+        /// <param name="key"></param>
         public void RemoveXAxis(string key)
         {
             bool res = DictOfXAxis.TryRemove(key, out var val); 
@@ -145,12 +156,20 @@ namespace ShimmerBLEAPI
             }
         }
 
+        /// <summary>
+        /// Returns index of signal properties in <see cref="ListOfPropertiesToPlot"/>
+        /// </summary>
+        /// <param name="signalToFind">signal properties</param>
         public int FindSignalIndex(string[] signalToFind)
         {
             int res = ListOfPropertiesToPlot.IndexOf(signalToFind);
             return res;
         }
 
+        /// <summary>
+        /// Returns true if signal properties exists in <see cref="ListOfPropertiesToPlot"/>
+        /// </summary>
+        /// <param name="signal">signal properties</param>
         public bool CheckSignalExists(string[] signal)
         {
             foreach(var property in ListOfPropertiesToPlot)
@@ -163,6 +182,11 @@ namespace ShimmerBLEAPI
             return false;
         }
 
+        /// <summary>
+        /// Returns signal properties from the object cluster provided
+        /// </summary>
+        /// <param name="ojc"></param>
+        /// <returns>List of signal properties</returns>
         public List<string[]> GetAllSignalPropertiesFromOjc(ObjectCluster ojc)
         {
             List<string[]> signals = new List<string[]>();
@@ -179,6 +203,10 @@ namespace ShimmerBLEAPI
             return signals;
         }
 
+        /// <summary>
+        /// Returns random rgb color
+        /// </summary>
+        /// <returns>integer array with rgb values</returns>
         public static int[] GenerateRandomColor()
         {
             Random rand = new Random();
