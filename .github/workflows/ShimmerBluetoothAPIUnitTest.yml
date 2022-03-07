@@ -28,6 +28,6 @@ jobs:
     - name: Build 
       run: msbuild ./ShimmerAPI/ShimmerAPITest.sln
     - name: VSTest
-      run: vstest.console.exe ./ShimmerAPI/ShimmerUnitTests/ShimmerUnitTests.csproj
+      run: vstest.console.exe ./ShimmerAPI/ShimmerUnitTests/bin/Debug/ShimmerBluetoothTests.dll
 
     
