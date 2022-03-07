@@ -26,5 +26,5 @@ jobs:
     - name: Build 
       run: msbuild ./ShimmerAPI/ShimmerAPITest.sln
     - name: Test
-      run: msbuild test ./ShimmerAPI/ShimmerAPITest.sln --no-build --verbosity normal
+      run: msbuild test ./ShimmerAPI/ShimmerUnitTests/ShimmerUnitTests.csproj
     
