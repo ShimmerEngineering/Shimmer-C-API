@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: 4.7.2
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./ShimmerAPI/ShimmerAPITest.sln
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./ShimmerAPI/ShimmerAPITest.sln --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./ShimmerAPI/ShimmerAPITest.sln --no-build --verbosity normal
