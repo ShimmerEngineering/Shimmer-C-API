@@ -11,7 +11,7 @@ namespace ShimmerBluetoothTests
     [TestClass]
     public class ShimmerBluetoothUnitTest
     {
-        String comPort = "COM4";
+        String comPort = "COM29";
         String deviceName = "testName";
         ShimmerLogAndStreamSystemSerialPort shimmerDevice;
         ObjectCluster ojc = null;
