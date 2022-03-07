@@ -23,6 +23,7 @@ namespace ShimmerBluetoothTests
         [TestMethod]
         public void TestPacketParserNoErrors()
         {
+            Assert.Fail();
             sbrd.start();
             while (ojcArray.Count < 10)
             {
