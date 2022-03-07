@@ -22,3 +22,5 @@ For solutions to parse your binary files please get in touch with us, at the mom
 
 ### Examples
 We would recommend reading through the [readme](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE/VerisenseBLEDemoApp/README.md) of VerisenseBLEDemoApp before proceeding to using any of the examples within this repository.
+
+### Unit Test
