@@ -62,9 +62,6 @@
     <Compile Include="ShimmerReadDataPacketTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="OrderedTestECGMDConstructor.orderedtest">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
