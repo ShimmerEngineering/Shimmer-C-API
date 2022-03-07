@@ -17,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Setup VSTest Path
+      uses: darenm/Setup-VSTest@v1
     - name: Setup MSBuild Path
       uses: microsoft/setup-msbuild@v1    
     - name: Setup Nuget
@@ -25,6 +27,7 @@ jobs:
       run: nuget restore ./ShimmerAPI/ShimmerAPITest.sln
     - name: Build 
       run: msbuild ./ShimmerAPI/ShimmerAPITest.sln
-    - name: Run a one-line script
-      run:  '& "$(vswhere -property installationPath)\Common7\IDE\MSTest.exe" /help'
+    - name: VSTest
+      run: vstest.console.exe ./ShimmerAPI/ShimmerUnitTests/ShimmerUnitTests.csproj
+
     
