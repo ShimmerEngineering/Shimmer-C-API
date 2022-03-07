@@ -13,8 +13,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
     - name: Setup MSBuild Path
       uses: microsoft/setup-msbuild@v1    
+    - name: Setup Nuget
+      uses: Nuget/setup-nuget@v1.0.5
+    - name: Restore nuget packages
+      run: nuget restore ./ShimmerAPI/ShimmerAPITest.sln
     - name: Build 
       run: msbuild ./ShimmerAPI/ShimmerAPITest.sln
     - name: Test
