@@ -10,7 +10,7 @@ namespace ShimmerBluetoothTests
     public class ShimmerECGMDConstructor
     {
 
-        String comport = "COM29";
+        String comport = "COM3";
         ArrayList ojcArray = new ArrayList();
         ObjectCluster ojc = null;
 
