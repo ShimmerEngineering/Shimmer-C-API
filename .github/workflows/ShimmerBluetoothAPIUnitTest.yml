@@ -25,6 +25,6 @@ jobs:
       run: nuget restore ./ShimmerAPI/ShimmerAPITest.sln
     - name: Build 
       run: msbuild ./ShimmerAPI/ShimmerAPITest.sln
-    - name: Test
-      run: msbuild test ./ShimmerAPI/ShimmerUnitTests/ShimmerUnitTests.csproj
+    - name: Run a one-line script
+      run:  '& "$(vswhere -property installationPath)\Common7\IDE\MSTest.exe" /help'
     
