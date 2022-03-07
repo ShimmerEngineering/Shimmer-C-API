@@ -1,0 +1,33 @@
+name: ShimmerBluetoothAPIUnitTest
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Setup VSTest Path
+      uses: darenm/Setup-VSTest@v1
+    - name: Setup MSBuild Path
+      uses: microsoft/setup-msbuild@v1    
+    - name: Setup Nuget
+      uses: Nuget/setup-nuget@v1.0.5
+    - name: Restore nuget packages
+      run: nuget restore ./ShimmerAPI/ShimmerAPITest.sln
+    - name: Build 
+      run: msbuild ./ShimmerAPI/ShimmerAPITest.sln
+    - name: VSTest
+      run: vstest.console.exe ./ShimmerAPI/ShimmerUnitTests/bin/Debug/ShimmerBluetoothTests.dll
+
+    
