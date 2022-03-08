@@ -205,11 +205,22 @@ namespace shimmer.Models
                     StorageBad = int.Parse(BitConverter.ToString(storageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
                 }
 
-                if (Length > 47)  
+                if (Length > 56)  
                 {
                     var updatedStorageFullBytes = new byte[4];
                     var updatedStorageToDelBytes = new byte[4];
                     var updatedStorageBadBytes = new byte[4];
+                    var updatedStorageBytes = new byte[4];
+                    System.Array.Copy(storageBadBytes, 0, updatedStorageBadBytes, 0, 3);
+                    updatedStorageBadBytes[3] = reader.ReadByte();
+                    Array.Reverse(updatedStorageBadBytes);
+                    StorageBad = int.Parse(BitConverter.ToString(updatedStorageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+
+                    System.Array.Copy(storageBytes, 0, updatedStorageBytes, 0, 3);
+                    updatedStorageBytes[3] = reader.ReadByte();
+                    Array.Reverse(updatedStorageBytes);
+                    FreeStorage = int.Parse(BitConverter.ToString(updatedStorageBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+
                     System.Array.Copy(storageFullBytes, 0, updatedStorageFullBytes, 0, 3);
                     updatedStorageFullBytes[3] = reader.ReadByte();
                     Array.Reverse(updatedStorageFullBytes);
@@ -218,19 +229,13 @@ namespace shimmer.Models
                     System.Array.Copy(storageToDelBytes, 0, updatedStorageToDelBytes, 0, 3);
                     updatedStorageToDelBytes[3] = reader.ReadByte();
                     Array.Reverse(updatedStorageToDelBytes);
-                    StorageFull = int.Parse(BitConverter.ToString(updatedStorageToDelBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
-
-                    System.Array.Copy(storageBadBytes, 0, updatedStorageBadBytes, 0, 3);
-                    updatedStorageBadBytes[3] = reader.ReadByte();
-                    Array.Reverse(updatedStorageBadBytes);
-                    StorageFull = int.Parse(BitConverter.ToString(updatedStorageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+                    StorageToDel = int.Parse(BitConverter.ToString(updatedStorageToDelBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
                     var storageCapacity = reader.ReadBytes(4);
                     Array.Reverse(storageCapacity);
                     StorageCapacity = int.Parse(BitConverter.ToString(storageCapacity).Replace("-", string.Empty), NumberStyles.HexNumber);
 
-                    var metadata_01 = reader.ReadBytes(4);
-                    Array.Reverse(metadata_01);
+                    var metadata_01 = reader.ReadBytes(1);
                     Metadata_01 = int.Parse(BitConverter.ToString(metadata_01).Replace("-", string.Empty), NumberStyles.HexNumber);
                     if ((Metadata_01 & 0b00000001) == 1)
                     {
