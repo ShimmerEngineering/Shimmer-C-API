@@ -55,7 +55,7 @@ namespace shimmer.Communications
                     var timeout = 5000;
                     cancel = new CancellationTokenSource();
                     TimeSpan timespan = new TimeSpan(0, 0, 5);
-                    Timer timer = new Timer(TimeoutConnect, null, 5000, Timeout.Infinite);
+                    Timer timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);
                     ConnectedASM = await adapter.ConnectToKnownDeviceAsync(Asm_uuid, new ConnectParameters(false, true),cancel.Token);
                     timer.Dispose();
                     /*if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
