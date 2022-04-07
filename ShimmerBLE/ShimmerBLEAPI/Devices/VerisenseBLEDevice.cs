@@ -989,7 +989,7 @@ namespace ShimmerBLEAPI.Devices
                     return ProdConfig.ASMID;
                 }
             }
-            return Asm_uuid.ToString();
+            throw new Exception("Sensor ID unknown because production config has not been read");
         }
         /// <summary>
         /// For more advance API/App which associate sensors to trials
