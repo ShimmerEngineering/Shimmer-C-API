@@ -977,7 +977,20 @@ namespace ShimmerBLEAPI.Devices
         {
             return ParticipantID;
         }
-
+        /// <summary>
+        /// Get the sensor ID, which is derived from the prodconfig, if connect is done without initializing it returns the uuid
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetSensorID()
+        {
+            if (ProdConfig != null)
+            {
+                if (!String.IsNullOrEmpty(ProdConfig.ASMID)){
+                    return ProdConfig.ASMID;
+                }
+            }
+            return Asm_uuid.ToString();
+        }
         /// <summary>
         /// For more advance API/App which associate sensors to trials
         /// </summary>
@@ -1531,7 +1544,7 @@ namespace ShimmerBLEAPI.Devices
                 //var trialSettings = RealmService.LoadTrialSettings();
 
                 //var participantID = asm.ParticipantID;
-                binFileFolderDir = string.Format("{0}/{1}/{2}/BinaryFiles", GetTrialName(), GetParticipantID(), Asm_uuid.ToString());
+                binFileFolderDir = string.Format("{0}/{1}/{2}/BinaryFiles", GetTrialName(), GetParticipantID(), GetSensorID());
                 var folder = Path.Combine(DependencyService.Get<ILocalFolderService>().GetAppLocalFolder(), binFileFolderDir);
 
                 if (!Directory.Exists(folder))
