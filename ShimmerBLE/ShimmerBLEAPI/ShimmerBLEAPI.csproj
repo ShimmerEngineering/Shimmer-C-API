@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.1.1" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.1.1" />
     <PackageReference Include="Microsoft.AppCenter.Distribute" Version="2.1.1" />
-    <PackageReference Include="Mono.Cecil" Version="0.10.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.0" />
     <PackageReference Include="OxyPlot.Xamarin.Forms" Version="1.1.0-unstable0011" />
     <PackageReference Include="Plugin.BluetoothLE" Version="6.2.3" />
     <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
