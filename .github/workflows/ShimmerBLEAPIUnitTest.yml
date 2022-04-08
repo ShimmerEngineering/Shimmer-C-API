@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: | 
-         4.0.x
+         2.0
     - name: Restore dependencies
       run: dotnet restore ./ShimmerBLE/ShimmerBLEAPItest.sln
     - name: Build
