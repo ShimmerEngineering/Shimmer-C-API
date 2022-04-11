@@ -970,6 +970,22 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
+        /// Get Sensor ID
+        /// </summary>
+        /// <returns></returns>
+        public virtual string GetSensorID()
+        {
+            if (ProdConfig != null)
+            {
+                if (!String.IsNullOrEmpty(ProdConfig.ASMID))
+                {
+                    return ProdConfig.ASMID;
+                }
+            }
+            throw new Exception("ID unknown, please read production config first");
+        }
+
+        /// <summary>
         /// For more advance API/App which associate sensors to participants
         /// </summary>
         /// <returns></returns>
@@ -1531,7 +1547,16 @@ namespace ShimmerBLEAPI.Devices
                 //var trialSettings = RealmService.LoadTrialSettings();
 
                 //var participantID = asm.ParticipantID;
-                binFileFolderDir = string.Format("{0}/{1}/{2}/BinaryFiles", GetTrialName(), GetParticipantID(), Asm_uuid.ToString());
+                String sensorID = Asm_uuid.ToString();
+                try
+                {
+                    sensorID = GetSensorID();
+                } catch (Exception ex) // if production config wasnt read default to the UUID
+                {
+                    sensorID = Asm_uuid.ToString();
+                    AdvanceLog(ex.Message, "Defaulting to UUID", dataFileName, ASMName);
+                }
+                binFileFolderDir = string.Format("{0}/{1}/{2}/BinaryFiles", GetTrialName(), GetParticipantID(), sensorID);
                 var folder = Path.Combine(DependencyService.Get<ILocalFolderService>().GetAppLocalFolder(), binFileFolderDir);
 
                 if (!Directory.Exists(folder))
