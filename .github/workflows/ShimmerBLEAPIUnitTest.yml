@@ -21,6 +21,8 @@ jobs:
          2.0         
     - name: Restore dependencies
       run: dotnet restore ./ShimmerBLE/ShimmerBLEAPItest.sln
+    - name: Install PropertyChanged.Fody 3.4
+      run: nuget install PropertyChanged.Fody -Version 3.4.0 -DirectDownload -OutputDirectory .
     - name: Build
       run: dotnet build ./ShimmerBLE/ShimmerBLEAPItest.sln --no-restore
     - name: Test
