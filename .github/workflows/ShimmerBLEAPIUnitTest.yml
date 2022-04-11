@@ -22,9 +22,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore ./ShimmerBLE/ShimmerBLEAPItest.sln
     - name: Delete PropertyChanged.Fody
-      run: nuget delete PropertyChanged.Fody 2.6.1
+      run: dotnet remove PropertyChanged.Fody
     - name: Install PropertyChanged.Fody 3.4
-      run: nuget install PropertyChanged.Fody -Version 3.4.0 -DirectDownload -OutputDirectory .
+      run: dotnet add PropertyChanged.Fody --version 3.4.0
     - name: Build
       run: dotnet build ./ShimmerBLE/ShimmerBLEAPItest.sln --no-restore
     - name: Test
