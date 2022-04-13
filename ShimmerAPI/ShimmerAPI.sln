@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimmer32FeetAPI", "..\Shim
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShimmerAPI", "ShimmerAPI\ShimmerAPI.csproj", "{6E320423-1D88-47EE-97BA-51113E538D33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShimmerUnitTests", "ShimmerUnitTests\ShimmerUnitTests.csproj", "{30C7273A-87CC-499F-9206-48F89082AE0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -304,6 +306,30 @@ Global
 		{6E320423-1D88-47EE-97BA-51113E538D33}.ShimmerAPIBasic|x64.Build.0 = Debug|Any CPU
 		{6E320423-1D88-47EE-97BA-51113E538D33}.ShimmerAPIBasic|x86.ActiveCfg = Debug|Any CPU
 		{6E320423-1D88-47EE-97BA-51113E538D33}.ShimmerAPIBasic|x86.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Debug|x64.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Debug|x86.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Release|x64.ActiveCfg = Release|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Release|x64.Build.0 = Release|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Release|x86.ActiveCfg = Release|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.Release|x86.Build.0 = Release|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPI|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPI|Any CPU.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPI|x64.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPI|x64.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPI|x86.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPI|x86.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPIBasic|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPIBasic|Any CPU.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPIBasic|x64.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPIBasic|x64.Build.0 = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPIBasic|x86.ActiveCfg = Debug|Any CPU
+		{30C7273A-87CC-499F-9206-48F89082AE0C}.ShimmerAPIBasic|x86.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
