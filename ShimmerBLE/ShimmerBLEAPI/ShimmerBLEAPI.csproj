@@ -20,14 +20,15 @@
     <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.1.1" />
     <PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.1.1" />
     <PackageReference Include="Microsoft.AppCenter.Distribute" Version="2.1.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="OxyPlot.Xamarin.Forms" Version="1.1.0-unstable0011" />
     <PackageReference Include="Plugin.BluetoothLE" Version="6.2.3" />
     <PackageReference Include="Plugin.Permissions" Version="3.0.0.12" />
+    <PackageReference Include="PropertyChanged.Fody" Version="2.6.0" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.5.188" />
     <PackageReference Include="SharpZipLib" Version="1.1.0" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
     <PackageReference Include="Xam.Plugin.Battery" Version="3.0.1" />
-    <PackageReference Include="PropertyChanged.Fody" Version="2.6.0" />
     <PackageReference Include="RestSharp" Version="106.6.9" />
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.5.0.6" />
     <PackageReference Include="Xam.Plugins.Settings" Version="3.1.1" />
