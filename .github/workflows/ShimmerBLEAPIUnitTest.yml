@@ -1,0 +1,31 @@
+name: ShimmerBLEAPIUnitTest
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: | 
+         5.0.x
+         2.0         
+    - name: Restore dependencies
+      run: dotnet restore ./ShimmerBLE/ShimmerBLEAPItest.sln
+    - name: Delete PropertyChanged.Fody
+      run: dotnet remove ./ShimmerBLE/ShimmerBLEAPI/ShimmerBLEAPI.csproj package PropertyChanged.Fody
+    - name: Install PropertyChanged.Fody 3.4
+      run: dotnet add ./ShimmerBLE/ShimmerBLEAPI/ShimmerBLEAPI.csproj package PropertyChanged.Fody --version 3.4.0
+    - name: Build
+      run: dotnet build ./ShimmerBLE/ShimmerBLEAPItest.sln --no-restore
+    - name: Test
+      run: dotnet test ./ShimmerBLE/ShimmerBLEAPItest.sln --no-build --verbosity normal
