@@ -46,7 +46,9 @@ namespace shimmer.Models
         }
         public bool? IsChargerChipPresent { get; set; } = null;
         public BatteryChargerStatus BattChargerStatus = BatteryChargerStatus.Unknown;
-
+        /// <summary>
+        /// Note this index count starts only after the 1 byte header + 2 bytes length
+        /// </summary>
         public enum ConfigurationBytesIndexName
         {
             STORAGE_FREE = 21,
