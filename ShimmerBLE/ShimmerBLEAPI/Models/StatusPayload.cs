@@ -45,7 +45,21 @@ namespace shimmer.Models
             Unknown
         }
         public bool? IsChargerChipPresent { get; set; } = null;
-        BatteryChargerStatus BattChargerStatus = BatteryChargerStatus.Unknown;
+        public BatteryChargerStatus BattChargerStatus = BatteryChargerStatus.Unknown;
+
+        public enum ConfigurationBytesIndexName
+        {
+            STORAGE_FREE = 21,
+            STORAGE_FULL = 47,
+            STORAGE_TO_DEL = 50,
+            STORAGE_BAD = 53,
+            STORAGE_FREE_MSB = 57,
+            STORAGE_FULL_MSB = 58,
+            STORAGE_TO_DEL_MSB = 59,
+            STORAGE_CAPACITY = 60,
+            METADATA_01 = 64
+        }
+
         private long ConvertMinuteToMS(long timestamp)
         {
             if (timestamp != BitHelper.MaxFourByteUnsignedValue) //special condition where the sensor/fw returns all FF values
@@ -211,24 +225,20 @@ namespace shimmer.Models
                     var updatedStorageToDelBytes = new byte[4];
                     var updatedStorageBadBytes = new byte[4];
                     var updatedStorageBytes = new byte[4];
-                    System.Array.Copy(storageBadBytes, 0, updatedStorageBadBytes, 0, 3);
-                    updatedStorageBadBytes[3] = reader.ReadByte();
-                    Array.Reverse(updatedStorageBadBytes);
+                    System.Array.Copy(storageBadBytes, 0, updatedStorageBadBytes, 1, 3);
+                    updatedStorageBadBytes[0] = reader.ReadByte();
                     StorageBad = int.Parse(BitConverter.ToString(updatedStorageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
-                    System.Array.Copy(storageBytes, 0, updatedStorageBytes, 0, 3);
-                    updatedStorageBytes[3] = reader.ReadByte();
-                    Array.Reverse(updatedStorageBytes);
+                    System.Array.Copy(storageBytes, 0, updatedStorageBytes, 1, 3);
+                    updatedStorageBytes[0] = reader.ReadByte();
                     FreeStorage = int.Parse(BitConverter.ToString(updatedStorageBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
-                    System.Array.Copy(storageFullBytes, 0, updatedStorageFullBytes, 0, 3);
-                    updatedStorageFullBytes[3] = reader.ReadByte();
-                    Array.Reverse(updatedStorageFullBytes);
+                    System.Array.Copy(storageFullBytes, 0, updatedStorageFullBytes, 1, 3);
+                    updatedStorageFullBytes[0] = reader.ReadByte();
                     StorageFull = int.Parse(BitConverter.ToString(updatedStorageFullBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
-                    System.Array.Copy(storageToDelBytes, 0, updatedStorageToDelBytes, 0, 3);
-                    updatedStorageToDelBytes[3] = reader.ReadByte();
-                    Array.Reverse(updatedStorageToDelBytes);
+                    System.Array.Copy(storageToDelBytes, 0, updatedStorageToDelBytes, 1, 3);
+                    updatedStorageToDelBytes[0] = reader.ReadByte();
                     StorageToDel = int.Parse(BitConverter.ToString(updatedStorageToDelBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
 
                     var storageCapacity = reader.ReadBytes(4);
