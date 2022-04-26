@@ -1,5 +1,14 @@
 # Shimmer C# BLE API (Alpha Release)
 
+## List of Examples
+[VerisenseBLEDemoApp](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/VerisenseBLEDemoApp)
+
+[PasskeyConfigurationApp](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/PasskeyConfigurationApp)
+
+[MultiVerisenseExample](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/MultiVerisenseExample)
+
+[Shimmer32FeetBLEAPIConsoleAppExample](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/Shimmer32FeetBLEAPIConsoleAppExample)
+
 ## Current Limitations
 ### Verisense Pairing Key
 When using the verisense device you will require knowing what the pairing key. Some examples already expect that the verisense devices are already paired. In others where the BLEManager is used, it will provide some support for pairing. Typically you will be allowed to specify whether you want to use the default passkey of 123456 on purchase. Should you have any inquiries contact support. 
