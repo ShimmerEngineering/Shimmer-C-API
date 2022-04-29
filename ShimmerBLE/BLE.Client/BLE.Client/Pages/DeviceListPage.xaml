@@ -1,0 +1,942 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<views:MvxTabbedPage x:TypeArguments="viewModels:DeviceListViewModel"
+                     xmlns="http://xamarin.com/schemas/2014/forms"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     xmlns:views="clr-namespace:MvvmCross.Forms.Views;assembly=MvvmCross.Forms"
+                     xmlns:viewModels="clr-namespace:BLE.Client.ViewModels;assembly=BLE.Client" 
+                    xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
+                     x:Class="BLE.Client.Pages.DeviceListPage"
+                     Title="Discover devices"
+                     x:Name="DevicePage">
+    <views:MvxTabbedPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="DeviceItemTemplate">
+                <ViewCell>
+                    <ViewCell.ContextActions>
+                        <!--
+                        <MenuItem Command="{Binding Path=BindingContext.DisconnectCommand, Source={x:Reference DevicePage}}"
+                                  CommandParameter="{Binding .}"
+                                  IsDestructive="True"
+                                  Text="Disconnect" />
+                        -->
+                    </ViewCell.ContextActions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid"
+                                         Binding="{Binding IsConnected}"
+                                         Value="true">
+                                <Setter Property="BackgroundColor"
+                                        Value="#1A00FF00"></Setter>
+                            </DataTrigger>
+                        </Grid.Triggers>
+                        <StackLayout Orientation="Vertical"
+                                     VerticalOptions="Center">
+                            <Label Text="{Binding Name}"
+                                   FontSize="Large" />
+                            <Label Text="{Binding Id, StringFormat='{0}'}"
+                                   TextColor="Gray"
+                                   FontSize="Small" />
+                        </StackLayout>
+                        <Label Grid.Column="1"
+                               Margin="10"
+                               Text="{Binding Rssi}"
+                               VerticalTextAlignment="Center"></Label>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ResourceDictionary>
+    </views:MvxTabbedPage.Resources>
+    <views:MvxTabbedPage.Children>
+        <ContentPage Title="Scan for devices">
+            <ScrollView Orientation="Vertical">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition>
+                            <RowDefinition.Height>
+                                <OnPlatform x:TypeArguments="GridLength">
+                                    <On Platform="Android,iOS">200</On>
+                                    <On Platform="UWP,WPF">400</On>
+                                </OnPlatform>
+                            </RowDefinition.Height>
+                        </RowDefinition>
+                        <RowDefinition>
+                            <RowDefinition.Height>
+                                <OnPlatform x:TypeArguments="GridLength">
+                                    <On Platform="Android,iOS">*</On>
+                                    <On Platform="UWP,WPF">*</On>
+                                </OnPlatform>
+                            </RowDefinition.Height>
+                        </RowDefinition>
+                        <RowDefinition>
+                            <RowDefinition.Height>
+                                <OnPlatform x:TypeArguments="GridLength">
+                                    <On Platform="Android,iOS">Auto</On>
+                                    <On Platform="UWP,WPF">Auto</On>
+                                </OnPlatform>
+                            </RowDefinition.Height>
+                        </RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackLayout BackgroundColor="#FF6969"
+                             Padding="10"
+                             IsVisible="{Binding IsStateOn, Converter={StaticResource InverseBoolean}}">
+                        <Label Text="{Binding StateText}"
+                           FontSize="18"
+                           HorizontalTextAlignment="Center">
+                        </Label>
+                    </StackLayout>
+                    <ContentView>
+                        <OnPlatform x:TypeArguments="View">
+                            <On Platform="Android,iOS">
+                                <ListView  ItemsSource="{Binding Devices}"
+                                   SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                   IsPullToRefreshEnabled="True"
+                                   RefreshCommand="{Binding RefreshCommand}"
+                                   IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                                   RowHeight="80"
+                                   ItemTemplate="{StaticResource DeviceItemTemplate}">
+                                </ListView>
+                            </On>
+                            <On Platform="UWP,WPF">
+                                <ListView
+                                   ItemsSource="{Binding Devices}"
+                                   SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                                   IsPullToRefreshEnabled="True"
+                                   RefreshCommand="{Binding RefreshCommand}"
+                                   IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                                   RowHeight="80"
+                                   ItemTemplate="{StaticResource DeviceItemTemplate}">
+                                </ListView>
+                            </On>
+                        </OnPlatform>
+                    </ContentView>
+
+                    <ContentView Grid.Row="2">
+                        <OnPlatform x:TypeArguments="View">
+                            <On Platform="Android,iOS">
+                                <ScrollView Orientation="Vertical">
+                                    <StackLayout Orientation="Vertical">
+                                        <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                        <Label Text="1) Pair Verisense Sensor to PC first! 2) Scan, select sensor and choose copy GUID, 3) Start Speed Test or Data Sync"
+                                       Margin="10,0,10,0"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                        <Label Text="{Binding PreviousGuid, StringFormat='GUID {0}'}"
+                                       Margin="10,0,10,0"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                        <Label Text="{Binding PairingStatus, StringFormat='{0}'}"
+                                       Margin="10,0,10,0"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                        <Label Text="{Binding ScanPairUpdate}"
+                                       Margin="10,0,10,0"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+
+                                        <StackLayout Orientation="Horizontal">
+                                            <Button Text="Start Scan"
+                                            Margin="10,0,0,0"
+                                            Command="{Binding RefreshCommand}"
+                                            HorizontalOptions="End" />
+                                            <Button Text="Stop Scan"
+                                            Command="{Binding StopScanCommand}"
+                                            HorizontalOptions="End" />
+                                            <Button Text="Pair"
+                                            Command="{Binding PairCommand}"
+                                            HorizontalOptions="End" />
+                                        </StackLayout>
+                                        <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                        <StackLayout Orientation="Vertical">
+                                            <ScrollView Orientation="Horizontal">
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="{Binding DeviceState}"
+                                               Margin="10,0,0,0"
+                                               FontSize="Small"
+                                               TextColor="Gray"
+                                               VerticalTextAlignment="Start" />
+                                                    <StackLayout Orientation="Vertical">
+                                                        <Label Text="Trial Name: " Margin="10,0,0,0" VerticalTextAlignment="Center" />
+                                                        <Entry Text="{Binding TrialName}" WidthRequest="200"/>
+                                                    </StackLayout>
+                                                    <StackLayout Orientation="Vertical">
+                                                        <Label Text="Participant ID: " Margin="10,0,10,0" VerticalTextAlignment="Center" />
+                                                        <Entry Text="{Binding ParticipantID}" WidthRequest="200"/>
+                                                    </StackLayout>
+                                                </StackLayout>
+                                            </ScrollView>
+                                            <Label Text="{Binding DeviceMessage}"
+                                           Margin="10,0,10,0"
+                                           FontSize="Small"
+                                           TextColor="Gray"
+                                           VerticalTextAlignment="End" />
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Vertical">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Using Default Config:" WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <Picker ItemsSource="{Binding DeviceConfigurations}"
+                                                    SelectedItem="{Binding SelectedDeviceConfiguration, Mode=TwoWay}" >
+                                                </Picker>
+                                            </StackLayout>
+                                            <Label Text="This allows you to select the default sensor configuration upon connecting." VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Keep Device Settings : " WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <CheckBox IsChecked="{Binding KeepDeviceSettings}" WidthRequest="30" />
+                                            </StackLayout>
+                                            <Label Text="Enable this before connecting to a sensor to keep device level settings unchanged when using default config settings above." VerticalTextAlignment="Center" Margin="10,0,10,0"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Log to file (when Streaming) : " WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <CheckBox IsChecked="{Binding LogToFile}" WidthRequest="30" />
+                                            </StackLayout>
+                                            <Label Text="{Binding LogPath}" VerticalTextAlignment="Center" Margin="10,0,10,0"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Auto-Reconnect : " WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <CheckBox IsChecked="{Binding AutoReconnect}" />
+                                            </StackLayout>
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Horizontal">
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Vertical">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ConnectCommand}"/>
+                                                <Button Text="Disconnect"
+                                                Command="{Binding DisconnectVRECommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Data Sync"
+                                                Command="{Binding DownloadDataCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Data Stream"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding StreamDataCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Stop Stream"
+                                                Command="{Binding StopStreamCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Erase Data"
+                                                Command="{Binding EraseDataCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="ReadStatus"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ReadStatusCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="ReadProdConf"
+                                                Command="{Binding ReadProdConfCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="ReadOpConf"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ReadOpConfCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="WriteTime"
+                                                Command="{Binding WriteTimeCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="ReadTime"
+                                                Command="{Binding ReadTimeCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Speed Test"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding TestSpeedCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Upload"
+                                                Command="{Binding UploadCommand}"
+                                                HorizontalOptions="End" />
+                                                <ActivityIndicator IsRunning="{Binding IsRefreshing}"
+                                           IsVisible="{Binding IsRefreshing}"
+                                           HeightRequest="24"
+                                           WidthRequest="24"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="FillAndExpand" />
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ScrollView>
+                            </On>
+                            <On Platform="UWP,WPF">
+                                <StackLayout Orientation="Vertical">
+                                    <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                    <Label Text="1) Pair Verisense Sensor to PC first! 2) Scan, select sensor and choose copy GUID, 3) Start Speed Test or Data Sync"
+                           FontSize="Small"
+                           TextColor="Gray"
+                           VerticalTextAlignment="End" />
+                                    <Label Text="{Binding PreviousGuid, StringFormat='GUID {0}'}"
+                           FontSize="Small"
+                           TextColor="Gray"
+                           VerticalTextAlignment="End" />
+
+                                    <Label Text="{Binding PairingStatus, StringFormat='{0}'}"
+                           FontSize="Small"
+                           TextColor="Gray"
+                           VerticalTextAlignment="End" />
+                                    <Label Text="{Binding ScanPairUpdate}"
+                           FontSize="Small"
+                           TextColor="Gray"
+                           VerticalTextAlignment="End" />
+                                    <!--    
+                    <StackLayout Orientation="Horizontal"
+                                 HorizontalOptions="Fill">
+                        <StackLayout.IsVisible>
+                            <OnPlatform x:TypeArguments="x:Boolean"
+                                        iOS="false"
+                                        Android="true" />
+                        </StackLayout.IsVisible>
+                        <Label Text="Use Android AutoConnect"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="Center" />
+                        <Switch IsToggled="{Binding UseAutoConnect}"
+                                HorizontalOptions="End"></Switch>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Scan Mode: "
+                               FontSize="Small"
+                               VerticalTextAlignment="Center"/>
+                        <Picker TextColor="DarkGreen"
+                                ItemsSource="{Binding ScanModes}"
+                                SelectedItem="{Binding SelectedScanMode, Mode=TwoWay}" />
+                    </StackLayout>
+                    -->
+                                    <ScrollView Orientation="Horizontal">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Button Text="Start Scan"
+                                Command="{Binding RefreshCommand}"
+                                HorizontalOptions="End" />
+                                            <Button Text="Stop Scan"
+                                Command="{Binding StopScanCommand}"
+                                HorizontalOptions="End" />
+                                            <Button Text="Pair"
+                            Command="{Binding PairCommand}"
+                            HorizontalOptions="End" />
+                                        </StackLayout>
+                                    </ScrollView>
+                                    <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                    <StackLayout Orientation="Vertical">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding DeviceState}"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Trial Name: " Margin="120,0,0,0" VerticalTextAlignment="Center" />
+                                                <Entry Text="{Binding TrialName}" WidthRequest="150"/>
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Participant ID: " VerticalTextAlignment="Center" />
+                                                <Entry Text="{Binding ParticipantID}" WidthRequest="160"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                        <Label Text="{Binding DeviceMessage}"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                    </StackLayout>
+
+                                    <StackLayout Orientation="Vertical">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Using Default Config:" WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <Picker ItemsSource="{Binding DeviceConfigurations}"
+                                SelectedItem="{Binding SelectedDeviceConfiguration, Mode=TwoWay}" >
+                                            </Picker>
+                                            <Label Text="This allows you to select the default sensor configuration upon connecting." VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Keep Device Settings : " WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding KeepDeviceSettings}" WidthRequest="30" />
+                                            <Label Text="Enable this before connecting to a sensor to keep device level settings unchanged when using default config settings above." VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Log to file (when Streaming) : " WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding LogToFile}" WidthRequest="30" />
+                                            <Label Text="{Binding LogPath}" VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Auto-Reconnect : " WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding AutoReconnect}" />
+                                        </StackLayout>
+                                    </StackLayout>
+
+
+                                    <StackLayout Orientation="Horizontal">
+                                    </StackLayout>
+
+                                    <ScrollView Orientation="Horizontal">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Button Text="Connect"
+                            Command="{Binding ConnectCommand}"/>
+                                            <Button Text="Disconnect"
+                            Command="{Binding DisconnectVRECommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Data Sync"
+                                Command="{Binding DownloadDataCommand}"
+                                HorizontalOptions="End" />
+                                            <Button Text="Data Stream"
+                            Command="{Binding StreamDataCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Stop Stream"
+                            Command="{Binding StopStreamCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Erase Data"
+                            Command="{Binding EraseDataCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadStatus"
+                            Command="{Binding ReadStatusCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadProdConf"
+                            Command="{Binding ReadProdConfCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadOpConf"
+                            Command="{Binding ReadOpConfCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="WriteTime"
+                            Command="{Binding WriteTimeCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadTime"
+                            Command="{Binding ReadTimeCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Speed Test"
+                            Command="{Binding TestSpeedCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Upload"
+                            Command="{Binding UploadCommand}"
+                            HorizontalOptions="End" />
+                                            <!--
+                        <Button Text="Enable Acc"
+                            Command="{Binding EnableAcc}"
+                            HorizontalOptions="End" />
+                        <Button Text="Disable Acc"
+                            Command="{Binding DisableAcc}"
+                            HorizontalOptions="End" />
+                        <Button Text="Enable Acc2 Gyro"
+                            Command="{Binding EnableAcc2Gyro}"
+                            HorizontalOptions="End" />
+                        <Button Text="Disable Acc2 Gyro"
+                            Command="{Binding DisableAcc2Gyro}"
+                            HorizontalOptions="End" />
+                            -->
+                                            <ActivityIndicator IsRunning="{Binding IsRefreshing}"
+                                           IsVisible="{Binding IsRefreshing}"
+                                           HeightRequest="24"
+                                           WidthRequest="24"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="FillAndExpand" />
+                                        </StackLayout>
+                                    </ScrollView>
+                                </StackLayout>
+                            </On>
+                        </OnPlatform>
+                    </ContentView>
+                </Grid>
+            </ScrollView>
+        </ContentPage>
+        <ContentPage Title="Device Settings">
+            <ScrollView Orientation="Vertical">
+                <StackLayout Orientation="Vertical">
+                    <StackLayout Orientation="Vertical">
+                        <Button Text="Configure"
+                                Command="{Binding ConfigureVerisenseDevice}"
+                                 />
+                        <Label Text="Settings Description: "/>
+                        <Label Text="{Binding DeviceSettingDescription}"
+                           FontSize="Micro"
+                           TextColor="Gray"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Enable Device : " VerticalOptions="Start" />
+                        <CheckBox IsChecked="{Binding DeviceEnabled}" VerticalOptions="Start" />
+                        <Label Text="Device Logging : " VerticalOptions="Start" />
+                        <CheckBox IsChecked="{Binding DeviceLogging}" VerticalOptions="Start" />
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Data Collection Start Time : " WidthRequest="200"/>
+                            <DatePicker MinimumDate="{Binding MinimumDate}" Date="{Binding SelectedStartDate}" DateSelected="OnStartDateSelected"/>
+                            <TimePicker x:Name="_startTimePicker" Time="{Binding SelectedStartTime}" PropertyChanged="OnStartTimePickerPropertyChanged"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Data Collection End Time : " WidthRequest="200"/>
+                            <DatePicker MinimumDate="{Binding MinimumDate}" Date="{Binding SelectedEndDate}" DateSelected="OnEndDateSelected"/>
+                            <TimePicker  x:Name="_endTimePicker" Time="{Binding SelectedEndTime}" PropertyChanged="OnEndTimePickerPropertyChanged"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="BLE Wake-up Retry Count : " WidthRequest="200"/>
+                        <Entry Text="{Binding BLEWakeupRetryCount}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Radio Output Power : " WidthRequest="200"/>
+                        <Picker ItemsSource="{Binding RadioOutputPower}"
+                                SelectedItem="{Binding SelectedRadioOutputPower, Mode=TwoWay}" ></Picker>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Data Transfer Interval (hrs) : " WidthRequest="200"/>
+                        <Entry Text="{Binding DataTransferInterval}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Data Transfer Time (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding DataTransferTime}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Data Transfer Duration (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding DataTransferDuration}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Data Transfer Retry Interval (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding DataTransferRetryInterval}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Status Transfer Interval (hrs) : " WidthRequest="200"/>
+                        <Entry Text="{Binding StatusTransferInterval}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Status Transfer Time (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding StatusTransferTime}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Status Transfer Duration (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding StatusTransferDuration}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="Status Transfer Retry Interval (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding StatusTransferRetryInterval}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="RTC Sync Interval (hrs) : " WidthRequest="200"/>
+                        <Entry Text="{Binding RTCSyncInterval}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="RTC Sync  Time (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding RTCSyncTime}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="RTC Sync  Duration (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding RTCSyncDuration}"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <Label Text="RTC Sync  Retry Interval (mins) : " WidthRequest="200"/>
+                        <Entry Text="{Binding RTCSyncRetryInterval}"/>
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+        </ContentPage>
+        <ContentPage Title="Sensor Settings">
+            <ScrollView Orientation="Vertical">
+                <StackLayout Orientation="Vertical">
+                    <StackLayout Orientation="Vertical">
+                        <Button Text="Configure"
+                                Command="{Binding ConfigureVerisenseSensor}"
+                                 />
+                        <Label Text="Settings Description: "/>
+                        <Label Text="{Binding SensorDescription}"
+                           FontSize="Micro"
+                           TextColor="Gray"/>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorAccel : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorAccel}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sampling Rate : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelRates}"
+                                SelectedItem="{Binding SelectedAccelRate, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Range : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelRanges}"
+                                SelectedItem="{Binding SelectedAccelRange, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Mode : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelModes}"
+                                SelectedItem="{Binding SelectedAccelMode, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Low Power Mode : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelLPModes}"
+                                SelectedItem="{Binding SelectedAccelLPMode, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Bandwidth Filter: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelBandwidthFilter}"
+                                SelectedItem="{Binding SelectedBandwidthFilter, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="F Mode: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelFMode}"
+                                SelectedItem="{Binding SelectedFMode, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="FIFO Threshold: " WidthRequest="250"/>
+                            <Entry Text="{Binding FIFOthreshold}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorAccel Low Noise : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorAccelLowNoise}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorAccel High Pass Filter : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorAccelHighPassFilter}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorAccel High Pass Filter Ref Mode : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorAccelHighPassFilterRefMode}" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorAccel2 : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorAccel2}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorGyro : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorGyro}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sampling Rate : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding Accel2GyroRates}"
+                                SelectedItem="{Binding SelectedAccel2GyroRate, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Accel Range : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding Accel2Ranges}"
+                                SelectedItem="{Binding SelectedAccel2Range, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Gyro Range : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding GyroRanges}"
+                                SelectedItem="{Binding SelectedGyroRange, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Gyro Full-Scale at 125dps : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding GyroFullScaleAt125}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="FIFO Rate : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding FIFOThresholds}"
+                                SelectedItem="{Binding SelectedFIFOThreshold, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Gyro FIFO Decimation: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding GyroFIFODecimation}"
+                                SelectedItem="{Binding SelectedGyroFIFODecimation, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Accel FIFO Decimation: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelFIFODecimation}"
+                                SelectedItem="{Binding SelectedAccel2FIFODecimation, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="FIFO Output Data Rate: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding FIFOOutputDataRate}"
+                                SelectedItem="{Binding SelectedFIFOOutputDataRate, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="FIFO Mode: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding FIFOMode}"
+                                SelectedItem="{Binding SelectedFIFOMode, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Accel Anti-aliasing Filter BW: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding AccelAntiAliasingFilterBW}"
+                                SelectedItem="{Binding SelectedAccel2AntiAliasingFilterBW, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="High Pass Filter CutOff Freq: " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding HPFilterCutOffFreq}"
+                                SelectedItem="{Binding SelectedHPFilterCutOffFreq, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorGyro High Pass Filter : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorGyroHighPassFilter}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorGyro Digital HP FIlter Reset : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorGyroDigitalHPReset}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Source Register Rounding Status : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SourceRegisterRoundingStatus}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Step Counter And Timestamp : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding StepCounterAndTimestamp}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Write In FIFO At Every Step Detected : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding WriteInFIFOAtEveryStepDetected}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Accel Low Pass Filter : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding Accel2LowPassFilter}" WidthRequest="200"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Accel Slope or High Pass Filter : " />
+                            <CheckBox IsChecked="{Binding Accel2SlopeOrHighPassFilter}" WidthRequest="200"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Accel Low Pass Filter On 6D Function : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding Accel2LowPassFilterOn6D}" />
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="SensorGSR : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorGSR}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Battery : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorBatt}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sampling Rate : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding GSRRates}"
+                                SelectedItem="{Binding SelectedGSRRate, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Oversampling Rate : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding GSROversamplingRates}"
+                                SelectedItem="{Binding SelectedGSROversamplingRate, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Range : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding GSRRanges}"
+                                SelectedItem="{Binding SelectedGSRRange, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sensor PPG Green : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorPPGGreen}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sensor PPG Red : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorPPGRed}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sensor PPG IR : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorPPGIR}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sensor PPG Blue : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding SensorPPGBlue}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Rec Duration (seconds) : " WidthRequest="250"/>
+                            <Entry Text="{Binding PPGRecDuration}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Rec Interval (minutes) : " WidthRequest="250"/>
+                            <Entry Text="{Binding PPGRecInterval}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Default LED pulse amplitude (mA) : " WidthRequest="250"/>
+                            <Entry Text="{Binding PPG_MA_DEFAULT}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Maximum LED Pulse Amplitude for Red and IR LEDs (mA) : " WidthRequest="250"/>
+                            <Entry Text="{Binding PPG_MA_MAX_RED_IR}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Maximum LED Pulse Amplitude for Green and Blue LEDs (mA) : " WidthRequest="250"/>
+                            <Entry Text="{Binding PPG_MA_MAX_GREEN_BLUE}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Target average offset (%) : " WidthRequest="250"/>
+                            <Entry Text="{Binding PPG_AGC_TARGET_PERCENT_OF_RANGE}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="LED pilot pulse amplitude while in proximity detection mode (mA) : " WidthRequest="300"/>
+                            <Entry Text="{Binding PPG_MA_LED_PILOT}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Crosstalk cancellation DAC1 code used in ADC : " WidthRequest="300"/>
+                            <Entry Text="{Binding PPG_XTALK_DAC1}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Crosstalk cancellation DAC2 code used in ADC : " WidthRequest="300"/>
+                            <Entry Text="{Binding PPG_XTALK_DAC2}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Crosstalk cancellation DAC3 code used in ADC : " WidthRequest="300"/>
+                            <Entry Text="{Binding PPG_XTALK_DAC3}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Crosstalk cancellation DAC4 code used in ADC : " WidthRequest="300"/>
+                            <Entry Text="{Binding PPG_XTALK_DAC4}"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Prox AGC Mode : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding PPGProxAGCMode}"
+                                SelectedItem="{Binding SelectedProxAGCMode, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Vertical">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sampling Rate : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding PPGRates}"
+                                SelectedItem="{Binding SelectedPPGRate, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Range : " WidthRequest="200"/>
+                            <Picker ItemsSource="{Binding PPGRanges}"
+                                SelectedItem="{Binding SelectedPPGRange, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Sampling Average : " WidthRequest="200" />
+                            <Picker ItemsSource="{Binding PPGSamplingAverages}"
+                                SelectedItem="{Binding SelectedPPGSamplingAverage, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Pulse Width : " WidthRequest="200" />
+                            <Picker ItemsSource="{Binding PPGWidths}"
+                                SelectedItem="{Binding SelectedPPGWidth, Mode=TwoWay}" ></Picker>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </ScrollView>
+        </ContentPage>
+        <ContentPage Title="Plot">
+            <ContentView>
+                <ScrollView Orientation="Horizontal">
+                    <!--
+                <StackLayout Orientation="Vertical">
+                    
+                    <forms:ChartView x:Name="Chart1"  Chart="{Binding Chart}"
+                               HeightRequest="500"/>
+                    <forms:ChartView x:Name="Chart2"  Chart="{Binding ChartGyro}"
+                               HeightRequest="500"/>
+                    
+                </StackLayout>
+                -->
+                    <StackLayout Padding="10" Orientation="Horizontal">
+                        <StackLayout Orientation="Vertical">
+                            <StackLayout.WidthRequest>
+                                <OnPlatform x:TypeArguments="x:Double">
+                                    <On Platform="Android,iOS">100</On>
+                                    <On Platform="UWP,WPF">250</On>
+                                </OnPlatform>
+                            </StackLayout.WidthRequest>
+                            <!--
+                        <Label Text="Signals to plot:" />
+                        <Picker ItemsSource="{Binding PlotSignalsAvailable}"
+                        SelectedItem="{Binding SelectedPlotSignal, Mode=TwoWay}" ></Picker>
+                        <StackLayout Orientation="Horizontal">
+                            <Button Text="Add Signal"
+                                Command="{Binding AddSignalCommand}"
+                                HorizontalOptions="End" />
+                            <Button Text="Remove Signal"
+                                Command="{Binding RemoveSignalCommand}"
+                                HorizontalOptions="End" />
+                        </StackLayout>
+                        -->
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="SIGNALS TO PLOT" FontAttributes="Bold">
+                                    <Label.FontSize>
+                                        <OnPlatform x:TypeArguments="x:Double">
+                                            <On Platform="Android,iOS">12</On>
+                                        </OnPlatform>
+                                    </Label.FontSize>
+                                </Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" HeightRequest="400">
+                                <ListView x:Name="PopulateSignals" HeightRequest="400" ItemsSource="{Binding PopulateSignalsListView}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <ViewCell>
+                                                <StackLayout Orientation="Horizontal">
+                                                    <CheckBox IsChecked="{Binding IsChecked}"></CheckBox>
+                                                    <Label Text="{Binding Title}">
+                                                        <Label.FontSize>
+                                                            <OnPlatform x:TypeArguments="x:Double">
+                                                                <On Platform="Android,iOS">10</On>
+                                                            </OnPlatform>
+                                                        </Label.FontSize>
+                                                    </Label>
+                                                </StackLayout>
+                                            </ViewCell>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="Set plot update interval to 100(ms): ">
+                                    <Label.FontSize>
+                                        <OnPlatform x:TypeArguments="x:Double">
+                                            <On Platform="Android,iOS">10</On>
+                                        </OnPlatform>
+                                    </Label.FontSize>
+                                </Label>
+                                <CheckBox IsChecked="{Binding CheckTime}"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" IsVisible="{Binding CheckTime, Converter={StaticResource InverseBoolean}}">
+                                <Label Text="*Downsampling is recommended for sampling rates above 25Hz" FontAttributes="Bold">
+                                    <Label.FontSize>
+                                        <OnPlatform x:TypeArguments="x:Double">
+                                            <On Platform="Android,iOS">10</On>
+                                        </OnPlatform>
+                                    </Label.FontSize>
+                                </Label>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" IsVisible="{Binding CheckTime, Converter={StaticResource InverseBoolean}}">
+                                <Label Text="Down Sampling: ">
+                                    <Label.FontSize>
+                                        <OnPlatform x:TypeArguments="x:Double">
+                                            <On Platform="Android,iOS">10</On>
+                                        </OnPlatform>
+                                    </Label.FontSize>
+                                </Label>
+                                <CheckBox IsChecked="{Binding EnableDownsample}" />
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" IsVisible="{Binding CheckTime, Converter={StaticResource InverseBoolean}}">
+                                <Label Text="Down Sampling Factor : ">
+                                    <Label.FontSize>
+                                        <OnPlatform x:TypeArguments="x:Double">
+                                            <On Platform="Android,iOS">10</On>
+                                        </OnPlatform>
+                                    </Label.FontSize>
+                                </Label>
+                                <Entry Text="{Binding DownsamplingFactor}"/>
+                            </StackLayout>
+                            <Label IsVisible="{Binding CheckTime, Converter={StaticResource InverseBoolean}}" Text="The downsampling factor is the value that the sampling rate is divided by.">
+                                <Label.FontSize>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS">10</On>
+                                    </OnPlatform>
+                                </Label.FontSize>
+                            </Label>
+                            <Label IsVisible="{Binding CheckTime, Converter={StaticResource InverseBoolean}}" Text="E.g. a factor of 4 means only every 4th data sample will be plotted.">
+                                <Label.FontSize>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS">10</On>
+                                    </OnPlatform>
+                                </Label.FontSize>
+                            </Label>
+                        </StackLayout>
+                        <oxyPlotView:PlotView x:Name = "plotView" VerticalOptions = "FillAndExpand" HorizontalOptions = "FillAndExpand" Model="{Binding PlotModel}" HeightRequest="400"/>
+
+                    </StackLayout>
+                </ScrollView>
+            </ContentView>
+        </ContentPage>
+    </views:MvxTabbedPage.Children>
+
+</views:MvxTabbedPage>
