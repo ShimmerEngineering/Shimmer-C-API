@@ -1,3 +1,6 @@
+# Alpha Release
+Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Alpha Releases
+
 # BLE Client
 Note that only the BLE.Client.UWP project is functioning and we are not supporting iOS and Android with this example. For iOS and Android examples, please refer to multiVerisenseExample. The BLE.Client is used to pair, connect, configure and stream data from Verisense device(s) via Bluetooth. 
 
