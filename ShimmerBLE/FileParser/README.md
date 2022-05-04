@@ -1,3 +1,6 @@
+# Alpha Release
+Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Alpha Releases
+
 # How to use the file parser
 1. Set the JAVA_HOME System Variable and set the JAVA_HOME System Path using the jre provided (can refer to this [guide](https://docs.oracle.com/goldengate/1212/gg-winux/GDRAD/java.htm#BGBFHBEA))
 2. Open command prompt and navigate to the directory where the 'VerisenseFileParserPC.jar' is located
