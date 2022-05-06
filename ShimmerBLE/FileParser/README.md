@@ -1,5 +1,5 @@
 # Pre-Alpha Release
-Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Alpha Releases
+Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Pre-Alpha Releases
 
 # How to use the file parser
 1. Set the JAVA_HOME System Variable and set the JAVA_HOME System Path using the jre provided (can refer to this [guide](https://docs.oracle.com/goldengate/1212/gg-winux/GDRAD/java.htm#BGBFHBEA))
@@ -18,4 +18,4 @@ Please refer to our [support policy](https://shimmersensing.com/support/wireless
 5. For example, `java -jar VerisenseFileParserPC.jar C:/Users/username/Desktop/WW/19092501A2BB/BinaryFiles SAVE_DATA_BLOCK_METADATA`
 6. The parsed files directory will be at the same level with the BinaryFiles level folder
 7. The Algorithm folder contains the results for non-wear detection
-8. For more details regarding the file parser output, can refer to 'ASM-DOC06-03_Verisense Data Dictionary.pdf'
+8. For more details regarding the file parser output, please refer to [ASM-DOC06-03_Verisense Data Dictionary.pdf](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/VCBA-110/ShimmerBLE/FileParser/ASM-DOC06-03_Verisense%20Data%20Dictionary.pdf)
