@@ -27,7 +27,7 @@ When using the verisense device you will require knowing what the pairing key. S
 
 
 ### Binary File Parsing
-For solutions to parse your binary files please get in touch with us, at the moment the release of a binary file open source solution is not on our roadmap. 
+For solutions to parse your binary files please use the [following](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/FileParser)
 
 ### Examples
 We would recommend reading through the [readme](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE/VerisenseBLEDemoApp/README.md) of VerisenseBLEDemoApp before proceeding to using any of the examples within this repository.
