@@ -1,4 +1,4 @@
-# Alpha Release
+# Pre-Alpha Release
 Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Alpha Releases
 
 # How to use the file parser
