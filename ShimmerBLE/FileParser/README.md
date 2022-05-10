@@ -19,3 +19,7 @@ Please refer to our [support policy](https://shimmersensing.com/support/wireless
 6. The parsed files directory will be at the same level with the BinaryFiles level folder
 7. The Algorithm folder contains the results for non-wear detection
 8. For more details regarding the file parser output, please refer to [ASM-DOC06-03_Verisense Data Dictionary.pdf](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/VCBA-110/ShimmerBLE/FileParser/ASM-DOC06-03_Verisense%20Data%20Dictionary.pdf)
+
+## Current Limitations
+### File Parser
+Currently the file parser is only available in Java
