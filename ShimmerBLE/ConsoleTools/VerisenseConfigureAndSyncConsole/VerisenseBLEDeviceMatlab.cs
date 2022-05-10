@@ -3,7 +3,7 @@ using ShimmerBLEAPI.Devices;
 using System;
 using System.IO;
 
-namespace MatlabConsoleApp
+namespace VerisenseConfigureAndSyncConsole
 {
     internal class VerisenseBLEDeviceMatlab : VerisenseBLEDevice
     {

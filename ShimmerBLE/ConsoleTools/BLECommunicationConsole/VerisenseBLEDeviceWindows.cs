@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestConsoleBLE
+namespace BLECommunicationConsole
 {
     public class VerisenseBLEDeviceWindows : VerisenseBLEDevice
     {

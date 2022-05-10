@@ -3,7 +3,7 @@ using shimmer.Models;
 using shimmer.Helpers;
 using static shimmer.Models.ShimmerBLEEventData;
 
-namespace MatlabConsoleApp
+namespace VerisenseConfigureAndSyncConsole
 {
     internal class Program
     {

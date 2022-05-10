@@ -8,7 +8,7 @@ using shimmer.Models;
 using ShimmerAPI;
 using static shimmer.Models.ShimmerBLEEventData;
 
-namespace TestConsoleBLE
+namespace BLECommunicationConsole
 {
     class Program
     {
