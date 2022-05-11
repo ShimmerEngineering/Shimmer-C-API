@@ -18,7 +18,7 @@ This API is to help users get started with using the Verisense device. If you ar
 - Configuring via BLE
 - Real Time Sensor Data Streaming via BLE
 - Logged Sensor Data Syncing via BLE
-_note: syncing is the retrieval of logged sensor data in a binary file fomat. **this binary file can be [parsed using this Java app] (https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/FileParser), however users should be aware that we do not provide file parsing source code in C#**_
+_note: syncing is the retrieval of logged sensor data in a binary file fomat. **this binary file can be [parsed using this Java app](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/FileParser), however users should be aware that we do not provide file parsing source code in C#**_
 
 ## List of Examples
 We would recommend reading through the [readme](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE/VerisenseBLEDemoApp/README.md) of VerisenseBLEDemoApp before proceeding to using any of the examples within this repository.
