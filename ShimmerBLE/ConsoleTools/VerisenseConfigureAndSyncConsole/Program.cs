@@ -2,6 +2,7 @@
 using shimmer.Models;
 using shimmer.Helpers;
 using static shimmer.Models.ShimmerBLEEventData;
+using System.IO;
 
 namespace VerisenseConfigureAndSyncConsole
 {
@@ -14,13 +15,15 @@ namespace VerisenseConfigureAndSyncConsole
             //args[0] - uuid
             //args[1] - sync / write prod config
             //args[2] - bin file path / op config bytes
+            //args[3] - trial name
+            //args[4] - participant id
 
             var result = await ConnectDevice(args[0]);
             if (result)
             {
                 if (args[1] == "DATA_SYNC")
                 {
-                    await StartDataSync(args[2]);
+                    await StartDataSync(args[2], args[3], args[4]);
                 }
                 else if (args[1] == "WRITE_OP_CONFIG")
                 {
@@ -59,7 +62,7 @@ namespace VerisenseConfigureAndSyncConsole
             return false;
         }
 
-        static async System.Threading.Tasks.Task<bool> StartDataSync(string path)
+        static async System.Threading.Tasks.Task<bool> StartDataSync(string path, string trialName, string participantID)
         {
             if (!System.IO.Directory.Exists(path))
             {
@@ -67,6 +70,8 @@ namespace VerisenseConfigureAndSyncConsole
                 return false;
             }
             VerisenseBLEDeviceMatlab.path = path;
+            device.SetTrialName(trialName);
+            device.SetParticipantID(participantID);
 
             var data = await device.ExecuteRequest(RequestType.TransferLoggedData);
             if (device != null)
