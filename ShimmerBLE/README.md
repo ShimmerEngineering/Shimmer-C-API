@@ -1,5 +1,5 @@
 # Shimmer C# BLE API 
-The following projects (API) are Alpha Releases, the rest of the projects are Pre-Alpha Releaseas
+The following projects (API) are Alpha Releases, the rest of the projects/example in this folder are Pre-Alpha Releaseas
 - ShimmerBLEAPI.Android
 - ShimmerBLEAPI.UWP
 - ShimmerBLEAPI.iOS
