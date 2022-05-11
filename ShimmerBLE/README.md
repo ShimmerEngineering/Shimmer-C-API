@@ -12,7 +12,7 @@ This API is to help users get started with using the Verisense device. If you ar
 
 ## Hardware Supported
 - Verisense IMU
-- Verisense Pulse+ (_upcomming_)
+- Verisense Pulse+ (_upcoming_)
 
 ## Functionality Supported
 - Configuring via BLE
