@@ -23,7 +23,15 @@ namespace VerisenseConfigureAndSyncConsole
             {
                 if (args[1] == "DATA_SYNC")
                 {
-                    await StartDataSync(args[2], args[3], args[4]);
+                    if (args.Length > 2)
+                    {
+                        await StartDataSync(args[2], args[3], args[4]);
+                    }
+                    else
+                    {
+                        await StartDataSync();
+                    }
+                    
                 }
                 else if (args[1] == "WRITE_OP_CONFIG")
                 {
@@ -31,13 +39,6 @@ namespace VerisenseConfigureAndSyncConsole
                 }
             }
             await DisconnectDevice();
-
-            //var result = await ConnectDevice("00000000-0000-0000-0000-d02b463da2bb");
-            //if (result)
-            //{
-            //    //await StartDataSync("C:\\Users\\WeiWentan\\Desktop");
-            //    await WriteOpConfig("5A-97-00-00-00-30-30-00-7F-00-D8-0F-09-16-24-0C-80-00-00-00-00-00-00-00-00-00-00-00-00-00-03-F4-18-3C-00-0A-0F-00-18-3C-00-0A-0F-00-18-3C-00-0A-0F-00-FF-FF-AA-01-03-3C-00-0E-00-00-63-28-CC-CC-1E-00-0A-00-00-00-00-01");
-            //}
         }
 
         static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid)
@@ -62,16 +63,29 @@ namespace VerisenseConfigureAndSyncConsole
             return false;
         }
 
-        static async System.Threading.Tasks.Task<bool> StartDataSync(string path, string trialName, string participantID)
+        static async System.Threading.Tasks.Task<bool> StartDataSync(string path = "", string trialName = "", string participantID = "")
         {
-            if (!System.IO.Directory.Exists(path))
+            if (!string.IsNullOrEmpty(path))
             {
-                Console.WriteLine("Please enter a valid path");
-                return false;
+                if (!System.IO.Directory.Exists(path))
+                {
+                    Console.WriteLine("Please enter a valid path");
+                    return false;
+                }
+            }
+            else
+            {
+                path = Directory.GetCurrentDirectory();
             }
             VerisenseBLEDeviceMatlab.path = path;
-            device.SetTrialName(trialName);
-            device.SetParticipantID(participantID);
+            if (!string.IsNullOrEmpty(trialName))
+            {
+                device.SetTrialName(trialName);
+            }
+            if (!string.IsNullOrEmpty(participantID))
+            {
+                device.SetParticipantID(participantID);
+            }
 
             var data = await device.ExecuteRequest(RequestType.TransferLoggedData);
             if (device != null)
