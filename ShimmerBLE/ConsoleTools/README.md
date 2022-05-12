@@ -31,11 +31,23 @@ The VerisenseConfigureAndSyncConsole provides
 
 HOW TO USE:
 - Build the project
-- Run the exe file in matlab with three arguments
-    - uuid of the Verisense device, e.g. 00000000-0000-0000-0000-d02b463da2bb
-    - the action you wish to run, DATA_SYNC or WRITE_OP_CONFIG
-    - the bin file path or the operational config bytes with dash, e.g. C:\\Users\\Username\\Desktop
+- Navigate to the exe directory in command prompt
+- Run 
+```
+start VerisenseConfigureAndSyncConsole.exe [-options] [-uuid] [args...]
+```
+where options include
+- DATA_SYNC (with the following three optional arguments)
+  - bin file path
+  - trial name
+  - participant id
+- WRITE_OP_CONFIG
+  - must include the operational config bytes separated with dash as argument
 
+e.g. 
+```
+start VerisenseConfigureAndSyncConsole.exe DATA_SYNC 00000000-0000-0000-0000-d02b463da2bb C:\\Users\\UserName\\Desktop trialA participantB
+```
 ## Prerequisites
 **Please make sure ShimmerAPI and ShimmerBLEAPI are built successfully before run BLECommunicationConsole**.
 
