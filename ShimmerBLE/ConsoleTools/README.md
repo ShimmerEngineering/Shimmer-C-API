@@ -50,7 +50,3 @@ start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb 
 ```
 ## Prerequisites
 **Please make sure ShimmerAPI and ShimmerBLEAPI are built successfully before run BLECommunicationConsole**.
-
-Note: if the example works you might have to add/reference the following files manually (e.g.)
-C:\Program Files (x86)\Windows Kits\10\UnionMetadata\Windows.winmd
-C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework.NETCore\v4.5\System.Runtime.WindowsRuntime.dll
