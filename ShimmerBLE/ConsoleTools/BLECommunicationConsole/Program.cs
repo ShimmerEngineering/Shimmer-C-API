@@ -12,18 +12,14 @@ namespace BLECommunicationConsole
 {
     class Program
     {
-        /*
-         * The following files need to be added/referenced manually 
-        C:\Program Files (x86)\Windows Kits\10\UnionMetadata\Windows.winmd
-        C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework.NETCore\v4.5\System.Runtime.WindowsRuntime.dll
-        */
         static VerisenseBLEDeviceWindows device;
         static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
         static List<string> uuids = new List<string>()
         {
+            "00000000-0000-0000-0000-d02b463da2bb",
             //"00000000-0000-0000-0000-e1ec063f5c80",
             //"00000000-0000-0000-0000-daa56d898b02",
-               "00000000-0000-0000-0000-c96117537402",
+               //"00000000-0000-0000-0000-c96117537402",
                 //"00000000-0000-0000-0000-fbe2054c2e04"
         };
 

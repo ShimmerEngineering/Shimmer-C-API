@@ -12,6 +12,7 @@ using Windows.Storage.Streams;
 
 namespace ShimmerBLEAPI.Communications
 {
+    [Obsolete("Not used any more", true)]
     public class RadioPluginWindows : IVerisenseByteCommunication
     {
         public Guid Asm_uuid { get; set; }
