@@ -19,10 +19,10 @@ namespace VerisenseConfigureAndSyncConsole
             //args[4] - participant id
             if(args.Length >= 2)
             {
-                var result = await ConnectDevice(args[1]);
+                var result = await ConnectDevice(args[0]);
                 if (result)
                 {
-                    if (args[0] == "DATA_SYNC")
+                    if (args[1] == "DATA_SYNC")
                     {
                         if (args.Length >= 5)
                         {
@@ -42,7 +42,7 @@ namespace VerisenseConfigureAndSyncConsole
                         }
 
                     }
-                    else if (args[0] == "WRITE_OP_CONFIG")
+                    else if (args[1] == "WRITE_OP_CONFIG")
                     {
                         await WriteOpConfig(args[2]);
                     }
