@@ -34,7 +34,7 @@ HOW TO USE:
 - Navigate to the exe directory in command prompt
 - Run 
 ```
-start VerisenseConfigureAndSyncConsole.exe [-options] [-uuid] [args...]
+start VerisenseConfigureAndSyncConsole.exe [-uuid] [-options] [args...]
 ```
 where options include
 - DATA_SYNC (with the following three optional arguments)
@@ -46,7 +46,7 @@ where options include
 
 e.g. 
 ```
-start VerisenseConfigureAndSyncConsole.exe DATA_SYNC 00000000-0000-0000-0000-d02b463da2bb C:\\Users\\UserName\\Desktop trialA participantB
+start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB
 ```
 ## Prerequisites
 **Please make sure ShimmerAPI and ShimmerBLEAPI are built successfully before run BLECommunicationConsole**.
