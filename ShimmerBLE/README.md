@@ -14,8 +14,13 @@ This API is to help users get started with using the Verisense device. If you ar
 - Verisense IMU
 - Verisense Pulse+ (_upcoming_)
 
+## Minimum OS Version Tested On
+- Android 10
+- iOS 15
+- Windows 10
+
 ## Functionality Supported
-- Configuring via BLE
+- Configuring via BLE (e.g. sampling rate, accel range)
 - Real Time Sensor Data Streaming via BLE
 - Logged Sensor Data Syncing via BLE
 _note: syncing is the retrieval of logged sensor data in a binary file fomat. **this binary file can be [parsed using this Java app](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/master/ShimmerBLE/FileParser), however users should be aware that we do not provide file parsing source code in C#**_
