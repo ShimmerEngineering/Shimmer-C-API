@@ -17,28 +17,42 @@ namespace VerisenseConfigureAndSyncConsole
             //args[2] - bin file path / op config bytes
             //args[3] - trial name
             //args[4] - participant id
-
-            var result = await ConnectDevice(args[0]);
-            if (result)
+            if(args.Length >= 2)
             {
-                if (args[1] == "DATA_SYNC")
+                var result = await ConnectDevice(args[1]);
+                if (result)
                 {
-                    if (args.Length > 2)
+                    if (args[0] == "DATA_SYNC")
                     {
-                        await StartDataSync(args[2], args[3], args[4]);
+                        if (args.Length >= 5)
+                        {
+                            await StartDataSync(args[2], args[3], args[4]);
+                        }
+                        else if (args.Length >= 4)
+                        {
+                            await StartDataSync(args[2], args[3]);
+                        }
+                        else if (args.Length >= 3)
+                        {
+                            await StartDataSync(args[2]);
+                        }
+                        else
+                        {
+                            await StartDataSync();
+                        }
+
                     }
-                    else
+                    else if (args[0] == "WRITE_OP_CONFIG")
                     {
-                        await StartDataSync();
+                        await WriteOpConfig(args[2]);
                     }
-                    
                 }
-                else if (args[1] == "WRITE_OP_CONFIG")
-                {
-                    await WriteOpConfig(args[2]);
-                }
+                await DisconnectDevice();
             }
-            await DisconnectDevice();
+            else
+            {
+                Console.WriteLine("At least two arguments are needed");
+            }
         }
 
         static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid)
