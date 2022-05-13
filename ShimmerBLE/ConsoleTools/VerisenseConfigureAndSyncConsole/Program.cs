@@ -52,6 +52,15 @@ namespace VerisenseConfigureAndSyncConsole
             else
             {
                 Console.WriteLine("At least two arguments are needed");
+                Console.WriteLine("Usage: start VerisenseConfigureAndSyncConsole.exe [-uuid] [-options] [args...]");
+                Console.WriteLine("where options include:");
+                Console.WriteLine("\t-DATA_SYNC (with three arguments)");
+                Console.WriteLine("\t\t-bin file path");
+                Console.WriteLine("\t\t-trial name");
+                Console.WriteLine("\t\t-participant id");
+                Console.WriteLine("\t -WRITE_OP_CONFIG (with one argument)");
+                Console.WriteLine("\t\t-operational config bytes e.g. 5A-97-00-00-00-...");
+                Console.WriteLine("e.g. start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB");
             }
         }
 
