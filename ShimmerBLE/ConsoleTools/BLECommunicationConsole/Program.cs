@@ -1,187 +1,117 @@
-﻿using ShimmerBLEAPI.Devices;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using ShimmerBLEAPI.Communications;
+using ShimmerBLEAPI.Devices;
+using System.Threading;
+using shimmer.Models;
+using System.Threading.Tasks;
 using System.Diagnostics;
 using shimmer.Communications;
-using shimmer.Sensors;
-using shimmer.Models;
-using ShimmerAPI;
-using static shimmer.Models.ShimmerBLEEventData;
+using shimmer.Services;
+using System.Numerics;
+using System.Globalization;
 
 namespace BLECommunicationConsole
 {
     class Program
     {
-        static VerisenseBLEDeviceWindows device;
-        static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
-        static List<string> uuids = new List<string>()
-        {
-            "00000000-0000-0000-0000-d02b463da2bb",
-            //"00000000-0000-0000-0000-e1ec063f5c80",
-            //"00000000-0000-0000-0000-daa56d898b02",
-               //"00000000-0000-0000-0000-c96117537402",
-                //"00000000-0000-0000-0000-fbe2054c2e04"
-        };
-
+        static RadioPlugin32Feet dev;
         static async System.Threading.Tasks.Task Main(string[] args)
         {
-            Run();
-        }
-
-        static void Run()
-        {
-            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
-            do
+            //string uuid = "00000000-0000-0000-0000-d02b463da2bb";
+            //string uuid = "00000000-0000-0000-0000-e7ec37a0d234";
+            //string uuid = "00000000-0000-0000-0000-e7452c6d6f14";
+            if (args.Length > 0)
             {
-                while (!Console.KeyAvailable)
+                string uuid = args[0];
+                //Write110000 - read status
+                //Write120000 - sync
+                dev = new RadioPlugin32Feet();
+                dev.Asm_uuid = Guid.Parse(uuid);
+            }
+            else
+            {
+                Console.WriteLine("Error no uuid specified");
+                return;
+            }
+            try
+            {
+                while (true)
                 {
-                    switch (Console.ReadKey(true).Key)
+                    string action = ReadActionFromJava();
+                    if (action != null)
                     {
-                        case ConsoleKey.S:
-                            ConnectDevices();
-                            break;
-                        case ConsoleKey.D:
-                            StartStreamingDevices();
-                            break;
-                        case ConsoleKey.C:
-                            StopStreamingDevices();
-                            break;
-                        case ConsoleKey.V:
-                            DisconnectDevices();
-                            break;
-                        default:
-                            break;
+                        if (action == "Connect")
+                        {
+                            Console.WriteLine("Connecting");
+                            ConnectivityState State = await dev.Connect();
+                            if (State == ConnectivityState.Connected)
+                            {
+                                Console.WriteLine("Connected");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Connect failed");
+                            }
+                        }
+                        else if (action.Contains("Write"))
+                        {
+                            if (dev.GetConnectivityState() == ConnectivityState.Connected)
+                            {
+                                var payload = action.Split("Write")[1];
+                                byte[] payloadBytes = BigInteger.Parse(payload, NumberStyles.HexNumber).ToByteArray();
+                                Array.Reverse(payloadBytes);
+                                var result = await dev.WriteBytes(payloadBytes);
+                                if (result == true)
+                                {
+                                    Console.WriteLine("Write success");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Connect first");
+                            }
+
+                        }
+                        else if (action == "Disconnect")
+                        {
+                            if (dev.GetConnectivityState() == ConnectivityState.Connected)
+                            {
+                                ConnectivityState State = await dev.Disconnect();
+                                if (State == ConnectivityState.Disconnected)
+                                {
+                                    Console.WriteLine("Disconnected");
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Disconnect Failed");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Connect first");
+                            }
+                        }
+                        else if (action == "Stop")
+                        {
+                            return; //Environment.Exit(0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unrecognized Command");
+                        }
                     }
                 }
-            } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
-        }
-
-        static async void ConnectDevices()
-        {
-            foreach (string uuid in uuids)
+            }
+            catch (Exception ex)
             {
-
-                if (!devices.ContainsKey(uuid))
-                {
-                    device = new VerisenseBLEDeviceWindows(uuid, "");
-                    device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
-                    bool result = await device.Connect(true);
-                    if (result)
-                    {
-                        Console.WriteLine("---------------------------------------------------------------");
-                        Console.WriteLine("Successfully connected to the device! UUID: " + uuid);
-                        Console.WriteLine("Device Version: " + device.GetProductionConfig().REV_HW_MAJOR + "." + device.GetProductionConfig().REV_HW_MINOR);
-                        Console.WriteLine("Firmware Version: " + device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL);
-                        devices.Add(uuid, device);
-                        Console.WriteLine("\nBT state: " + device.GetVerisenseBLEState() + "\nUUID: " + device.Asm_uuid + "\nBattery: " + device.GetStatus().BatteryPercent + "%");
-                        ConfigureDevices(device);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Failed to connect device! UUID: " + uuid);
-                    }
-                }
-                else if (devices.ContainsKey(uuid))
-                {
-                    var device = devices[uuid];
-                    if (device.GetVerisenseBLEState().Equals(ShimmerDeviceBluetoothState.Disconnected))
-                    {
-                        var result = await device.Connect(true);
-                        Console.WriteLine(result);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Unable to connect device as it is already connected");
-                    }
-
-                }
+                Console.WriteLine(ex.Message);
             }
         }
 
-        static async void ConfigureDevices(VerisenseBLEDevice device)
+        public static string ReadActionFromJava()
         {
-            var clone = new VerisenseBLEDevice(device);
-
-            SensorLIS2DW12 sensor = (SensorLIS2DW12)clone.GetSensor(SensorLIS2DW12.SensorName);
-            sensor.SetAccelEnabled(true);
-            sensor.SetSamplingRate(SensorLIS2DW12.LowPerformanceAccelSamplingRate.Freq_25Hz);
-
-            bool accelDetection = sensor.IsAccelEnabled();
-            string accelRate = sensor.GetSamplingRate().GetDisplayName();
-            string accelMode = sensor.GetMode().GetDisplayName();
-            string accelLPMode = sensor.GetLowPowerMode().GetDisplayName();
-
-            var opconfigbytes = clone.GenerateConfigurationBytes();
-            await device.WriteAndReadOperationalConfiguration(opconfigbytes);
-
-            Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
-            Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
-            Console.WriteLine("---------------------------------------------------------------");
-        }
-
-        static async void StartStreamingDevices()
-        {
-            foreach (VerisenseBLEDevice device in devices.Values)
-            {
-                var streamResult = await device.ExecuteRequest(RequestType.StartStreaming);
-                Console.WriteLine("Stream Status: " + streamResult);
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
-                if (device != null)
-                {
-                    device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
-                }
-                device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
-            }
-        }
-
-        static void ShimmerDevice_BLEEvent(object sender, ShimmerBLEEventData e)
-        {
-            if (e.CurrentEvent == VerisenseBLEEvent.NewDataPacket)
-            {
-                ObjectCluster ojc = ((ObjectCluster)e.ObjMsg);
-                if (ojc.GetNames().Contains(SensorLIS2DW12.ObjectClusterSensorName.LIS2DW12_ACC_X))
-                {
-                    var a2x = ojc.GetData(SensorLIS2DW12.ObjectClusterSensorName.LIS2DW12_ACC_X, ShimmerConfiguration.SignalFormats.CAL);
-                    var a2y = ojc.GetData(SensorLIS2DW12.ObjectClusterSensorName.LIS2DW12_ACC_Y, ShimmerConfiguration.SignalFormats.CAL);
-                    var a2z = ojc.GetData(SensorLIS2DW12.ObjectClusterSensorName.LIS2DW12_ACC_Z, ShimmerConfiguration.SignalFormats.CAL);
-                    Debug.WriteLine("UUID: " + ojc.GetCOMPort() + " |X : " + Math.Round(a2x.Data, 2) + "  Y : " + Math.Round(a2y.Data, 2) + "  Z : " + Math.Round(a2z.Data, 2) + "|");
-                    System.Console.WriteLine("UUID: " + ojc.GetCOMPort() + " |X : " + Math.Round(a2x.Data, 2) + "  Y : " + Math.Round(a2y.Data, 2) + "  Z : " + Math.Round(a2z.Data, 2) + "|");
-                }
-            }
-        }
-
-        static async void StopStreamingDevices()
-        {
-            foreach (VerisenseBLEDevice device in devices.Values)
-            {
-                var result = await device.ExecuteRequest(RequestType.StopStreaming);
-                Console.WriteLine("\nUUID: " + device.Asm_uuid + " stop streaming request \nResult: " + result + "\n");
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
-            }
-
-        }
-
-        static async void DisconnectDevices()
-        {
-            List<string> listOfDisconnectedUuids = new List<string>();
-            foreach (VerisenseBLEDevice device in devices.Values)
-            {
-                var result = await device.Disconnect();
-                if (result)
-                {
-                    listOfDisconnectedUuids.Add(device.Asm_uuid.ToString());
-                    device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
-                }
-
-                Console.WriteLine("\nUUID: " + device.Asm_uuid + " attempt disconnect \nResult: " + result + "\nNew BLE Status: " + device.GetVerisenseBLEState());
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
-            }
-
-            //Remove disconnected devices from the Dictionary
-            foreach (var uuid in listOfDisconnectedUuids)
-            {
-                devices.Remove(uuid);
-            }
+            String line = Console.ReadLine();
+            return line;
         }
     }
 }
