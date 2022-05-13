@@ -5,10 +5,10 @@ using System.IO;
 
 namespace VerisenseConfigureAndSyncConsole
 {
-    internal class VerisenseBLEDeviceMatlab : VerisenseBLEDevice
+    internal class VerisenseBLEDeviceConsole : VerisenseBLEDevice
     {
         public static string path;
-        public VerisenseBLEDeviceMatlab(string uuid, string id) : base(uuid, id)
+        public VerisenseBLEDeviceConsole(string uuid, string id) : base(uuid, id)
         {
 
         }
