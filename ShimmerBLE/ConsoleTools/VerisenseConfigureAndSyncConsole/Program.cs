@@ -3,12 +3,13 @@ using shimmer.Models;
 using shimmer.Helpers;
 using static shimmer.Models.ShimmerBLEEventData;
 using System.IO;
+using shimmer.Communications;
 
 namespace VerisenseConfigureAndSyncConsole
 {
     internal class Program
     {
-        static VerisenseBLEDeviceConsole device;
+        static VerisenseBLEDeviceWindows device;
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
@@ -17,7 +18,7 @@ namespace VerisenseConfigureAndSyncConsole
             //args[2] - bin file path / op config bytes
             //args[3] - trial name
             //args[4] - participant id
-            if(args.Length >= 2)
+            if (args.Length >= 2)
             {
                 var result = await ConnectDevice(args[0]);
                 if (result)
@@ -67,7 +68,7 @@ namespace VerisenseConfigureAndSyncConsole
         static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid)
         {
             Console.WriteLine("CONNECT");
-            device = new VerisenseBLEDeviceConsole(uuid, "");
+            device = new VerisenseBLEDeviceWindows(uuid, "");
             device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             bool result = await device.Connect(true);
             if (result)
@@ -100,7 +101,7 @@ namespace VerisenseConfigureAndSyncConsole
             {
                 path = Directory.GetCurrentDirectory();
             }
-            VerisenseBLEDeviceConsole.path = path;
+            VerisenseBLEDeviceWindows.path = path;
             if (!string.IsNullOrEmpty(trialName))
             {
                 device.SetTrialName(trialName);
