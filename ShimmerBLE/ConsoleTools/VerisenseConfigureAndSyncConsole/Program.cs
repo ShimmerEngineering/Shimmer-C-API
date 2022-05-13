@@ -8,7 +8,7 @@ namespace VerisenseConfigureAndSyncConsole
 {
     internal class Program
     {
-        static VerisenseBLEDeviceMatlab device;
+        static VerisenseBLEDeviceConsole device;
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
@@ -67,7 +67,7 @@ namespace VerisenseConfigureAndSyncConsole
         static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid)
         {
             Console.WriteLine("CONNECT");
-            device = new VerisenseBLEDeviceMatlab(uuid, "");
+            device = new VerisenseBLEDeviceConsole(uuid, "");
             device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             bool result = await device.Connect(true);
             if (result)
@@ -100,7 +100,7 @@ namespace VerisenseConfigureAndSyncConsole
             {
                 path = Directory.GetCurrentDirectory();
             }
-            VerisenseBLEDeviceMatlab.path = path;
+            VerisenseBLEDeviceConsole.path = path;
             if (!string.IsNullOrEmpty(trialName))
             {
                 device.SetTrialName(trialName);
