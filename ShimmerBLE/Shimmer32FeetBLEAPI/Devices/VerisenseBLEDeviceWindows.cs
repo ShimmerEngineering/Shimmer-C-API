@@ -41,6 +41,11 @@ namespace shimmer.Communications
                 }
                 binFileFolderDir = string.Format("{0}/{1}/{2}/BinaryFiles", GetTrialName(), GetParticipantID(), sensorID);
                 //string path = ApplicationData.Current.LocalFolder.Path;
+                if(path == null)
+                {
+                    path = Directory.GetCurrentDirectory();
+                }
+
                 var folder = Path.Combine(path, binFileFolderDir);
 
                 if (!Directory.Exists(folder))
