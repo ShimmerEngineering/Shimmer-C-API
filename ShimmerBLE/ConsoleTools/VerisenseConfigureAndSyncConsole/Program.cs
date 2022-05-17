@@ -4,6 +4,7 @@ using shimmer.Helpers;
 using static shimmer.Models.ShimmerBLEEventData;
 using System.IO;
 using shimmer.Communications;
+using System.Reflection;
 
 namespace VerisenseConfigureAndSyncConsole
 {
@@ -18,50 +19,62 @@ namespace VerisenseConfigureAndSyncConsole
             //args[2] - bin file path / op config bytes
             //args[3] - trial name
             //args[4] - participant id
-            if (args.Length >= 2)
+            if (args.Length == 1)
             {
-                var result = await ConnectDevice(args[0]);
-                if (result)
+                if (args[0] == "VERSION")
                 {
-                    if (args[1] == "DATA_SYNC")
-                    {
-                        if (args.Length >= 5)
-                        {
-                            await StartDataSync(args[2], args[3], args[4]);
-                        }
-                        else if (args.Length >= 4)
-                        {
-                            await StartDataSync(args[2], args[3]);
-                        }
-                        else if (args.Length >= 3)
-                        {
-                            await StartDataSync(args[2]);
-                        }
-                        else
-                        {
-                            await StartDataSync();
-                        }
-
-                    }
-                    else if (args[1] == "WRITE_OP_CONFIG")
-                    {
-                        await WriteOpConfig(args[2]);
-                    }
+                    Version version = Assembly.GetEntryAssembly().GetName().Version;
+                    Console.WriteLine("Version: " + version.ToString());
                 }
-                await DisconnectDevice();
             }
             else
             {
-                Console.WriteLine("At least two arguments are needed");
-                Console.WriteLine("Usage: start VerisenseConfigureAndSyncConsole.exe [-uuid] [-options] [args...]");
-                Console.WriteLine("where options include:");
-                Console.WriteLine("\t-DATA_SYNC (with three arguments)");
-                Console.WriteLine("\t\t-bin file path");
-                Console.WriteLine("\t\t-trial name");
-                Console.WriteLine("\t\t-participant id");
-                Console.WriteLine("\t -WRITE_OP_CONFIG (with one argument)");
-                Console.WriteLine("\t\t-operational config bytes e.g. 5A-97-00-00-00-...");
-                Console.WriteLine("e.g. start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB");
+                if (args.Length >= 2)
+                {
+                    var result = await ConnectDevice(args[0]);
+                    if (result)
+                    {
+                        if (args[1] == "DATA_SYNC")
+                        {
+                            if (args.Length >= 5)
+                            {
+                                await StartDataSync(args[2], args[3], args[4]);
+                            }
+                            else if (args.Length >= 4)
+                            {
+                                await StartDataSync(args[2], args[3]);
+                            }
+                            else if (args.Length >= 3)
+                            {
+                                await StartDataSync(args[2]);
+                            }
+                            else
+                            {
+                                await StartDataSync();
+                            }
+
+                        }
+                        else if (args[1] == "WRITE_OP_CONFIG")
+                        {
+                            await WriteOpConfig(args[2]);
+                        }
+                    }
+                    await DisconnectDevice();
+                }
+                else
+                {
+                    Console.WriteLine("At least two arguments are needed");
+                    Console.WriteLine("Usage: start VerisenseConfigureAndSyncConsole.exe [-uuid] [-options] [args...]");
+                    Console.WriteLine("where options include:");
+                    Console.WriteLine("\t-VERSION");
+                    Console.WriteLine("\t-DATA_SYNC (with three arguments)");
+                    Console.WriteLine("\t\t-bin file path");
+                    Console.WriteLine("\t\t-trial name");
+                    Console.WriteLine("\t\t-participant id");
+                    Console.WriteLine("\t -WRITE_OP_CONFIG (with one argument)");
+                    Console.WriteLine("\t\t-operational config bytes e.g. 5A-97-00-00-00-...");
+                    Console.WriteLine("e.g. start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB");
+                }
             }
         }
 
