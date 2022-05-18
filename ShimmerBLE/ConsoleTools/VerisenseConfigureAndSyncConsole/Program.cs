@@ -115,6 +115,7 @@ namespace VerisenseConfigureAndSyncConsole
                 path = Directory.GetCurrentDirectory();
             }
             VerisenseBLEDeviceWindows.path = path;
+            RadioPlugin32Feet.ShowRXB = false;
             if (!string.IsNullOrEmpty(trialName))
             {
                 device.SetTrialName(trialName);
