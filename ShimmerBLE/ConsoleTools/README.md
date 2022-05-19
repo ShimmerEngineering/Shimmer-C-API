@@ -28,8 +28,12 @@ where options include
   - bin file path
   - trial name
   - participant id
-- WRITE_OP_CONFIG
+- WRITE_OPCONFIG
   - must include the operational config bytes separated with dash as argument
+- WRITE_DEFAULT_OPCONFIG
+  - the available default operational configurations are ACCEL1, ACCEL2_GYRO, GSR_BATT_ACCEL1, GSR_BATT, PPG
+- ERASE_DATA
+- DISABLE_LOGGING
 
 e.g. 
 ```
