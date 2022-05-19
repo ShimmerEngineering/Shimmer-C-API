@@ -5,6 +5,7 @@ using static shimmer.Models.ShimmerBLEEventData;
 using System.IO;
 using shimmer.Communications;
 using System.Reflection;
+using ShimmerBLEAPI.Devices;
 
 namespace VerisenseConfigureAndSyncConsole
 {
@@ -15,8 +16,8 @@ namespace VerisenseConfigureAndSyncConsole
         static async System.Threading.Tasks.Task Main(string[] args)
         {
             //args[0] - uuid
-            //args[1] - sync / write prod config
-            //args[2] - bin file path / op config bytes
+            //args[1] - action
+            //args[2] - bin file path / op config bytes / default config
             //args[3] - trial name
             //args[4] - participant id
             if (args.Length == 1)
@@ -31,32 +32,54 @@ namespace VerisenseConfigureAndSyncConsole
             {
                 if (args.Length >= 2)
                 {
-                    var result = await ConnectDevice(args[0]);
-                    if (result)
+                    if(args[1] == "WRITE_DEFAULT_OPCONFIG")
                     {
-                        if (args[1] == "DATA_SYNC")
+                        var result = await ConnectDevice(args[0], args[2]);
+                        if (!result)
                         {
-                            if (args.Length >= 5)
-                            {
-                                await StartDataSync(args[2], args[3], args[4]);
-                            }
-                            else if (args.Length >= 4)
-                            {
-                                await StartDataSync(args[2], args[3]);
-                            }
-                            else if (args.Length >= 3)
-                            {
-                                await StartDataSync(args[2]);
-                            }
-                            else
-                            {
-                                await StartDataSync();
-                            }
-
+                            return;
                         }
-                        else if (args[1] == "WRITE_OP_CONFIG")
+                    }
+                    else
+                    {
+                        var result = await ConnectDevice(args[0]);
+                        if (result)
                         {
-                            await WriteOpConfig(args[2]);
+                            if (args[1] == "DATA_SYNC")
+                            {
+                                if (args.Length >= 5)
+                                {
+                                    await StartDataSync(args[2], args[3], args[4]);
+                                }
+                                else if (args.Length >= 4)
+                                {
+                                    await StartDataSync(args[2], args[3]);
+                                }
+                                else if (args.Length >= 3)
+                                {
+                                    await StartDataSync(args[2]);
+                                }
+                                else
+                                {
+                                    await StartDataSync();
+                                }
+                            }
+                            else if (args[1] == "WRITE_OPCONFIG")
+                            {
+                                await WriteOpConfig(args[2]);
+                            }
+                            else if (args[1] == "DISABLE_LOGGING")
+                            {
+                                await DisableLogging();
+                            }
+                            else if (args[1] == "ERASE_DATA")
+                            {
+                                await EraseData();
+                            }
+                        }
+                        else
+                        {
+                            return;
                         }
                     }
                     await DisconnectDevice();
@@ -71,19 +94,42 @@ namespace VerisenseConfigureAndSyncConsole
                     Console.WriteLine("\t\t-bin file path");
                     Console.WriteLine("\t\t-trial name");
                     Console.WriteLine("\t\t-participant id");
-                    Console.WriteLine("\t -WRITE_OP_CONFIG (with one argument)");
+                    Console.WriteLine("\t -WRITE_OPCONFIG (with one argument)");
                     Console.WriteLine("\t\t-operational config bytes e.g. 5A-97-00-00-00-...");
                     Console.WriteLine("e.g. start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB");
                 }
             }
         }
 
-        static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid)
+        static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid, string defaultConfig = "")
         {
-            Console.WriteLine("CONNECT");
             device = new VerisenseBLEDeviceWindows(uuid, "");
             device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
-            bool result = await device.Connect(true);
+            bool result = false;
+            switch (defaultConfig)
+            {
+                case "":
+                    result = await device.Connect(true);
+                    break;
+                case "ACCEL1":
+                    result = await device.Connect(true, VerisenseDevice.DefaultVerisenseConfiguration.Accel1_Default_Setting, false);
+                    break;
+                case "ACCEL2_GYRO":
+                    result = await device.Connect(true, VerisenseDevice.DefaultVerisenseConfiguration.Accel2_Gyro_Default_Setting, false);
+                    break;
+                case "GSR_BATT_ACCEL1":
+                    result = await device.Connect(true, VerisenseDevice.DefaultVerisenseConfiguration.GSR_Batt_Accel1_Default_Setting, false);
+                    break;
+                case "GSR_BATT":
+                    result = await device.Connect(true, VerisenseDevice.DefaultVerisenseConfiguration.GSR_Batt_Default_Setting, false);
+                    break;
+                case "PPG":
+                    result = await device.Connect(true, VerisenseDevice.DefaultVerisenseConfiguration.PPG_Default_Setting, false);
+                    break;
+                default:
+                    Console.WriteLine("The available default configurations are ACCEL1, ACCEL2_GYRO, GSR_BATT_ACCEL1, GSR_BATT, PPG");
+                    return false;
+            }
             if (result)
             {
                 Console.WriteLine("---------------------------------------------------------------");
@@ -145,6 +191,29 @@ namespace VerisenseConfigureAndSyncConsole
             if (result != null)
             {
                 Console.WriteLine("Write Success");
+                return true;
+            }
+            return false;
+        }
+
+        static async System.Threading.Tasks.Task<bool> DisableLogging()
+        {
+            device.setLoggingEnabled(false);
+            var opconfigbytes = device.GenerateConfigurationBytes();
+            var result = await device.WriteAndReadOperationalConfiguration(opconfigbytes);
+            if (result != null)
+            {
+                Console.WriteLine("Logging disabled");
+                return true;
+            }
+            return false;
+        }
+
+        static async System.Threading.Tasks.Task<bool> EraseData()
+        {
+            var result = await device.ExecuteRequest(RequestType.EraseData);
+            if (result != null)
+            {
                 return true;
             }
             return false;
