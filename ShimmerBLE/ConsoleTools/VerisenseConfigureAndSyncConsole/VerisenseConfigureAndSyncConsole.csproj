@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj" />
     <ProjectReference Include="..\..\Shimmer32FeetBLEAPI\Shimmer32FeetBLEAPI.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj" />
+    <ProjectReference Include="..\..\ShimmerBlueZBLEAPI\ShimmerBlueZBLEAPI.csproj" />
   </ItemGroup>
 
 	<ItemGroup>
