@@ -4,7 +4,8 @@ Currently the Shimmer C# BLE API and Example Projects are released as a Pre-Alph
 Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Pre-Alpha/Alpha Releases
 
 ## Introduction
-This API is to help users get started with using the Verisense device. If you are looking for Shimmer3 support in C# please refer to the [following](https://github.com/ShimmerEngineering/Shimmer-C-API#readme).
+This API is to help users get started with using the Verisense device. If you are looking for Shimmer3 support in C# please refer to the [following](https://github.com/ShimmerEngineering/Shimmer-C-API#readme). The Verisense quick start guide can be found [here](https://github.com/ShimmerEngineering/Shimmer-C-API/wiki/Quick-Start-Guide)
+
 
 ## Hardware Supported
 - Verisense IMU
