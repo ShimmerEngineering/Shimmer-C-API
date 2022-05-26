@@ -28,8 +28,6 @@ namespace shimmer.Communications
         {
             try
             {
-                ConnectionStatusTCS = new TaskCompletionSource<bool>();
-
                 IAdapter1 adapter;
                 var adapters = await BlueZManager.GetAdaptersAsync();
                 if (adapters.Count == 0)
@@ -45,7 +43,13 @@ namespace shimmer.Communications
                 Console.WriteLine($"Using Bluetooth adapter {adapterName}");
 
                 // Find the Bluetooth peripheral.
-                bluetoothDevice = await adapter.GetDeviceAsync(Asm_uuid.ToString().Split('-')[4]);
+                string macAddress = Asm_uuid.ToString().Split('-')[4].ToUpper();
+                for (int i = 2; i < macAddress.Length; i += 2)
+                {
+                    macAddress = macAddress.Insert(i, ":");
+                    i++;
+                }
+                bluetoothDevice = await adapter.GetDeviceAsync(macAddress);
                 if (bluetoothDevice == null)
                 {
                     throw new Exception("Device not found.");
@@ -63,40 +67,30 @@ namespace shimmer.Communications
                 Console.WriteLine("Waiting for services to resolve...");
                 await bluetoothDevice.WaitForPropertyValueAsync("ServicesResolved", value: true, timeout);
 
-
                 ServiceTXRX = await bluetoothDevice.GetServiceAsync("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
                 UartTX = await ServiceTXRX.GetCharacteristicAsync("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
                 UartRX = await ServiceTXRX.GetCharacteristicAsync("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
 
-                UartRX.Value += characteristic_Value;
-                await UartRX.StartNotifyAsync();
+                UartRX.Value += Gc_ValueChanged;
 
-                //if (bluetoothDevice.Gatt.IsConnected)
-                //{
-                //    State = ConnectivityState.Connected;
-                //    return State;
-                //}
-                //else
-                //{
-                //    bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
-                //    bluetoothDevice.Gatt.Disconnect();
-                //    State = ConnectivityState.Disconnected;
-                //    return State;
-                //}
-                return ConnectivityState.Connected;
+                return State;
             }
             catch (Exception ex)
             {
-                //bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
-                //bluetoothDevice.Gatt.Disconnect();
-                //Console.WriteLine("Radio Plugin 32Feet Exception " + ex.Message + "Please retry to connect");
+                bluetoothDevice.Connected -= device_ConnectedAsync;
+                bluetoothDevice.Disconnected -= device_DisconnectedAsync;
+                bluetoothDevice.ServicesResolved -= device_ServicesResolvedAsync;
+                Console.WriteLine(ex.ToString());
                 return ConnectivityState.Disconnected;
             }
         }
 
-        private async Task characteristic_Value(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
+        private async Task Gc_ValueChanged(GattCharacteristic characteristic, GattCharacteristicValueEventArgs e)
         {
-            Console.WriteLine(BitConverter.ToString(e.Value));
+            if (ShowRXB)
+            {
+                Console.WriteLine("RXB:" + BitConverter.ToString(e.Value));
+            }
 
             if (CommunicationEvent != null)
             {
@@ -104,7 +98,7 @@ namespace shimmer.Communications
             }
         }
 
-        private static async Task device_ConnectedAsync(Device device, BlueZEventArgs e)
+        private async Task device_ConnectedAsync(Device device, BlueZEventArgs e)
         {
             try
             {
@@ -116,6 +110,7 @@ namespace shimmer.Communications
                 {
                     Console.WriteLine($"Already connected to {await device.GetAddressAsync()}");
                 }
+                State = ConnectivityState.Connected;
             }
             catch (Exception ex)
             {
@@ -123,16 +118,13 @@ namespace shimmer.Communications
             }
         }
 
-        private static async Task device_DisconnectedAsync(Device device, BlueZEventArgs e)
+        private async Task device_DisconnectedAsync(Device device, BlueZEventArgs e)
         {
             try
             {
                 Console.WriteLine($"Disconnected from {await device.GetAddressAsync()}");
-
-                await Task.Delay(TimeSpan.FromSeconds(15));
-
-                Console.WriteLine($"Attempting to reconnect to {await device.GetAddressAsync()}...");
-                await device.ConnectAsync();
+                State = ConnectivityState.Disconnected;
+                ConnectionStatusTCS.TrySetResult(true);
             }
             catch (Exception ex)
             {
@@ -161,18 +153,14 @@ namespace shimmer.Communications
 
         public async Task<ConnectivityState> Disconnect()
         {
-            ConnectivityState test = State;
-            //ConnectionStatusTCS = new TaskCompletionSource<bool>();
-            //await ConnectionStatusTCS.Task;
-            UartRX.Value += characteristic_Value;
+            ConnectionStatusTCS = new TaskCompletionSource<bool>();
+            await bluetoothDevice.DisconnectAsync();
+            await ConnectionStatusTCS.Task;
+            UartRX.Value -= Gc_ValueChanged;
             bluetoothDevice.Connected -= device_ConnectedAsync;
             bluetoothDevice.Disconnected -= device_DisconnectedAsync;
             bluetoothDevice.ServicesResolved -= device_ServicesResolvedAsync;
 
-            //UartRX = null;
-            //UartTX = null;
-            //GC.Collect();
-            //Thread.Sleep(3000);
             return State;
         }
 
@@ -184,21 +172,9 @@ namespace shimmer.Communications
 
         public async Task<bool> WriteBytes(byte[] bytes)
         {
-            await UartTX.WriteValueAsync(bytes, null);
+            IDictionary<string, object> options = new Dictionary<string, object>();
+            await UartTX.WriteValueAsync(bytes, options);
             return true;
         }
-
-        //private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
-        //{
-        //    if (ShowRXB)
-        //    {
-        //        Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
-        //    }
-
-        //    if (CommunicationEvent != null)
-        //    {
-        //        CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = args.Value, Event = shimmer.Communications.ByteLevelCommunicationEvent.CommEvent.NewBytes });
-        //    }
-        //}
     }
 }
