@@ -1,9 +1,5 @@
 # Shimmer C# BLE API 
-The following projects (API) are Alpha Releases, the rest of the projects/example in this folder are Pre-Alpha Releaseas
-- ShimmerBLEAPI.Android
-- ShimmerBLEAPI.UWP
-- ShimmerBLEAPI.iOS
-- ShimmerBLEAPI
+Currently the Shimmer C# BLE API and Example Projects are released as a Pre-Alpha release
 
 Please refer to our [support policy](https://shimmersensing.com/support/wireless-sensor-networks-documentation/) on Pre-Alpha/Alpha Releases
 
