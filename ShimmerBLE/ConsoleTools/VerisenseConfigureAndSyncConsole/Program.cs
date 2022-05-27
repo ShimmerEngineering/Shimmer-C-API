@@ -6,12 +6,13 @@ using System.IO;
 using shimmer.Communications;
 using System.Reflection;
 using ShimmerBLEAPI.Devices;
+using System.Runtime.InteropServices;
 
 namespace VerisenseConfigureAndSyncConsole
 {
     internal class Program
     {
-        static VerisenseBLEDeviceWindows device;
+        static VerisenseBLEDevice device;
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
@@ -103,7 +104,15 @@ namespace VerisenseConfigureAndSyncConsole
 
         static async System.Threading.Tasks.Task<bool> ConnectDevice(string uuid, string defaultConfig = "")
         {
-            device = new VerisenseBLEDeviceWindows(uuid, "");
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                device = new VerisenseBLEDeviceWindowsBlueZ(uuid, "");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                device = new VerisenseBLEDeviceWindows(uuid, "");
+            }
+
             device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             bool result = false;
             switch (defaultConfig)
@@ -160,7 +169,15 @@ namespace VerisenseConfigureAndSyncConsole
             {
                 path = Directory.GetCurrentDirectory();
             }
-            VerisenseBLEDeviceWindows.path = path;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                VerisenseBLEDeviceWindowsBlueZ.path = path;
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                VerisenseBLEDeviceWindows.path = path;
+            }
+            
             RadioPlugin32Feet.ShowRXB = false;
             if (!string.IsNullOrEmpty(trialName))
             {
