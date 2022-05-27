@@ -35,8 +35,8 @@ namespace shimmer.Communications
                     throw new Exception("No Bluetooth adapters found.");
                 }
 
-                adapter = await BlueZManager.GetAdapterAsync("hci0");
-                //adapter = adapters.First();
+                //adapter = await BlueZManager.GetAdapterAsync("hci0");
+                adapter = adapters.First();
 
                 var adapterPath = adapter.ObjectPath.ToString();
                 var adapterName = adapterPath.Substring(adapterPath.LastIndexOf("/") + 1);
