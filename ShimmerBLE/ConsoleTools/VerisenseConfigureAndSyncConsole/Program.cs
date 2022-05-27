@@ -16,11 +16,6 @@ namespace VerisenseConfigureAndSyncConsole
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
-            //args[0] - uuid
-            //args[1] - action
-            //args[2] - bin file path / op config bytes / default config
-            //args[3] - trial name
-            //args[4] - participant id
             if (args.Length == 1)
             {
                 if (args[0] == "VERSION")
@@ -87,17 +82,21 @@ namespace VerisenseConfigureAndSyncConsole
                 }
                 else
                 {
-                    Console.WriteLine("At least two arguments are needed");
-                    Console.WriteLine("Usage: start VerisenseConfigureAndSyncConsole.exe [-uuid] [-options] [args...]");
-                    Console.WriteLine("where options include:");
-                    Console.WriteLine("\t-VERSION");
-                    Console.WriteLine("\t-DATA_SYNC (with three arguments)");
-                    Console.WriteLine("\t\t-bin file path");
-                    Console.WriteLine("\t\t-trial name");
-                    Console.WriteLine("\t\t-participant id");
-                    Console.WriteLine("\t -WRITE_OPCONFIG (with one argument)");
-                    Console.WriteLine("\t\t-operational config bytes e.g. 5A-97-00-00-00-...");
-                    Console.WriteLine("e.g. start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB");
+                    Console.WriteLine("Usage:  start VerisenseConfigureAndSyncConsole.exe -VERSION");
+                    Console.WriteLine("\tor");
+                    Console.WriteLine("Usage:  start VerisenseConfigureAndSyncConsole.exe [-uuid] [-options] [args...]");
+                    Console.WriteLine("\twhere options include:");
+                    Console.WriteLine("\t\t-DATA_SYNC (three optional arguments)");
+                    Console.WriteLine("\t\t\t-bin file path");
+                    Console.WriteLine("\t\t\t-trial name");
+                    Console.WriteLine("\t\t\t-participant id");
+                    Console.WriteLine("\t\t-WRITE_OPCONFIG (one argument)");
+                    Console.WriteLine("\t\t\t-operational config bytes e.g. 5A-97-00-00-00-...");
+                    Console.WriteLine("\t\t-WRITE_DEFAULT_OPCONFIG (one argument)");
+                    Console.WriteLine("\t\t\t-ACCEL1/ACCEL2_GYRO/GSR_BATT_ACCEL1/GSR_BATT/PPG");
+                    Console.WriteLine("\t\t-DISABLE_LOGGING");
+                    Console.WriteLine("\t\t-ERASE_DATA");
+                    Console.WriteLine("\te.g. start VerisenseConfigureAndSyncConsole.exe 00000000-0000-0000-0000-d02b463da2bb DATA_SYNC C:\\Users\\UserName\\Desktop trialA participantB");
                 }
             }
         }
@@ -172,13 +171,14 @@ namespace VerisenseConfigureAndSyncConsole
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 VerisenseBLEDeviceWindowsBlueZ.path = path;
+                RadioPluginBlueZ.ShowRXB = false;
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 VerisenseBLEDeviceWindows.path = path;
+                RadioPlugin32Feet.ShowRXB = false;
             }
             
-            RadioPlugin32Feet.ShowRXB = false;
             if (!string.IsNullOrEmpty(trialName))
             {
                 device.SetTrialName(trialName);
