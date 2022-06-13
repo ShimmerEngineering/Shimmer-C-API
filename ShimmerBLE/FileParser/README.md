@@ -18,4 +18,15 @@ Please refer to our [support policy](https://shimmersensing.com/support/wireless
 5. For example, `java -jar VerisenseFileParserPC.jar C:/Users/username/Desktop/WW/19092501A2BB/BinaryFiles SAVE_DATA_BLOCK_METADATA`
 6. The parsed files directory will be at the same level with the BinaryFiles level folder
 7. The Algorithm folder contains the results for non-wear detection
-8. For more details regarding the file parser output, please refer to [ASM-DOC06-03_Verisense Data Dictionary.pdf](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/VCBA-110/ShimmerBLE/FileParser/ASM-DOC06-03_Verisense%20Data%20Dictionary.pdf)
+8. For more details regarding the file parser output, please refer to the following sections in [ASM-DOC06-03_Verisense Data Dictionary.pdf](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/VCBA-110/ShimmerBLE/FileParser/ASM-DOC06-03_Verisense%20Data%20Dictionary.pdf)
+     - 2.4 File Naming Convention
+     - 2.5 Raw Data
+     - 2.6 Derived Data
+9. Note that a single bin file will output more than one parsed file if one of the followings happens, and you will need to combine the files manually
+     - Unexpected time gap or overlap in data
+     - Configuration change detected
+     - Midday or midnight cross-over (for all files except the payload metadata file)
+
+## Current Limitations
+### File Parser
+Currently the file parser is only available in Java

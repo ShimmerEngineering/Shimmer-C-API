@@ -7,18 +7,18 @@ using System.IO;
 
 namespace shimmer.Communications
 {
-    public class VerisenseBLEDeviceWindows : VerisenseBLEDevice
+    public class VerisenseBLEDeviceWindowsBlueZ : VerisenseBLEDevice
     {
         public static string path;
 
-        public VerisenseBLEDeviceWindows(string uuid, string id) : base(uuid, id)
+        public VerisenseBLEDeviceWindowsBlueZ(string uuid, string id) : base(uuid, id)
         {
 
         }
 
         protected override void InitializeRadio()
         {
-            BLERadio = new RadioPlugin32Feet();
+            BLERadio = new RadioPluginBlueZ();
         }
 
         protected override void createBinFile(bool crcError)

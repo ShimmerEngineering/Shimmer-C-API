@@ -10,6 +10,7 @@ namespace shimmer.Communications
 {
     public class RadioPlugin32Feet : IVerisenseByteCommunication
     {
+        public static bool ShowRXB = true;
         public Guid Asm_uuid { get; set; }
 
         public event EventHandler<ByteLevelCommunicationEvent> CommunicationEvent;
@@ -27,6 +28,7 @@ namespace shimmer.Communications
                 ConnectionStatusTCS = new TaskCompletionSource<bool>();
                 bluetoothDevice = await BluetoothDevice.FromIdAsync(Asm_uuid.ToString().Split('-')[4]);
                 bluetoothDevice.GattServerDisconnected += Device_GattServerDisconnected;
+                await bluetoothDevice.Gatt.ConnectAsync();
 
                 BluetoothUuid TxID = BluetoothUuid.FromGuid(new Guid("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
                 BluetoothUuid RxID = BluetoothUuid.FromGuid(new Guid("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
@@ -37,8 +39,7 @@ namespace shimmer.Communications
                 UartRX = await ServiceTXRX.GetCharacteristicAsync(RxID);
 
                 UartRX.CharacteristicValueChanged += Gc_ValueChanged;
-
-                await bluetoothDevice.Gatt.ConnectAsync();
+                await UartRX.StartNotificationsAsync();
 
                 if (bluetoothDevice.Gatt.IsConnected)
                 {
@@ -60,7 +61,6 @@ namespace shimmer.Communications
                 Console.WriteLine("Radio Plugin 32Feet Exception " + ex.Message + "Please retry to connect");
                 return ConnectivityState.Disconnected;
             }
-
         }
 
         public async Task<ConnectivityState> Disconnect()
@@ -75,13 +75,14 @@ namespace shimmer.Communications
             UartRX = null;
             UartTX = null;
             GC.Collect();
+            Thread.Sleep(3000);
             return State;
         }
 
         private void Device_GattServerDisconnected(object sender, EventArgs e)
         {
 
-            if (((BluetoothDevice)sender).Gatt.IsConnected) 
+            if (((BluetoothDevice)sender).Gatt.IsConnected)
             {
                 //disconnect from UI
                 State = ConnectivityState.Disconnected;
@@ -91,7 +92,7 @@ namespace shimmer.Communications
                 }
                 ConnectionStatusTCS.TrySetResult(true);
             }
-            else 
+            else
             {
                 //connection lost
                 Console.WriteLine("Connection Lost. Please reconnect.");
@@ -99,7 +100,7 @@ namespace shimmer.Communications
                 bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
                 bluetoothDevice.Gatt.Disconnect();
             }
-           
+
         }
 
         public ConnectivityState GetConnectivityState()
@@ -110,14 +111,15 @@ namespace shimmer.Communications
         public async Task<bool> WriteBytes(byte[] bytes)
         {
             await UartTX.WriteValueWithoutResponseAsync(bytes);
-            await UartRX.StartNotificationsAsync();
-
             return true;
         }
 
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
         {
-            Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
+            if (ShowRXB)
+            {
+                Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
+            }
 
             if (CommunicationEvent != null)
             {
