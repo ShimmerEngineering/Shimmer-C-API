@@ -9,8 +9,8 @@ namespace ShimmerAPI
 {
     public class ShimmerLogAndStreamSystemSerialPortV2 : ShimmerLogAndStreamSystemSerialPort, IDisposable
     {
-        private MemoryStream ms = null;
-        private BinaryReader br = null;
+        private MemoryStream RXMemoryStream = null;
+        private BinaryReader RXBinaryReader = null;
         private int NumberofBytesToRead;
         private int IndexPosition;
         private bool ReadRequired = true;
@@ -35,16 +35,16 @@ namespace ShimmerAPI
                         if (NumberofBytesToRead > 0)
                         {
                             ReadStopWatch.Restart();
-                            if (ms != null)
-                                ms.Dispose();
-                            if (br != null)
-                                br.Dispose();
+                            if (RXMemoryStream != null)
+                                RXMemoryStream.Dispose();
+                            if (RXBinaryReader != null)
+                                RXBinaryReader.Dispose();
 
                             byte[] buffer = new byte[NumberofBytesToRead];
                             SerialPort.Read(buffer, 0, NumberofBytesToRead);
                             ReadRequired = false;
-                            ms = new MemoryStream(buffer);
-                            br = new BinaryReader(ms);
+                            RXMemoryStream = new MemoryStream(buffer);
+                            RXBinaryReader = new BinaryReader(RXMemoryStream);
                             IndexPosition = 0;
                             break;
                         }
@@ -60,7 +60,7 @@ namespace ShimmerAPI
                         if (Terminate) Dispose();
                     }
                 }
-                byte ret = br.ReadByte();
+                byte ret = RXBinaryReader.ReadByte();
                 IndexPosition++;
                 if (IndexPosition == NumberofBytesToRead)
                     ReadRequired = true;
@@ -71,10 +71,10 @@ namespace ShimmerAPI
 
         public void Dispose()
         {
-            if (ms != null)
-                ms.Dispose();
-            if (br != null)
-                br.Dispose();
+            if (RXMemoryStream != null)
+                RXMemoryStream.Dispose();
+            if (RXBinaryReader != null)
+                RXBinaryReader.Dispose();
             if (SerialPort.IsOpen)
                 SerialPort.Close();
         }
