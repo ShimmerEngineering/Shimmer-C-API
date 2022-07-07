@@ -2350,6 +2350,10 @@ namespace BLE.Client.ViewModels
             else if (e.CurrentEvent == VerisenseBLEEvent.SyncLoggedDataComplete)
             {
                 DeviceMessage = VerisenseBLEDevice.dataFilePath + " : " + e.CurrentEvent.ToString();
+                InvokeOnMainThread(() =>
+                {
+                    CurrentPage.DisplayAlert("Sync Complete", "You can refer to https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE/FileParser/README.md regarding how to parse the bin file", "OK");
+                });
             }
             else if (e.CurrentEvent == VerisenseBLEEvent.RequestResponse)
             {
