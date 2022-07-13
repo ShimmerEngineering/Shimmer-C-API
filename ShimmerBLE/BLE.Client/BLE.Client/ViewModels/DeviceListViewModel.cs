@@ -208,6 +208,36 @@ namespace BLE.Client.ViewModels
             }
         }
 
+        bool _bluetoothEnabled;
+        public bool BluetoothEnabled
+        {
+            get => _bluetoothEnabled;
+
+            set
+            {
+                if (_bluetoothEnabled == value)
+                    return;
+
+                _bluetoothEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        bool _usbEnabled;
+        public bool USBEnabled
+        {
+            get => _usbEnabled;
+
+            set
+            {
+                if (_usbEnabled == value)
+                    return;
+
+                _usbEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         bool _AutoReconnect=false;
         public bool AutoReconnect
         {
@@ -2381,6 +2411,8 @@ namespace BLE.Client.ViewModels
 
                     DeviceLogging = VerisenseBLEDevice.IsLoggingEnabled();
                     DeviceEnabled = VerisenseBLEDevice.IsDeviceEnabled();
+                    BluetoothEnabled = VerisenseBLEDevice.IsBluetoothEnabled();
+                    USBEnabled = VerisenseBLEDevice.IsUSBEnabled();
                     SensorAccel = ((SensorLIS2DW12)VerisenseBLEDevice.GetSensor(SensorLIS2DW12.SensorName)).IsAccelEnabled();
                     SensorAccel2 = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsAccelEnabled();
                     SensorGyro = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsGyroEnabled();
@@ -3002,6 +3034,8 @@ namespace BLE.Client.ViewModels
             var clone = new VerisenseBLEDevice(VerisenseBLEDevice);
             clone.setLoggingEnabled(_deviceLogging);
             clone.setDeviceEnabled(_deviceEnabled);
+            clone.setBluetoothEnabled(_bluetoothEnabled);
+            clone.setUSBEnabled(_usbEnabled);
             var startDateTime = startDate.AddMinutes(StartTimeSpan.TotalMinutes);
             DateTime utcStartDateTime = startDateTime.ToUniversalTime();
             var localStartDateTime = utcStartDateTime.ToLocalTime();

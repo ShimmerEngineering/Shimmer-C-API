@@ -462,6 +462,10 @@
                         <CheckBox IsChecked="{Binding DeviceEnabled}" VerticalOptions="Start" />
                         <Label Text="Device Logging : " VerticalOptions="Start" />
                         <CheckBox IsChecked="{Binding DeviceLogging}" VerticalOptions="Start" />
+                        <Label Text="Enable Bluetooth : " VerticalOptions="Start" />
+                        <CheckBox IsChecked="{Binding BluetoothEnabled}" VerticalOptions="Start" />
+                        <Label Text="Enable USB : " VerticalOptions="Start" />
+                        <CheckBox IsChecked="{Binding USBEnabled}" VerticalOptions="Start" />
                     </StackLayout>
                     <StackLayout Orientation="Vertical">
                         <StackLayout Orientation="Horizontal">

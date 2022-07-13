@@ -187,6 +187,38 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        /// <summary>
+        /// Disable/Enable bluetooth (bluetooth will always be enabled when USB powered)
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void setBluetoothEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] | 0b00010000);
+            }
+            else
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b11101111);
+            }
+        }
+
+        /// <summary>
+        /// Disable/Enable USB
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void setUSBEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] | 0b00001000);
+            }
+            else
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b11110111);
+            }
+        }
+
         // MINUTES SINCE 1 JAN 1970
         /// <summary>
         /// The clock system on a Verisense sensor is in local time (e.g. unix time expressed in your time zone, e.g. for Kuala Lumpur unixtime + 08:00) 
@@ -628,6 +660,46 @@ namespace ShimmerBLEAPI.Devices
                 throw new Exception("Configuration Bytes Unknown");
             }
             if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00000010) == 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Is bluetooth enabled (bluetooth will always be enabled when USB powered)
+        /// </summary>
+        /// <exception cref="Exception">Thrown if op config is null</exception>
+        public bool IsBluetoothEnabled()
+        {
+            if (OpConfig.ConfigurationBytes == null)
+            {
+                throw new Exception("Configuration Bytes Unknown");
+            }
+            if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00010000) == 16)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Is USB enabled
+        /// </summary>
+        /// <exception cref="Exception">Thrown if op config is null</exception>
+        public bool IsUSBEnabled()
+        {
+            if (OpConfig.ConfigurationBytes == null)
+            {
+                throw new Exception("Configuration Bytes Unknown");
+            }
+            if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00001000) == 8)
             {
                 return true;
             }
