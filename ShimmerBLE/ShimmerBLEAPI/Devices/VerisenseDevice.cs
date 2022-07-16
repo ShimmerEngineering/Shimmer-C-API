@@ -43,6 +43,12 @@ namespace ShimmerBLEAPI.Devices
             VERISENSE_DEV_BOARD = 64,
             VERISENSE_PULSE_PLUS = 68
         }
+        public CommunicationType CommType = CommunicationType.BLE;
+        public enum CommunicationType
+        {
+            BLE = 00,
+            SerialPort = 01
+        }
 
         /// <summary>
         /// Each variable represents a Bluetooth 5 power level setting
@@ -76,6 +82,7 @@ namespace ShimmerBLEAPI.Devices
         protected PendingEventsPayload PendingEvents { get; set; }
 
         public Guid Asm_uuid { get; set; }
+        public String ComPort { get; set; }
         protected string ASMName { get; set; }
         protected Dictionary<int, Sensor> SensorList = new Dictionary<int, Sensor>();
 
