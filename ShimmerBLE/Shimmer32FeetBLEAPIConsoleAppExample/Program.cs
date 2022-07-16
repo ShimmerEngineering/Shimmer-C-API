@@ -65,6 +65,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                 if (!devices.ContainsKey(uuid))
                 {
                     device = new VerisenseBLEDeviceWindows(uuid, "");
+                    //device = new VerisenseBLEDeviceWindows(uuid, "","com3", VerisenseDevice.CommunicationType.SerialPort);
                     device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                     bool result = await device.Connect(true);
                     if (result)
