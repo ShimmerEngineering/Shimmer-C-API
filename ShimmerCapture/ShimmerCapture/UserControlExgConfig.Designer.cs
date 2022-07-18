@@ -60,6 +60,7 @@
             this.textBoxChip2Reg10 = new System.Windows.Forms.TextBox();
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.checkBoxDefaultExGTest = new System.Windows.Forms.CheckBox();
+            this.checkBoxDefaultRespiration = new System.Windows.Forms.CheckBox();
             this.checkBoxDefaultEMG = new System.Windows.Forms.CheckBox();
             this.checkBoxDefaultECG = new System.Windows.Forms.CheckBox();
             this.labelEXG = new System.Windows.Forms.Label();
@@ -369,6 +370,7 @@
             // 
             // groupBoxSettings
             // 
+            this.groupBoxSettings.Controls.Add(this.checkBoxDefaultRespiration);
             this.groupBoxSettings.Controls.Add(this.checkBoxDefaultExGTest);
             this.groupBoxSettings.Controls.Add(this.checkBoxDefaultEMG);
             this.groupBoxSettings.Controls.Add(this.checkBoxDefaultECG);
@@ -404,10 +406,22 @@
             this.groupBoxSettings.Text = "ExG Settings";
             this.groupBoxSettings.Enter += new System.EventHandler(this.groupBoxSettings_Enter);
             // 
+            // checkBoxDefaultRespiration
+            // 
+            this.checkBoxDefaultRespiration.AutoSize = true;
+            this.checkBoxDefaultRespiration.Location = new System.Drawing.Point(336, 35);
+            this.checkBoxDefaultRespiration.Name = "checkBoxDefaultRespiration";
+            this.checkBoxDefaultRespiration.Size = new System.Drawing.Size(107, 17);
+            this.checkBoxDefaultRespiration.TabIndex = 45;
+            this.checkBoxDefaultRespiration.Text = "Default Respiration";
+            this.checkBoxDefaultRespiration.UseVisualStyleBackColor = true;
+            this.checkBoxDefaultRespiration.CheckedChanged += new System.EventHandler(this.checkBoxDefaultRespiration_CheckedChanged);
+            this.checkBoxDefaultRespiration.Click += new System.EventHandler(this.checkBoxDefaultRespiration_Click);
+            // 
             // checkBoxDefaultExGTest
             // 
             this.checkBoxDefaultExGTest.AutoSize = true;
-            this.checkBoxDefaultExGTest.Location = new System.Drawing.Point(297, 35);
+            this.checkBoxDefaultExGTest.Location = new System.Drawing.Point(219, 35);
             this.checkBoxDefaultExGTest.Name = "checkBoxDefaultExGTest";
             this.checkBoxDefaultExGTest.Size = new System.Drawing.Size(107, 17);
             this.checkBoxDefaultExGTest.TabIndex = 44;
@@ -419,7 +433,7 @@
             // checkBoxDefaultEMG
             // 
             this.checkBoxDefaultEMG.AutoSize = true;
-            this.checkBoxDefaultEMG.Location = new System.Drawing.Point(161, 35);
+            this.checkBoxDefaultEMG.Location = new System.Drawing.Point(122, 35);
             this.checkBoxDefaultEMG.Name = "checkBoxDefaultEMG";
             this.checkBoxDefaultEMG.Size = new System.Drawing.Size(87, 17);
             this.checkBoxDefaultEMG.TabIndex = 43;
@@ -602,6 +616,7 @@
         private System.Windows.Forms.Label labelExGLeadOffCurrent;
         private System.Windows.Forms.Label labelExGLeadOffComparatorThreshold;
         public System.Windows.Forms.ComboBox comboBoxLeadOffDetection;
+        private System.Windows.Forms.CheckBox checkBoxDefaultRespiration;
         private System.Windows.Forms.CheckBox checkBoxDefaultExGTest;
         private System.Windows.Forms.CheckBox checkBoxDefaultEMG;
         private System.Windows.Forms.CheckBox checkBoxDefaultECG;
