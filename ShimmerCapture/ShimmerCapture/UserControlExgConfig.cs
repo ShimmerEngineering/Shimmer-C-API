@@ -18,6 +18,8 @@ namespace ShimmerAPI
         byte[] defaultEMGReg2 = new byte[10] {0x00, 0xA0, 0x10, 0xE1, 0xE1, 0x00, 0x00, 0x00, 0x02, 0x01};
         byte[] defaultExGTestReg1 = new byte[10] {0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01};
         byte[] defaultExGTestReg2 = new byte[10] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
+        byte[] defaultRespirationReg1 = new byte[10] { 0x02, 0xA8, 0x10, 0x40, 0x40, 0x20, 0x00, 0x00, 0x02, 0x03 };
+        byte[] defaultRespirationReg2 = new byte[10] { 0x02, 0xA0, 0x10, 0x40, 0x40, 0x00, 0x00, 0x00, 0xEA, 0x01 };
 
         public static bool UsingLinux
         {
@@ -197,8 +199,10 @@ namespace ShimmerAPI
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked = true; // enable ECG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked = false; // disable EMG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor17.Checked = false; // disable ExG Test
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor23.Checked = false; // disable Respiration
                 checkBoxDefaultEMG.Checked = false;
                 checkBoxDefaultExGTest.Checked = false;
+                checkBoxDefaultRespiration.Checked = false;
                 setExGUIElements();
                 setExGRegBytesinForm(true);
             }
@@ -218,8 +222,10 @@ namespace ShimmerAPI
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked = false; // disable ECG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked = true; // enable EMG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor17.Checked = false; // disable ExG Test
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor23.Checked = false; // disable Respiration
                 checkBoxDefaultECG.Checked = false;
                 checkBoxDefaultExGTest.Checked = false;
+                checkBoxDefaultRespiration.Checked = false;
                 setExGUIElements();
                 setExGRegBytesinForm(true);
             }
@@ -242,8 +248,10 @@ namespace ShimmerAPI
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked = false; // disable ECG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked = false; // disable EMG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor17.Checked = true; // enable ExG Test
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor23.Checked = false; // disable Respiration
                 checkBoxDefaultECG.Checked = false;
                 checkBoxDefaultEMG.Checked = false;
+                checkBoxDefaultRespiration.Checked = false;
                 setExGUIElements();
                 setExGRegBytesinForm(true);
             }
@@ -253,7 +261,33 @@ namespace ShimmerAPI
             }
 
         }
-        
+
+        private void checkBoxDefaultRespiration_Click(object sender, EventArgs e)
+        {
+            if (checkBoxDefaultRespiration.Checked)
+            {
+                Array.Copy(defaultRespirationReg1, PConfiguration.ExgReg1UI, 10);
+                Array.Copy(defaultRespirationReg2, PConfiguration.ExgReg2UI, 10);
+                PConfiguration.ExgReg1UI = defaultRespirationReg1;
+                PConfiguration.ExgReg2UI = defaultRespirationReg2;
+                PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedIndex = 3; // set recommended gain index for ExG Test
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked = false; // disable ECG
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked = false; // disable EMG
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor17.Checked = false; // disable ExG Test
+                PConfiguration.userControlGeneralConfig1.checkBoxSensor23.Checked = true; // enable Respiration
+                checkBoxDefaultECG.Checked = false;
+                checkBoxDefaultEMG.Checked = false;
+                checkBoxDefaultExGTest.Checked = false;
+                setExGUIElements();
+                setExGRegBytesinForm(true);
+            }
+            else
+            {
+
+            }
+
+        }
+
         private Boolean isDefaultECG() // compare ExG Register bytes in form with the default for ECG
         {
             var arraysAreEqual = Enumerable.SequenceEqual(PConfiguration.ExgReg1UI, defaultECGReg1) && Enumerable.SequenceEqual(PConfiguration.ExgReg2UI, defaultECGReg2);
@@ -271,7 +305,13 @@ namespace ShimmerAPI
             var arraysAreEqual = Enumerable.SequenceEqual(PConfiguration.ExgReg1UI, defaultExGTestReg1) && Enumerable.SequenceEqual(PConfiguration.ExgReg2UI, defaultExGTestReg2);
             return arraysAreEqual;
         }
-        
+
+        private Boolean isDefaultRespiration() // compare ExG Register bytes in form with the default for Respiration
+        {
+            var arraysAreEqual = Enumerable.SequenceEqual(PConfiguration.ExgReg1UI, defaultRespirationReg1) && Enumerable.SequenceEqual(PConfiguration.ExgReg2UI, defaultRespirationReg2);
+            return arraysAreEqual;
+        }
+
         public int ConvertEXGReferenceValuetoSetting(String mode, int value)
         {
 
@@ -651,6 +691,7 @@ namespace ShimmerAPI
                 checkBoxDefaultECG.Checked = false;
                 checkBoxDefaultEMG.Checked = false;
                 checkBoxDefaultExGTest.Checked = false;
+                checkBoxDefaultRespiration.Checked = false;
 
                 if (isDefaultECG())
                 {
@@ -663,6 +704,10 @@ namespace ShimmerAPI
                 if (isDefaultExGTest())
                 {
                     checkBoxDefaultExGTest.Checked = true;
+                }
+                if (isDefaultRespiration())
+                {
+                    checkBoxDefaultRespiration.Checked = true;
                 }
             }
         }
@@ -1479,6 +1524,11 @@ namespace ShimmerAPI
         }
 
         private void checkBoxDefaultExGTest_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxDefaultRespiration_CheckedChanged(object sender, EventArgs e)
         {
 
         }

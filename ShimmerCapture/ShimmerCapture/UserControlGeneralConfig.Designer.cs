@@ -38,6 +38,7 @@
             this.checkBoxSensor8 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor9 = new System.Windows.Forms.CheckBox();
             this.groupBoxSensors = new System.Windows.Forms.GroupBox();
+            this.checkBoxSensor23 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor22 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor21 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor20 = new System.Windows.Forms.CheckBox();
@@ -109,7 +110,7 @@
             // checkBoxSensor1
             // 
             this.checkBoxSensor1.AutoSize = true;
-            this.checkBoxSensor1.Location = new System.Drawing.Point(8, 25);
+            this.checkBoxSensor1.Location = new System.Drawing.Point(8, 23);
             this.checkBoxSensor1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor1.Name = "checkBoxSensor1";
             this.checkBoxSensor1.Size = new System.Drawing.Size(98, 21);
@@ -121,7 +122,7 @@
             // checkBoxSensor2
             // 
             this.checkBoxSensor2.AutoSize = true;
-            this.checkBoxSensor2.Location = new System.Drawing.Point(8, 50);
+            this.checkBoxSensor2.Location = new System.Drawing.Point(8, 46);
             this.checkBoxSensor2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor2.Name = "checkBoxSensor2";
             this.checkBoxSensor2.Size = new System.Drawing.Size(98, 21);
@@ -133,7 +134,7 @@
             // checkBoxSensor3
             // 
             this.checkBoxSensor3.AutoSize = true;
-            this.checkBoxSensor3.Location = new System.Drawing.Point(8, 74);
+            this.checkBoxSensor3.Location = new System.Drawing.Point(8, 69);
             this.checkBoxSensor3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor3.Name = "checkBoxSensor3";
             this.checkBoxSensor3.Size = new System.Drawing.Size(98, 21);
@@ -145,7 +146,7 @@
             // checkBoxSensor4
             // 
             this.checkBoxSensor4.AutoSize = true;
-            this.checkBoxSensor4.Location = new System.Drawing.Point(8, 98);
+            this.checkBoxSensor4.Location = new System.Drawing.Point(8, 92);
             this.checkBoxSensor4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor4.Name = "checkBoxSensor4";
             this.checkBoxSensor4.Size = new System.Drawing.Size(98, 21);
@@ -157,7 +158,7 @@
             // checkBoxSensor5
             // 
             this.checkBoxSensor5.AutoSize = true;
-            this.checkBoxSensor5.Location = new System.Drawing.Point(8, 123);
+            this.checkBoxSensor5.Location = new System.Drawing.Point(8, 115);
             this.checkBoxSensor5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor5.Name = "checkBoxSensor5";
             this.checkBoxSensor5.Size = new System.Drawing.Size(98, 21);
@@ -169,7 +170,7 @@
             // checkBoxSensor6
             // 
             this.checkBoxSensor6.AutoSize = true;
-            this.checkBoxSensor6.Location = new System.Drawing.Point(8, 148);
+            this.checkBoxSensor6.Location = new System.Drawing.Point(8, 138);
             this.checkBoxSensor6.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor6.Name = "checkBoxSensor6";
             this.checkBoxSensor6.Size = new System.Drawing.Size(98, 21);
@@ -181,7 +182,7 @@
             // checkBoxSensor7
             // 
             this.checkBoxSensor7.AutoSize = true;
-            this.checkBoxSensor7.Location = new System.Drawing.Point(8, 172);
+            this.checkBoxSensor7.Location = new System.Drawing.Point(8, 161);
             this.checkBoxSensor7.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor7.Name = "checkBoxSensor7";
             this.checkBoxSensor7.Size = new System.Drawing.Size(98, 21);
@@ -193,7 +194,7 @@
             // checkBoxSensor8
             // 
             this.checkBoxSensor8.AutoSize = true;
-            this.checkBoxSensor8.Location = new System.Drawing.Point(8, 197);
+            this.checkBoxSensor8.Location = new System.Drawing.Point(8, 184);
             this.checkBoxSensor8.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor8.Name = "checkBoxSensor8";
             this.checkBoxSensor8.Size = new System.Drawing.Size(98, 21);
@@ -204,7 +205,7 @@
             // checkBoxSensor9
             // 
             this.checkBoxSensor9.AutoSize = true;
-            this.checkBoxSensor9.Location = new System.Drawing.Point(8, 222);
+            this.checkBoxSensor9.Location = new System.Drawing.Point(8, 207);
             this.checkBoxSensor9.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor9.Name = "checkBoxSensor9";
             this.checkBoxSensor9.Size = new System.Drawing.Size(98, 21);
@@ -216,6 +217,7 @@
             // 
             // groupBoxSensors
             // 
+            this.groupBoxSensors.Controls.Add(this.checkBoxSensor23);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor22);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor21);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor20);
@@ -250,7 +252,7 @@
             // checkBoxSensor22
             // 
             this.checkBoxSensor22.AutoSize = true;
-            this.checkBoxSensor22.Location = new System.Drawing.Point(267, 270);
+            this.checkBoxSensor22.Location = new System.Drawing.Point(267, 253);
             this.checkBoxSensor22.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor22.Name = "checkBoxSensor22";
             this.checkBoxSensor22.Size = new System.Drawing.Size(106, 21);
@@ -262,7 +264,7 @@
             // checkBoxSensor21
             // 
             this.checkBoxSensor21.AutoSize = true;
-            this.checkBoxSensor21.Location = new System.Drawing.Point(267, 246);
+            this.checkBoxSensor21.Location = new System.Drawing.Point(267, 230);
             this.checkBoxSensor21.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor21.Name = "checkBoxSensor21";
             this.checkBoxSensor21.Size = new System.Drawing.Size(106, 21);
@@ -274,7 +276,7 @@
             // checkBoxSensor20
             // 
             this.checkBoxSensor20.AutoSize = true;
-            this.checkBoxSensor20.Location = new System.Drawing.Point(267, 222);
+            this.checkBoxSensor20.Location = new System.Drawing.Point(267, 207);
             this.checkBoxSensor20.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor20.Name = "checkBoxSensor20";
             this.checkBoxSensor20.Size = new System.Drawing.Size(106, 21);
@@ -286,7 +288,7 @@
             // checkBoxSensor18
             // 
             this.checkBoxSensor18.AutoSize = true;
-            this.checkBoxSensor18.Location = new System.Drawing.Point(267, 197);
+            this.checkBoxSensor18.Location = new System.Drawing.Point(267, 184);
             this.checkBoxSensor18.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor18.Name = "checkBoxSensor18";
             this.checkBoxSensor18.Size = new System.Drawing.Size(106, 21);
@@ -298,7 +300,7 @@
             // checkBoxSensor19
             // 
             this.checkBoxSensor19.AutoSize = true;
-            this.checkBoxSensor19.Location = new System.Drawing.Point(267, 172);
+            this.checkBoxSensor19.Location = new System.Drawing.Point(267, 161);
             this.checkBoxSensor19.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor19.Name = "checkBoxSensor19";
             this.checkBoxSensor19.Size = new System.Drawing.Size(106, 21);
@@ -307,10 +309,23 @@
             this.checkBoxSensor19.UseVisualStyleBackColor = true;
             this.checkBoxSensor19.Click += new System.EventHandler(this.checkBoxSensor19_Click);
             // 
+            // checkBoxSensor23
+            // 
+            this.checkBoxSensor23.AutoSize = true;
+            this.checkBoxSensor23.Location = new System.Drawing.Point(267, 138);
+            this.checkBoxSensor23.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSensor23.Name = "checkBoxSensor23";
+            this.checkBoxSensor23.Size = new System.Drawing.Size(106, 21);
+            this.checkBoxSensor23.TabIndex = 22;
+            this.checkBoxSensor23.Text = "checkBox23";
+            this.checkBoxSensor23.UseVisualStyleBackColor = true;
+            this.checkBoxSensor23.CheckedChanged += new System.EventHandler(this.checkBoxSensor23_CheckedChanged);
+            this.checkBoxSensor23.Click += new System.EventHandler(this.checkBoxSensor23_Click);
+            // 
             // checkBoxSensor17
             // 
             this.checkBoxSensor17.AutoSize = true;
-            this.checkBoxSensor17.Location = new System.Drawing.Point(267, 146);
+            this.checkBoxSensor17.Location = new System.Drawing.Point(267, 115);
             this.checkBoxSensor17.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor17.Name = "checkBoxSensor17";
             this.checkBoxSensor17.Size = new System.Drawing.Size(106, 21);
@@ -323,7 +338,7 @@
             // checkBoxSensor16
             // 
             this.checkBoxSensor16.AutoSize = true;
-            this.checkBoxSensor16.Location = new System.Drawing.Point(267, 121);
+            this.checkBoxSensor16.Location = new System.Drawing.Point(267, 92);
             this.checkBoxSensor16.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor16.Name = "checkBoxSensor16";
             this.checkBoxSensor16.Size = new System.Drawing.Size(106, 21);
@@ -336,7 +351,7 @@
             // checkBoxSensor15
             // 
             this.checkBoxSensor15.AutoSize = true;
-            this.checkBoxSensor15.Location = new System.Drawing.Point(267, 98);
+            this.checkBoxSensor15.Location = new System.Drawing.Point(267, 69);
             this.checkBoxSensor15.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor15.Name = "checkBoxSensor15";
             this.checkBoxSensor15.Size = new System.Drawing.Size(106, 21);
@@ -349,7 +364,7 @@
             // checkBoxSensor14
             // 
             this.checkBoxSensor14.AutoSize = true;
-            this.checkBoxSensor14.Location = new System.Drawing.Point(267, 74);
+            this.checkBoxSensor14.Location = new System.Drawing.Point(267, 46);
             this.checkBoxSensor14.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor14.Name = "checkBoxSensor14";
             this.checkBoxSensor14.Size = new System.Drawing.Size(106, 21);
@@ -362,7 +377,7 @@
             // checkBoxSensor13
             // 
             this.checkBoxSensor13.AutoSize = true;
-            this.checkBoxSensor13.Location = new System.Drawing.Point(267, 50);
+            this.checkBoxSensor13.Location = new System.Drawing.Point(267, 23);
             this.checkBoxSensor13.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor13.Name = "checkBoxSensor13";
             this.checkBoxSensor13.Size = new System.Drawing.Size(106, 21);
@@ -374,7 +389,7 @@
             // checkBoxSensor12
             // 
             this.checkBoxSensor12.AutoSize = true;
-            this.checkBoxSensor12.Location = new System.Drawing.Point(267, 25);
+            this.checkBoxSensor12.Location = new System.Drawing.Point(8, 276);
             this.checkBoxSensor12.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor12.Name = "checkBoxSensor12";
             this.checkBoxSensor12.Size = new System.Drawing.Size(106, 21);
@@ -387,7 +402,7 @@
             // checkBoxSensor11
             // 
             this.checkBoxSensor11.AutoSize = true;
-            this.checkBoxSensor11.Location = new System.Drawing.Point(8, 270);
+            this.checkBoxSensor11.Location = new System.Drawing.Point(8, 253);
             this.checkBoxSensor11.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor11.Name = "checkBoxSensor11";
             this.checkBoxSensor11.Size = new System.Drawing.Size(106, 21);
@@ -400,7 +415,7 @@
             // checkBoxSensor10
             // 
             this.checkBoxSensor10.AutoSize = true;
-            this.checkBoxSensor10.Location = new System.Drawing.Point(8, 246);
+            this.checkBoxSensor10.Location = new System.Drawing.Point(8, 230);
             this.checkBoxSensor10.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkBoxSensor10.Name = "checkBoxSensor10";
             this.checkBoxSensor10.Size = new System.Drawing.Size(106, 21);
@@ -989,6 +1004,7 @@
         private System.Windows.Forms.CheckBox checkBoxSensor8;
         private System.Windows.Forms.CheckBox checkBoxSensor9;
         private System.Windows.Forms.GroupBox groupBoxSensors;
+        public System.Windows.Forms.CheckBox checkBoxSensor23;
         public System.Windows.Forms.CheckBox checkBoxSensor17;
         public System.Windows.Forms.CheckBox checkBoxSensor16;
         public System.Windows.Forms.CheckBox checkBoxSensor15;
