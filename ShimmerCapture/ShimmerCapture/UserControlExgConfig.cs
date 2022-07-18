@@ -242,8 +242,6 @@ namespace ShimmerAPI
             {
                 Array.Copy(defaultExGTestReg1, PConfiguration.ExgReg1UI, 10);
                 Array.Copy(defaultExGTestReg2, PConfiguration.ExgReg2UI, 10);
-                PConfiguration.ExgReg1UI = defaultExGTestReg1;
-                PConfiguration.ExgReg2UI = defaultExGTestReg2;
                 PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedIndex = 3; // set recommended gain index for ExG Test
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked = false; // disable ECG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked = false; // disable EMG
@@ -268,8 +266,6 @@ namespace ShimmerAPI
             {
                 Array.Copy(defaultRespirationReg1, PConfiguration.ExgReg1UI, 10);
                 Array.Copy(defaultRespirationReg2, PConfiguration.ExgReg2UI, 10);
-                PConfiguration.ExgReg1UI = defaultRespirationReg1;
-                PConfiguration.ExgReg2UI = defaultRespirationReg2;
                 PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedIndex = 3; // set recommended gain index for ExG Test
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor15.Checked = false; // disable ECG
                 PConfiguration.userControlGeneralConfig1.checkBoxSensor16.Checked = false; // disable EMG
