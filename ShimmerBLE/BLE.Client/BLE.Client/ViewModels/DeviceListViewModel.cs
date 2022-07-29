@@ -53,9 +53,11 @@ namespace BLE.Client.ViewModels
         PlotManager PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
 
         VerisenseBLEScannedDevice selectedDevice = null;
+        VerisenseSerialDevice selectedSerialDevice = null;
         private CancellationTokenSource _cancellationTokenSource;
         VerisenseBLEDevice VerisenseBLEDevice;
         IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
+        IVerisenseSerialPortManager serialPortManager = DependencyService.Get<IVerisenseSerialPortManager>();
         ShimmerDeviceBluetoothState CurrentState;
         ShimmerDeviceBluetoothState StateToContinue;
         VerisenseAPIDemoSettings verisenseApiDemoSettings = new VerisenseAPIDemoSettings();
@@ -117,6 +119,7 @@ namespace BLE.Client.ViewModels
         public MvxCommand StopScanCommand => new MvxCommand(() => StopScan());
 
         public ObservableCollection<DeviceListItemViewModel> Devices { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
+        public ObservableCollection<VerisenseSerialDevice> SerialDevices { get; set; } = new ObservableCollection<VerisenseSerialDevice>();
         public bool IsRefreshing => (Adapter != null) ? Adapter.IsScanning : false;
         public bool IsStateOn => _bluetoothLe.IsOn;
         public string StateText => GetStateText();
@@ -128,6 +131,19 @@ namespace BLE.Client.ViewModels
                 if (value != null)
                 {
                     HandleSelectedDevice(value);
+                }
+
+                RaisePropertyChanged();
+            }
+        }
+        public VerisenseSerialDevice SelectedSerialDevice
+        {
+            get => null;
+            set
+            {
+                if (value != null)
+                {
+                    selectedSerialDevice = value;
                 }
 
                 RaisePropertyChanged();
@@ -1863,7 +1879,7 @@ namespace BLE.Client.ViewModels
                 }
             });
         }
-
+        
         public override async void ViewAppeared()
         {
             base.ViewAppeared();
@@ -1871,7 +1887,13 @@ namespace BLE.Client.ViewModels
             CheckTime = true;
             await GetPreviousGuidAsync();
             await GetPairingStatusAsync();
+            await serialPortManager.StartScanForSerialPorts();
             //TryStartScanning();
+
+            foreach (var device in serialPortManager.GetListOfSerialDevices())
+            {
+                SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+            }
 
             GetSystemConnectedOrPairedDevices();
 
@@ -2704,7 +2726,14 @@ namespace BLE.Client.ViewModels
                 ReconnectTimer.Dispose();
             }
 
-            if (VerisenseBLEDevice != null)
+            if(selectedSerialDevice != null)
+            {
+                if (Device.RuntimePlatform == Device.UWP)
+                {
+                    VerisenseBLEDevice = new VerisenseBLEDeviceUWP(PreviousGuid.ToString(), "SensorName", selectedSerialDevice.Id, VerisenseDevice.CommunicationType.SerialPort);
+                }
+            }
+            else if (VerisenseBLEDevice != null)
             {
                 VerisenseBLEDevice.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
                 if (!VerisenseBLEDevice.Asm_uuid.Equals(PreviousGuid))
