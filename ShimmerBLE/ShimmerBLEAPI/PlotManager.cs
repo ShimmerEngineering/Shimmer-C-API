@@ -28,7 +28,7 @@ namespace ShimmerBLEAPI
         private double StrokeThickness = 1.5;
         private bool EnableDownsampling = false;
         private double DownsamplingFactor = 0;
-
+        private bool EnableSamplingCountXAxisPlotting = false;
         private double CountDownsample = 0;
 
         /// <summary>
@@ -112,6 +112,8 @@ namespace ShimmerBLEAPI
             }
         }
 
+        private long sampleCount = 0;
+
         /// <summary>
         /// Plot data from the object cluster
         /// </summary>
@@ -119,7 +121,7 @@ namespace ShimmerBLEAPI
         private void PlotOjc(ObjectCluster ojc)
         {
             int count = 0;
-
+            sampleCount++;
             string deviceName = ojc.GetShimmerID();
 
             bool xRes = DictOfXAxis.TryGetValue(deviceName, out string[] xProperties);
@@ -130,7 +132,10 @@ namespace ShimmerBLEAPI
             }
             //Assuming the xData is a unix timestamp in millis
             double ts = DateTimeAxis.ToDouble(DateHelper.GetDateTimeFromUnixTimestampMillis(xData));
-
+            if (EnableSamplingCountXAxisPlotting)
+            {
+                ts = sampleCount;
+            }
             foreach (string[] properties in ListOfPropertiesToPlot)
             {
                 if (properties[(int)SignalArrayIndex.ShimmerID].Equals(deviceName))
@@ -371,6 +376,11 @@ namespace ShimmerBLEAPI
         public double GetDownsamplingFactor()
         {
             return DownsamplingFactor;
+        }
+
+        public void SetEnableSampleCountXAxisPlotting(bool enable)
+        {
+            EnableSamplingCountXAxisPlotting = enable;
         }
     }
 }

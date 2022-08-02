@@ -40,6 +40,7 @@ using ShimmerBLEAPI.UWP.Communications;
 using Newtonsoft.Json;
 using ShimmerAdvanceBLEAPI;
 using ShimmerBLEAPI.Communications;
+using ShimmerLibrary;
 
 namespace BLE.Client.ViewModels
 {
@@ -49,9 +50,15 @@ namespace BLE.Client.ViewModels
         private readonly IUserDialogs _userDialogs;
         private readonly ISettings _settings;
         private Guid _previousGuid;
+        Filter LPF_PPG;
+        Filter HPF_PPG;
+        private PPGToHRAlgorithm PPGtoHeartRateCalculation;
+        private int NumberOfHeartBeatsToAverage = 1;
+        private int NumberOfHeartBeatsToAverageECG = 1;
+        private int TrainingPeriodPPG = 10; //5 second buffer
 
         PlotManager PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
-
+        
         VerisenseBLEScannedDevice selectedDevice = null;
         private CancellationTokenSource _cancellationTokenSource;
         VerisenseBLEDevice VerisenseBLEDevice;
@@ -1531,13 +1538,31 @@ namespace BLE.Client.ViewModels
         public ObservableCollection<CheckBoxModel> PopulateSignalsListView { get; set; } = new ObservableCollection<CheckBoxModel>();
 
         private bool IsFirstOjc = true;
-
+        private long SampleCount = 0;
         private void OxyPlotDataProcess(ObjectCluster ojc)
         {
             try
             {
+                List<Double> data = ojc.GetData();
+                int index = ojc.GetIndex(SensorPPG.ObjectClusterSensorName.PPG_GREEN, ShimmerConfiguration.SignalFormats.CAL);
+                int indexts = ojc.GetIndex(ShimmerConfiguration.SignalNames.TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL);
+                if (index != -1)
+                {
+                    SampleCount++;
+                    double dataFilteredLP = LPF_PPG.filterData(data[index]);
+                    double dataFilteredHP = HPF_PPG.filterData(dataFilteredLP);
+                    //data[index] = dataFilteredHP;
+                    double[] dataTS = new double[] { data[indexts] };
+                    DataPPGToHROutput datahr = PPGtoHeartRateCalculation.ppgToHrandIbiConversion(dataFilteredHP, SampleCount * 20);
+                    int heartRate = (int)datahr.getHeartRate();
+                    Debug.WriteLine("Heart Rate: " + heartRate);
+                    ojc.Add("Heart Rate", "CAL", "bpm", heartRate);
+                    ojc.Add(SensorPPG.ObjectClusterSensorName.PPG_GREEN + " Filtered", "CAL", "mV", dataFilteredHP);
+                }
+
                 if (IsFirstOjc)
                 {
+                    PlotManager.SetEnableSampleCountXAxisPlotting(true);
                     List<string[]> signalsToPlotList = PlotManager.GetAllSignalPropertiesFromOjc(ojc);
                     List<string> plotSignalsAvailableTemp = new List<string>();
                     ObservableCollection<CheckBoxModel> populateSignalsListView = new ObservableCollection<CheckBoxModel>();
@@ -1564,6 +1589,7 @@ namespace BLE.Client.ViewModels
                     RaisePropertyChanged(nameof(this.PlotSignalsAvailable));
                     IsFirstOjc = false;
                 }
+                
 
                 PlotManager.FilterDataAndPlot(ojc);
                 RaisePropertyChanged(nameof(this.PlotModel));
@@ -2325,6 +2351,9 @@ namespace BLE.Client.ViewModels
                 if (VerisenseBLEDevice.GetVerisenseBLEState().Equals(ShimmerDeviceBluetoothState.Connected) && ReconnectTimer == null) //null means its not trying to reconnect
                 {
                     StateToContinue = ShimmerDeviceBluetoothState.Connected;
+                    PPGtoHeartRateCalculation = new PPGToHRAlgorithm(50, NumberOfHeartBeatsToAverage, TrainingPeriodPPG);
+                    LPF_PPG = new Filter(Filter.LOW_PASS, 50, new double[] { 5 });
+                    HPF_PPG = new Filter(Filter.HIGH_PASS, 50, new double[] { 0.5 });
                 }
 
                 ShimmerDeviceBluetoothState previousState = CurrentState;
