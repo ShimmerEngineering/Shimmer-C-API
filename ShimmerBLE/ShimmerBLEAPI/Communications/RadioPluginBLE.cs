@@ -88,9 +88,18 @@ namespace shimmer.Communications
 
                     AdvanceLog(nameof(RadioPluginBLE), "Connect ASM Hash", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
                     await Task.Delay(500);
-                    System.Console.WriteLine("Getting Service");
-                    ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
+                    System.Console.WriteLine("Getting Services");
+
                     ServiceRSC = await ConnectedASM.GetServiceAsync(App.RSCServiceID);
+
+                    if (ServiceRSC != null)
+                    {
+                        RSCMeasure = await ServiceRSC.GetCharacteristicAsync(App.RSCMeasurementID);
+                        RSCMeasure.ValueUpdated += RSCMeasurement_ValueUpdated;
+                        await RSCMeasure.StartUpdatesAsync();
+                    }
+
+                    ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
 
                     if (ServiceTXRX != null)
                     {
@@ -101,13 +110,7 @@ namespace shimmer.Communications
                         System.Console.WriteLine("Getting RX Characteristics Completed");
                         UartRX.ValueUpdated += UartRX_ValueUpdated;
                         await UartRX.StartUpdatesAsync();
-                        if(ServiceRSC != null)
-                        {
-                            RSCMeasure = await ServiceRSC.GetCharacteristicAsync(App.RSCMeasurementID);
-                            RSCMeasure.ValueUpdated += RSCMeasurement_ValueUpdated;
-                            await RSCMeasure.StartUpdatesAsync();
-                        }
-
+                       
                         AdvanceLog(nameof(RadioPluginBLE), "GetKnownDevice", "Success", Asm_uuid.ToString());
                         //StateChange(ShimmerDeviceBluetoothState.Connected);
                         localTask.TrySetResult(true);
@@ -227,7 +230,13 @@ namespace shimmer.Communications
                     ServiceTXRX.Dispose();
                     ServiceTXRX = null;
                 }
-                
+
+                if (ServiceRSC != null)
+                {
+                    ServiceRSC.Dispose();
+                    ServiceRSC = null;
+                }
+
                 //ResponseBuffer = null;
 
                 if (ConnectedASM != null)
