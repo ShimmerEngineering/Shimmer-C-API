@@ -294,6 +294,10 @@ namespace shimmer.Sensors
 		/// <param name="enabled"></param>
 		public void SetStepCountEnabled(bool enabled)
 		{
+			if(enabled && (!Accel2_Enabled || !Gyro_Enabled))
+            {
+				throw new Exception("Unable to enable step count when Accel2 or Gyro is not enabled. ");
+			}
 			StepCountEnabled = enabled;
 		}
 

@@ -307,6 +307,12 @@ namespace BLE.Client.ViewModels
                 if (_Accel2Enabled == value)
                     return;
 
+                if (_Accel2Enabled && _StepCountEnabled)
+                {
+                    RaisePropertyChanged();
+                    return;
+                }
+
                 _Accel2Enabled = value;
                 RaisePropertyChanged();
             }
@@ -322,6 +328,12 @@ namespace BLE.Client.ViewModels
                 if (_GyroEnabled == value)
                     return;
 
+                if(_GyroEnabled && _StepCountEnabled)
+                {
+                    RaisePropertyChanged();
+                    return;
+                }
+
                 _GyroEnabled = value;
                 RaisePropertyChanged();
             }
@@ -336,6 +348,12 @@ namespace BLE.Client.ViewModels
             {
                 if (_StepCountEnabled == value)
                     return;
+
+                if (!_Accel2Enabled || !_GyroEnabled)
+                {
+                    RaisePropertyChanged();
+                    return;
+                }
 
                 _StepCountEnabled = value;
                 RaisePropertyChanged();
