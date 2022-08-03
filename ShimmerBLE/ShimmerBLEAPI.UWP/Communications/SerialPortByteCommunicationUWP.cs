@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Diagnostics;
+using System.Linq;
 
 using Windows.Devices.Enumeration;
 using Windows.Devices.SerialCommunication;
@@ -22,6 +23,8 @@ namespace ShimmerBLEAPI.UWP.Communications
         public SerialDevice serialDevice;
         DataWriter dataWriterObject = null;
         DataReader dataReaderObject = null;
+        bool startStreaming = false;
+        bool stopStreaming = false;
         public async Task<ConnectivityState> Connect()
         {
             //string selector = SerialDevice.GetDeviceSelector("COM14");
@@ -94,17 +97,29 @@ namespace ShimmerBLEAPI.UWP.Communications
             
             if (bytesRead > 0)
             {
-                if (bytesRead == 204)
+                if (startStreaming)
                 {
-                    bytesRead = 3;
-                    byte[] buffer2 = new byte[bytesRead];
+                    byte[] buffer2 = new byte[3];
                     dataReaderObject.ReadBytes(buffer2);
                     Debug.WriteLine("New RX Serial Port: " + string.Join(", ", buffer2));
                     if (CommunicationEvent != null)
                     {
                         CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = buffer2, Event = shimmer.Communications.ByteLevelCommunicationEvent.CommEvent.NewBytes });
                     }
-                    bytesRead = 201;
+                    bytesRead = bytesRead - 3;
+                    startStreaming = false;
+                }
+                else if (stopStreaming)
+                {
+                    byte[] buffer2 = new byte[bytesRead - 3];
+                    dataReaderObject.ReadBytes(buffer2);
+                    Debug.WriteLine("New RX Serial Port: " + string.Join(", ", buffer2));
+                    if (CommunicationEvent != null)
+                    {
+                        CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = buffer2, Event = shimmer.Communications.ByteLevelCommunicationEvent.CommEvent.NewBytes });
+                    }
+                    bytesRead = 3;
+                    stopStreaming = false;
                 }
                 byte[] buffer = new byte[bytesRead];
                 dataReaderObject.ReadBytes(buffer);
@@ -138,6 +153,17 @@ namespace ShimmerBLEAPI.UWP.Communications
 
         public async Task<bool> WriteBytes(byte[] bytes)
         {
+            byte[] StreamDataRequest = new byte[] { 0x2A, 0x01, 0x00, 0x01 };
+            byte[] StopStreamRequest = new byte[] { 0x2A, 0x01, 0x00, 0x02 };
+
+            if (bytes.SequenceEqual(StreamDataRequest))
+            {
+                startStreaming = true;
+            }
+            else if (bytes.SequenceEqual(StopStreamRequest))
+            {
+                stopStreaming = true;
+            }
             dataWriterObject = new DataWriter(serialDevice.OutputStream);
             try
             {
