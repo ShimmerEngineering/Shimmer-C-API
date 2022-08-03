@@ -24,6 +24,7 @@ namespace ShimmerBLEAPI.Android.Communications
 
         public event EventHandler<ByteLevelCommunicationEvent> CommunicationEvent;
         public String ComPort { get; set; }
+        ConnectivityState state = ConnectivityState.Disconnected;
 
         public static void setContext(Context context1)
         {
@@ -72,6 +73,7 @@ namespace ShimmerBLEAPI.Android.Communications
                 {
                     return ConnectivityState.Disconnected;
                 }
+                state = ConnectivityState.Connected;
                 return ConnectivityState.Connected;
             }
             
@@ -103,6 +105,7 @@ namespace ShimmerBLEAPI.Android.Communications
                     // ignore
                 }
             }
+            state = ConnectivityState.Disconnected;
             return ConnectivityState.Disconnected;
         }
 
@@ -121,7 +124,7 @@ namespace ShimmerBLEAPI.Android.Communications
 
         public ConnectivityState GetConnectivityState()
         {
-            return ConnectivityState.Connected;
+            return state;
         }
 
         public async Task<bool> WriteBytes(byte[] bytes)
