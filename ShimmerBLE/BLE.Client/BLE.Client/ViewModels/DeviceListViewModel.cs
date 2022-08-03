@@ -93,6 +93,14 @@ namespace BLE.Client.ViewModels
 
         DeviceManagerPluginBLE BLEManager;
         public MvxCommand RefreshCommand => new MvxCommand(() => TryStartScanning(true));
+        public MvxCommand RefreshSerialPort => new MvxCommand(async () => {
+            SerialDevices.Clear();
+            await serialPortManager.StartScanForSerialPorts();
+            foreach (var device in serialPortManager.GetListOfSerialDevices())
+            {
+                SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+            }
+        });
         public MvxCommand<DeviceListItemViewModel> DisconnectCommand => new MvxCommand<DeviceListItemViewModel>(DisconnectDevice);
 
         public MvxCommand<DeviceListItemViewModel> ConnectDisposeCommand => new MvxCommand<DeviceListItemViewModel>(ConnectAndDisposeDevice);
@@ -1887,16 +1895,17 @@ namespace BLE.Client.ViewModels
             CheckTime = true;
             await GetPreviousGuidAsync();
             await GetPairingStatusAsync();
-            await serialPortManager.StartScanForSerialPorts();
             //TryStartScanning();
 
-            foreach (var device in serialPortManager.GetListOfSerialDevices())
+            if (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android)
             {
-                SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+                await serialPortManager.StartScanForSerialPorts();
+                foreach (var device in serialPortManager.GetListOfSerialDevices())
+                {
+                    SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+                }
             }
-
             GetSystemConnectedOrPairedDevices();
-
         }
 
         private void GetSystemConnectedOrPairedDevices()
@@ -2726,12 +2735,9 @@ namespace BLE.Client.ViewModels
                 ReconnectTimer.Dispose();
             }
 
-            if(selectedSerialDevice != null)
+            if (selectedSerialDevice != null && (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android))
             {
-                if (Device.RuntimePlatform == Device.UWP)
-                {
-                    VerisenseBLEDevice = new VerisenseBLEDeviceUWP(PreviousGuid.ToString(), "SensorName", selectedSerialDevice.Id, VerisenseDevice.CommunicationType.SerialPort);
-                }
+                VerisenseBLEDevice = serialPortManager.CreateVerisenseSerialDevice(PreviousGuid.ToString(), selectedSerialDevice.Id);
             }
             else if (VerisenseBLEDevice != null)
             {
@@ -2740,7 +2746,8 @@ namespace BLE.Client.ViewModels
                 {
                     VerisenseBLEDevice = new VerisenseBLEDevice(PreviousGuid.ToString(), "SensorName");
                 }
-            } else
+            }
+            else
             {
                 VerisenseBLEDevice = new VerisenseBLEDevice(PreviousGuid.ToString(), "SensorName");
             }

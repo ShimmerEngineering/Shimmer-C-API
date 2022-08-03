@@ -45,8 +45,6 @@ namespace ShimmerBLEAPI.Android.Communications
                 break;
             }
             port = driver.Ports[0];
-            port.SetDTR(true);
-            port.SetRTS(true);
             var permissionGranted = await usbManager.RequestPermissionAsync(port.Driver.Device, context);
             if (permissionGranted)
             {
@@ -60,10 +58,15 @@ namespace ShimmerBLEAPI.Android.Communications
                 serialIoManager.DataReceived += (sender, e) => {
                     DataReceived(e.Data);
                 };
+                serialIoManager.ErrorReceived += (sender, e) => {
+                    ErrorReceived();
+                };
 
                 try
                 {
                     serialIoManager.Open(usbManager);
+                    port.SetDTR(true);
+                    port.SetRTS(true);
                 }
                 catch (Java.IO.IOException e)
                 {
@@ -89,13 +92,31 @@ namespace ShimmerBLEAPI.Android.Communications
 
         public async Task<ConnectivityState> Disconnect()
         {
-            throw new NotImplementedException();
+            if (serialIoManager != null && serialIoManager.IsOpen)
+            {
+                try
+                {
+                    serialIoManager.Close();
+                }
+                catch (Java.IO.IOException)
+                {
+                    // ignore
+                }
+            }
+            return ConnectivityState.Disconnected;
         }
 
         void DataReceived(byte[] data)
         {
-            var temp = "Read " + data.Length + " bytes: \n"
-                + HexDump.DumpHexString(data) + "\n\n";
+            if (CommunicationEvent != null)
+            {
+                CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = data, Event = shimmer.Communications.ByteLevelCommunicationEvent.CommEvent.NewBytes });
+            }
+        }
+
+        void ErrorReceived()
+        {
+            Console.WriteLine("Error Received");
         }
 
         public ConnectivityState GetConnectivityState()

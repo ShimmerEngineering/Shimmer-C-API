@@ -507,10 +507,7 @@
                     </StackLayout>
                     <ContentView>
                         <OnPlatform x:TypeArguments="View">
-                            <On Platform="Android,iOS">
-                                <Label Text="Not supported"/>
-                            </On>
-                            <On Platform="UWP,WPF">
+                            <On Platform="UWP,Android">
                                 <ListView
                                    ItemsSource="{Binding SerialDevices}"
                                    SelectedItem="{Binding SelectedSerialDevice, Mode=TwoWay}"
@@ -530,6 +527,15 @@
                                 <ScrollView Orientation="Vertical">
                                     <StackLayout Orientation="Vertical">
                                         <StackLayout Orientation="Vertical">
+                                            <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                            <ScrollView Orientation="Horizontal">
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Button Text="Refresh"
+                                                    Command="{Binding Refresh}"
+                                                    HorizontalOptions="End" />
+                                                </StackLayout>
+                                            </ScrollView>
+                                            <BoxView BackgroundColor="Gray" HeightRequest="1"/>
                                             <ScrollView Orientation="Horizontal">
                                                 <StackLayout Orientation="Horizontal">
                                                     <Label Text="{Binding DeviceState}"
@@ -647,6 +653,14 @@
                             </On>
                             <On Platform="UWP,WPF">
                                 <StackLayout Orientation="Vertical">
+                                    <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                    <ScrollView Orientation="Horizontal">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Button Text="Refresh"
+                                                    Command="{Binding RefreshSerialPort}"
+                                                    HorizontalOptions="End" />
+                                        </StackLayout>
+                                    </ScrollView>
                                     <BoxView BackgroundColor="Gray" HeightRequest="1"/>
                                     <StackLayout Orientation="Vertical">
                                         <StackLayout Orientation="Horizontal">
