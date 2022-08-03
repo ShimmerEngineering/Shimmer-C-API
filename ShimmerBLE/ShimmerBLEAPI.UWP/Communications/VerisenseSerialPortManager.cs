@@ -11,6 +11,7 @@ using Windows.Devices.SerialCommunication;
 using ShimmerBLEAPI.Models;
 using System.Threading.Tasks;
 using Windows.UI.Core;
+using ShimmerBLEAPI.Devices;
 
 [assembly: Dependency(typeof(VerisenseSerialPortManager))]
 namespace ShimmerBLEAPI.UWP.Communications
@@ -136,6 +137,11 @@ namespace ShimmerBLEAPI.UWP.Communications
                 listOfSerialDevices.Add(new VerisenseSerialDevice(item.Id));
             }
             return listOfSerialDevices;
+        }
+
+        public VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string serialId)
+        {
+            return new VerisenseBLEDeviceUWP(uuid, "SensorName", serialId, VerisenseDevice.CommunicationType.SerialPort);
         }
     }
 }
