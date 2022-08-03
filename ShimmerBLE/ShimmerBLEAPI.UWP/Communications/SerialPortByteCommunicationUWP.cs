@@ -25,6 +25,7 @@ namespace ShimmerBLEAPI.UWP.Communications
         DataReader dataReaderObject = null;
         bool startStreaming = false;
         bool stopStreaming = false;
+        ConnectivityState state = ConnectivityState.Disconnected;
         public async Task<ConnectivityState> Connect()
         {
             //string selector = SerialDevice.GetDeviceSelector("COM14");
@@ -52,9 +53,9 @@ namespace ShimmerBLEAPI.UWP.Communications
                 //device.MessageReceived += device_NmeaMessageReceived;
                 Listen();
 
-                return ConnectivityState.Connected;
+                state = ConnectivityState.Connected;
             }
-            return ConnectivityState.Disconnected;
+            return state;
         }
 
         private async void Listen()
@@ -143,12 +144,13 @@ namespace ShimmerBLEAPI.UWP.Communications
                 serialDevice.Dispose();
             }
             serialDevice = null;
-            return ConnectivityState.Disconnected;
+            state = ConnectivityState.Disconnected;
+            return state;
         }
 
         public ConnectivityState GetConnectivityState()
         {
-            return ConnectivityState.Connected;
+            return state;
         }
 
         public async Task<bool> WriteBytes(byte[] bytes)
