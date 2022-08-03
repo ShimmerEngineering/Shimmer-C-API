@@ -327,6 +327,21 @@ namespace BLE.Client.ViewModels
             }
         }
 
+        bool _StepCountEnabled;
+        public bool StepCount
+        {
+            get => _StepCountEnabled;
+
+            set
+            {
+                if (_StepCountEnabled == value)
+                    return;
+
+                _StepCountEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
         //bool _GyroHighPerformanceEnabled;
         //public bool SensorGyroHighPerformance
         //{
@@ -2384,6 +2399,7 @@ namespace BLE.Client.ViewModels
                     SensorAccel = ((SensorLIS2DW12)VerisenseBLEDevice.GetSensor(SensorLIS2DW12.SensorName)).IsAccelEnabled();
                     SensorAccel2 = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsAccelEnabled();
                     SensorGyro = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsGyroEnabled();
+                    StepCount = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsStepCountEnabled();
                     if (((shimmer.Sensors.SensorGSR)VerisenseBLEDevice.GetSensor(shimmer.Sensors.SensorGSR.SensorName)).GetOversamplingRate() != null)
                     {
                         SelectedGSROversamplingRate = ((shimmer.Sensors.SensorGSR)VerisenseBLEDevice.GetSensor(shimmer.Sensors.SensorGSR.SensorName)).GetOversamplingRate().GetDisplayName();
@@ -2824,6 +2840,14 @@ namespace BLE.Client.ViewModels
             else
             {
                 ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetGyroEnabled(false);
+            }
+            if (StepCount)
+            {
+                ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetStepCountEnabled(true);
+            }
+            else
+            {
+                ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetStepCountEnabled(false);
             }
             ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetAccelRange(a2range);
             ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetSamplingRate(a2gyrorate);

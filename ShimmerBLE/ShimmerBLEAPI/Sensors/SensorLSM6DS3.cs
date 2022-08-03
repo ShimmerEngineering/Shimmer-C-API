@@ -24,6 +24,8 @@ namespace shimmer.Sensors
 		//GEN_CFG_0
 		protected bool Accel2_Enabled = false;
 		protected bool Gyro_Enabled = false;
+		//GEN_CFG_2
+		protected bool StepCountEnabled;
 		//GYRO_ACCEL2_CFG_0
 		protected SensorSetting FIFOThresholdSetting = Sensor.UnknownSetting;
 		//GYRO_ACCEL2_CFG_1
@@ -268,6 +270,7 @@ namespace shimmer.Sensors
         {
 			Accel2_Enabled = enable;
         }
+
 		/// <summary>
 		/// Turns on/off data collection from the gyroscope
 		/// </summary>
@@ -276,6 +279,24 @@ namespace shimmer.Sensors
         {
 			Gyro_Enabled = enable;
         }
+
+		/// <summary>
+		/// Returns true if step count is enabled
+		/// </summary>
+		public bool IsStepCountEnabled()
+		{
+			return StepCountEnabled;
+		}
+
+		/// <summary>
+		/// Enable or disable step count
+		/// </summary>
+		/// <param name="enabled"></param>
+		public void SetStepCountEnabled(bool enabled)
+		{
+			StepCountEnabled = enabled;
+		}
+
 		/// <summary>
 		/// Returns true if the data collection from the secondary accelerometer is enabled
 		/// </summary>
@@ -284,6 +305,7 @@ namespace shimmer.Sensors
         {
 			return Accel2_Enabled;
         }
+
 		/// <summary>
 		/// Returns true if the data collection from the gyroscope is enabled
 		/// </summary>
@@ -660,6 +682,15 @@ namespace shimmer.Sensors
 				operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b11011111);
 			}
 
+			if (StepCountEnabled)
+			{
+				operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | 0b00100000);
+			}
+			else
+			{
+				operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b11011111);
+			}
+
 			//temp
 			operationalConfigBytes[(int)ConfigurationBytesIndexName.GYRO_ACCEL2_CFG_5] = (byte)((operationalConfigBytes[(int)ConfigurationBytesIndexName.GYRO_ACCEL2_CFG_5] & 0b0001111) | (SamplingRateSetting.GetConfigurationValue() << 4));
 			operationalConfigBytes[(int)ConfigurationBytesIndexName.GYRO_ACCEL2_CFG_5] = (byte)((operationalConfigBytes[(int)ConfigurationBytesIndexName.GYRO_ACCEL2_CFG_5] & 0b11110011) | (GyroRangeSetting.GetConfigurationValue() << 2));
@@ -901,6 +932,14 @@ namespace shimmer.Sensors
 			else
 			{
 				Gyro_Enabled = false;
+			}
+			if ((operationalConfigBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00100000) > 5)
+			{
+				StepCountEnabled = true;
+			}
+			else
+			{
+				StepCountEnabled = false;
 			}
 			if (((operationalConfigBytes[(int)ConfigurationBytesIndexName.GYRO_ACCEL2_CFG_1] >> 7) & 0b00000001) == 1)
 			{
