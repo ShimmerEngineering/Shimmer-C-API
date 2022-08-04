@@ -131,7 +131,7 @@ namespace ShimmerBLEAPI.Android.Communications
         {
             if (serialIoManager.IsOpen)
             {
-                port.Write(bytes, 100);
+                port.Write(bytes, 1000);
             }
             return true;
         }

@@ -531,7 +531,7 @@
                                             <ScrollView Orientation="Horizontal">
                                                 <StackLayout Orientation="Horizontal">
                                                     <Button Text="Refresh"
-                                                    Command="{Binding Refresh}"
+                                                    Command="{Binding RefreshCommand}"
                                                     HorizontalOptions="End" />
                                                 </StackLayout>
                                             </ScrollView>
@@ -657,7 +657,7 @@
                                     <ScrollView Orientation="Horizontal">
                                         <StackLayout Orientation="Horizontal">
                                             <Button Text="Refresh"
-                                                    Command="{Binding RefreshSerialPort}"
+                                                    Command="{Binding RefreshCommand}"
                                                     HorizontalOptions="End" />
                                         </StackLayout>
                                     </ScrollView>
