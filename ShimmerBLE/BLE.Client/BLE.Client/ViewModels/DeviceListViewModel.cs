@@ -1966,6 +1966,15 @@ namespace BLE.Client.ViewModels
                 ScanForDevices();
             }
             */
+            if (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android)
+            {
+                SerialDevices.Clear();
+                await serialPortManager.StartScanForSerialPorts();
+                foreach (var device in serialPortManager.GetListOfSerialDevices())
+                {
+                    SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+                }
+            }
             bleManager.StartScanForDevices();
         }
 
