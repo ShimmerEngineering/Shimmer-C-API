@@ -31,7 +31,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static void Run()
         {
-            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
+            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync");
             do
             {
                 while (!Console.KeyAvailable)
@@ -49,6 +49,9 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                             break;
                         case ConsoleKey.V:
                             DisconnectDevices();
+                            break;
+                        case ConsoleKey.B:
+                            StartSyncingDevices();
                             break;
                         default:
                             break;
@@ -117,8 +120,20 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             await device.WriteAndReadOperationalConfiguration(opconfigbytes);
 
             Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
-            Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
+            Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync");
             Console.WriteLine("---------------------------------------------------------------");
+        }
+        static async void StartSyncingDevices()
+        {
+            foreach (VerisenseBLEDevice device in devices.Values)
+            {
+                var streamResult = await device.ExecuteRequest(RequestType.TransferLoggedData);
+                if (device != null)
+                {
+                    device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
+                }
+                device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
+            }
         }
 
         static async void StartStreamingDevices()
