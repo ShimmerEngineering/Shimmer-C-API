@@ -42,8 +42,8 @@ namespace ShimmerBLEAPI.UWP.Communications
                 serialDevice.DataBits = 8;
                 serialDevice.StopBits = SerialStopBitCount.One;
                 serialDevice.Parity = SerialParity.None;
-                serialDevice.ReadTimeout = TimeSpan.FromMilliseconds(1000);
-                serialDevice.WriteTimeout = TimeSpan.FromMilliseconds(1000);
+                serialDevice.ReadTimeout = TimeSpan.FromMilliseconds(10);
+                serialDevice.WriteTimeout = TimeSpan.FromMilliseconds(10);
                 serialDevice.IsRequestToSendEnabled = true;
                 serialDevice.IsDataTerminalReadyEnabled = true;
                 //serialDevice.PortName = ComPort;
