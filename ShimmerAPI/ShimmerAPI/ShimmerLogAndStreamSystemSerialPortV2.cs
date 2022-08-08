@@ -86,28 +86,15 @@ namespace ShimmerAPI
 
         protected override void OpenConnection()
         {
-            MemoryStream ms = null;
-            BinaryReader br = null;
+            RXMemoryStream = null;
+            RXBinaryReader = null;
             NumberofBytesToRead = 0;
             IndexPosition = 0 ;
             ReadRequired = true;
             Terminate = false;
             ReadStopWatch = new Stopwatch();
 
-            SerialPort.BaudRate = 115200;
-            SerialPort.PortName = ComPort;
-            SerialPort.ReadTimeout = this.ReadTimeout;
-            SerialPort.WriteTimeout = this.WriteTimeout;
-            SetState(SHIMMER_STATE_CONNECTING);
-            try
-            {
-                SerialPort.Open();
-            }
-            catch
-            {
-            }
-            SerialPort.DiscardInBuffer();
-            SerialPort.DiscardOutBuffer();
+            base.OpenConnection();
         }
 
     }
