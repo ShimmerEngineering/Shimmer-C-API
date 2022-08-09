@@ -523,18 +523,22 @@
 
                     <ContentView Grid.Row="2">
                         <OnPlatform x:TypeArguments="View">
-                            <On Platform="Android,iOS">
+                            <On Platform="Android">
                                 <ScrollView Orientation="Vertical">
                                     <StackLayout Orientation="Vertical">
                                         <StackLayout Orientation="Vertical">
                                             <BoxView BackgroundColor="Gray" HeightRequest="1"/>
-                                            <ScrollView Orientation="Horizontal">
+                                            <Label Text="1) Enable USB on your Verisense! 2) Connect your Verisense device through USB 3) Start Speed Test or Data Sync"
+                                                   Margin="10,0,10,0"
+                                                   FontSize="Small"
+                                                   TextColor="Gray"
+                                                   VerticalTextAlignment="End" />
                                                 <StackLayout Orientation="Horizontal">
                                                     <Button Text="Refresh"
-                                                    Command="{Binding RefreshCommand}"
-                                                    HorizontalOptions="End" />
+                                                        Margin="10,0,0,0"
+                                                        Command="{Binding RefreshCommand}"
+                                                        HorizontalOptions="End" />
                                                 </StackLayout>
-                                            </ScrollView>
                                             <BoxView BackgroundColor="Gray" HeightRequest="1"/>
                                             <ScrollView Orientation="Horizontal">
                                                 <StackLayout Orientation="Horizontal">
@@ -651,23 +655,27 @@
                                     </StackLayout>
                                 </ScrollView>
                             </On>
-                            <On Platform="UWP,WPF">
+                            <On Platform="UWP">
                                 <StackLayout Orientation="Vertical">
                                     <BoxView BackgroundColor="Gray" HeightRequest="1"/>
-                                    <ScrollView Orientation="Horizontal">
-                                        <StackLayout Orientation="Horizontal">
-                                            <Button Text="Refresh"
-                                                    Command="{Binding RefreshCommand}"
-                                                    HorizontalOptions="End" />
-                                        </StackLayout>
-                                    </ScrollView>
+                                    <Label Text="1) Enable USB on your Verisense! 2) Connect your Verisense device through USB 3) Start Speed Test or Data Sync"
+                                       Margin="10,0,10,0"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Button Text="Refresh"
+                                            Margin="10,0,0,0"
+                                            Command="{Binding RefreshCommand}"
+                                            HorizontalOptions="End" />
+                                    </StackLayout>
                                     <BoxView BackgroundColor="Gray" HeightRequest="1"/>
                                     <StackLayout Orientation="Vertical">
                                         <StackLayout Orientation="Horizontal">
                                             <Label Text="{Binding DeviceState}"
-                                       FontSize="Small"
-                                       TextColor="Gray"
-                                       VerticalTextAlignment="End" />
+                                               FontSize="Small"
+                                               TextColor="Gray"
+                                               VerticalTextAlignment="End" />
                                             <StackLayout Orientation="Horizontal">
                                                 <Label Text="Trial Name: " Margin="120,0,0,0" VerticalTextAlignment="Center" />
                                                 <Entry Text="{Binding TrialName}" WidthRequest="150"/>
@@ -678,9 +686,9 @@
                                             </StackLayout>
                                         </StackLayout>
                                         <Label Text="{Binding DeviceMessage}"
-                                       FontSize="Small"
-                                       TextColor="Gray"
-                                       VerticalTextAlignment="End" />
+                                           FontSize="Small"
+                                           TextColor="Gray"
+                                           VerticalTextAlignment="End" />
                                     </StackLayout>
 
                                     <StackLayout Orientation="Vertical">
