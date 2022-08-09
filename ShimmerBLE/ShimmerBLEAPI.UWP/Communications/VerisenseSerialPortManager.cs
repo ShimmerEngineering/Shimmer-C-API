@@ -26,7 +26,8 @@ namespace ShimmerBLEAPI.UWP.Communications
         public async Task<bool> StartScanForSerialPorts()
         {
             resultCollection.Clear();
-            var deviceSelector = SerialDevice.GetDeviceSelector();
+            //var deviceSelector = SerialDevice.GetDeviceSelector();
+            var deviceSelector = SerialDevice.GetDeviceSelectorFromUsbVidPid(6421, 21007);//VID 1915 PID 520F
             deviceWatcher = DeviceInformation.CreateWatcher(deviceSelector);
             StartWatcher(deviceWatcher);
             return await RequestTCS.Task;
