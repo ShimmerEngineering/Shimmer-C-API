@@ -94,6 +94,7 @@ namespace ShimmerBLEAPI.Devices
         protected byte[] DFUCommand = new byte[] { 0x26, 0x00, 0x00 };
         protected byte[] DisconnectRequest = new byte[] { 0x2B, 0x00, 0x00 };
         protected byte[] EraseSensorData = new byte[] { 0x29, 0x01, 0x00, 0x0A };
+        protected byte[] ReadEventLog = new byte[] { 0x29, 0x01, 0x00, 0x10 };
 
         #endregion
 
@@ -529,6 +530,27 @@ namespace ShimmerBLEAPI.Devices
                         }
 
                         break;
+                    case 0x39: // read event log
+                        var logEventsData = new LogEventsPayload();
+                        var logEventsResult = logEventsData.ProcessPayload(ResponseBuffer);
+                        //logEventsData.WriteParsedDataToFile(ResponseBuffer, "");
+                        if (logEventsResult)
+                        {
+                            if (ShimmerBLEEvent != null)
+                            {
+                                ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.ReadEventLog });
+                            }
+                            RequestTCS.TrySetResult(true);
+                        }
+                        else
+                        {
+                            if (ShimmerBLEEvent != null)
+                            {
+                                ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponseFail, ObjMsg = RequestType.ReadEventLog });
+                            }
+                            RequestTCS.TrySetResult(false);
+                        }
+                        break;
                     default:
                         AdvanceLog(LogObject, "NonDataResponse", BitConverter.ToString(ResponseBuffer), ASMName);
                         throw new Exception();
@@ -690,6 +712,9 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.EraseData:
                     request = EraseSensorData;
                     break;
+                case RequestType.ReadEventLog:
+                    request = ReadEventLog;
+                    break;
             }
 
             if (request == null)
@@ -792,6 +817,8 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.StopStreaming:
                     return WriteResponse;
                 case RequestType.EraseData:
+                    return WriteResponse;
+                case RequestType.ReadEventLog:
                     return WriteResponse;
             }
 

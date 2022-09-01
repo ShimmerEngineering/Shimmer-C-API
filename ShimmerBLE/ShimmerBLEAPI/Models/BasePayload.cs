@@ -90,7 +90,9 @@ namespace shimmer.Models
         DFU = 26,
         StartStreaming = 95,
         StopStreaming = 100,
-        EraseData = 29
+        EraseData = 29,
+        ReadEventLog = 30
+            
     }
 
     public enum BondingStatus
