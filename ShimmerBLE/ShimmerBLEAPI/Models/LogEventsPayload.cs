@@ -1,53 +1,17 @@
 ﻿using shimmer.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using static shimmer.Models.CommunicationState;
 
 namespace shimmer.Models
 {
     public class LogEventsPayload : BasePayload
     {
         public string ConfigBody { get; set; }
-        public byte[] ConfigurationBytes;
-
-        public enum LogEvents
-        {
-            NONE = 0,
-            BATTERY_FALL = 1,
-            BATTERY_RECOVER = 2,
-            WRITE_TO_FLASH_SUCCESS = 3,
-            WRITE_TO_FLASH_FAIL_GENERAL = 4,
-            WRITE_TO_FLASH_FULL = 5,
-            WRITE_TO_FLASH_FAIL_CHECK_ADDR_FREE = 6,
-            WRITE_TO_FLASH_FAIL_LOW_BATT_CHECK_ADDR_FREE = 7,
-            WRITE_TO_FLASH_FAIL_LOW_BATT_FLASH_ON = 8,
-            WRITE_TO_FLASH_FAIL_LOW_BATT_FLASH_WRITE = 9,
-            WRITE_TO_FLASH_FAIL_LOW_BATT_BEFORE_START = 10,
-            USB_PLUGGED_IN = 11,
-            USB_PLUGGED_OUT = 12,
-            RECORDING_PAUSED = 13,
-            RECORDING_RESUMED = 14,
-            BATTERY_RECOVER_IN_BATT_CHECK_TIMER = 15,
-            TSK_FREE_UP_FLASH = 16,
-            FREE_UP_FLASH_FAIL_LOW_BATT = 17,
-            PAYLOAD_PACKAGING_TASK_SET = 18,
-            PAYLOAD_PACKAGING_FUNCTION_CALL = 19,
-            BATTERY_VOLTAGE = 20,
-            TSK_WRITE_LOOKUP_TBL_CHANGES_TO_EEPROM = 21,
-            LPCOMP_ON = 22,
-            LPCOMP_ON_ALREADY = 23,
-            LPCOMP_OFF = 24,
-            LPCOMP_TRIED_BUT_BATT_LOW = 25,
-            BLE_CONNECTED = 26,
-            BLE_DISCONNECTED = 27,
-            TSK_WRITE_FLASH = 28,
-            PPG_TIMER_START = 29,
-            PAYLOAD_OVERSHOT = 30,
-            ADVERTISING_START = 31,
-            ADVERTISING_STOP = 32,
-        };
+        public byte[] LogEventsBytes;
+        public List<LogEventData> LogEvents { get; set; }
 
         public new bool ProcessPayload(byte[] response)
         {
@@ -64,8 +28,10 @@ namespace shimmer.Models
                 var lengthBytes = reader.ReadBytes(2);
                 Array.Reverse(lengthBytes);
                 Length = int.Parse(BitConverter.ToString(lengthBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
-                ConfigurationBytes = reader.ReadBytes(response.Length - 3);
-                ConfigBody = BitConverter.ToString(ConfigurationBytes).Replace("-", string.Empty);
+                LogEventsBytes = reader.ReadBytes(response.Length - 3);
+                ConfigBody = BitConverter.ToString(LogEventsBytes).Replace("-", string.Empty);
+
+                LogEvents = ParseLogEventsBytes(LogEventsBytes);
 
                 reader.Close();
                 stream = null;
@@ -79,59 +45,94 @@ namespace shimmer.Models
             }
         }
 
-        public void WriteParsedDataToFile(byte[] ResponseBuffer, string path)
+        public List<LogEventData> ParseLogEventsBytes(byte[] rawBytes)
         {
-            byte[] arr = ResponseBuffer.Skip(3).ToArray();
-            int eventType = 0;
-            bool event_logged = false;
-            LogEvents event_string;
+            var list = new List<LogEventData>();
+            for (int i = 0; i < rawBytes.Length; i += 8)
+            {
+                byte[] packet = new byte[8];
+                Array.Copy(rawBytes, i, packet, 0, 8);
+                list.Add(ParseData(packet));
+            }
+            return list;
+        }
+
+        public LogEventData ParseData(byte[] rawData)
+        {
+            if(rawData.Length != 8)
+            {
+                throw new Exception("Each log event packet has a length of 8 bytes");
+            }
+
+            int eventType = rawData[7];
+            if (eventType != 0 && Enum.IsDefined(typeof(LogEvent), eventType))
+            {
+                LogEventData data = new LogEventData();
+                data.CurrentEvent = (LogEvent)eventType;
+                if (eventType == (int)LogEvent.BATTERY_VOLTAGE)
+                {
+                    byte[] battLevelBytes = new byte[3];
+                    Array.Copy(rawData, 0, battLevelBytes, 0, 3);
+                    Array.Reverse(battLevelBytes);
+                    data.BattLevel = int.Parse(BitConverter.ToString(battLevelBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+                }
+                else
+                {
+                    byte[] timestampBytes = new byte[7];
+                    Array.Copy(rawData, 0, timestampBytes, 0, 7);
+                    int rwc_min = 0;
+                    rwc_min += (timestampBytes[0] & 0xFF);
+                    rwc_min += ((timestampBytes[1] & 0xFF) << 8);
+                    rwc_min += ((timestampBytes[2] & 0xFF) << 16);
+                    rwc_min += ((timestampBytes[3] & 0xFF) << 24);
+
+                    double rwc = 0.0;
+                    rwc += (timestampBytes[4] & 0xFF);
+                    rwc += ((timestampBytes[5] & 0xFF) << 8);
+                    rwc += ((timestampBytes[6] & 0xFF) << 16);
+
+                    double rwc_seconds = rwc / 32768;
+                    double ts = rwc_min * 60;
+                    ts += rwc_seconds;
+                    DateTime dt = DateHelper.GetDateTimeFromSeconds(ts);
+                    data.Timestamp = dt.ToString();
+                }
+                return data;
+            }
+            return null;
+        }
+
+        public void WriteRawDataToFile(string path)
+        {
             using (var w = new StreamWriter(path, true))
             {
-                for (int i = 0; i < arr.Length; i += 8)
+                for (int i = 0; i < LogEventsBytes.Length; i += 8)
                 {
-                    eventType = arr[i + 7];
-                    if (eventType != 0)
+                    byte[] logEventBytes = new byte[8];
+                    Array.Copy(LogEventsBytes, i, logEventBytes, 0, 8);
+                    w.WriteLine(BitConverter.ToString(logEventBytes));
+                }
+            }
+        }
+
+        public void WriteLogEventsToFile(string path)
+        {
+            using (var w = new StreamWriter(path, true))
+            {
+                if(LogEvents.Count > 0)
+                {
+                    for (int i = 0; i < LogEvents.Count; i++)
                     {
-                        event_logged = true;
-                        event_string = (LogEvents)eventType;
-                        if (Enum.IsDefined(typeof(LogEvents), eventType))
+                        if(LogEvents[i] != null)
                         {
-                            if (eventType == (int)LogEvents.BATTERY_VOLTAGE)
-                            {
-                                byte[] result = new byte[3];
-                                Array.Copy(arr, i, result, 0, 3);
-                                Array.Reverse(result);
-                                int battLevel = int.Parse(BitConverter.ToString(result).Replace("-", string.Empty), NumberStyles.HexNumber);
-                                w.WriteLine("index: " + i / 8 + " batt value:" + battLevel + " event: " + event_string);
-                            }
-                            else
-                            {
-                                byte[] result = new byte[7];
-                                Array.Copy(arr, i, result, 0, 7);
-                                int rwc_min = 0;
-                                rwc_min += (result[0] & 0xFF);
-                                rwc_min += ((result[1] & 0xFF) << 8);
-                                rwc_min += ((result[2] & 0xFF) << 16);
-                                rwc_min += ((result[3] & 0xFF) << 24);
-
-                                double rwc = 0.0;
-                                rwc += (result[4] & 0xFF);
-                                rwc += ((result[5] & 0xFF) << 8);
-                                rwc += ((result[6] & 0xFF) << 16);
-
-                                double rwc_seconds = rwc / 32768;
-                                double ts = rwc_min * 60;
-                                ts += rwc_seconds;
-                                DateTime dt = DateHelper.GetDateTimeFromSeconds(ts);
-                                w.WriteLine("index: " + i / 8 + " timestamp:" + dt.ToString() + " event: " + event_string);
-                            }
+                            w.WriteLine("Index: " + i + " " + LogEvents[i].ToString());
                         }
                     }
                 }
-            }
-            if (!event_logged)
-            {
-
+                else
+                {
+                    w.WriteLine("No log events");
+                }
             }
         }
     }

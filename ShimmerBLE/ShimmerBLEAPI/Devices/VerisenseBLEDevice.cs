@@ -533,9 +533,10 @@ namespace ShimmerBLEAPI.Devices
                     case 0x39: // read event log
                         var logEventsData = new LogEventsPayload();
                         var logEventsResult = logEventsData.ProcessPayload(ResponseBuffer);
-                        //logEventsData.WriteParsedDataToFile(ResponseBuffer, "");
                         if (logEventsResult)
                         {
+                            LogEvents = logEventsData;
+                            LogEvents.WriteLogEventsToFile("");
                             if (ShimmerBLEEvent != null)
                             {
                                 ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.ReadEventLog });
