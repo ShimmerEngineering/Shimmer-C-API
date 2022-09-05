@@ -163,7 +163,7 @@ namespace DisconnectTest
                                     await DisplayAlert("Alert", "Please power off the device in 5 seconds", "OK");
                                 });
                                 await Task.Delay(5000);
-                                await device.Disconnect();
+                                await device.ExecuteRequest(RequestType.Disconnect);
                                 break;
                             default:
                                 break;
