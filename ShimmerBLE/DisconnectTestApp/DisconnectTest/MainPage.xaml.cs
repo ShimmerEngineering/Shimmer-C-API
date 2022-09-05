@@ -27,13 +27,17 @@ namespace DisconnectTest
         VerisenseBLEScannedDevice selectedDevice;
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
 
-        private int interval = 5;
+        private int interval = 3;
         private int successCount = 0;
         private int failureCount = 0;
-        private int totalIterationLimit = 3;
+        private int totalIterationLimit = 2;
         private int currentIteration = 0;
         private int testType = 0;
         private bool isConnected = false;
+        private bool connectFailed = false;
+
+        private List<LogEventData> LogEvents;
+        private LogEventData lastDisconnect;
 
         private bool isTestStarted = false;
         private Dictionary<int, int> ResultMap = new Dictionary<int, int>(); //-1,0,1 , unknown, fail, pass
@@ -88,11 +92,6 @@ namespace DisconnectTest
 
         private async void ShimmerDevice_BLEEvent(object sender, ShimmerBLEEventData e)
         {
-            //if (e.Event == ByteLevelCommunicationEvent.CommEvent.Disconnected)
-            //{
-
-            //}
-
             if (e.CurrentEvent == VerisenseBLEEvent.StateChange)
             {
                 var state = device.GetVerisenseBLEState();
@@ -120,6 +119,28 @@ namespace DisconnectTest
                     isConnected = true;
                     try
                     {
+                        var eventLogs = await device.ExecuteRequest(RequestType.ReadEventLog);
+                        LogEvents = ((LogEventsPayload)eventLogs).LogEvents;
+                        LogEvents.Sort((x, y) => x.Timestamp.CompareTo(y.Timestamp));
+
+                        if(lastDisconnect == null)
+                        {
+                            lastDisconnect = LogEvents.FindLast(a => a.CurrentEvent.Equals(LogEvent.BLE_DISCONNECTED));
+                        }
+                        else
+                        {
+                            var temp = LogEvents.FindLast(a => a.CurrentEvent.Equals(LogEvent.BLE_DISCONNECTED));
+                            if(lastDisconnect.Timestamp < temp.Timestamp)
+                            {
+                                // disconnect success
+                                lastDisconnect = temp;
+                            }
+                            else
+                            {
+                                // disconnect fail
+                                throw new Exception("disconnect log event not found");
+                            }
+                        }
                         switch (testType)
                         {
                             case 0:
@@ -136,7 +157,12 @@ namespace DisconnectTest
                                 await device.Disconnect();
                                 break;
                             case 3:
-                                await DisplayAlert("Alert", "Please power off the device before continue", "OK");
+                                // power off, disconnect
+                                Device.BeginInvokeOnMainThread(async () =>
+                                {
+                                    await DisplayAlert("Alert", "Please power off the device in 5 seconds", "OK");
+                                });
+                                await Task.Delay(5000);
                                 await device.Disconnect();
                                 break;
                             default:
@@ -148,7 +174,7 @@ namespace DisconnectTest
 
                     }
 
-                    await Task.Delay(1000);
+                    await Task.Delay(2000);
                     if (ResultMap[currentIteration] == -1)
                     {
                         ResultMap[currentIteration] = 0;
@@ -157,6 +183,7 @@ namespace DisconnectTest
                         {
                             failureCountEntry.Text = failureCount.ToString();
                         });
+                        await device.Disconnect();
                     }
                 }
                 else if (state == ShimmerDeviceBluetoothState.Disconnected)
@@ -180,7 +207,11 @@ namespace DisconnectTest
                     }
                     else
                     {
-                        throw (new Exception("Connect failed"));
+                        // connect failed
+                        //throw (new Exception("Connect failed"));
+                        connectFailed = true;
+                        await Task.Delay(interval * 1000);
+                        ConnectTask();
                     }
                 }
                 else if (state == ShimmerDeviceBluetoothState.Limited)
@@ -254,14 +285,21 @@ namespace DisconnectTest
                 }
                 else
                 {
-                    currentIteration += 1;
-                    Device.BeginInvokeOnMainThread(() =>
+                    if (!connectFailed)
                     {
-                        testProgressEntry.Text = currentIteration.ToString() + " of " + totalIterationLimit.ToString();
-                    });
-                    ResultMap.Add(currentIteration, -1);
+                        currentIteration += 1;
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            testProgressEntry.Text = currentIteration.ToString() + " of " + totalIterationLimit.ToString();
+                        });
+                        ResultMap.Add(currentIteration, -1);
+                    }
+                    else
+                    {
+                        connectFailed = false;
+                    }
+                    
                     await device.Connect(true);
-                    //await device.Connect();
                 }
             }
         }
@@ -276,6 +314,11 @@ namespace DisconnectTest
 
         private async void startTestButton_Clicked(object sender, EventArgs e)
         {
+            //device = new VerisenseBLEDevice(selectedDevice.Uuid.ToString(), "");
+            //device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
+            //await device.Connect(true);
+            //await device.ExecuteRequest(RequestType.ReadEventLog);
+
             if (!isTestStarted)
             {
                 if (device != null)
@@ -307,7 +350,7 @@ namespace DisconnectTest
                     failureCountEntry.Text = failureCount.ToString();
                     testProgressEntry.Text = currentIteration.ToString() + " of " + totalIterationLimit.ToString();
                 });
-                
+
                 isTestStarted = true;
                 ConnectTask();
             }

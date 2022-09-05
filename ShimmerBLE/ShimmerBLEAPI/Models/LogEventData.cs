@@ -9,7 +9,7 @@ namespace shimmer.Models
     /// </summary>
     public class LogEventData
     {
-        public string Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
         public LogEvent CurrentEvent { get; set; }
         public int BattLevel { get; set; }
         public override string ToString()
@@ -20,7 +20,7 @@ namespace shimmer.Models
             }
             else
             {
-                return "Timestamp:" + Timestamp + " Event: " + CurrentEvent;
+                return "Timestamp:" + Timestamp.ToString() + " Event: " + CurrentEvent;
             }
         }
     }

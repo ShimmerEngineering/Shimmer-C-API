@@ -536,7 +536,6 @@ namespace ShimmerBLEAPI.Devices
                         if (logEventsResult)
                         {
                             LogEvents = logEventsData;
-                            LogEvents.WriteLogEventsToFile("");
                             if (ShimmerBLEEvent != null)
                             {
                                 ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.ReadEventLog });
@@ -820,7 +819,7 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.EraseData:
                     return WriteResponse;
                 case RequestType.ReadEventLog:
-                    return WriteResponse;
+                    return LogEvents;
             }
 
             return null;
