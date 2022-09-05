@@ -30,7 +30,7 @@ namespace DisconnectTest
         private int interval = 3;
         private int successCount = 0;
         private int failureCount = 0;
-        private int totalIterationLimit = 2;
+        private int totalIterationLimit = 5;
         private int currentIteration = 0;
         private int testType = 0;
         private bool isConnected = false;
@@ -174,7 +174,7 @@ namespace DisconnectTest
 
                     }
 
-                    await Task.Delay(2000);
+                    await Task.Delay(2500);
                     if (ResultMap[currentIteration] == -1)
                     {
                         ResultMap[currentIteration] = 0;
