@@ -52,7 +52,11 @@ namespace shimmer.Models
             {
                 byte[] packet = new byte[8];
                 Array.Copy(rawBytes, i, packet, 0, 8);
-                list.Add(ParseData(packet));
+                LogEventData temp = ParseData(packet);
+                if(temp != null)
+                {
+                    list.Add(temp);
+                }
             }
             return list;
         }
@@ -94,8 +98,7 @@ namespace shimmer.Models
                     double rwc_seconds = rwc / 32768;
                     double ts = rwc_min * 60;
                     ts += rwc_seconds;
-                    DateTime dt = DateHelper.GetDateTimeFromSeconds(ts);
-                    data.Timestamp = dt.ToString();
+                    data.Timestamp = DateHelper.GetDateTimeFromSeconds(ts);
                 }
                 return data;
             }
