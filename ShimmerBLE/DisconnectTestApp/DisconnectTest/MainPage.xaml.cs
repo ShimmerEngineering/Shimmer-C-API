@@ -123,14 +123,14 @@ namespace DisconnectTest
                         LogEvents = ((LogEventsPayload)eventLogs).LogEvents;
                         LogEvents.Sort((x, y) => x.Timestamp.CompareTo(y.Timestamp));
 
-                        if(lastDisconnect == null)
+                        if (lastDisconnect == null)
                         {
                             lastDisconnect = LogEvents.FindLast(a => a.CurrentEvent.Equals(LogEvent.BLE_DISCONNECTED));
                         }
                         else
                         {
                             var temp = LogEvents.FindLast(a => a.CurrentEvent.Equals(LogEvent.BLE_DISCONNECTED));
-                            if(lastDisconnect.Timestamp < temp.Timestamp)
+                            if (lastDisconnect.Timestamp < temp.Timestamp)
                             {
                                 // disconnect success
                                 lastDisconnect = temp;
