@@ -166,9 +166,9 @@
       <Project>{2b423ed5-9db8-40fe-8c0c-dcdafe0e6229}</Project>
       <Name>ShimmerBLEAPI</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ConnectionTest\ConnectionTest.csproj">
-      <Project>{74f63cdd-7c87-4227-b517-8b7226a2b4e9}</Project>
-      <Name>ConnectionTest</Name>
+    <ProjectReference Include="..\DisconnectTest\DisconnectTest.csproj">
+      <Project>{9196f4b3-23e2-47c6-a997-3dda2c43aa8a}</Project>
+      <Name>DisconnectTest</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
