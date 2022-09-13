@@ -5,11 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Xamarin.Forms;
 using Xamarin.Essentials;
-using shimmer.Sensors;
 using shimmer.Models;
-using ShimmerAPI;
 using static shimmer.Models.ShimmerBLEEventData;
-using static ShimmerBLEAPI.AbstractPlotManager;
 using shimmer.Communications;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,7 +19,6 @@ namespace DisconnectTest
     public partial class MainPage : ContentPage
     {
         VerisenseBLEDevice device;
-        //RadioPluginBLE device;
         IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
         VerisenseBLEScannedDevice selectedDevice;
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
@@ -75,7 +71,6 @@ namespace DisconnectTest
 
         public async void ConnectDevices()
         {
-            //bool result = await device.Connect(true);
             var result = await device.Connect(true);
         }
 
@@ -95,24 +90,10 @@ namespace DisconnectTest
             if (e.CurrentEvent == VerisenseBLEEvent.StateChange)
             {
                 var state = device.GetVerisenseBLEState();
-                //var state = device.GetConnectivityState();
                 Device.BeginInvokeOnMainThread(() =>
                 {
                     statusEntry.Text = state.ToString();
                 });
-
-                //if(state != ShimmerDeviceBluetoothState.Disconnected && isConnected)
-                //{
-                //    if (ResultMap[currentIteration] == -1)
-                //    {
-                //        ResultMap[currentIteration] = 0;
-                //        failureCount += 1;
-                //        Device.BeginInvokeOnMainThread(() =>
-                //        {
-                //            failureCountEntry.Text = failureCount.ToString();
-                //        });
-                //    }
-                //}
 
                 if (state == ShimmerDeviceBluetoothState.Connected)
                 {
@@ -144,11 +125,11 @@ namespace DisconnectTest
                         switch (testType)
                         {
                             case 0:
-                                // RadioPluginBLE - Disconnect()
+                                // disconnect
                                 await device.Disconnect();
                                 break;
                             case 1:
-                                // RadioPluginBLE - WriteBytes 2B-00-00
+                                // WriteBytes 2B-00-00
                                 await device.ExecuteRequest(RequestType.Disconnect);
                                 break;
                             case 2:
@@ -157,13 +138,17 @@ namespace DisconnectTest
                                 await device.Disconnect();
                                 break;
                             case 3:
-                                // power off, disconnect
+                                // power off, WriteBytes 2B-00-00
                                 Device.BeginInvokeOnMainThread(async () =>
                                 {
                                     await DisplayAlert("Alert", "Please power off the device in 5 seconds", "OK");
                                 });
                                 await Task.Delay(5000);
                                 await device.ExecuteRequest(RequestType.Disconnect);
+                                Device.BeginInvokeOnMainThread(async () =>
+                                {
+                                    await DisplayAlert("Alert", "Please power on the device", "OK");
+                                });
                                 break;
                             default:
                                 break;
@@ -207,8 +192,6 @@ namespace DisconnectTest
                     }
                     else
                     {
-                        // connect failed
-                        //throw (new Exception("Connect failed"));
                         connectFailed = true;
                         await Task.Delay(interval * 1000);
                         ConnectTask();
@@ -314,11 +297,6 @@ namespace DisconnectTest
 
         private async void startTestButton_Clicked(object sender, EventArgs e)
         {
-            //device = new VerisenseBLEDevice(selectedDevice.Uuid.ToString(), "");
-            //device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
-            //await device.Connect(true);
-            //await device.ExecuteRequest(RequestType.ReadEventLog);
-
             if (!isTestStarted)
             {
                 if (device != null)
@@ -327,10 +305,6 @@ namespace DisconnectTest
                 }
                 else
                 {
-                    //device = new RadioPluginBLE();
-                    //device.Asm_uuid = Guid.Parse(selectedDevice.Uuid.ToString());
-                    //device.CommunicationEvent += ShimmerDevice_BLEEvent;
-
                     device = new VerisenseBLEDevice(selectedDevice.Uuid.ToString(), "");
                     device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
                 }
