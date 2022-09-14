@@ -91,5 +91,10 @@ namespace shimmer.Communications
         {
             throw new NotImplementedException();
         }
+
+        public List<string> GetSystemConnectedOrPairedDevices()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
