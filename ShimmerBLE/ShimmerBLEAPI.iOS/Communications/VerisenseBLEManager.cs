@@ -120,5 +120,15 @@ namespace ShimmerBLEAPI.iOS.Communications
             throw new NotImplementedException();
         }
 
+        public List<string> GetSystemConnectedOrPairedDevices()
+        {
+            List<string> list = new List<string>();
+            foreach (var item in Adapter.GetSystemConnectedOrPairedDevices())
+            {
+                list.Add(item.Id.ToString());
+            }
+            return list;
+        }
+
     }
 }

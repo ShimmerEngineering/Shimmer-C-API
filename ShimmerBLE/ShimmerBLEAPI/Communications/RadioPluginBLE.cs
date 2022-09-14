@@ -52,11 +52,6 @@ namespace shimmer.Communications
             {
                 try
                 {
-                    foreach (var device in adapter.GetSystemConnectedOrPairedDevices())
-                    {
-                        AdvanceLog(nameof(RadioPluginBLE), "Device Paired", "", device.Name);
-                    }
-
                     var timeout = 5000;
                     cancel = new CancellationTokenSource();
                     TimeSpan timespan = new TimeSpan(0, 0, 5);

@@ -193,6 +193,15 @@ namespace ShimmerBLEAPI.Android.Communications
             return BLEManagerEvent;
         }
 
+        public List<string> GetSystemConnectedOrPairedDevices()
+        {
+            List<string> list = new List<string>();
+            foreach(var item in adapter.GetSystemConnectedOrPairedDevices())
+            {
+                list.Add(item.Id.ToString());
+            }
+            return list;
+        }
     }
 
     public class BroadcastReceiverPairingRequest : BroadcastReceiver

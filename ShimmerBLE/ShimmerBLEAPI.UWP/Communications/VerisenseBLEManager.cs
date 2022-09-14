@@ -311,5 +311,10 @@ namespace ShimmerBLEAPI.UWP.Communications
         {
             return BLEManagerEvent;
         }
+
+        public List<string> GetSystemConnectedOrPairedDevices()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
