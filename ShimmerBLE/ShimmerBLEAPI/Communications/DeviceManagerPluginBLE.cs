@@ -92,7 +92,7 @@ namespace shimmer.Communications
             throw new NotImplementedException();
         }
 
-        public List<string> GetSystemConnectedOrPairedDevices()
+        public Task<List<string>> GetSystemConnectedOrPairedDevices()
         {
             throw new NotImplementedException();
         }

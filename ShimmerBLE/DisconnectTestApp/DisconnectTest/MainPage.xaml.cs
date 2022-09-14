@@ -255,7 +255,7 @@ namespace DisconnectTest
         {
             if (isTestStarted)
             {
-                foreach(string item in bleManager.GetSystemConnectedOrPairedDevices())
+                foreach(string item in await bleManager.GetSystemConnectedOrPairedDevices())
                 {
                     System.Console.WriteLine("Device Paired " + item);
                 }

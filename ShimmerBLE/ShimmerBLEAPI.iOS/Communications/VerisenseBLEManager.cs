@@ -120,14 +120,19 @@ namespace ShimmerBLEAPI.iOS.Communications
             throw new NotImplementedException();
         }
 
-        public List<string> GetSystemConnectedOrPairedDevices()
+        public Task<List<string>> GetSystemConnectedOrPairedDevices()
         {
+            TaskCompletionSource<List<string>> tcs = new TaskCompletionSource<List<string>>();
             List<string> list = new List<string>();
             foreach (var item in Adapter.GetSystemConnectedOrPairedDevices())
             {
-                list.Add(item.Id.ToString());
+                if (item.Name.Contains("Verisense"))
+                {
+                    list.Add(item.Id.ToString());
+                }
             }
-            return list;
+            tcs.SetResult(list);
+            return tcs.Task;
         }
 
     }
