@@ -1550,7 +1550,7 @@ namespace ShimmerAPI
                 {
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE:
                         int inStreamCMD = ReadByte();
-                        //System.Console.WriteLine("In Stream CMD Response");
+                        System.Console.WriteLine("In Stream CMD Response");
                         if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
                             System.Console.WriteLine("Status Response Received");
@@ -1561,7 +1561,7 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            //System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
+                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
 
                             //AS is this ok?
                             isLogging = logging;
@@ -1795,7 +1795,7 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            //System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
+                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
                             if (CurrentDockStatus != docked)
                             {
                                 CurrentDockStatus = docked;
@@ -1921,6 +1921,18 @@ namespace ShimmerAPI
 
                     default: break;
 
+                }
+            }
+            if (BluetoothCRCMode != BTCRCMode.OFF) //doesnt look like there is CRC with the instream command, to be checked with MN
+            {
+                if (b != 0xff)
+                {
+                    //Don't deal with the crc if non streaming mode
+                    for (int k = 0; k < (int)BluetoothCRCMode; k++)
+                    {
+                        System.Console.WriteLine("Throw CRC Byte");
+                        //ReadByte();
+                    }
                 }
             }
         }

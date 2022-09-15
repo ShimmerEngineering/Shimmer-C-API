@@ -23,6 +23,12 @@ namespace ShimmerBluetoothTests
         public int byteDataIndex = -1;
         public byte[] data = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
         int numberOfPackets = 0;
+        public bool stopReadingAtEndOfDataStream = false;
+        public void limitNumberOfPackets()
+        {
+
+        }
+
         public void enableReadTimeoutException(bool exception )
         {
             throwException = exception;
@@ -50,6 +56,16 @@ namespace ShimmerBluetoothTests
             IsFilled = true; //inquiry done
             SetState(ShimmerBluetooth.SHIMMER_STATE_STREAMING);
             PacketSize = 10;
+            ReadThread = new Thread(new ThreadStart(ReadData));
+            ReadThread.Name = "Read Thread for Device: " + DeviceName;
+            ReadThread.Start();
+        }
+        public void start(int packetSize)
+        {
+            StopReading = false; //read data thread continue
+            IsFilled = true; //inquiry done
+            SetState(ShimmerBluetooth.SHIMMER_STATE_STREAMING);
+            PacketSize = packetSize;
             ReadThread = new Thread(new ThreadStart(ReadData));
             ReadThread.Name = "Read Thread for Device: " + DeviceName;
             ReadThread.Start();
@@ -101,14 +117,21 @@ namespace ShimmerBluetoothTests
         {
         }
 
+
+
         protected override int ReadByte()
         {
             byteDataIndex++;
             if (data.Length == byteDataIndex)
             {
+                if (stopReadingAtEndOfDataStream)
+                {
+                    StopReading = true;
+                }
                 byteDataIndex = 0;
                 numberOfPackets++;
             }
+
             if (throwException)
             {
                 if (numberOfPackets==5 && byteDataIndex==4)
@@ -118,6 +141,12 @@ namespace ShimmerBluetoothTests
             }
             return data[byteDataIndex];
         }
+
+        public new void WriteCRCMode(BTCRCMode mode)
+        {
+            BluetoothCRCMode = mode;
+        }
+
 
         protected override void WriteBytes(byte[] b, int index, int length)
         {
