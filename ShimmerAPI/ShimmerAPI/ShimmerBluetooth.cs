@@ -234,6 +234,15 @@ namespace ShimmerAPI
 
         protected long ShimmerRealWorldClock = 0;
 
+        public enum BTCRCMode
+        {
+            OFF = 0,
+            ONE_BYTE = 1,
+            TWO_BYTE = 2
+        }
+
+        protected BTCRCMode BluetoothCRCMode = BTCRCMode.OFF;
+
         public enum ShimmerIdentifier
         {
             MSG_IDENTIFIER_STATE_CHANGE = 0,
@@ -1071,12 +1080,33 @@ namespace ShimmerAPI
                                 if (IsFilled)
                                 {
                                     dataByte = new List<byte>();
-                                    for (i = 0; i < PacketSize; i++)
+                                    int packetSize = PacketSize;
+                                    packetSize = packetSize + (int)BluetoothCRCMode;
+                                    for (i = 0; i < packetSize; i++)
                                     {
                                         dataByte.Add((byte)ReadByte());
                                     }
+                                    bool check = true;
+                                    if (BluetoothCRCMode != BTCRCMode.OFF)
+                                    {
+                                        byte[] dataArray = dataByte.ToArray();
+                                        byte[] fullPacket = new byte[dataArray.Length + 1];
+                                        System.Array.Copy(dataArray, 0, fullPacket, 1, dataArray.Length);
+                                        fullPacket[0] = (byte)PacketTypeShimmer2.DATA_PACKET;
+                                        check = CheckCrc(fullPacket, PacketSize+1);
+                                    }
+                                    if (check)
+                                    {
+                                        objectCluster = BuildMsg(dataByte);
+                                    } else
+                                    {
+                                        Debug.WriteLine("CRC Failed");
+                                        dataByte.RemoveAt(0);
+                                        objectCluster = null;
+                                    }
 
-                                    objectCluster = BuildMsg(dataByte);
+
+
 
                                     if (KeepObjectCluster != null)
                                     {
@@ -1285,6 +1315,7 @@ namespace ShimmerAPI
                                 SetInternalExpPower(ReadByte());
                                 break;
                             case (byte)PacketTypeShimmer2.ACK_COMMAND:
+                                System.Console.WriteLine("ACK Received");
                                 if (mWaitingForStartStreamingACK)
                                 {
                                     SetState(SHIMMER_STATE_STREAMING);
@@ -1532,6 +1563,19 @@ namespace ShimmerAPI
                                 }
                                 break;
                         }
+                        if (BluetoothCRCMode != BTCRCMode.OFF)
+                        {
+                            if (b != 0xff)
+                            {
+                                //Don't deal with the crc if non streaming mode
+                                for (int k = 0; k < (int)BluetoothCRCMode; k++)
+                                {
+                                    System.Console.WriteLine("Throw Byte CRC");
+                                    ReadByte();
+                                }
+                            }
+                        }
+
                     }
 
 
@@ -5043,6 +5087,12 @@ namespace ShimmerAPI
             System.Threading.Thread.Sleep(200);
         }
 
+        public void WriteCRCMode(BTCRCMode mode) {
+            WriteBytes(new byte[2] { (byte)InstructionsSet.SetCrcCommand,((byte)mode) }, 0, 2);
+            System.Threading.Thread.Sleep(300);
+            BluetoothCRCMode = mode;
+        }
+
         /// <summary>
         /// Rate is set to Hz. Note that when using shimmer ecg/emg, setting the sampling rate also update the configuration bytes on the exg chip. Because of this you should always try to use writesamplingrate after a command such as WriteEXGConfigurations. Unless you are certain you are setting the correct data rate via WriteEXGConfigurations.
         /// </summary>
@@ -6065,6 +6115,97 @@ namespace ShimmerAPI
                 return UtilCalibration.NudgeDouble(gsrResistanceKOhms, SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting, 0], SHIMMER3_GSR_RESISTANCE_MIN_MAX_KOHMS[gsrRangeSetting, 1]);
             }
             return gsrResistanceKOhms;
+        }
+
+        /** Check the CRC stored at the end of the byte array 
+         * @param msg the input byte array
+         * @return a boolean value value, true if CRC matches and false if CRC doesn't match
+         */
+        public static bool ShimmerUartCrcCheck(byte[] msg)
+        {
+            byte[] crc = ShimmerUartCrcCalc(msg, msg.Length - 2);
+
+            if ((crc[0] == msg[msg.Length - 2])
+                    && (crc[1] == msg[msg.Length - 1]))
+                return true;
+            else
+                return false;
+        }
+
+        /** Calculate the CRC per byte
+         * @param crc the start CRC value
+         * @param b the byte to calculate the CRC on
+         * @return the new CRC value
+         */
+        protected static int ShimmerUartCrcByte(int crc, byte b)
+        {
+            crc &= 0xFFFF;
+            //crc = ((crc & 0xFFFF) >>> 8) | ((crc & 0xFFFF) << 8);
+            crc = GetUnsignedRightShift((crc & 0xFFFF), 8) | ((crc & 0xFFFF) << 8);
+            crc ^= (b & 0xFF);
+            //crc ^= (crc & 0xFF) >>> 4;
+            crc ^= GetUnsignedRightShift((crc & 0xFF),4);
+            crc ^= crc << 12;
+            crc ^= (crc & 0xFF) << 5;
+            crc &= 0xFFFF;
+            return crc;
+        }
+
+        private static int GetUnsignedRightShift(int value, int s)
+        {
+            return (int)((uint)value >> s);
+        }
+
+        /** Calculate the CRC for a byte array. array[0] is CRC LSB, array[1] is CRC MSB 
+	     * @param msg the input byte array
+	     * @param len the length of the byte array to calculate the CRC on
+	     * @return the calculated CRC value
+	     */
+        public static byte[] ShimmerUartCrcCalc(byte[] msg, int len)
+        {
+            int CRC_INIT = 0xB0CA;
+            int crcCalc;
+            int i;
+
+            crcCalc = ShimmerUartCrcByte(CRC_INIT, msg[0]);
+            for (i = 1; i < len; i++)
+            {
+                crcCalc = ShimmerUartCrcByte(crcCalc, (msg[i]));
+            }
+            if (len % 2 > 0)
+            {
+                crcCalc = ShimmerUartCrcByte(crcCalc, (byte)0x00);
+            }
+
+            byte[] crcCalcArray = new byte[2];
+            crcCalcArray[0] = (byte)(crcCalc & 0xFF);  // CRC LSB
+            crcCalcArray[1] = (byte)((crcCalc >> 8) & 0xFF); // CRC MSB 
+
+            return crcCalcArray;
+        }
+
+        public bool CheckCrc(byte[] bufferTemp, int length)
+        {
+            byte[] crcCalc = ShimmerUartCrcCalc(bufferTemp, length);
+
+            if (BluetoothCRCMode == BTCRCMode.ONE_BYTE || BluetoothCRCMode == BTCRCMode.TWO_BYTE)
+            {
+                // + 1 as this is the location of the CRC's LSB
+                if (bufferTemp[PacketSize+1] != crcCalc[0])
+                {
+                    return false;
+                }
+            }
+
+            if (BluetoothCRCMode == BTCRCMode.TWO_BYTE)
+            {
+                // + 2 as this is the location of the CRC's MSB
+                if (bufferTemp[PacketSize + 2] != crcCalc[1])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }

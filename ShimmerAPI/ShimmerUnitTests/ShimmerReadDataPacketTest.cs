@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading;
 using ShimmerAPI;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace ShimmerBluetoothTests
 {
@@ -50,6 +51,159 @@ namespace ShimmerBluetoothTests
             //System.Console.WriteLine();
             }
 
+        }
+
+        [TestMethod]
+        public void TestPacketParserCRCNoErrors()
+        {
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.TWO_BYTE);
+            sbrd.data = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x93
+            };
+            sbrd.stopReadingAtEndOfDataStream = true;
+            sbrd.start(sbrd.data.Length-3); //-1 for the starting byte 00 and crc has 2 bytes
+            Thread.Sleep(100);
+            sbrd.stop();
+            sbrd.stopReadingAtEndOfDataStream = false;
+            if (ojcArray.Count == 1)
+            {
+                Assert.IsTrue(true);
+            } else
+            {
+                Assert.IsFalse(true);
+            }
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.OFF);
+        }
+
+        [TestMethod]
+        public void TestPacketParserCRCNoErrorsMultiplePackets()
+        {
+            int numberOfPackets = 10;
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.TWO_BYTE);
+            sbrd.data = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x93
+            };
+            int packetSize = (sbrd.data.Length - 3); //-1 for the starting byte 00 and crc has 2 bytes
+            List<Byte> dataList = new List<Byte>();
+            for (int i = 0; i < numberOfPackets; i++)
+            {
+                foreach(byte b in sbrd.data)
+                {
+                    dataList.Add(b);
+                }                
+            }
+            sbrd.data = dataList.ToArray();
+            sbrd.stopReadingAtEndOfDataStream = true;
+            sbrd.start(packetSize); //-1 for the starting byte 00 and crc has 2 bytes
+            Thread.Sleep(300);
+            sbrd.stop();
+            sbrd.stopReadingAtEndOfDataStream = false;
+            if (ojcArray.Count == 10)
+            {
+                Assert.IsTrue(true);
+            }
+            else
+            {
+                Assert.IsFalse(true);
+            }
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.OFF);
+        }
+
+        [TestMethod]
+        public void TestPacketParserCRCNoErrorsMultiplePacketsStartWithWrongAlignment()
+        {
+            int numberOfPackets = 10;
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.TWO_BYTE);
+            sbrd.byteDataIndex = 3;
+            sbrd.data = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x93
+            };
+            int packetSize = (sbrd.data.Length - 3); //-1 for the starting byte 00 and crc has 2 bytes
+            List<Byte> dataList = new List<Byte>();
+            for (int i = 0; i < numberOfPackets; i++)
+            {
+                foreach (byte b in sbrd.data)
+                {
+                    dataList.Add(b);
+                }
+            }
+            sbrd.data = dataList.ToArray();
+            sbrd.stopReadingAtEndOfDataStream = true;
+            sbrd.start(packetSize); //-1 for the starting byte 00 and crc has 2 bytes
+            Thread.Sleep(300);
+            sbrd.stop();
+            sbrd.stopReadingAtEndOfDataStream = false;
+            if (ojcArray.Count == 10)
+            {
+                Assert.IsTrue(true);
+            }
+            else
+            {
+                Assert.IsFalse(true);
+            }
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.OFF);
+        }
+
+        [TestMethod]
+        public void TestPacketParserCRCNoErrorsMultiplePacketBadCRC()
+        {
+            int numberOfPackets = 10; //only even
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.TWO_BYTE);
+            byte[] gooddata = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x93
+            };
+            byte[] baddata = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x94
+            };
+            int packetSize = (gooddata.Length - 3); //-1 for the starting byte 00 and crc has 2 bytes
+            List<Byte> dataList = new List<Byte>();
+            for (int i = 0; i < (numberOfPackets/2); i++)
+            {
+                foreach (byte b in gooddata)
+                {
+                    dataList.Add(b);
+                }
+
+                foreach (byte b in baddata)
+                {
+                    dataList.Add(b);
+                }
+            }
+            sbrd.data = dataList.ToArray();
+            sbrd.stopReadingAtEndOfDataStream = true;
+            sbrd.start(packetSize); //-1 for the starting byte 00 and crc has 2 bytes
+            Thread.Sleep(300);
+            sbrd.stop();
+            sbrd.stopReadingAtEndOfDataStream = false;
+            if (ojcArray.Count == 5)
+            {
+                Assert.IsTrue(true);
+            }
+            else
+            {
+                Assert.IsFalse(true);
+            }
+            sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.OFF);
         }
 
         [TestMethod]
