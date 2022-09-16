@@ -1062,6 +1062,7 @@ namespace ShimmerAPI
             int i;
             byte[] bufferbyte;
             List<byte> dataByte;
+            List<byte> throwAwayBytes = new List<Byte>();
             ObjectCluster objectCluster;
             FlushInputConnection();
             KeepObjectCluster = null;
@@ -1070,7 +1071,17 @@ namespace ShimmerAPI
             {
                 try
                 {
-                    byte b = (byte)ReadByte();
+                    byte b;
+                    if (throwAwayBytes.Count() > 0)
+                    {
+                        Debug.WriteLine("Reuse Bytes");
+                        b = throwAwayBytes[0];
+                        throwAwayBytes.RemoveAt(0);
+                    }
+                    else
+                    {
+                        b = (byte)ReadByte();
+                    }
                     StreamTimeOutCount = 0;
                     if (ShimmerState == SHIMMER_STATE_STREAMING)
                     {
@@ -1082,10 +1093,17 @@ namespace ShimmerAPI
                                     dataByte = new List<byte>();
                                     int packetSize = PacketSize;
                                     packetSize = packetSize + (int)BluetoothCRCMode;
-                                    for (i = 0; i < packetSize; i++)
+                                    if (throwAwayBytes.Count > 0)
+                                    {
+                                        dataByte = throwAwayBytes.ToArray().ToList<byte>();
+                                        throwAwayBytes.Clear();
+                                    }
+                                    int count = dataByte.Count();
+                                    for (i = 0; i < (packetSize- count); i++)
                                     {
                                         dataByte.Add((byte)ReadByte());
                                     }
+                                    
                                     bool check = true;
                                     if (BluetoothCRCMode != BTCRCMode.OFF)
                                     {
@@ -1097,11 +1115,15 @@ namespace ShimmerAPI
                                     }
                                     if (check)
                                     {
+                                        //Debug.WriteLine("CRC Pass");
                                         objectCluster = BuildMsg(dataByte);
+
                                     } else
                                     {
                                         Debug.WriteLine("CRC Failed");
-                                        dataByte.RemoveAt(0);
+                                        //dataByte.RemoveAt(0);
+                                        throwAwayBytes = new List<Byte>();
+                                        throwAwayBytes = dataByte.ToArray().ToList() ;
                                         objectCluster = null;
                                     }
 

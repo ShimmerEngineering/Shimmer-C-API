@@ -1,6 +1,7 @@
 ﻿using ShimmerAPI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -121,6 +122,7 @@ namespace ShimmerBluetoothTests
 
         protected override int ReadByte()
         {
+            //Debug.WriteLine("Read Byte");
             byteDataIndex++;
             if (data.Length == byteDataIndex)
             {

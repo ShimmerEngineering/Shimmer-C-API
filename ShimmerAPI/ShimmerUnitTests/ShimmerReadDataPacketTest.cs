@@ -66,7 +66,7 @@ namespace ShimmerBluetoothTests
             };
             sbrd.stopReadingAtEndOfDataStream = true;
             sbrd.start(sbrd.data.Length-3); //-1 for the starting byte 00 and crc has 2 bytes
-            Thread.Sleep(100);
+            Thread.Sleep(50);
             sbrd.stop();
             sbrd.stopReadingAtEndOfDataStream = false;
             if (ojcArray.Count == 1)
@@ -103,7 +103,7 @@ namespace ShimmerBluetoothTests
             sbrd.data = dataList.ToArray();
             sbrd.stopReadingAtEndOfDataStream = true;
             sbrd.start(packetSize); //-1 for the starting byte 00 and crc has 2 bytes
-            Thread.Sleep(300);
+            Thread.Sleep(50);
             sbrd.stop();
             sbrd.stopReadingAtEndOfDataStream = false;
             if (ojcArray.Count == 10)
@@ -142,10 +142,10 @@ namespace ShimmerBluetoothTests
             sbrd.data = dataList.ToArray();
             sbrd.stopReadingAtEndOfDataStream = true;
             sbrd.start(packetSize); //-1 for the starting byte 00 and crc has 2 bytes
-            Thread.Sleep(300);
+            Thread.Sleep(50);
             sbrd.stop();
             sbrd.stopReadingAtEndOfDataStream = false;
-            if (ojcArray.Count == 10)
+            if (ojcArray.Count == 9)
             {
                 Assert.IsTrue(true);
             }
@@ -157,7 +157,7 @@ namespace ShimmerBluetoothTests
         }
 
         [TestMethod]
-        public void TestPacketParserCRCNoErrorsMultiplePacketBadCRC()
+        public void TestPacketParserCRCMultiplePacketBadCRC()
         {
             int numberOfPackets = 10; //only even
             sbrd.WriteCRCMode(ShimmerBluetooth.BTCRCMode.TWO_BYTE);
@@ -192,7 +192,7 @@ namespace ShimmerBluetoothTests
             sbrd.data = dataList.ToArray();
             sbrd.stopReadingAtEndOfDataStream = true;
             sbrd.start(packetSize); //-1 for the starting byte 00 and crc has 2 bytes
-            Thread.Sleep(300);
+            Thread.Sleep(50);
             sbrd.stop();
             sbrd.stopReadingAtEndOfDataStream = false;
             if (ojcArray.Count == 5)
