@@ -811,6 +811,7 @@ namespace ShimmerAPI
             {
                 try
                 {
+                    StreamTimeOutCount = 0;
                     OpenConnection();
 
                     StopReading = false;
@@ -855,23 +856,23 @@ namespace ShimmerAPI
                         {
                             if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                             {
-                                WriteBatteryFrequency(0);
+                                //WriteBatteryFrequency(0);
                                 ReadExpansionBoard();
                                 InitializeShimmer3SDBT();
                             }
                             else if (GetFirmwareIdentifier() == FW_IDENTIFIER_BTSTREAM)
                             {
-                                WriteBatteryFrequency(0);
+                                //WriteBatteryFrequency(0);
                                 InitializeShimmer3();
                             }
                             else if (GetFirmwareIdentifier() == 13)
                             {
-                                WriteBatteryFrequency(0);
+                                //WriteBatteryFrequency(0);
                                 InitializeShimmer3();
                             }
                             else if (GetFirmwareIdentifier() == FW_IDENTIFIER_SHIMMERECGMD)
                             {
-                                WriteBatteryFrequency(0);
+                                //WriteBatteryFrequency(0);
                                 InitializeShimmerECGMD();
                             }
                         }
@@ -1591,10 +1592,10 @@ namespace ShimmerAPI
                         {
                             if (b != 0xff)
                             {
-                                //Don't deal with the crc if non streaming mode
+                                //Currently on CRC for sensor data packets are handled
                                 for (int k = 0; k < (int)BluetoothCRCMode; k++)
                                 {
-                                    System.Console.WriteLine("Throw Byte CRC");
+                                    System.Console.WriteLine("State Connected: Throw CRC Byte");
                                     ReadByte();
                                 }
                             }
@@ -4720,6 +4721,26 @@ namespace ShimmerAPI
                 TimeStampPacketRawMaxValue = 16777216;// 16777216 or 65536 
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception">If device is not connected/streaming</exception>
+        public bool IsCRCSupported()
+        {
+            if (GetState() == SHIMMER_STATE_CONNECTED ||
+                GetState() == SHIMMER_STATE_STREAMING)
+            {
+                if (GetCompatibilityCode() >= 8)
+                {
+                    return true;
+                }
+            } else
+            {
+                throw new Exception("Device needs to be connected or streaming");
+            }
+            return false;
+        }
 
         protected void SetCompatibilityCode()
         {
@@ -4759,7 +4780,11 @@ namespace ShimmerAPI
                 }
                 else if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
                 {
-                    if (FirmwareMajor == 0 && FirmwareMinor == 1) //(FirmwareVersion == 0.1)
+                    if ((FirmwareMajor == 0 && FirmwareMinor >= 13 && FirmwareInternal >= 7))
+                    {
+                        CompatibilityCode = 8;
+                    }
+                    else if (FirmwareMajor == 0 && FirmwareMinor == 1) //(FirmwareVersion == 0.1)
                     {
                         CompatibilityCode = 3;
                     }
@@ -5378,6 +5403,7 @@ namespace ShimmerAPI
         /// Battery frequency change only supported in BtStream v0.8.0 or later and LogAndStream v0.7.0 or later but it is not still handled by the API so we set it to 0
         /// </summary>
         /// <param name="freq">Frequency</param>
+        [Obsolete("This method is deprecated and no longer supported")]
         public void WriteBatteryFrequency(int freq)
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && ((FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 6) || (FirmwareIdentifier == FW_IDENTIFIER_BTSTREAM && CompatibilityCode >= 7)))

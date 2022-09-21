@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace ShimmerAPI
 {
@@ -1698,6 +1699,18 @@ namespace ShimmerAPI
                         KeepObjectCluster = null;
                         break;
                 }
+                if (BluetoothCRCMode != BTCRCMode.OFF) //doesnt look like there is CRC with the instream command, to be checked with MN
+                {
+                    if (b != 0xff)
+                    {
+                        //Currently on CRC for sensor data packets are handled
+                        for (int k = 0; k < (int)BluetoothCRCMode; k++)
+                        {
+                            Debug.WriteLine("State Streaming: Throw CRC Byte");
+                            ReadByte();
+                        }
+                    }
+                }
             }
             else
             {
@@ -1922,18 +1935,6 @@ namespace ShimmerAPI
 
                     default: break;
 
-                }
-            }
-            if (BluetoothCRCMode != BTCRCMode.OFF) //doesnt look like there is CRC with the instream command, to be checked with MN
-            {
-                if (b != 0xff)
-                {
-                    //Don't deal with the crc if non streaming mode
-                    for (int k = 0; k < (int)BluetoothCRCMode; k++)
-                    {
-                        System.Console.WriteLine("Throw CRC Byte");
-                        //ReadByte();
-                    }
                 }
             }
         }
