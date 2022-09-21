@@ -233,6 +233,7 @@ namespace ShimmerAPI
         private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         protected long ShimmerRealWorldClock = 0;
+        protected List<byte> UnalignedBytesReceived = new List<Byte>();
 
         public enum BTCRCMode
         {
@@ -1061,22 +1062,21 @@ namespace ShimmerAPI
             List<byte> buffer = new List<byte>();
             int i;
             byte[] bufferbyte;
-            List<byte> dataByte;
-            List<byte> throwAwayBytes = new List<Byte>();
             ObjectCluster objectCluster;
             FlushInputConnection();
             KeepObjectCluster = null;
+            UnalignedBytesReceived = new List<Byte>();
 
             while (!StopReading)
             {
                 try
                 {
                     byte b;
-                    if (throwAwayBytes.Count() > 0)
+                    if (UnalignedBytesReceived.Count() > 0)
                     {
-                        Debug.WriteLine("Reuse Bytes");
-                        b = throwAwayBytes[0];
-                        throwAwayBytes.RemoveAt(0);
+                        //Debug.WriteLine("Reuse Unaligned Bytes");
+                        b = UnalignedBytesReceived[0];
+                        UnalignedBytesReceived.RemoveAt(0);
                     }
                     else
                     {
@@ -1090,13 +1090,14 @@ namespace ShimmerAPI
                             case (byte)PacketTypeShimmer2.DATA_PACKET: //Shimmer3 has the same value
                                 if (IsFilled)
                                 {
+                                    List<byte> dataByte;
                                     dataByte = new List<byte>();
                                     int packetSize = PacketSize;
                                     packetSize = packetSize + (int)BluetoothCRCMode;
-                                    if (throwAwayBytes.Count > 0)
+                                    if (UnalignedBytesReceived.Count > 0)
                                     {
-                                        dataByte = throwAwayBytes.ToArray().ToList<byte>();
-                                        throwAwayBytes.Clear();
+                                        dataByte = UnalignedBytesReceived.ToArray().ToList<byte>();
+                                        UnalignedBytesReceived.Clear();
                                     }
                                     int count = dataByte.Count();
                                     for (i = 0; i < (packetSize- count); i++)
@@ -1122,8 +1123,8 @@ namespace ShimmerAPI
                                     {
                                         Debug.WriteLine("CRC Failed");
                                         //dataByte.RemoveAt(0);
-                                        throwAwayBytes = new List<Byte>();
-                                        throwAwayBytes = dataByte.ToArray().ToList() ;
+                                        UnalignedBytesReceived = new List<Byte>();
+                                        UnalignedBytesReceived = dataByte.ToArray().ToList() ;
                                         objectCluster = null;
                                     }
 
@@ -1214,6 +1215,7 @@ namespace ShimmerAPI
                             case (byte)PacketTypeShimmer2.DATA_PACKET:  //Read bytes but do nothing with them
                                 if (IsFilled)
                                 {
+                                    List<byte> dataByte;
                                     dataByte = new List<byte>();
                                     for (i = 0; i < PacketSize; i++)
                                     {
@@ -4368,6 +4370,7 @@ namespace ShimmerAPI
                     KeepObjectCluster = null; //This is important and is required!
                     OrientationAlgo = null;
                     mWaitingForStartStreamingACK = true;
+                    UnalignedBytesReceived = new List<Byte>();
                     WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.START_STREAMING_COMMAND }, 0, 1);
                 }
             }
@@ -5930,6 +5933,7 @@ namespace ShimmerAPI
                     PacketLossCount = 0;
                     PacketReceptionRate = 100;
                     KeepObjectCluster = null; //This is important and is required!
+                    UnalignedBytesReceived = new List<Byte>();
                     OrientationAlgo = null;
                     mWaitingForStartStreamingACK = true;
                     if (value > 16777215 || value < 0)

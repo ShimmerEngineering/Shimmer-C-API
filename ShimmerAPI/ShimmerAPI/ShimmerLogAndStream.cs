@@ -399,6 +399,7 @@ namespace ShimmerAPI
         public override void StartStreamingandLog()
         {
             KeepObjectCluster = null;
+            UnalignedBytesReceived = new List<Byte>();
             if (IsConnectionOpen())
             {
                 if (ShimmerState == SHIMMER_STATE_CONNECTED)
