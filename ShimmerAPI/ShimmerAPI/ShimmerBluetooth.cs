@@ -5147,9 +5147,15 @@ namespace ShimmerAPI
         }
 
         public void WriteCRCMode(BTCRCMode mode) {
-            WriteBytes(new byte[2] { (byte)InstructionsSet.SetCrcCommand,((byte)mode) }, 0, 2);
-            System.Threading.Thread.Sleep(300);
-            BluetoothCRCMode = mode;
+            if (IsCRCSupported())
+            {
+                WriteBytes(new byte[2] { (byte)InstructionsSet.SetCrcCommand, ((byte)mode) }, 0, 2);
+                System.Threading.Thread.Sleep(300);
+                BluetoothCRCMode = mode;
+            } else
+            {
+                throw new Exception("CRC not supported on this firmware");
+            }
         }
 
         /// <summary>
