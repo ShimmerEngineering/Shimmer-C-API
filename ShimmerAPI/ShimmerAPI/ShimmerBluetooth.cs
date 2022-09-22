@@ -1208,7 +1208,7 @@ namespace ShimmerAPI
                                             //Currently on CRC for sensor data packets are handled
                                             for (int k = 0; k < (int)BluetoothCRCMode; k++)
                                             {
-                                                Debug.WriteLine("State Connected: Throw CRC Byte");
+                                                //Debug.WriteLine("State Connected: Throw CRC Byte");
                                                 ReadByte();
                                             }
                                         }
@@ -1364,7 +1364,7 @@ namespace ShimmerAPI
                                     {
                                         for (int k = 0; k < (int)BluetoothCRCMode; k++)
                                         {
-                                            Debug.WriteLine("State Connected: Throw CRC Byte");
+                                            //Debug.WriteLine("State Connected: Throw CRC Byte");
                                             ReadByte();
                                         }
                                     }
@@ -1617,7 +1617,7 @@ namespace ShimmerAPI
                                 //Currently on CRC for sensor data packets are handled
                                 for (int k = 0; k < (int)BluetoothCRCMode; k++)
                                 {
-                                    Debug.WriteLine("State Connected: Throw CRC Byte");
+                                    //Debug.WriteLine("State Connected: Throw CRC Byte");
                                     ReadByte();
                                 }
                             }

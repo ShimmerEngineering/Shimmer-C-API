@@ -1737,7 +1737,7 @@ namespace ShimmerAPI
                         //Currently on CRC for sensor data packets are handled
                         for (int k = 0; k < (int)BluetoothCRCMode; k++)
                         {
-                            Debug.WriteLine("State Streaming: Throw CRC Byte");
+                            //Debug.WriteLine("State Streaming: Throw CRC Byte");
                             ReadByte();
                         }
                     }
