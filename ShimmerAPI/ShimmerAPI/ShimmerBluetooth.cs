@@ -243,6 +243,7 @@ namespace ShimmerAPI
         }
 
         protected BTCRCMode BluetoothCRCMode = BTCRCMode.OFF;
+        protected BTCRCMode CRCModeToSetup = BTCRCMode.OFF;
 
         public enum ShimmerIdentifier
         {
@@ -1257,6 +1258,13 @@ namespace ShimmerAPI
                                 }
                                 if (ShimmerState != SHIMMER_STATE_CONNECTED)
                                 {
+                                    if (SetupDevice)
+                                    {
+                                        if (IsCRCSupported())
+                                        {
+                                            WriteCRCMode(CRCModeToSetup);
+                                        }
+                                    }
                                     SetupDevice = false; //device has been setup
                                     SetState(SHIMMER_STATE_CONNECTED);
                                 }
@@ -4729,7 +4737,8 @@ namespace ShimmerAPI
         public bool IsCRCSupported()
         {
             if (GetState() == SHIMMER_STATE_CONNECTED ||
-                GetState() == SHIMMER_STATE_STREAMING)
+                GetState() == SHIMMER_STATE_STREAMING ||
+                GetState() == SHIMMER_STATE_CONNECTING)
             {
                 if (GetCompatibilityCode() >= 8)
                 {
@@ -4737,7 +4746,7 @@ namespace ShimmerAPI
                 }
             } else
             {
-                throw new Exception("Device needs to be connected or streaming");
+                throw new Exception("Device needs to be connected, connecting or streaming");
             }
             return false;
         }
