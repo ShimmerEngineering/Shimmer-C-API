@@ -67,6 +67,33 @@ namespace ShimmerAPI
             CurrentSensingStatus = false;
         }
 
+        //Shimmer3 Constructor
+        //Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection
+        /// <summary>
+        /// Shimmer 3 constructor
+        /// </summary>
+        /// <param name="devName">User Defined Device Name</param>
+        /// <param name="samplingRate">Sampling rate in Hz</param>
+        /// <param name="accelRange">Shimmer3 options - 0,1,2,3,4 = 2g,4g,8g,16g.</param>
+        /// <param name="gsrRange">Range is between 0 and 4. 0 = 10-56kOhm, 1 = 56-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
+        /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer3, for multiple sensors use an or operation</param>
+        /// <param name="enableLowPowerAccel"></param>
+        /// <param name="enableLowPowerGyro"></param>
+        /// <param name="enableLowPowerMag"></param>
+        /// <param name="gyroRange">Options are 0,1,2,3. Where 0 = 250 Degree/s, 1 = 500 Degree/s, 2 = 1000 Degree/s, 3 = 2000 Degree/s</param>
+        /// <param name="magRange">Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1</param>
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
+        /// <param name="internalExpPower"></param>
+        /// <param name="CRCmode"></param>Whether to enable CRC model, note on log and stream 0.13.7 > supports this, otherwise command does nothing
+        public ShimmerLogAndStream(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower, BTCRCMode CRCmode)
+            : base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
+        {
+            isLogging = false;
+            CurrentSensingStatus = false;
+            CRCModeToSetup = CRCmode;
+        }
+
         //Shimmer2R Constructor
         /// <summary>
         /// Shimmer2 constructor, to set the Shimmer device according to specified settings upon connection
@@ -503,7 +530,7 @@ namespace ShimmerAPI
                 WriteSensors(SetEnabledSensors); //this should always be the last command
                 SetLowPowerAccel(LowPowerAccelEnabled);
                 SetLowPowerMag(LowPowerMagEnabled);
-                SetLowPowerGyro(LowPowerGyroEnabled);
+                SetLowPowerGyro(LowPowerGyroEnabled);        
             }
 
 
