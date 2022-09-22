@@ -1271,13 +1271,6 @@ namespace ShimmerAPI
                                 }
                                 if (ShimmerState != SHIMMER_STATE_CONNECTED)
                                 {
-                                    if (SetupDevice)
-                                    {
-                                        if (IsCRCSupported())
-                                        {
-                                            WriteCRCMode(CRCModeToSetup);
-                                        }
-                                    }
                                     SetupDevice = false; //device has been setup
                                     SetState(SHIMMER_STATE_CONNECTED);
                                 }
@@ -1868,6 +1861,10 @@ namespace ShimmerAPI
         {
             if (SetupDevice == true)
             {
+                if (IsCRCSupported())
+                {
+                    WriteCRCMode(CRCModeToSetup);
+                }
                 WriteAccelRange(AccelRange);
                 WriteGSRRange(GSRRange);
                 WriteGyroRange(GyroRange);
