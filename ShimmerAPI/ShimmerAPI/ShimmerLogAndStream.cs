@@ -520,6 +520,10 @@ namespace ShimmerAPI
         {
             if (SetupDevice == true)
             {
+                if (IsCRCSupported())
+                {
+                    WriteCRCMode(CRCModeToSetup);
+                }
                 WriteAccelRange(AccelRange);
                 WriteGSRRange(GSRRange);
                 WriteGyroRange(GyroRange);
