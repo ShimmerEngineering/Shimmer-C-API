@@ -1201,6 +1201,18 @@ namespace ShimmerAPI
                                 else
                                 {
                                     System.Console.WriteLine("ACK for Streaming Command Received");
+                                    if (BluetoothCRCMode != BTCRCMode.OFF)
+                                    {
+                                        if (b != 0xff)
+                                        {
+                                            //Currently on CRC for sensor data packets are handled
+                                            for (int k = 0; k < (int)BluetoothCRCMode; k++)
+                                            {
+                                                Debug.WriteLine("State Connected: Throw CRC Byte");
+                                                ReadByte();
+                                            }
+                                        }
+                                    }
                                     StreamingACKReceived = true;
                                 }
                                 break;
@@ -1355,6 +1367,14 @@ namespace ShimmerAPI
                                     SetState(SHIMMER_STATE_STREAMING);
                                     mWaitingForStartStreamingACK = false;
                                     System.Console.WriteLine("ACK for Streaming Command Received");
+                                    if (BluetoothCRCMode != BTCRCMode.OFF)
+                                    {
+                                        for (int k = 0; k < (int)BluetoothCRCMode; k++)
+                                        {
+                                            Debug.WriteLine("State Connected: Throw CRC Byte");
+                                            ReadByte();
+                                        }
+                                    }
                                     StreamingACKReceived = true;
                                 }
                                 break;
@@ -1604,7 +1624,7 @@ namespace ShimmerAPI
                                 //Currently on CRC for sensor data packets are handled
                                 for (int k = 0; k < (int)BluetoothCRCMode; k++)
                                 {
-                                    System.Console.WriteLine("State Connected: Throw CRC Byte");
+                                    Debug.WriteLine("State Connected: Throw CRC Byte");
                                     ReadByte();
                                 }
                             }
