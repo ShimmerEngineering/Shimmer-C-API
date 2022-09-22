@@ -813,6 +813,7 @@ namespace ShimmerAPI
                 try
                 {
                     StreamTimeOutCount = 0;
+                    BluetoothCRCMode = BTCRCMode.OFF; //can only be enabled upon connection
                     OpenConnection();
 
                     StopReading = false;
