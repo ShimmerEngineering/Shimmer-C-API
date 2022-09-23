@@ -1730,7 +1730,7 @@ namespace ShimmerAPI
                         KeepObjectCluster = null;
                         break;
                 }
-                if (BluetoothCRCMode != BTCRCMode.OFF) //doesnt look like there is CRC with the instream command, to be checked with MN
+                if (BluetoothCRCMode != BTCRCMode.OFF)
                 {
                     if (b != 0xff)
                     {
