@@ -519,6 +519,11 @@ namespace ShimmerAPI
 
         protected override void InitializeShimmer3SDBT()
         {
+            RadioVersion = "";
+            if (IsGetRadioVersionSupported())
+            {
+                ReadRadioVersion();
+            }
             if (SetupDevice == true)
             {
                 if (IsCRCSupported())
@@ -827,6 +832,11 @@ namespace ShimmerAPI
             {
                 throw new Exception("Get Radio Version not supported on this firmware");
             }
+        }
+
+        public string GetRadioVersion()
+        {
+            return RadioVersion;
         }
 
         public override void WriteExpID()
