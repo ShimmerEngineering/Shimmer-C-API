@@ -2795,8 +2795,7 @@ namespace ShimmerAPI
 
         private void buttonReadDirectory_Click(object sender, EventArgs e)
         {
-            //ShimmerDevice.ReadDirectory();
-            ShimmerDevice.ReadRadioVersion();
+            ShimmerDevice.ReadDirectory();
         }
 
         private void comboBoxComPorts_SelectedIndexChanged(object sender, EventArgs e)
