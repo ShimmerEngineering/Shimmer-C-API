@@ -1641,7 +1641,12 @@ namespace ShimmerAPI
                     if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
                     {
                         AppendTextBox("Connected");
-                        ChangeStatusLabel("Connected to " + ShimmerDevice.GetShimmerAddress() + ". Firmware Version: " + ShimmerDevice.GetFirmwareVersionFullName());
+                        String label = "Connected to " + ShimmerDevice.GetShimmerAddress() + ". Firmware Version: " + ShimmerDevice.GetFirmwareVersionFullName();
+                        if (ShimmerDevice.GetRadioVersion().Length > 0)
+                        {
+                            label = label + ". Radio Version: " + ShimmerDevice.GetRadioVersion();
+                        }
+                        ChangeStatusLabel(label);
                         EnableButtons((int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED);
                         //buttonStop_Click1();
                     }
@@ -2790,7 +2795,8 @@ namespace ShimmerAPI
 
         private void buttonReadDirectory_Click(object sender, EventArgs e)
         {
-            ShimmerDevice.ReadDirectory();
+            //ShimmerDevice.ReadDirectory();
+            ShimmerDevice.ReadRadioVersion();
         }
 
         private void comboBoxComPorts_SelectedIndexChanged(object sender, EventArgs e)
