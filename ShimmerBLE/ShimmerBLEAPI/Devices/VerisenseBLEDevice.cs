@@ -78,6 +78,9 @@ namespace ShimmerBLEAPI.Devices
         public ushort PayloadIndex { get; set; }
         public int? PreviouslyWrittenPayloadIndex { get; set; } = -1;
         public string binFileFolderDir { get; set; }
+        public string sensorLogFileName { get; set; }
+        public string sensorLogFilePath { get; set; }
+        public string sensorLogFolderDir { get; set; }
 
         #endregion
 
@@ -533,9 +536,13 @@ namespace ShimmerBLEAPI.Devices
                     case 0x39: // read event log
                         var logEventsData = new LogEventsPayload();
                         var logEventsResult = logEventsData.ProcessPayload(ResponseBuffer);
+                        createSensorLogFile(false);
+                        SaveVlogFileToDB();
                         if (logEventsResult)
                         {
                             LogEvents = logEventsData;
+                            WriteSensorLogToFile(((LogEventsPayload)logEventsData).LogEventsBytes);
+                            //logEventsData.WriteLogEventsToFile(sensorLogFilePath);
                             if (ShimmerBLEEvent != null)
                             {
                                 ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.ReadEventLog });
@@ -992,6 +999,15 @@ namespace ShimmerBLEAPI.Devices
         /// For advance applications, to have the option to keep the location of the bin file in the DB
         /// </summary>
         protected virtual void SaveBinFileToDB()
+        {
+            //
+        }
+
+
+        /// <summary>
+        /// For advance applications, to have the option to keep the location of the vlog file in the DB
+        /// </summary>
+        protected virtual void SaveVlogFileToDB()
         {
             //
         }
@@ -1610,6 +1626,52 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        protected virtual void createSensorLogFile(bool crcError)
+        {
+            try
+            {
+                String sensorID = Asm_uuid.ToString();
+                try
+                {
+                    sensorID = GetSensorID();
+                }
+                catch (Exception ex) // if production config wasnt read default to the UUID
+                {
+                    sensorID = Asm_uuid.ToString();
+                    AdvanceLog(ex.Message, "Defaulting to UUID", sensorLogFileName, ASMName);
+                }
+
+                sensorLogFolderDir = string.Format("{0}/{1}/{2}/SensorLogs", GetTrialName(), GetParticipantID(), sensorID);
+                //sensorLogFolderDir = String.Format("SensorLog");
+
+                //need to check how data bin file is being uploaded (so that no all bin file is being uploaded to the BinaryFiles folder)
+                //or use a different path
+                var folder = Path.Combine(DependencyService.Get<ILocalFolderService>().GetAppLocalFolder(), sensorLogFolderDir);
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                if (crcError)
+                {
+                    sensorLogFileName = string.Format("{0}_{1}_{2}.vlog", DateTime.Now.ToString("yyMMdd_HHmmss"), "DebugLog", BadCRC);
+                }
+                else
+                {
+                    sensorLogFileName = string.Format("{0}_{1}.vlog", DateTime.Now.ToString("yyMMdd_HHmmss"), "DebugLog");
+                }
+
+                AdvanceLog(LogObject, "SensorLogFileNameCreated", sensorLogFileName, ASMName);
+                sensorLogFilePath = Path.Combine(folder, sensorLogFileName);
+
+                AdvanceLog(LogObject, "SensorLogFileCreated", sensorLogFilePath, ASMName);
+            }
+            catch (Exception ex)
+            {
+                AdvanceLog(LogObject, "SensorLogFileCreatedException", ex, ASMName);
+            }
+        }
+
         void DeleteLastPayloadFromBinFile()
         {
             AdvanceLog(LogObject, "DeleteLastPayloadFromBinFile", FinalChunkLogMsgForNack, ASMName);
@@ -1666,6 +1728,32 @@ namespace ShimmerBLEAPI.Devices
                 AdvanceLog(LogObject, "WritePayloadToBinFile", "Same Payload Index = " + PayloadIndex.ToString(), ASMName);
             }
         }
+
+        void WriteSensorLogToFile(byte[] payload)
+        {
+            if (PreviouslyWrittenPayloadIndex != PayloadIndex)
+            {
+                try
+                {
+                    System.Console.WriteLine("Write Sensor Log To File!");
+                    using (var stream = new FileStream(sensorLogFilePath, FileMode.Append))
+                    {
+                        stream.Write(payload, 0, payload.Length);
+                    }
+                    IsFileLocked(sensorLogFilePath);
+                }
+                catch (Exception ex)
+                {
+                    AdvanceLog(LogObject, "SensorLogFileAppendException", ex, ASMName);
+                    throw ex;
+                }
+            }
+            else
+            {
+                AdvanceLog(LogObject, "WriteSensorLogToFile", "Same Payload Index = " + PayloadIndex.ToString(), ASMName);
+            }
+        }
+
         protected virtual bool IsFileLocked(string filepath)
         {
             try
