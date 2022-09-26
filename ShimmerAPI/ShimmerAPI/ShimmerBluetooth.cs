@@ -505,7 +505,9 @@ namespace ShimmerAPI
             INSTREAM_CMD_RESPONSE = 0x8A,
             SET_RWC_COMMAND = 0x8F,
             RWC_RESPONSE = 0x90,
-            GET_RWC_COMMAND = 0x91
+            GET_RWC_COMMAND = 0x91,
+            BT_FW_VERSION_STR_RESPONSE = 0xA2,
+            GET_BT_FW_VERSION_STR_COMMAND = 0xA1
         };
 
         public enum ConfigSetupByte0Bitmap : byte
@@ -4759,6 +4761,29 @@ namespace ShimmerAPI
                     return true;
                 }
             } else
+            {
+                throw new Exception("Device needs to be connected, connecting or streaming");
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception">If device is not connected/streaming</exception>
+        public bool IsGetRadioVersionSupported()
+        {
+            if (GetState() == SHIMMER_STATE_CONNECTED ||
+                GetState() == SHIMMER_STATE_STREAMING ||
+                GetState() == SHIMMER_STATE_CONNECTING)
+            {
+                if (GetCompatibilityCode() >= 8)
+                {
+                    return true;
+                }
+            }
+            else
             {
                 throw new Exception("Device needs to be connected, connecting or streaming");
             }
