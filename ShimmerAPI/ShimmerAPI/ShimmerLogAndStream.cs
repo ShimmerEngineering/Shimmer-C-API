@@ -236,6 +236,7 @@ namespace ShimmerAPI
         private string shimmername = null;
         private string SdDir = "";
         private string experimentid = null;
+        public string RadioVersion = "";
         private long configtime = 0;
         public byte[] storedConfig = new byte[118];
 
@@ -518,6 +519,11 @@ namespace ShimmerAPI
 
         protected override void InitializeShimmer3SDBT()
         {
+            RadioVersion = "";
+            if (IsGetRadioVersionSupported())
+            {
+                ReadRadioVersion();
+            }
             if (SetupDevice == true)
             {
                 if (IsCRCSupported())
@@ -813,6 +819,24 @@ namespace ShimmerAPI
             System.Buffer.BlockCopy(shimmername_byte, 0, tosend, 2, shimmername_byte.Length);
             WriteBytes(tosend, 0, tosend.Length);
             System.Threading.Thread.Sleep(300);
+        }
+
+        public void ReadRadioVersion()
+        {
+            if (IsGetRadioVersionSupported())
+            {
+                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_BT_FW_VERSION_STR_COMMAND }, 0, 1);
+                System.Threading.Thread.Sleep(200);
+            }
+            else
+            {
+                throw new Exception("Get Radio Version not supported on this firmware");
+            }
+        }
+
+        public string GetRadioVersion()
+        {
+            return RadioVersion;
         }
 
         public override void WriteExpID()
@@ -1780,6 +1804,21 @@ namespace ShimmerAPI
                             //buffer.Add((byte)'\0');
                             //System.Console.WriteLine("ShimmerName: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
                             SetShimmerName(System.Text.Encoding.Default.GetString(buffer.ToArray()));
+                            buffer.Clear();
+                        }
+                        SetDataReceived(true);
+                        break;
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.BT_FW_VERSION_STR_RESPONSE:
+                        {
+                            int len = ReadByte();
+                            if (len > 0)
+                            {
+                                for (i = 0; i < len; i++)
+                                {
+                                    buffer.Add((byte)ReadByte());
+                                }
+                                RadioVersion = System.Text.Encoding.Default.GetString(buffer.ToArray());
+                            }
                             buffer.Clear();
                         }
                         SetDataReceived(true);
