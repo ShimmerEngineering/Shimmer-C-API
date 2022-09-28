@@ -536,7 +536,7 @@ namespace ShimmerBLEAPI.Devices
                     case 0x39: // read event log
                         var logEventsData = new LogEventsPayload();
                         var logEventsResult = logEventsData.ProcessPayload(ResponseBuffer);
-                        createSensorLogFile(false);
+                        CreateSensorLogFile(false);
                         SaveVlogFileToDB();
                         if (logEventsResult)
                         {
@@ -1626,7 +1626,7 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
-        protected virtual void createSensorLogFile(bool crcError)
+        protected virtual void CreateSensorLogFile(bool crcError)
         {
             try
             {
