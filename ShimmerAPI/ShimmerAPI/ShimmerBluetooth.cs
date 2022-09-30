@@ -4828,7 +4828,7 @@ namespace ShimmerAPI
                 }
                 else if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
                 {
-                    if ((FirmwareMajor == 0 && FirmwareMinor >= 14) || (FirmwareMajor == 0 && FirmwareMinor == 13 && FirmwareInternal >= 7)) //(FirmwareVersion >= 0.13.7)
+                    if ((FirmwareMajor > 0) || (FirmwareMajor == 0 && FirmwareMinor > 13) || (FirmwareMajor == 0 && FirmwareMinor == 13 && FirmwareInternal >= 7)) //(FirmwareVersion >= 0.13.7)
                     {
                         CompatibilityCode = 8;
                     }
