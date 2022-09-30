@@ -4797,54 +4797,54 @@ namespace ShimmerAPI
             {
                 if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_BTSTREAM)    //BtStream //Also Used For EXG MD, 9/2/2018: No longer used for newer ECGMD fw versions
                 {
-                    if (FirmwareMajor == 0 && FirmwareMinor == 1)//FirmwareVersion == 0.1)
+                    if (compareVersions(0,1))//FirmwareVersion == 0.1)
                     {
                         CompatibilityCode = 1;
                     }
-                    else if (FirmwareMajor == 0 && FirmwareMinor == 2)//FirmwareVersion == 0.2)
+                    else if (compareVersions(0, 2))//FirmwareVersion == 0.2)
                     {
                         CompatibilityCode = 2;
                     }
-                    else if (FirmwareMajor == 0 && FirmwareMinor == 3)//FirmwareVersion == 0.3)
+                    else if (compareVersions(0, 3))//FirmwareVersion == 0.3)
                     {
                         CompatibilityCode = 3;
                     }
-                    else if (FirmwareMajor == 0 && FirmwareMinor == 4)//FirmwareVersion == 0.4)
+                    else if (compareVersions(0, 4))//FirmwareVersion == 0.4)
                     {
                         CompatibilityCode = 4;
                     }
-                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 5) && (FirmwareMajor == 0 && FirmwareMinor <= 7 && FirmwareInternal <= 2))//(FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
+                    else if (compareVersions(0, 5) && (!compareVersions(0, 7, 3)))//(FirmwareVersion >= 0.5 && (FirmwareVersion <= 0.7 && FirmwareInternal <= 2))
                     {
                         CompatibilityCode = 5;
                     }
-                    else if (FirmwareMajor == 0 && FirmwareMinor >= 7 && FirmwareInternal > 2)//(FirmwareVersion >= 0.7 && FirmwareInternal>2)
+                    else if (compareVersions(0, 7, 3))//(FirmwareVersion >= 0.7 && FirmwareInternal>2)
                     {
                         CompatibilityCode = 7; //skip CompatibilityCode = 6 since functionality of code 6 and 7 was introduced at the same time 
                     }
-                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 8))//(FirmwareVersion >= 0.8)
+                    else if (compareVersions(0, 8))//(FirmwareVersion >= 0.8)
                     {
                         CompatibilityCode = 7;
                     }
                 }
                 else if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
                 {
-                    if ((FirmwareMajor > 0) || (FirmwareMajor == 0 && FirmwareMinor > 13) || (FirmwareMajor == 0 && FirmwareMinor == 13 && FirmwareInternal >= 7)) //(FirmwareVersion >= 0.13.7)
+                    if (compareVersions(0, 13, 7)) //(FirmwareVersion >= 0.13.7)
                     {
                         CompatibilityCode = 8;
                     }
-                    else if (FirmwareMajor == 0 && FirmwareMinor == 1) //(FirmwareVersion == 0.1)
+                    else if (compareVersions(0, 1)) //(FirmwareVersion == 0.1)
                     {
                         CompatibilityCode = 3;
                     }
-                    else if (FirmwareMajor == 0 && FirmwareMinor == 2) //(FirmwareVersion == 0.2)
+                    else if (compareVersions(0, 2)) //(FirmwareVersion == 0.2)
                     {
                         CompatibilityCode = 4;
                     }
-                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 3) && (FirmwareMajor == 0 && FirmwareMinor < 5))//(FirmwareVersion >= 0.3 && FirmwareVersion<0.5)
+                    else if ((compareVersions(0, 3)) && (!compareVersions(0, 5)))//(FirmwareVersion >= 0.3 && FirmwareVersion<0.5)
                     {
                         CompatibilityCode = 5;
                     }
-                    else if ((FirmwareMajor == 0 && FirmwareMinor >= 5 && FirmwareInternal >= 4) || (FirmwareMajor == 0 && FirmwareMinor == 6))//(FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
+                    else if (compareVersions(0, 5, 4) || compareVersions(0, 6))//(FirmwareVersion >= 0.5 && FirmwareInternal >= 4  || FirmwareVersion == 0.6)
                     {
                         CompatibilityCode = 6;
                     }
@@ -4862,7 +4862,7 @@ namespace ShimmerAPI
             {
                 if (FirmwareIdentifier == 1)    //BtStream
                 {
-                    if ((FirmwareMajor == 1 && FirmwareMinor == 2))//FirmwareVersion == 1.2)
+                    if (compareVersions(1, 2))//FirmwareVersion == 1.2)
                     {
                         CompatibilityCode = 1;
                     }
@@ -6187,9 +6187,20 @@ namespace ShimmerAPI
         public bool compareVersions(int compMajor, int compMinor, int compInternal)
         {
 
-            if ((compMajor > FirmwareMajor)
-                    || (FirmwareMajor == compMajor && compMinor > FirmwareMinor)
-                    || (FirmwareMajor == compMajor && FirmwareMinor == compMinor && compInternal >= FirmwareInternal))
+            if ((FirmwareMajor > compMajor)
+                    || (FirmwareMajor == compMajor && FirmwareMinor > compMinor)
+                    || (FirmwareMajor == compMajor && FirmwareMinor == compMinor && FirmwareInternal >= compInternal))
+            {
+                return true; // if FW ID is the same and version is greater or equal 
+            }
+            return false; // if less or not the same FW ID
+        }
+        
+        public bool compareVersions(int compMajor, int compMinor)
+        {
+
+            if ((FirmwareMajor > compMajor)
+                    || (FirmwareMajor == compMajor && FirmwareMinor >= compMinor))
             {
                 return true; // if FW ID is the same and version is greater or equal 
             }
