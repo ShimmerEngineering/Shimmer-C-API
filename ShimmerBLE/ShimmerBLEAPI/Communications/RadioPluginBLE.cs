@@ -72,16 +72,15 @@ namespace shimmer.Communications
                         localTask.TrySetResult(false);
                         return;
                     }*/
-                    await Task.Delay(500);
+
+                    ConnectedASM.UpdateConnectionInterval(ConnectionInterval.High);
+                    await ConnectedASM.RequestMtuAsync(251);
 
                     if (ConnectedASM.State != DeviceState.Connected)
                     {
                         localTask.TrySetResult(false);
                         return;
                     }
-
-                    ConnectedASM.UpdateConnectionInterval(ConnectionInterval.High);
-                    await ConnectedASM.RequestMtuAsync(251);
 
                     AdvanceLog(nameof(RadioPluginBLE), "Connect ASM Hash", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
                     await Task.Delay(500);
