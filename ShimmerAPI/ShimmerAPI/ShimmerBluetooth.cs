@@ -5215,6 +5215,7 @@ namespace ShimmerAPI
                 int samplingByteValue = (int)(32768 / rate);
                 WriteBytes(new byte[3] { (byte)PacketTypeShimmer2.SET_SAMPLING_RATE_COMMAND, (byte)(samplingByteValue & 0xFF), (byte)((samplingByteValue >> 8) & 0xFF) }, 0, 3);
             }
+            System.Threading.Thread.Sleep(200);
 
             //now check to see that the internal sensor rates are close to the sampling rate value
             if (GetFirmwareIdentifier() != FW_IDENTIFIER_SHIMMERECGMD)
