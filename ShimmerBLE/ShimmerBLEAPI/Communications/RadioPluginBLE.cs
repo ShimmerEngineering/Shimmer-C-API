@@ -57,6 +57,9 @@ namespace shimmer.Communications
                     TimeSpan timespan = new TimeSpan(0, 0, 5);
                     Timer timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);
                     ConnectedASM = await adapter.ConnectToKnownDeviceAsync(Asm_uuid, new ConnectParameters(false, true),cancel.Token);
+                    ConnectedASM.UpdateConnectionInterval(ConnectionInterval.High);
+                    await ConnectedASM.RequestMtuAsync(251);
+
                     timer.Dispose();
                     /*if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
                     {
@@ -85,7 +88,7 @@ namespace shimmer.Communications
                     AdvanceLog(nameof(RadioPluginBLE), "Connect ASM Hash", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
                     await Task.Delay(500);
                     System.Console.WriteLine("Getting Service");
-                     ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
+                    ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
 
                     if (ServiceTXRX != null)
                     {
@@ -189,11 +192,11 @@ namespace shimmer.Communications
         /// <returns>Disconnected or Limited <see cref="ConnectivityState"/></returns>
         public async Task<ConnectivityState> Disconnect()
         {
-            
+
             ConnectivityState state = ConnectivityState.Unknown;
             try
             {
-                
+
                 if (UartRX != null)
                 {
                     UartRX.ValueUpdated -= UartRX_ValueUpdated;
@@ -210,7 +213,7 @@ namespace shimmer.Communications
                     ServiceTXRX.Dispose();
                     ServiceTXRX = null;
                 }
-                
+
                 //ResponseBuffer = null;
 
                 if (ConnectedASM != null)
@@ -246,6 +249,7 @@ namespace shimmer.Communications
                 {
                     ConnectedASM.Dispose();
                     ConnectedASM = null;
+                    Dispose(true);
                 }
             }
             return state;
@@ -328,6 +332,7 @@ namespace shimmer.Communications
                         {
                             ConnectedASM.Dispose();
                         }
+                        adapter.DeviceConnected -= Adapter_DeviceConnected;
                         adapter.DeviceDisconnected -= Adapter_DeviceDisconnected;
                         adapter.DeviceConnectionLost -= Adapter_DeviceConnectionLost;
 
