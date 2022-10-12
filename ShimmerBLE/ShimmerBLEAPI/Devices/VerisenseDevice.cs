@@ -74,6 +74,7 @@ namespace ShimmerBLEAPI.Devices
         protected OpConfigPayload OpConfig { get; set; }
         protected BasePayload WriteResponse { get; set; }
         protected PendingEventsPayload PendingEvents { get; set; }
+        protected LogEventsPayload LogEvents { get; set; }
 
         public Guid Asm_uuid { get; set; }
         protected string ASMName { get; set; }
