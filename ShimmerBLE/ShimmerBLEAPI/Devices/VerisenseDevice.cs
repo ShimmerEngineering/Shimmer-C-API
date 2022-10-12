@@ -717,6 +717,15 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
+        /// Returns log events payload
+        /// </summary>
+        /// <returns></returns>
+        public LogEventsPayload GetLogEvents()
+        {
+            return LogEvents;
+        }
+
+        /// <summary>
         /// Returns time payload
         /// </summary>
         public TimePayload GetLastReceivedRTC()
