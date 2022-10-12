@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace ShimmerAPI
 {
@@ -64,6 +65,33 @@ namespace ShimmerAPI
         {
             isLogging = false;
             CurrentSensingStatus = false;
+        }
+
+        //Shimmer3 Constructor
+        //Shimmer3 constructor, to set the Shimmer device according to specified settings upon connection
+        /// <summary>
+        /// Shimmer 3 constructor
+        /// </summary>
+        /// <param name="devName">User Defined Device Name</param>
+        /// <param name="samplingRate">Sampling rate in Hz</param>
+        /// <param name="accelRange">Shimmer3 options - 0,1,2,3,4 = 2g,4g,8g,16g.</param>
+        /// <param name="gsrRange">Range is between 0 and 4. 0 = 10-56kOhm, 1 = 56-220kOhm, 2 = 220-680kOhm, 3 = 680kOhm-4.7MOhm, 4 = Auto range</param>
+        /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer3, for multiple sensors use an or operation</param>
+        /// <param name="enableLowPowerAccel"></param>
+        /// <param name="enableLowPowerGyro"></param>
+        /// <param name="enableLowPowerMag"></param>
+        /// <param name="gyroRange">Options are 0,1,2,3. Where 0 = 250 Degree/s, 1 = 500 Degree/s, 2 = 1000 Degree/s, 3 = 2000 Degree/s</param>
+        /// <param name="magRange">Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1</param>
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
+        /// <param name="internalExpPower"></param>
+        /// <param name="CRCmode"></param>Whether to enable CRC model, note on log and stream 0.13.7 > supports this, otherwise command does nothing
+        public ShimmerLogAndStream(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower, BTCRCMode CRCmode)
+            : base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
+        {
+            isLogging = false;
+            CurrentSensingStatus = false;
+            CRCModeToSetup = CRCmode;
         }
 
         //Shimmer2R Constructor
@@ -208,6 +236,7 @@ namespace ShimmerAPI
         private string shimmername = null;
         private string SdDir = "";
         private string experimentid = null;
+        public string RadioVersion = "";
         private long configtime = 0;
         public byte[] storedConfig = new byte[118];
 
@@ -399,6 +428,7 @@ namespace ShimmerAPI
         public override void StartStreamingandLog()
         {
             KeepObjectCluster = null;
+            UnalignedBytesReceived = new List<Byte>();
             if (IsConnectionOpen())
             {
                 if (ShimmerState == SHIMMER_STATE_CONNECTED)
@@ -489,8 +519,17 @@ namespace ShimmerAPI
 
         protected override void InitializeShimmer3SDBT()
         {
+            RadioVersion = "";
+            if (IsGetRadioVersionSupported())
+            {
+                ReadRadioVersion();
+            }
             if (SetupDevice == true)
             {
+                if (IsCRCSupported())
+                {
+                    WriteCRCMode(CRCModeToSetup);
+                }
                 WriteAccelRange(AccelRange);
                 WriteGSRRange(GSRRange);
                 WriteGyroRange(GyroRange);
@@ -501,7 +540,7 @@ namespace ShimmerAPI
                 WriteSensors(SetEnabledSensors); //this should always be the last command
                 SetLowPowerAccel(LowPowerAccelEnabled);
                 SetLowPowerMag(LowPowerMagEnabled);
-                SetLowPowerGyro(LowPowerGyroEnabled);
+                SetLowPowerGyro(LowPowerGyroEnabled);        
             }
 
 
@@ -780,6 +819,24 @@ namespace ShimmerAPI
             System.Buffer.BlockCopy(shimmername_byte, 0, tosend, 2, shimmername_byte.Length);
             WriteBytes(tosend, 0, tosend.Length);
             System.Threading.Thread.Sleep(300);
+        }
+
+        public void ReadRadioVersion()
+        {
+            if (IsGetRadioVersionSupported())
+            {
+                WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_BT_FW_VERSION_STR_COMMAND }, 0, 1);
+                System.Threading.Thread.Sleep(200);
+            }
+            else
+            {
+                throw new Exception("Get Radio Version not supported on this firmware");
+            }
+        }
+
+        public string GetRadioVersion()
+        {
+            return RadioVersion;
         }
 
         public override void WriteExpID()
@@ -1550,7 +1607,7 @@ namespace ShimmerAPI
                 {
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INSTREAM_CMD_RESPONSE:
                         int inStreamCMD = ReadByte();
-                        //System.Console.WriteLine("In Stream CMD Response");
+                        System.Console.WriteLine("In Stream CMD Response");
                         if (inStreamCMD == (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.STATUS_RESPONSE)
                         {
                             System.Console.WriteLine("Status Response Received");
@@ -1561,7 +1618,7 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            //System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
+                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
 
                             //AS is this ok?
                             isLogging = logging;
@@ -1697,6 +1754,18 @@ namespace ShimmerAPI
                         KeepObjectCluster = null;
                         break;
                 }
+                if (BluetoothCRCMode != BTCRCMode.OFF)
+                {
+                    if (b != 0xff)
+                    {
+                        //Currently on CRC for sensor data packets are handled
+                        for (int k = 0; k < (int)BluetoothCRCMode; k++)
+                        {
+                            //Debug.WriteLine("State Streaming: Throw CRC Byte");
+                            ReadByte();
+                        }
+                    }
+                }
             }
             else
             {
@@ -1735,6 +1804,21 @@ namespace ShimmerAPI
                             //buffer.Add((byte)'\0');
                             //System.Console.WriteLine("ShimmerName: " + System.Text.Encoding.Default.GetString(buffer.ToArray()));
                             SetShimmerName(System.Text.Encoding.Default.GetString(buffer.ToArray()));
+                            buffer.Clear();
+                        }
+                        SetDataReceived(true);
+                        break;
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.BT_FW_VERSION_STR_RESPONSE:
+                        {
+                            int len = ReadByte();
+                            if (len > 0)
+                            {
+                                for (i = 0; i < len; i++)
+                                {
+                                    buffer.Add((byte)ReadByte());
+                                }
+                                RadioVersion = System.Text.Encoding.Default.GetString(buffer.ToArray());
+                            }
                             buffer.Clear();
                         }
                         SetDataReceived(true);
@@ -1795,7 +1879,7 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            //System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
+                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
                             if (CurrentDockStatus != docked)
                             {
                                 CurrentDockStatus = docked;

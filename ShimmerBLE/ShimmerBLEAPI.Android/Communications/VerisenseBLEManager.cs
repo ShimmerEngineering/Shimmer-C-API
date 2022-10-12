@@ -193,6 +193,20 @@ namespace ShimmerBLEAPI.Android.Communications
             return BLEManagerEvent;
         }
 
+        public Task<List<string>> GetSystemConnectedOrPairedDevices()
+        {
+            TaskCompletionSource<List<string>> tcs = new TaskCompletionSource<List<string>>();
+            List<string> list = new List<string>();
+            foreach(var item in adapter.GetSystemConnectedOrPairedDevices())
+            {
+                if (item.Name.Contains("Verisense"))
+                {
+                    list.Add(item.Id.ToString());
+                }
+            }
+            tcs.SetResult(list);
+            return tcs.Task;
+        }
     }
 
     public class BroadcastReceiverPairingRequest : BroadcastReceiver
