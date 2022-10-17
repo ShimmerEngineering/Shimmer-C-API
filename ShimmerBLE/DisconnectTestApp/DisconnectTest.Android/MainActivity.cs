@@ -17,6 +17,8 @@ namespace DisconnectTest.Droid
         {
             Manifest.Permission.AccessCoarseLocation,
             Manifest.Permission.AccessFineLocation,
+            Manifest.Permission.ReadExternalStorage,
+            Manifest.Permission.WriteExternalStorage
         };
         protected override void OnCreate(Bundle savedInstanceState)
         {
