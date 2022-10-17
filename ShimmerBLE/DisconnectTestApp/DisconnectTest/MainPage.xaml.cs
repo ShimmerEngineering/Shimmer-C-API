@@ -23,7 +23,7 @@ namespace DisconnectTest
         VerisenseBLEScannedDevice selectedDevice;
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
 
-        private int interval = 3;
+        private int interval = 5;
         private int successCount = 0;
         private int failureCount = 0;
         private int totalIterationLimit = 5;
@@ -159,7 +159,7 @@ namespace DisconnectTest
 
                     }
 
-                    await Task.Delay(2500);
+                    await Task.Delay(4000);
                     if (ResultMap[currentIteration] == -1)
                     {
                         ResultMap[currentIteration] = 0;
@@ -255,7 +255,7 @@ namespace DisconnectTest
         {
             if (isTestStarted)
             {
-                foreach(string item in await bleManager.GetSystemConnectedOrPairedDevices())
+                foreach (string item in await bleManager.GetSystemConnectedOrPairedDevices())
                 {
                     System.Console.WriteLine("Device Paired " + item);
                 }
