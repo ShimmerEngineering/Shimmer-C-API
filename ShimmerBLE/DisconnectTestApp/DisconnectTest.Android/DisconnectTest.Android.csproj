@@ -68,6 +68,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocalFolderService.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -106,6 +107,10 @@
     <ProjectReference Include="..\..\ShimmerBLEAPI.Android\ShimmerBLEAPI.Android.csproj">
       <Project>{381507d7-64e0-464d-a100-1f981c6a5235}</Project>
       <Name>ShimmerBLEAPI.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
+      <Project>{2b423ed5-9db8-40fe-8c0c-dcdafe0e6229}</Project>
+      <Name>ShimmerBLEAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\DisconnectTest\DisconnectTest.csproj">
       <Project>{9196f4b3-23e2-47c6-a997-3dda2c43aa8a}</Project>
