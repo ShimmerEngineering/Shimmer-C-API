@@ -139,16 +139,15 @@ namespace DisconnectTest
                                 break;
                             case 3:
                                 // power off, WriteBytes 2B-00-00
+                                TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
                                 Device.BeginInvokeOnMainThread(async () =>
                                 {
-                                    await DisplayAlert("Alert", "Please power off the device in 5 seconds", "OK");
-                                });
-                                await Task.Delay(5000);
-                                await device.ExecuteRequest(RequestType.Disconnect);
-                                Device.BeginInvokeOnMainThread(async () =>
-                                {
+                                    await DisplayAlert("Alert", "Please power off the device before pressing the OK button", "OK");
+                                    await device.ExecuteRequest(RequestType.Disconnect);
+                                    tcs.SetResult(true);
                                     await DisplayAlert("Alert", "Please power on the device", "OK");
                                 });
+                                await tcs.Task;
                                 break;
                             default:
                                 break;
