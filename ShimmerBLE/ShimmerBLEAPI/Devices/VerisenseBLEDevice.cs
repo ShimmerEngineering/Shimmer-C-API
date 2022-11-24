@@ -896,7 +896,11 @@ namespace ShimmerBLEAPI.Devices
             NewPayload = true;
             DataBuffer = new DataChunkNew();
             DataBufferToBeSaved = null;
+            dataFilePath = null;
+            dataFileName = null;
 
+            PayloadIndex = 0;
+            PreviouslyWrittenPayloadIndex = -1;
             SendReadDataRequestCommandOnMainThread();
 
             var result = await DataTCS.Task;
