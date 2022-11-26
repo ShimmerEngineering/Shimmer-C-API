@@ -8,7 +8,9 @@ namespace shimmer.Communications
     public interface IVerisenseByteCommunication
     {
         Guid Asm_uuid { get; set; }
+        bool IsAutoConnecting { get; set; }
         Task<ConnectivityState> Connect();
+        Task<ConnectivityState> Connect(bool autoConnect);
         Task<ConnectivityState> Disconnect();
 
         event EventHandler<ByteLevelCommunicationEvent> CommunicationEvent;

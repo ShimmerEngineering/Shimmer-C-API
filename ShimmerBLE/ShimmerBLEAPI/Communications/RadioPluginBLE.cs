@@ -25,6 +25,10 @@ namespace shimmer.Communications
         ICharacteristic UartRX { get; set; }
         ICharacteristic UartTX { get; set; }
         IService ServiceTXRX { get; set; }
+        public bool IsAutoConnecting { get; set; } = false;
+
+        public bool testm = false;
+       
         ConnectivityState StateOfConnectivity = ConnectivityState.Unknown;
 
         /// <summary>
@@ -40,11 +44,19 @@ namespace shimmer.Communications
             cancel.Cancel();
         }
         CancellationTokenSource cancel = new CancellationTokenSource();
-        /// <summary>
-        /// Connect to a device using <see cref="Asm_uuid"/> and get the characteristics
-        /// </summary>
-        /// <returns><see cref="ConnectivityState"/></returns>
-        public async Task<ConnectivityState> Connect()
+
+        public bool AutoConnect;
+        public async Task<ConnectivityState> Connect(bool autoConnect)
+        {
+            AutoConnect = autoConnect;
+            return await Connect();
+        }
+
+            /// <summary>
+            /// Connect to a device using <see cref="Asm_uuid"/> and get the characteristics
+            /// </summary>
+            /// <returns><see cref="ConnectivityState"/></returns>
+            public async Task<ConnectivityState> Connect()
         {
             var localTask = new TaskCompletionSource<bool>();
 
@@ -52,12 +64,24 @@ namespace shimmer.Communications
             {
                 try
                 {
-                    var timeout = 5000;
+                    //var timeout = 5000;
                     cancel = new CancellationTokenSource();
-                    TimeSpan timespan = new TimeSpan(0, 0, 5);
-                    Timer timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);                 
-                    ConnectedASM = await adapter.ConnectToKnownDeviceAsync(Asm_uuid, new ConnectParameters(false, true),cancel.Token);
-                    timer.Dispose();
+                    //TimeSpan timespan = new TimeSpan(0, 0, 5);
+                    Timer timer = null;
+
+                    IsAutoConnecting = false;
+                    if (AutoConnect)
+                    {
+                        IsAutoConnecting = true;
+                    } else
+                    {
+                        timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);
+                    }
+                    ConnectedASM = await adapter.ConnectToKnownDeviceAsync(Asm_uuid, new ConnectParameters(AutoConnect, true),cancel.Token);
+                    IsAutoConnecting = false;
+                    if (timer != null) { 
+                        timer.Dispose();
+                    }
                     /*if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
                     {
                         // task completed within timeout
@@ -362,6 +386,5 @@ namespace shimmer.Communications
             System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
             Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
         }
-
     }
 }

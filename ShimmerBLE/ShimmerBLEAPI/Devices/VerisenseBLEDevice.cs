@@ -26,6 +26,14 @@ namespace ShimmerBLEAPI.Devices
     {
         #region Comm Props
         public event EventHandler<ShimmerBLEEventData> ShimmerBLEEvent;
+        public bool RadioIsAutoConnecting()
+        {
+            if (BLERadio != null)
+            {
+                return BLERadio.IsAutoConnecting;
+            }
+            return false;
+        }
 
         public byte[] ResponseBuffer { get; set; }
 
@@ -159,7 +167,7 @@ namespace ShimmerBLEAPI.Devices
             BLERadio.Asm_uuid = Asm_uuid;
             BLERadio.CommunicationEvent += UartRX_ValueUpdated;
 
-            var result = await BLERadio.Connect();
+            var result = await BLERadio.Connect(AutoConnect);
             if (result.Equals(ConnectivityState.Connected))
             {
                 return true;
@@ -1960,6 +1968,18 @@ namespace ShimmerBLEAPI.Devices
         /// <returns></returns>
         public async Task<bool> Connect(bool initialize)
         {
+            return await Connect(initialize, DefaultVerisenseConfiguration.Unknown_Device_OpConfig_Setting, false);
+        }
+
+        public bool AutoConnect = true;
+        /// <summary>
+        /// To attempt a ble connection with the verisense device
+        /// </summary>
+        /// <param name="initialize">if a BLE connection is successful setting this to true will read the status, production configuration, operation configuration and set the time</param>
+        /// <returns></returns>
+        public async Task<bool> Connect(bool initialize,bool autoConnect)
+        {
+            AutoConnect = autoConnect;
             return await Connect(initialize, DefaultVerisenseConfiguration.Unknown_Device_OpConfig_Setting, false);
         }
 
