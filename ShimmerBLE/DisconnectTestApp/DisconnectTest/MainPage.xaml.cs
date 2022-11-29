@@ -23,7 +23,7 @@ namespace DisconnectTest
         VerisenseBLEScannedDevice selectedDevice;
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
 
-        private int interval = 3;
+        private int interval = 5;
         private int successCount = 0;
         private int failureCount = 0;
         private int totalIterationLimit = 5;
@@ -139,16 +139,15 @@ namespace DisconnectTest
                                 break;
                             case 3:
                                 // power off, WriteBytes 2B-00-00
+                                TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
                                 Device.BeginInvokeOnMainThread(async () =>
                                 {
-                                    await DisplayAlert("Alert", "Please power off the device in 5 seconds", "OK");
-                                });
-                                await Task.Delay(5000);
-                                await device.ExecuteRequest(RequestType.Disconnect);
-                                Device.BeginInvokeOnMainThread(async () =>
-                                {
+                                    await DisplayAlert("Alert", "Please power off the device before pressing the OK button", "OK");
+                                    await device.ExecuteRequest(RequestType.Disconnect);
+                                    tcs.SetResult(true);
                                     await DisplayAlert("Alert", "Please power on the device", "OK");
                                 });
+                                await tcs.Task;
                                 break;
                             default:
                                 break;
@@ -159,7 +158,7 @@ namespace DisconnectTest
 
                     }
 
-                    await Task.Delay(2500);
+                    await Task.Delay(4000);
                     if (ResultMap[currentIteration] == -1)
                     {
                         ResultMap[currentIteration] = 0;
@@ -255,7 +254,7 @@ namespace DisconnectTest
         {
             if (isTestStarted)
             {
-                foreach(string item in await bleManager.GetSystemConnectedOrPairedDevices())
+                foreach (string item in await bleManager.GetSystemConnectedOrPairedDevices())
                 {
                     System.Console.WriteLine("Device Paired " + item);
                 }

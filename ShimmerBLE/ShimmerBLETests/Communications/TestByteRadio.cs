@@ -20,6 +20,7 @@ namespace ShimmerBLETests.Communications
         byte[] WriteTimeRequest = new byte[] { 0x25, 0x00, 0x00 };
         byte[] ReadPendingEventsRequest = new byte[] { 0x17, 0x00, 0x00 };
         byte[] DFUCommand = new byte[] { 0x26, 0x00, 0x00 };
+        byte[] ReadEventLog = new byte[] { 0x29, 0x01, 0x00, 0x10 };
         int DataSyncMtuSize = 5;
         public Guid Asm_uuid { get; set; }
 
@@ -168,9 +169,30 @@ namespace ShimmerBLETests.Communications
                         CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = result, Event = ByteLevelCommunicationEvent.CommEvent.NewBytes });
                     }
                 }
+                else if(bytes[3] == ReadEventLog[3])
+                {
+                    byte[] lengthBytes = new byte[] { 57, 64, 31 };
+                    byte[] eventLogsBytes = new byte[] { 128, 147, 167, 1, 1, 105, 27, 27, 128, 147, 167, 1, 3, 105, 27, 24, 128, 147, 167, 1, 160, 61, 28, 26 };
+                    byte[] first = new byte[244];
+                    byte[] second = new byte[244];
+                    byte[] third = new byte[192];
+
+                    Array.Copy(eventLogsBytes, 0, first, 0, 24);
+                    
+                    if (CommunicationEvent != null)
+                    {
+                        CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = lengthBytes, Event = ByteLevelCommunicationEvent.CommEvent.NewBytes });
+                        CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = first, Event = ByteLevelCommunicationEvent.CommEvent.NewBytes });
+                        for (int i = 0; i < 31; i++)
+                        {
+                            CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = second, Event = ByteLevelCommunicationEvent.CommEvent.NewBytes });
+                        }
+                        CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = third, Event = ByteLevelCommunicationEvent.CommEvent.NewBytes });
+                    }
+                }
             }
             else if (bytes[0] == 36) //0x24 , write op config
-            {   
+            {
                 byte[] result = new byte[] { 68, 0, 0 }; //0x44 , write op config ack
                 if (CommunicationEvent != null)
                 {
