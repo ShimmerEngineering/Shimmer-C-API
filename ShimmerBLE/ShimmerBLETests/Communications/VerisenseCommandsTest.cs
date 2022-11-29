@@ -109,6 +109,24 @@ namespace ShimmerBLETests
         }
 
         [Test]
+        public async Task ReadEventLog()
+        {
+            var result = await VerisenseBLEDevice.Connect(false);
+            if (result && VerisenseBLEDevice.GetVerisenseBLEState() == shimmer.Communications.ShimmerDeviceBluetoothState.Connected)
+            {
+                await VerisenseBLEDevice.ExecuteRequest(RequestType.ReadEventLog);
+                LogEventsPayload logEvents = VerisenseBLEDevice.GetLogEvents();
+                if (logEvents != null && 
+                    logEvents.LogEvents[0].CurrentEvent == LogEvent.BLE_DISCONNECTED &&
+                    logEvents.LogEvents[2].CurrentEvent == LogEvent.BLE_CONNECTED)
+                {
+                    Assert.Pass();
+                }
+            }
+            Assert.Fail();
+        }
+
+        [Test]
         public async Task ReadTime()
         {
             var result = await VerisenseBLEDevice.Connect(false);
