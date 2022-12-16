@@ -132,8 +132,6 @@ namespace shimmer.Communications
                 }
                 catch (Exception ex)
                 {
-                    GattCallBackErrorCount++;   //testtttt 2275
-
                     Debug.WriteLine("Radio Plugin BLE Exception " + ex.Message);
                     AdvanceLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", ex.Message, Asm_uuid.ToString());
                     //GattCallback error: Failure
