@@ -17,7 +17,7 @@ namespace shimmer.Communications
     /// </summary>
     public class RadioPluginBLE : IVerisenseByteCommunication
     {
-        public int GallCallBackErrorCount = 0;
+        public static int GattCallBackErrorCount { get; set; }
         public Guid Asm_uuid { get; set; }
         public event EventHandler<ByteLevelCommunicationEvent> CommunicationEvent;
         public IDevice ConnectedASM { get; set; }
@@ -132,12 +132,14 @@ namespace shimmer.Communications
                 }
                 catch (Exception ex)
                 {
+                    GattCallBackErrorCount++;   //testtttt 2275
+
                     Debug.WriteLine("Radio Plugin BLE Exception " + ex.Message);
                     AdvanceLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", ex.Message, Asm_uuid.ToString());
                     //GattCallback error: Failure
                     if (ex.Message.Contains("GattCallback error: Failure")) //might want to have a look at this error as well in the future GattCallback error: 133 
                     {
-                        GallCallBackErrorCount++;
+                        GattCallBackErrorCount++;
                     }
                     foreach (IDevice device in adapter.ConnectedDevices)
                     {

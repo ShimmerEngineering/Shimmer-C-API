@@ -45,8 +45,7 @@ namespace ShimmerBLEAPI.Devices
         int TimerCount;
         int TaskCount;
         int MaximumNumberOfBytesPerBinFile = 100000000; // 100MB limit
-        public int GallCallBackErrorCount = 0;
-
+        //public int GallCallBackErrorCount;
         protected const string LogObject = "VerisenseBLEDevice";
         protected const string BadCRC = "BadCRC";
         #endregion
