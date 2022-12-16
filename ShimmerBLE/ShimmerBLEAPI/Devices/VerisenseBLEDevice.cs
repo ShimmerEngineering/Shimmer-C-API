@@ -152,6 +152,20 @@ namespace ShimmerBLEAPI.Devices
         }
 
         /// <summary>
+        /// This is to give an option to log in normal mode
+        /// </summary>
+        /// <param name="ObjectName"></param>
+        /// <param name="Action"></param>
+        /// <param name="Data"></param>
+        /// <param name="asmid"></param>
+        public virtual void NormalLog(string ObjectName, string Action, object Data, string asmid)
+        {
+            //Just print to console
+            System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+            Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+        }
+
+        /// <summary>
         /// The duration in milliseconds since the last time the instance has received data successfully from a Verisense Device
         /// </summary>
         /// <returns>Duration in milliseconds</returns>
@@ -340,7 +354,7 @@ namespace ShimmerBLEAPI.Devices
             }
             catch (Exception ex)
             {
-                AdvanceLog(LogObject, "ProcessDataTimeout", ex, ASMName);
+                NormalLog(LogObject, "ProcessDataTimeout", ex, ASMName);
                 ReceivingData = false;
                 DataTCS.TrySetResult(false);
                 DataRequestTimer.Dispose();
@@ -572,7 +586,7 @@ namespace ShimmerBLEAPI.Devices
             }
             catch (Exception ex)
             {
-                AdvanceLog(LogObject, "NonDataResponse Exception", ex, ASMName);
+                NormalLog(LogObject, "NonDataResponse Exception", ex, ASMName);
                 if (RequestTCS != null)
                     RequestTCS.TrySetResult(false);
                 if (DataTCS != null)
@@ -928,7 +942,7 @@ namespace ShimmerBLEAPI.Devices
             catch (Exception ex)
             {
                 DataTCS.TrySetResult(false);
-                AdvanceLog(LogObject, "ReadDataException", ex, ASMName);
+                NormalLog(LogObject, "ReadDataException", ex, ASMName);
             }
 
         }
@@ -943,7 +957,7 @@ namespace ShimmerBLEAPI.Devices
             catch (Exception ex)
             {
                 DataTCS.TrySetResult(false);
-                AdvanceLog(LogObject, "ReadDataException", ex, ASMName);
+                NormalLog(LogObject, "ReadDataException", ex, ASMName);
             }
         }
 
@@ -964,7 +978,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 WaitingForStopStreamingCommand = false;
                 DataTCS.TrySetResult(false);
-                AdvanceLog(LogObject, "ReadDataException", ex, ASMName);
+                NormalLog(LogObject, "ReadDataException", ex, ASMName);
             }
         }
 
@@ -1000,7 +1014,7 @@ namespace ShimmerBLEAPI.Devices
                     DeleteLastPayloadFromBinFile();
                 }
 
-                AdvanceLog(LogObject, "SendDataACKException", ex.Message, ASMName);
+                NormalLog(LogObject, "SendDataACKException", ex.Message, ASMName);
                 DataTCS.TrySetResult(false);
             }
 
@@ -1146,7 +1160,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 NACKcounter++;
             }
-            AdvanceLog(LogObject, "DataNACKRequest", "NACK count = " + NACKcounter + ";  NACK CRC count = " + NACKCRCcounter, ASMName);
+            NormalLog(LogObject, "DataNACKRequest", "NACK count = " + NACKcounter + ";  NACK CRC count = " + NACKCRCcounter, ASMName);
             DataBuffer = new DataChunkNew();
             NewPayload = true;
 
@@ -1158,7 +1172,7 @@ namespace ShimmerBLEAPI.Devices
             }
             catch (Exception ex)
             {
-                AdvanceLog(LogObject, "SendDataNACKException", ex.Message, ASMName);
+                NormalLog(LogObject, "SendDataNACKException", ex.Message, ASMName);
                 DataTCS.TrySetResult(false);
             }
 
@@ -1352,7 +1366,7 @@ namespace ShimmerBLEAPI.Devices
         {
             try
             {
-                AdvanceLog(LogObject, "HandleEOS", BitConverter.ToString(payload), ASMName);
+                NormalLog(LogObject, "HandleEOS", BitConverter.ToString(payload), ASMName);
                 DataRequestTimer.Dispose(); //can stop the timer if the EOS is reached
                 DataTCS.TrySetResult(true);
                 return;
@@ -1730,7 +1744,7 @@ namespace ShimmerBLEAPI.Devices
                 }
                 catch (Exception ex)
                 {
-                    AdvanceLog(LogObject, "FileAppendException", ex, ASMName);
+                    NormalLog(LogObject, "FileAppendException", ex, ASMName);
                     throw ex;
                 }
             }

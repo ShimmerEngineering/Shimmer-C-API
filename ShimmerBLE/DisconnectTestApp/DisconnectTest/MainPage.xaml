@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
              x:Class="DisconnectTest.MainPage">
     <StackLayout>
         <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Verisense Connection Test" HorizontalTextAlignment="Center" TextColor="White" FontSize="30"/>
+            <Label Text="Verisense Disconnect Test" HorizontalTextAlignment="Center" TextColor="White" FontSize="30"/>
         </Frame>
         <Grid>
             <Grid.RowDefinitions>
