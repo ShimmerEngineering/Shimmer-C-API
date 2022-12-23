@@ -133,11 +133,13 @@ namespace shimmer.Communications
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Radio Plugin BLE Exception " + ex.Message);
-                    AdvanceLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", ex.Message, Asm_uuid.ToString());
+                    NormalLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", ex.Message, Asm_uuid.ToString());
                     //GattCallback error: Failure
                     if (ex.Message.Contains("GattCallback error: Failure")) //might want to have a look at this error as well in the future GattCallback error: 133 
                     {
                         GattCallBackErrorCount++;
+                        NormalLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", "GattCallBackErrorCount: " + GattCallBackErrorCount, Asm_uuid.ToString());
+
                     }
                     foreach (IDevice device in adapter.ConnectedDevices)
                     {
@@ -262,7 +264,7 @@ namespace shimmer.Communications
             }
             catch (Exception ex)
             {
-                AdvanceLog(nameof(RadioPluginBLE), "DisconnectException", ex.Message, Asm_uuid.ToString());
+                NormalLog(nameof(RadioPluginBLE), "DisconnectException", ex.Message, Asm_uuid.ToString());
             }
             finally
             {
@@ -295,7 +297,7 @@ namespace shimmer.Communications
                 }
                 catch (Exception ex)
                 {
-                    AdvanceLog(nameof(RadioPluginBLE), "WriteRequestException", ex.Message, Asm_uuid.ToString());
+                    NormalLog(nameof(RadioPluginBLE), "WriteRequestException", ex.Message, Asm_uuid.ToString());
                     writeTCS.TrySetResult(false);
                 }
             });
@@ -345,7 +347,7 @@ namespace shimmer.Communications
                     }
                     catch (Exception ex)
                     {
-                        AdvanceLog(nameof(RadioPluginBLE), "Dispose Exception", ex.Message, Asm_uuid.ToString());
+                        NormalLog(nameof(RadioPluginBLE), "Dispose Exception", ex.Message, Asm_uuid.ToString());
                     }
                     finally
                     {
@@ -381,6 +383,12 @@ namespace shimmer.Communications
         /// <param name="Data"></param>
         /// <param name="asmid"></param>
         public virtual void AdvanceLog(string ObjectName, string Action, object Data, string asmid)
+        {
+            //Just print to console
+            System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+            Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+        }
+        public virtual void NormalLog(string ObjectName, string Action, object Data, string asmid)
         {
             //Just print to console
             System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
