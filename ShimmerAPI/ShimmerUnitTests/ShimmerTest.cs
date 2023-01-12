@@ -17,7 +17,44 @@ namespace ShimmerBluetoothTests
         {
 
         }
-       
+
+        [TestMethod]
+        public void TestCRCTrue()
+        {
+            byte[] testPacket = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x93
+            };
+            byte[] crc = ShimmerUartCrcCalc(testPacket, testPacket.Length - 2);
+            Assert.IsTrue(ShimmerBluetooth.ShimmerUartCrcCheck(testPacket));
+
+            testPacket = new byte[] {
+                (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00,
+                 231,  206
+            };
+            crc = ShimmerUartCrcCalc(testPacket, testPacket.Length - 2);
+            Assert.IsTrue(ShimmerBluetooth.ShimmerUartCrcCheck(testPacket));
+        }
+
+        [TestMethod]
+        public void TestCRCFalse()
+        {
+            byte[] testPacket = new byte[] {
+                (byte) 0x00,
+                (byte) 0xb6, (byte) 0xf8, (byte) 0xbb,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0xff, (byte) 0x80, (byte) 0x00, (byte) 0x01, (byte) 0x80, (byte) 0x00, (byte) 0x01,
+                (byte) 0x8a, (byte) 0x94
+            };
+            Assert.IsFalse(ShimmerBluetooth.ShimmerUartCrcCheck(testPacket));
+        }
+
         [TestMethod]
         public void TestMethodDeviceName()
         {

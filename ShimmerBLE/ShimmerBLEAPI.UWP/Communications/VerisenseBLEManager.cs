@@ -7,6 +7,7 @@ using shimmer.Helpers;
 using ShimmerBLEAPI.Communications;
 using ShimmerBLEAPI.Models;
 using ShimmerBLEAPI.UWP.Communications;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Enumeration;
 using Windows.UI.Core;
 using Xamarin.Forms;
@@ -310,6 +311,20 @@ namespace ShimmerBLEAPI.UWP.Communications
         public EventHandler<BLEManagerEvent> GetBLEManagerEvent()
         {
             return BLEManagerEvent;
+        }
+
+        public async Task<List<string>> GetSystemConnectedOrPairedDevices()
+        {
+            List<string> list = new List<string>();
+            DeviceInformationCollection PairedBluetoothDevices = await DeviceInformation.FindAllAsync(BluetoothDevice.GetDeviceSelectorFromPairingState(true));
+            foreach (var item in PairedBluetoothDevices)
+            {
+                if (item.Name.Contains("Verisense"))
+                {
+                    list.Add(item.Name);
+                }
+            }
+            return list;
         }
     }
 }

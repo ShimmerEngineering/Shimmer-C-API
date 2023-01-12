@@ -1518,12 +1518,22 @@ namespace ShimmerAPI
                 //checkBoxTSACheck.Visible = true;
                 checkBoxTSACheck.Checked = ShimmerDevice.mEnableTimeStampAlignmentCheck;
                 buttonDisconnect.Enabled = true;
-                if (ShimmerDevice.GetFirmwareIdentifier() == 3)
+                if (ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)
                 {
                     buttonStreamandLog.Enabled = true;
                     buttonReadDirectory.Enabled = true;
                     buttonReadDirectory.Visible = true;
                     buttonStreamandLog.Visible = true;
+
+                    if (ShimmerDevice.IsCRCSupported())
+                    {
+                        checkBoxCRC.Visible = true;
+                        checkBoxCRC.Enabled = true;
+                    } else
+                    {
+                        checkBoxCRC.Visible = false;
+                        checkBoxCRC.Enabled = false;
+                    }
                 }
                 else
                 {
@@ -1560,6 +1570,7 @@ namespace ShimmerAPI
                 buttonStop.Enabled = false;
                 configureToolStripMenuItem.Enabled = false;
                 ToolStripMenuItemShow3DOrientation.Enabled = false;
+                checkBoxCRC.Visible = false;
             }
             else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING)
             {
@@ -1573,6 +1584,7 @@ namespace ShimmerAPI
                 // btsd changes1
                 configureToolStripMenuItem.Enabled = true;
                 labelPRR.Visible = true;
+                checkBoxCRC.Enabled = false;
             }
 
             Boolean leadOffDetectionEnabled = getLeadOffDetectionEnabled(); // method returns true if ECG lead off detection is enabled
@@ -1629,7 +1641,12 @@ namespace ShimmerAPI
                     if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
                     {
                         AppendTextBox("Connected");
-                        ChangeStatusLabel("Connected to " + ShimmerDevice.GetShimmerAddress() + ". Firmware Version: " + ShimmerDevice.GetFirmwareVersionFullName());
+                        String label = "Connected to " + ShimmerDevice.GetShimmerAddress() + ". Firmware Version: " + ShimmerDevice.GetFirmwareVersionFullName();
+                        if (ShimmerDevice.GetRadioVersion().Length > 0)
+                        {
+                            label = label + ". Radio Version: " + ShimmerDevice.GetRadioVersion();
+                        }
+                        ChangeStatusLabel(label);
                         EnableButtons((int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED);
                         //buttonStop_Click1();
                     }
@@ -2824,6 +2841,20 @@ namespace ShimmerAPI
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void checkBox91_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ShimmerDevice.IsConnected())
+            {
+                if (checkBoxCRC.Checked)
+                {
+                    ShimmerDevice.WriteCRCMode(ShimmerBluetooth.BTCRCMode.ONE_BYTE);
+                } else
+                {
+                    ShimmerDevice.WriteCRCMode(ShimmerBluetooth.BTCRCMode.OFF);
+                }
+            }
         }
     }
 

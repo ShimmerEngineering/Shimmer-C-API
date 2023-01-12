@@ -78,6 +78,9 @@ namespace ShimmerBLEAPI.Devices
         public ushort PayloadIndex { get; set; }
         public int? PreviouslyWrittenPayloadIndex { get; set; } = -1;
         public string binFileFolderDir { get; set; }
+        public string sensorLogFileName { get; set; }
+        public string sensorLogFilePath { get; set; }
+        public string sensorLogFolderDir { get; set; }
 
         #endregion
 
@@ -94,6 +97,7 @@ namespace ShimmerBLEAPI.Devices
         protected byte[] DFUCommand = new byte[] { 0x26, 0x00, 0x00 };
         protected byte[] DisconnectRequest = new byte[] { 0x2B, 0x00, 0x00 };
         protected byte[] EraseSensorData = new byte[] { 0x29, 0x01, 0x00, 0x0A };
+        protected byte[] ReadEventLog = new byte[] { 0x29, 0x01, 0x00, 0x10 };
 
         #endregion
 
@@ -134,6 +138,20 @@ namespace ShimmerBLEAPI.Devices
         /// <param name="Data"></param>
         /// <param name="asmid"></param>
         public virtual void AdvanceLog(string ObjectName, string Action, object Data, string asmid)
+        {
+            //Just print to console
+            System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+            Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+        }
+
+        /// <summary>
+        /// This is to give an option to log in normal mode
+        /// </summary>
+        /// <param name="ObjectName"></param>
+        /// <param name="Action"></param>
+        /// <param name="Data"></param>
+        /// <param name="asmid"></param>
+        public virtual void NormalLog(string ObjectName, string Action, object Data, string asmid)
         {
             //Just print to console
             System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
@@ -329,7 +347,7 @@ namespace ShimmerBLEAPI.Devices
             }
             catch (Exception ex)
             {
-                AdvanceLog(LogObject, "ProcessDataTimeout", ex, ASMName);
+                NormalLog(LogObject, "ProcessDataTimeout", ex, ASMName);
                 ReceivingData = false;
                 DataTCS.TrySetResult(false);
                 DataRequestTimer.Dispose();
@@ -529,6 +547,31 @@ namespace ShimmerBLEAPI.Devices
                         }
 
                         break;
+                    case 0x39: // read event log
+                        var logEventsData = new LogEventsPayload();
+                        var logEventsResult = logEventsData.ProcessPayload(ResponseBuffer);
+                        CreateSensorLogFile(false);
+                        SaveVlogFileToDB();
+                        if (logEventsResult)
+                        {
+                            LogEvents = logEventsData;
+                            WriteSensorLogToFile(((LogEventsPayload)logEventsData).LogEventsBytes);
+                            //logEventsData.WriteLogEventsToFile(sensorLogFilePath);
+                            if (ShimmerBLEEvent != null)
+                            {
+                                ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.ReadEventLog });
+                            }
+                            RequestTCS.TrySetResult(true);
+                        }
+                        else
+                        {
+                            if (ShimmerBLEEvent != null)
+                            {
+                                ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponseFail, ObjMsg = RequestType.ReadEventLog });
+                            }
+                            RequestTCS.TrySetResult(false);
+                        }
+                        break;
                     default:
                         AdvanceLog(LogObject, "NonDataResponse", BitConverter.ToString(ResponseBuffer), ASMName);
                         throw new Exception();
@@ -536,7 +579,7 @@ namespace ShimmerBLEAPI.Devices
             }
             catch (Exception ex)
             {
-                AdvanceLog(LogObject, "NonDataResponse Exception", ex, ASMName);
+                NormalLog(LogObject, "NonDataResponse Exception", ex, ASMName);
                 if (RequestTCS != null)
                     RequestTCS.TrySetResult(false);
                 if (DataTCS != null)
@@ -690,6 +733,9 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.EraseData:
                     request = EraseSensorData;
                     break;
+                case RequestType.ReadEventLog:
+                    request = ReadEventLog;
+                    break;
             }
 
             if (request == null)
@@ -793,6 +839,8 @@ namespace ShimmerBLEAPI.Devices
                     return WriteResponse;
                 case RequestType.EraseData:
                     return WriteResponse;
+                case RequestType.ReadEventLog:
+                    return LogEvents;
             }
 
             return null;
@@ -883,7 +931,7 @@ namespace ShimmerBLEAPI.Devices
             catch (Exception ex)
             {
                 DataTCS.TrySetResult(false);
-                AdvanceLog(LogObject, "ReadDataException", ex, ASMName);
+                NormalLog(LogObject, "ReadDataException", ex, ASMName);
             }
 
         }
@@ -898,7 +946,7 @@ namespace ShimmerBLEAPI.Devices
             catch (Exception ex)
             {
                 DataTCS.TrySetResult(false);
-                AdvanceLog(LogObject, "ReadDataException", ex, ASMName);
+                NormalLog(LogObject, "ReadDataException", ex, ASMName);
             }
         }
 
@@ -919,7 +967,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 WaitingForStopStreamingCommand = false;
                 DataTCS.TrySetResult(false);
-                AdvanceLog(LogObject, "ReadDataException", ex, ASMName);
+                NormalLog(LogObject, "ReadDataException", ex, ASMName);
             }
         }
 
@@ -955,7 +1003,7 @@ namespace ShimmerBLEAPI.Devices
                     DeleteLastPayloadFromBinFile();
                 }
 
-                AdvanceLog(LogObject, "SendDataACKException", ex.Message, ASMName);
+                NormalLog(LogObject, "SendDataACKException", ex.Message, ASMName);
                 DataTCS.TrySetResult(false);
             }
 
@@ -965,6 +1013,15 @@ namespace ShimmerBLEAPI.Devices
         /// For advance applications, to have the option to keep the location of the bin file in the DB
         /// </summary>
         protected virtual void SaveBinFileToDB()
+        {
+            //
+        }
+
+
+        /// <summary>
+        /// For advance applications, to have the option to keep the location of the vlog file in the DB
+        /// </summary>
+        protected virtual void SaveVlogFileToDB()
         {
             //
         }
@@ -1092,7 +1149,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 NACKcounter++;
             }
-            AdvanceLog(LogObject, "DataNACKRequest", "NACK count = " + NACKcounter + ";  NACK CRC count = " + NACKCRCcounter, ASMName);
+            NormalLog(LogObject, "DataNACKRequest", "NACK count = " + NACKcounter + ";  NACK CRC count = " + NACKCRCcounter, ASMName);
             DataBuffer = new DataChunkNew();
             NewPayload = true;
 
@@ -1104,7 +1161,7 @@ namespace ShimmerBLEAPI.Devices
             }
             catch (Exception ex)
             {
-                AdvanceLog(LogObject, "SendDataNACKException", ex.Message, ASMName);
+                NormalLog(LogObject, "SendDataNACKException", ex.Message, ASMName);
                 DataTCS.TrySetResult(false);
             }
 
@@ -1298,7 +1355,7 @@ namespace ShimmerBLEAPI.Devices
         {
             try
             {
-                AdvanceLog(LogObject, "HandleEOS", BitConverter.ToString(payload), ASMName);
+                NormalLog(LogObject, "HandleEOS", BitConverter.ToString(payload), ASMName);
                 DataRequestTimer.Dispose(); //can stop the timer if the EOS is reached
                 DataTCS.TrySetResult(true);
                 return;
@@ -1583,6 +1640,52 @@ namespace ShimmerBLEAPI.Devices
             }
         }
 
+        protected virtual void CreateSensorLogFile(bool crcError)
+        {
+            try
+            {
+                String sensorID = Asm_uuid.ToString();
+                try
+                {
+                    sensorID = GetSensorID();
+                }
+                catch (Exception ex) // if production config wasnt read default to the UUID
+                {
+                    sensorID = Asm_uuid.ToString();
+                    AdvanceLog(ex.Message, "Defaulting to UUID", sensorLogFileName, ASMName);
+                }
+
+                sensorLogFolderDir = string.Format("{0}/{1}/{2}/SensorLogs", GetTrialName(), GetParticipantID(), sensorID);
+                //sensorLogFolderDir = String.Format("SensorLog");
+
+                //need to check how data bin file is being uploaded (so that no all bin file is being uploaded to the BinaryFiles folder)
+                //or use a different path
+                var folder = Path.Combine(DependencyService.Get<ILocalFolderService>().GetAppLocalFolder(), sensorLogFolderDir);
+
+                if (!Directory.Exists(folder))
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                if (crcError)
+                {
+                    sensorLogFileName = string.Format("{0}_{1}_{2}.vlog", DateTime.Now.ToString("yyMMdd_HHmmss"), "DebugLog", BadCRC);
+                }
+                else
+                {
+                    sensorLogFileName = string.Format("{0}_{1}.vlog", DateTime.Now.ToString("yyMMdd_HHmmss"), "DebugLog");
+                }
+
+                AdvanceLog(LogObject, "SensorLogFileNameCreated", sensorLogFileName, ASMName);
+                sensorLogFilePath = Path.Combine(folder, sensorLogFileName);
+
+                AdvanceLog(LogObject, "SensorLogFileCreated", sensorLogFilePath, ASMName);
+            }
+            catch (Exception ex)
+            {
+                AdvanceLog(LogObject, "SensorLogFileCreatedException", ex, ASMName);
+            }
+        }
+
         void DeleteLastPayloadFromBinFile()
         {
             AdvanceLog(LogObject, "DeleteLastPayloadFromBinFile", FinalChunkLogMsgForNack, ASMName);
@@ -1630,7 +1733,7 @@ namespace ShimmerBLEAPI.Devices
                 }
                 catch (Exception ex)
                 {
-                    AdvanceLog(LogObject, "FileAppendException", ex, ASMName);
+                    NormalLog(LogObject, "FileAppendException", ex, ASMName);
                     throw ex;
                 }
             }
@@ -1639,6 +1742,32 @@ namespace ShimmerBLEAPI.Devices
                 AdvanceLog(LogObject, "WritePayloadToBinFile", "Same Payload Index = " + PayloadIndex.ToString(), ASMName);
             }
         }
+
+        void WriteSensorLogToFile(byte[] payload)
+        {
+            if (PreviouslyWrittenPayloadIndex != PayloadIndex)
+            {
+                try
+                {
+                    System.Console.WriteLine("Write Sensor Log To File!");
+                    using (var stream = new FileStream(sensorLogFilePath, FileMode.Append))
+                    {
+                        stream.Write(payload, 0, payload.Length);
+                    }
+                    IsFileLocked(sensorLogFilePath);
+                }
+                catch (Exception ex)
+                {
+                    AdvanceLog(LogObject, "SensorLogFileAppendException", ex, ASMName);
+                    throw ex;
+                }
+            }
+            else
+            {
+                AdvanceLog(LogObject, "WriteSensorLogToFile", "Same Payload Index = " + PayloadIndex.ToString(), ASMName);
+            }
+        }
+
         protected virtual bool IsFileLocked(string filepath)
         {
             try

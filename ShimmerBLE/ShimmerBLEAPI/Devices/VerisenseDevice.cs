@@ -80,6 +80,7 @@ namespace ShimmerBLEAPI.Devices
         protected OpConfigPayload OpConfig { get; set; }
         protected BasePayload WriteResponse { get; set; }
         protected PendingEventsPayload PendingEvents { get; set; }
+        protected LogEventsPayload LogEvents { get; set; }
 
         public Guid Asm_uuid { get; set; }
         public String ComPort { get; set; }
@@ -792,6 +793,15 @@ namespace ShimmerBLEAPI.Devices
         public StatusPayload GetStatus()
         {
             return Status;
+        }
+
+        /// <summary>
+        /// Returns log events payload
+        /// </summary>
+        /// <returns></returns>
+        public LogEventsPayload GetLogEvents()
+        {
+            return LogEvents;
         }
 
         /// <summary>
