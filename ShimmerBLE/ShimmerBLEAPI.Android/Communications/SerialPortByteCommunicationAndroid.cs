@@ -13,6 +13,8 @@ namespace ShimmerBLEAPI.Android.Communications
 {
     public class SerialPortByteCommunicationAndroid : IVerisenseByteCommunication
     {
+        public static readonly int VID = 0x1915;
+        public static readonly int PID = 0x520F;
         public UsbManager usbManager;
         UsbSerialPort port;
         UsbSerialDriver driver;
@@ -85,7 +87,7 @@ namespace ShimmerBLEAPI.Android.Communications
             var table = UsbSerialProber.DefaultProbeTable;
 
             //Verisense
-            table.AddProduct(0x1915, 0x520F, typeof(CdcAcmSerialDriver));
+            table.AddProduct(VID, PID, typeof(CdcAcmSerialDriver));
 
             var prober = new UsbSerialProber(table);
 

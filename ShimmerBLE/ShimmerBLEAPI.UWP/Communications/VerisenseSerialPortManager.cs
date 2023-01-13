@@ -22,12 +22,14 @@ namespace ShimmerBLEAPI.UWP.Communications
         public DeviceWatcher deviceWatcher { get; set; }
         public CoreDispatcher dispatcher { get; set; }
         public TaskCompletionSource<bool> RequestTCS { get; set; }
+        public static readonly ushort VID = 0x1915;
+        public static readonly ushort PID = 0x520F;
 
         public async Task<bool> StartScanForSerialPorts()
         {
             resultCollection.Clear();
             //var deviceSelector = SerialDevice.GetDeviceSelector();
-            var deviceSelector = SerialDevice.GetDeviceSelectorFromUsbVidPid(6421, 21007);//VID 1915 PID 520F
+            var deviceSelector = SerialDevice.GetDeviceSelectorFromUsbVidPid(VID, PID);
             deviceWatcher = DeviceInformation.CreateWatcher(deviceSelector);
             StartWatcher(deviceWatcher);
             return await RequestTCS.Task;
