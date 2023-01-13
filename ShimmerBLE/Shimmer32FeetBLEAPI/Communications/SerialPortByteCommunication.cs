@@ -85,13 +85,14 @@ namespace shimmer.Communications
             try
             {
                 SerialPort.Write(bytes, 0, bytes.Length);
+                success = true;
             }
             catch (Exception e )
             {
                 System.Console.WriteLine(e);
                 return success;
             }
-            return true;
+            return success;
         }
     }
 }
