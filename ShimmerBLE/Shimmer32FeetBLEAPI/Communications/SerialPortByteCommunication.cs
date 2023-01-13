@@ -81,6 +81,7 @@ namespace shimmer.Communications
 
         public async Task<bool> WriteBytes(byte[] bytes)
         {
+            bool success = false;
             try
             {
                 SerialPort.Write(bytes, 0, bytes.Length);
@@ -88,6 +89,7 @@ namespace shimmer.Communications
             catch (Exception e )
             {
                 System.Console.WriteLine(e);
+                return success;
             }
             return true;
         }
