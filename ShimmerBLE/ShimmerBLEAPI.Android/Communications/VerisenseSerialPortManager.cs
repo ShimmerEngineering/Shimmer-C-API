@@ -65,7 +65,7 @@ namespace ShimmerBLEAPI.Android.Communications
             var table = UsbSerialProber.DefaultProbeTable;
 
             //Verisense
-            table.AddProduct(0x1915, 0x520F, typeof(CdcAcmSerialDriver));
+            table.AddProduct(SerialPortByteCommunicationAndroid.VID, SerialPortByteCommunicationAndroid.PID, typeof(CdcAcmSerialDriver));
 
             var prober = new UsbSerialProber(table);
 
