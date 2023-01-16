@@ -28,6 +28,19 @@ namespace ShimmerBLEAPI.Android.Communications
         public String ComPort { get; set; }
         ConnectivityState state = ConnectivityState.Disconnected;
 
+        /// <summary>
+        /// Note that it is necessary to set the context before connecting to a serial device
+        /// </summary>
+        public SerialPortByteCommunicationAndroid()
+        {
+
+        }
+
+        public SerialPortByteCommunicationAndroid(Context context1)
+        {
+            context = context1;
+        }
+
         public static void setContext(Context context1)
         {
             context = context1;
