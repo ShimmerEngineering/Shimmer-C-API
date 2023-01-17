@@ -10,15 +10,32 @@ namespace shimmer.Communications
     public class VerisenseBLEDeviceWindows : VerisenseBLEDevice
     {
         public static string path;
+        public VerisenseBLEDeviceWindows(string uuid, string name, string comport, CommunicationType commtype):base(uuid,name)
+        {
+            ComPort = comport;
+            CommType = commtype;
+        }
 
-        public VerisenseBLEDeviceWindows(string uuid, string id) : base(uuid, id)
+        public VerisenseBLEDeviceWindows(string uuid, string name) : base(uuid, name)
         {
 
         }
 
         protected override void InitializeRadio()
         {
-            BLERadio = new RadioPlugin32Feet();
+            
+
+            if (BLERadio != null)
+                BLERadio.CommunicationEvent -= UartRX_ValueUpdated;
+            if (CommType == CommunicationType.BLE)
+            {
+                BLERadio = new RadioPlugin32Feet();
+            }
+            else if (CommType == CommunicationType.SerialPort)
+            {
+                BLERadio = new SerialPortByteCommunication();
+                ((SerialPortByteCommunication)BLERadio).ComPort = ComPort;
+            }
         }
 
         protected override void createBinFile(bool crcError)

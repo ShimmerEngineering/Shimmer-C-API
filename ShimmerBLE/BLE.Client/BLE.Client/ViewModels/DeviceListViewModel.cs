@@ -53,9 +53,11 @@ namespace BLE.Client.ViewModels
         PlotManager PlotManager = new PlotManager("Data", "Data Point", "Timestamp", true);
 
         VerisenseBLEScannedDevice selectedDevice = null;
+        VerisenseSerialDevice selectedSerialDevice = null;
         private CancellationTokenSource _cancellationTokenSource;
         VerisenseBLEDevice VerisenseBLEDevice;
         IVerisenseBLEManager bleManager = DependencyService.Get<IVerisenseBLEManager>();
+        IVerisenseSerialPortManager serialPortManager = DependencyService.Get<IVerisenseSerialPortManager>();
         ShimmerDeviceBluetoothState CurrentState;
         ShimmerDeviceBluetoothState StateToContinue;
         VerisenseAPIDemoSettings verisenseApiDemoSettings = new VerisenseAPIDemoSettings();
@@ -91,6 +93,14 @@ namespace BLE.Client.ViewModels
 
         DeviceManagerPluginBLE BLEManager;
         public MvxCommand RefreshCommand => new MvxCommand(() => TryStartScanning(true));
+        public MvxCommand RefreshSerialPort => new MvxCommand(async () => {
+            SerialDevices.Clear();
+            await serialPortManager.StartScanForSerialPorts();
+            foreach (var device in serialPortManager.GetListOfSerialDevices())
+            {
+                SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+            }
+        });
         public MvxCommand<DeviceListItemViewModel> DisconnectCommand => new MvxCommand<DeviceListItemViewModel>(DisconnectDevice);
 
         public MvxCommand<DeviceListItemViewModel> ConnectDisposeCommand => new MvxCommand<DeviceListItemViewModel>(ConnectAndDisposeDevice);
@@ -117,6 +127,7 @@ namespace BLE.Client.ViewModels
         public MvxCommand StopScanCommand => new MvxCommand(() => StopScan());
 
         public ObservableCollection<DeviceListItemViewModel> Devices { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
+        public ObservableCollection<VerisenseSerialDevice> SerialDevices { get; set; } = new ObservableCollection<VerisenseSerialDevice>();
         public bool IsRefreshing => (Adapter != null) ? Adapter.IsScanning : false;
         public bool IsStateOn => _bluetoothLe.IsOn;
         public string StateText => GetStateText();
@@ -128,6 +139,19 @@ namespace BLE.Client.ViewModels
                 if (value != null)
                 {
                     HandleSelectedDevice(value);
+                }
+
+                RaisePropertyChanged();
+            }
+        }
+        public VerisenseSerialDevice SelectedSerialDevice
+        {
+            get => null;
+            set
+            {
+                if (value != null)
+                {
+                    selectedSerialDevice = value;
                 }
 
                 RaisePropertyChanged();
@@ -204,6 +228,36 @@ namespace BLE.Client.ViewModels
                     return;
 
                 _deviceEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        bool _bluetoothEnabled;
+        public bool BluetoothEnabled
+        {
+            get => _bluetoothEnabled;
+
+            set
+            {
+                if (_bluetoothEnabled == value)
+                    return;
+
+                _bluetoothEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        bool _usbEnabled;
+        public bool USBEnabled
+        {
+            get => _usbEnabled;
+
+            set
+            {
+                if (_usbEnabled == value)
+                    return;
+
+                _usbEnabled = value;
                 RaisePropertyChanged();
             }
         }
@@ -1833,7 +1887,7 @@ namespace BLE.Client.ViewModels
                 }
             });
         }
-
+        
         public override async void ViewAppeared()
         {
             base.ViewAppeared();
@@ -1843,8 +1897,15 @@ namespace BLE.Client.ViewModels
             await GetPairingStatusAsync();
             //TryStartScanning();
 
+            if (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android)
+            {
+                await serialPortManager.StartScanForSerialPorts();
+                foreach (var device in serialPortManager.GetListOfSerialDevices())
+                {
+                    SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+                }
+            }
             GetSystemConnectedOrPairedDevices();
-
         }
 
         private void GetSystemConnectedOrPairedDevices()
@@ -1905,6 +1966,15 @@ namespace BLE.Client.ViewModels
                 ScanForDevices();
             }
             */
+            if (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android)
+            {
+                SerialDevices.Clear();
+                await serialPortManager.StartScanForSerialPorts();
+                foreach (var device in serialPortManager.GetListOfSerialDevices())
+                {
+                    SerialDevices.Add(new VerisenseSerialDevice(device.Id));
+                }
+            }
             bleManager.StartScanForDevices();
         }
 
@@ -2381,6 +2451,8 @@ namespace BLE.Client.ViewModels
 
                     DeviceLogging = VerisenseBLEDevice.IsLoggingEnabled();
                     DeviceEnabled = VerisenseBLEDevice.IsDeviceEnabled();
+                    BluetoothEnabled = VerisenseBLEDevice.IsBluetoothEnabled();
+                    USBEnabled = VerisenseBLEDevice.IsUSBEnabled();
                     SensorAccel = ((SensorLIS2DW12)VerisenseBLEDevice.GetSensor(SensorLIS2DW12.SensorName)).IsAccelEnabled();
                     SensorAccel2 = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsAccelEnabled();
                     SensorGyro = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsGyroEnabled();
@@ -2672,14 +2744,19 @@ namespace BLE.Client.ViewModels
                 ReconnectTimer.Dispose();
             }
 
-            if (VerisenseBLEDevice != null)
+            if (selectedSerialDevice != null && (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android))
+            {
+                VerisenseBLEDevice = serialPortManager.CreateVerisenseSerialDevice(PreviousGuid.ToString(), selectedSerialDevice.Id);
+            }
+            else if (VerisenseBLEDevice != null)
             {
                 VerisenseBLEDevice.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
                 if (!VerisenseBLEDevice.Asm_uuid.Equals(PreviousGuid))
                 {
                     VerisenseBLEDevice = new VerisenseBLEDevice(PreviousGuid.ToString(), "SensorName");
                 }
-            } else
+            }
+            else
             {
                 VerisenseBLEDevice = new VerisenseBLEDevice(PreviousGuid.ToString(), "SensorName");
             }
@@ -3002,6 +3079,8 @@ namespace BLE.Client.ViewModels
             var clone = new VerisenseBLEDevice(VerisenseBLEDevice);
             clone.setLoggingEnabled(_deviceLogging);
             clone.setDeviceEnabled(_deviceEnabled);
+            clone.setBluetoothEnabled(_bluetoothEnabled);
+            clone.setUSBEnabled(_usbEnabled);
             var startDateTime = startDate.AddMinutes(StartTimeSpan.TotalMinutes);
             DateTime utcStartDateTime = startDateTime.ToUniversalTime();
             var localStartDateTime = utcStartDateTime.ToLocalTime();

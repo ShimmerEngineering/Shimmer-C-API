@@ -43,6 +43,12 @@ namespace ShimmerBLEAPI.Devices
             VERISENSE_DEV_BOARD = 64,
             VERISENSE_PULSE_PLUS = 68
         }
+        public CommunicationType CommType = CommunicationType.BLE;
+        public enum CommunicationType
+        {
+            BLE = 00,
+            SerialPort = 01
+        }
 
         /// <summary>
         /// Each variable represents a Bluetooth 5 power level setting
@@ -77,6 +83,7 @@ namespace ShimmerBLEAPI.Devices
         protected LogEventsPayload LogEvents { get; set; }
 
         public Guid Asm_uuid { get; set; }
+        public String ComPort { get; set; }
         protected string ASMName { get; set; }
         protected Dictionary<int, Sensor> SensorList = new Dictionary<int, Sensor>();
 
@@ -185,6 +192,38 @@ namespace ShimmerBLEAPI.Devices
             else
             {
                 OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b11111101);
+            }
+        }
+
+        /// <summary>
+        /// Disable/Enable bluetooth (bluetooth will always be enabled when USB powered)
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void setBluetoothEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] | 0b00010000);
+            }
+            else
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b11101111);
+            }
+        }
+
+        /// <summary>
+        /// Disable/Enable USB
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void setUSBEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] | 0b00001000);
+            }
+            else
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b11110111);
             }
         }
 
@@ -629,6 +668,46 @@ namespace ShimmerBLEAPI.Devices
                 throw new Exception("Configuration Bytes Unknown");
             }
             if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00000010) == 2)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Is bluetooth enabled (bluetooth will always be enabled when USB powered)
+        /// </summary>
+        /// <exception cref="Exception">Thrown if op config is null</exception>
+        public bool IsBluetoothEnabled()
+        {
+            if (OpConfig.ConfigurationBytes == null)
+            {
+                throw new Exception("Configuration Bytes Unknown");
+            }
+            if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00010000) == 16)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Is USB enabled
+        /// </summary>
+        /// <exception cref="Exception">Thrown if op config is null</exception>
+        public bool IsUSBEnabled()
+        {
+            if (OpConfig.ConfigurationBytes == null)
+            {
+                throw new Exception("Configuration Bytes Unknown");
+            }
+            if ((int)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_0] & 0b00001000) == 8)
             {
                 return true;
             }

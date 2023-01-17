@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32421.90
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShimmerBLEAPI.UWP", "ShimmerBLEAPI.UWP\ShimmerBLEAPI.UWP.csproj", "{76908925-02BB-433B-A9E5-BB07EDFCB9C9}"
 EndProject
@@ -77,6 +77,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VerisenseConfigureAndSyncConsole", "ConsoleTools\VerisenseConfigureAndSyncConsole\VerisenseConfigureAndSyncConsole.csproj", "{786E38C3-381A-43D1-8F9E-74E087B7E740}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShimmerBlueZBLEAPI", "ShimmerBlueZBLEAPI\ShimmerBlueZBLEAPI.csproj", "{AE3A3DF5-56D1-4CDD-9890-EF1CE9E09777}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UsbSerialForAndroid", "UsbSerialForAndroid\UsbSerialForAndroid.csproj", "{A64567BC-548A-4CB7-9F2C-ECE75EE1A868}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DisconnectTestApp", "DisconnectTestApp", "{F6FD9304-BB0B-4CDD-BA65-F2B8EDFBC109}"
 EndProject
