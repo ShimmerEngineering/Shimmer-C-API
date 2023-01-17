@@ -532,7 +532,7 @@ namespace ShimmerAPI
             EXP_BRD_BR_AMP_UNIFIED = 49,
         }
 
-        public static readonly String[] LIST_OF_BAUD_RATE = { "115200", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "230400", "460800", "921600" };
+        public static readonly String[] LIST_OF_BAUD_RATE = { "115200", "1200", "2400", "4800", "9600", "19200", "38400", "57600", "230400", "460800", "921600", "1000000" };
         public static readonly String[] LIST_OF_EXG_ECG_REFERENCE_ELECTRODES = { "Fixed Potential", "Inverse Wilson CT", };
         public static readonly String[] LIST_OF_EXG_EMG_REFERENCE_ELECTRODES = { "Fixed Potential", "Inverse of Ch1" };
         public static readonly String[] LIST_OF_EXG_LEAD_OFF_DETECTION_OPTIONS = { "Off", "DC Current" };
