@@ -144,6 +144,12 @@ namespace ShimmerBLEAPI.Devices
             Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
         }
 
+        public virtual void AdvanceSyncLog(string ObjectName, string Action, object Data, string asmid)
+        {
+            System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+            Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+        }
+
         /// <summary>
         /// This is to give an option to log in normal mode
         /// </summary>
@@ -1313,7 +1319,7 @@ namespace ShimmerBLEAPI.Devices
                 DataBuffer.Finish = DateTime.Now;
                 DataBuffer.Transfer = DataBuffer.CurrentLength / (DataBuffer.Finish - DataBuffer.Start).TotalSeconds;
                 string syncProgress = string.Format("{0:.##} KB/s", DataBuffer.Transfer / 1024.0) + "(" + ShimmerBLEAPI.Resources.AppResources.PayloadIndex + ": " + PayloadIndex + ")";
-                AdvanceLog(LogObject, "Payload transfer rate", syncProgress, ASMName);
+                AdvanceSyncLog(LogObject, "Payload transfer rate", syncProgress, ASMName);
                 //InvokeSyncEvent(Asm_uuid.ToString(), new SyncEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = SyncEvent.DataSync, SyncProgress = syncProgress });
                 
                 if (!CRCCheck(DataBuffer))
@@ -1394,7 +1400,7 @@ namespace ShimmerBLEAPI.Devices
                 DataStreamingBuffer.CurrentLength += remainingBytes.Count();
                 NewStreamPayload = false;
 
-                AdvanceLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataStreamingBuffer.ExpectedLength), ASMName);
+                AdvanceSyncLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataStreamingBuffer.ExpectedLength), ASMName);
 
                 reader.Close();
                 stream = null;
@@ -1453,7 +1459,7 @@ namespace ShimmerBLEAPI.Devices
                 DataCommandBuffer.CurrentLength += remainingBytesWStartingOffset.Count();
                 NewCommandPayload = false;
 
-                AdvanceLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataCommandBuffer.ExpectedLength), ASMName);
+                AdvanceSyncLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataCommandBuffer.ExpectedLength), ASMName);
 
                 reader.Close();
                 stream = null;
@@ -1535,11 +1541,11 @@ namespace ShimmerBLEAPI.Devices
                 NewPayload = false;
                 if (String.IsNullOrEmpty(ASMName))
                 {
-                    AdvanceLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataBuffer.ExpectedLength), Asm_uuid.ToString());
+                    AdvanceSyncLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataBuffer.ExpectedLength), Asm_uuid.ToString());
                 }
                 else
                 {
-                    AdvanceLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataBuffer.ExpectedLength), ASMName);
+                    AdvanceSyncLog(LogObject, "PayloadIndex", string.Format("Payload Index = {0}; Expected Length = {1}", PayloadIndex, DataBuffer.ExpectedLength), ASMName);
                 }
                 reader.Close();
                 stream = null;
