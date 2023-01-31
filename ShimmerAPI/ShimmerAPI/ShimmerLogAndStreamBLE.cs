@@ -1,20 +1,20 @@
 ﻿using System;
 using System.IO;
 using InTheHand.Bluetooth;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace ShimmerAPI
 {
     public class ShimmerLogAndStreamBLE : ShimmerLogAndStream
     {
-        private readonly MemoryStream innerStream = new MemoryStream();
-        private long readPosition;
-        private long writePosition;
         private BluetoothDevice bluetoothDevice { get; set; }
         private GattService ServiceTXRX { get; set; }
         private GattCharacteristic UartTX { get; set; }
         private GattCharacteristic UartRX { get; set; }
         protected String macAddress { get; set; }
-        
+        ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
+
         public ShimmerLogAndStreamBLE(String devID, String bMacAddress)
           : base(devID)
         {
@@ -97,11 +97,9 @@ namespace ShimmerAPI
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
         {
             Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
-            lock (innerStream)
+            for (int i = 0; i < args.Value.Length; i++)
             {
-                innerStream.Position = writePosition;
-                innerStream.Write(args.Value, 0, args.Value.Length);
-                writePosition = innerStream.Position;
+                cq.Enqueue(args.Value[i]);
             }
         }
 
@@ -109,13 +107,14 @@ namespace ShimmerAPI
         {
             if (GetState() != SHIMMER_STATE_NONE)
             {
-                lock (innerStream)
+                byte b = 0xFF;
+                Timer timer = new Timer((obj) => throw new TimeoutException(), null, 15000, Timeout.Infinite);
+                while (!cq.TryDequeue(out b))
                 {
-                    innerStream.Position = readPosition;
-                    int b = innerStream.ReadByte();
-                    readPosition = innerStream.Position;
-                    return b;
+
                 }
+                timer.Dispose();
+                return b;
             }
             throw new InvalidOperationException();
         }
