@@ -1363,6 +1363,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 NormalLog(LogObject, "HandleEOS", BitConverter.ToString(payload), ASMName);
                 DataRequestTimer.Dispose(); //can stop the timer if the EOS is reached
+                SaveBinFileToDB();
                 DataTCS.TrySetResult(true);
                 return;
             }

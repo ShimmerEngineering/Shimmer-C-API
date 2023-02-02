@@ -37,7 +37,7 @@ namespace ShimmerBLEAPI.Android.Communications
             resultCollection.Clear();
             if(SerialPortByteCommunicationAndroid.context == null)
             {
-                return false;
+                throw new Exception("SerialPortByteCommunicationAndroid context has to be set in the MainActivity");
             }
             UsbManager usbManager = SerialPortByteCommunicationAndroid.context.GetSystemService("usb") as UsbManager;
             var drivers = await FindAllDriversAsync(usbManager);
@@ -54,12 +54,6 @@ namespace ShimmerBLEAPI.Android.Communications
         {
             throw new NotImplementedException();
         }
-
-        public VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string serialId)
-        {
-            return new VerisenseBLEDeviceAndroid(uuid, "SensorName", serialId, VerisenseDevice.CommunicationType.SerialPort);
-        }
-
         private Task<IList<IUsbSerialDriver>> FindAllDriversAsync(UsbManager usbManager)
         {
             var table = UsbSerialProber.DefaultProbeTable;
@@ -70,6 +64,11 @@ namespace ShimmerBLEAPI.Android.Communications
             var prober = new UsbSerialProber(table);
 
             return prober.FindAllDriversAsync(usbManager);
+        }
+
+        public VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string asmName, string serialId)
+        {
+            return new VerisenseBLEDeviceAndroid(uuid, asmName, serialId, VerisenseDevice.CommunicationType.SerialPort);
         }
     }
 }
