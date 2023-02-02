@@ -10,6 +10,6 @@ namespace shimmer.Communications
         List<VerisenseSerialDevice> GetListOfSerialDevices();
         Task<bool> StartScanForSerialPorts();
         void StopScanForSerialPorts();
-        VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string serialId);
+        VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string asmName, string serialId);
     }
 }
