@@ -142,9 +142,9 @@ namespace ShimmerBLEAPI.UWP.Communications
             return listOfSerialDevices;
         }
 
-        public VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string serialId)
+        public VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string asmName, string serialId)
         {
-            return new VerisenseBLEDeviceUWP(uuid, "SensorName", serialId, VerisenseDevice.CommunicationType.SerialPort);
+            return new VerisenseBLEDeviceUWP(uuid, asmName, serialId, VerisenseDevice.CommunicationType.SerialPort);
         }
     }
 }
