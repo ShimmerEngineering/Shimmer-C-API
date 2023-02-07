@@ -823,7 +823,7 @@ namespace ShimmerAPI
                     ReadThread.Name = "Read Thread for Device: " + DeviceName;
                     ReadThread.Start();
                     // give the shimmer time to make the changes before continuing
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(10000);
                     // Read Shimmer Profile
                     if (IsConnectionOpen())
                     {

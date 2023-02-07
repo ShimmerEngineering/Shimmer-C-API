@@ -64,7 +64,7 @@ namespace ShimmerAPI
                 bluetoothDevice = await BluetoothDevice.FromIdAsync(macAddress);
                 bluetoothDevice.GattServerDisconnected += Device_GattServerDisconnected;
                 await bluetoothDevice.Gatt.ConnectAsync();
-
+                Console.WriteLine("current mtu value" + bluetoothDevice.Gatt.Mtu);
                 BluetoothUuid TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
                 BluetoothUuid RxID = BluetoothUuid.FromGuid(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
                 BluetoothUuid ServiceID = BluetoothUuid.FromGuid(new Guid("49535343-fe7d-4ae5-8fa9-9fafd205e455"));
@@ -74,6 +74,7 @@ namespace ShimmerAPI
 
                 UartRX.CharacteristicValueChanged += Gc_ValueChanged;
                 await UartRX.StartNotificationsAsync();
+                Console.WriteLine("current mtu value" + bluetoothDevice.Gatt.Mtu);
             }
             catch (Exception ex)
             {
@@ -108,7 +109,7 @@ namespace ShimmerAPI
             if (GetState() != SHIMMER_STATE_NONE)
             {
                 byte b = 0xFF;
-                Timer timer = new Timer((obj) => throw new TimeoutException(), null, 15000, Timeout.Infinite);
+                Timer timer = new Timer((obj) => throw new TimeoutException(), null, 30000, Timeout.Infinite);
                 while (!cq.TryDequeue(out b))
                 {
 
