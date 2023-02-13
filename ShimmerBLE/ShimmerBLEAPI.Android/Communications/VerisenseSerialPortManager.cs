@@ -66,6 +66,13 @@ namespace ShimmerBLEAPI.Android.Communications
             return prober.FindAllDriversAsync(usbManager);
         }
 
+        /// <summary>
+        /// This creates/sets up the verisense instance with a USB/Serial Port communivation flow. It adheres to the BLE communication protocol, just that it write and read bytes via USB/Serial Port
+        /// </summary>
+        /// <param name="uuid"></param>
+        /// <param name="asmName"></param>
+        /// <param name="serialId">corresponds to the serial USB ID see IVerisenseSerialPortManager.GetListOfSerialDevices and ID value in VerisenseSerialDevice</param>
+        /// <returns></returns>
         public VerisenseBLEDevice CreateVerisenseSerialDevice(string uuid, string asmName, string serialId)
         {
             return new VerisenseBLEDeviceAndroid(uuid, asmName, serialId, VerisenseDevice.CommunicationType.SerialPort);
