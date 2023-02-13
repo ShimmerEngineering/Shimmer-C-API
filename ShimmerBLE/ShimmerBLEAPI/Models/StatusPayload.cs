@@ -46,6 +46,7 @@ namespace shimmer.Models
         }
         public bool? IsChargerChipPresent { get; set; } = null;
         public BatteryChargerStatus BattChargerStatus = BatteryChargerStatus.Unknown;
+        public string BatteryChargerStatusResult { get; set; }
         /// <summary>
         /// Note this index count starts only after the 1 byte header + 2 bytes length
         /// </summary>
@@ -257,6 +258,7 @@ namespace shimmer.Models
                         IsChargerChipPresent = false;
                     }
                     BattChargerStatus = (BatteryChargerStatus)((Metadata_01 & 0b00000110) >> 1);
+                    BatteryChargerStatusResult = BattChargerStatus.ToString();
                 }
 
                 SyncMode = (int)syncMode;
