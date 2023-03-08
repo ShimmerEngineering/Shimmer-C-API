@@ -288,7 +288,14 @@ namespace ShimmerBLEAPI.Devices
                     {
                         if (NewCommandPayload)
                         {
-                            CreateNewCommandPayload(bytes);
+                            if (bytes.Length < 3)
+                            {
+                                WaitForCompletePayload(bytes);
+                            }
+                            else
+                            {
+                                CreateNewCommandPayload(bytes);
+                            }
                         }
                         else
                         {
@@ -1423,6 +1430,24 @@ namespace ShimmerBLEAPI.Devices
                 return;
             }
 
+        }
+
+        byte[] currentPayload;
+        int currentLength = 0;
+        void WaitForCompletePayload(byte[] payload)
+        {
+            if (currentPayload == null)
+            {
+                currentPayload = new byte[3];
+            }
+            Buffer.BlockCopy(payload, 0, currentPayload, currentLength, payload.Length);
+            currentLength += payload.Length;
+
+            if (currentLength == 3)
+            {
+                CreateNewCommandPayload(currentPayload);
+                currentLength = 0;
+            }
         }
 
         void CreateNewCommandPayload(byte[] payload)
