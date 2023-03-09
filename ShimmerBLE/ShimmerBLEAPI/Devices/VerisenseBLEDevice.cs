@@ -1775,28 +1775,21 @@ namespace ShimmerBLEAPI.Devices
         }
 
         void WriteSensorLogToFile(byte[] payload)
-        {
-            if (PreviouslyWrittenPayloadIndex != PayloadIndex)
+        {            
+            try
             {
-                try
+                System.Console.WriteLine("Write Sensor Log To File!");
+                using (var stream = new FileStream(sensorLogFilePath, FileMode.Append))
                 {
-                    System.Console.WriteLine("Write Sensor Log To File!");
-                    using (var stream = new FileStream(sensorLogFilePath, FileMode.Append))
-                    {
-                        stream.Write(payload, 0, payload.Length);
-                    }
-                    IsFileLocked(sensorLogFilePath);
+                    stream.Write(payload, 0, payload.Length);
                 }
-                catch (Exception ex)
-                {
-                    AdvanceLog(LogObject, "SensorLogFileAppendException", ex, ASMName);
-                    throw ex;
-                }
+                IsFileLocked(sensorLogFilePath);
             }
-            else
+            catch (Exception ex)
             {
-                AdvanceLog(LogObject, "WriteSensorLogToFile", "Same Payload Index = " + PayloadIndex.ToString(), ASMName);
-            }
+                AdvanceLog(LogObject, "SensorLogFileAppendException", ex, ASMName);
+                throw ex;
+            }            
         }
 
         protected virtual bool IsFileLocked(string filepath)
