@@ -91,7 +91,8 @@ namespace shimmer.Models
         StartStreaming = 95,
         StopStreaming = 100,
         EraseData = 29,
-        ReadEventLog = 30
+        ReadEventLog = 30,
+        Reset = 31
             
     }
 
