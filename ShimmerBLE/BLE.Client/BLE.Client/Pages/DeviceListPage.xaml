@@ -261,6 +261,9 @@
                                                 <Button Text="ReadProdConf"
                                                 Command="{Binding ReadProdConfCommand}"
                                                 HorizontalOptions="End" />
+                                                <Button Text="Connect 2"
+                                                Command="{Binding Connect2}"
+                                                HorizontalOptions="End" />
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Button Text="ReadOpConf"
