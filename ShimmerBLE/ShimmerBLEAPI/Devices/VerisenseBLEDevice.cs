@@ -355,7 +355,7 @@ namespace ShimmerBLEAPI.Devices
                 }
                 else
                 {
-                    //return true;
+                    AdvanceLog(LogObject, "Process Data Timeout ASM-2342", "DateTime.Now: " + DateTime.Now + " LastDataPayload: " + LastDataPayload, ASMName);
                 }
             }
             catch (Exception ex)
