@@ -125,6 +125,7 @@ namespace BLE.Client.ViewModels
         public MvxCommand ConfigureVerisenseDevice => new MvxCommand(() => ConfigureDevice());
         public MvxCommand ConfigureVerisenseSensor => new MvxCommand(() => ConfigureSensor());
         public MvxCommand StopScanCommand => new MvxCommand(() => StopScan());
+        public MvxCommand SoftResetCommand => new MvxCommand(() => ResetSensor());
 
         public ObservableCollection<DeviceListItemViewModel> Devices { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
         public ObservableCollection<VerisenseSerialDevice> SerialDevices { get; set; } = new ObservableCollection<VerisenseSerialDevice>();
@@ -2848,6 +2849,12 @@ namespace BLE.Client.ViewModels
         {
             bleManager.StopScanForDevices();
         }
+
+        protected async void ResetSensor()
+        {
+            VerisenseBLEDevice.ExecuteRequest(RequestType.Reset);
+        }
+
         protected async void ConfigureSensor()
         {
             var clone = new VerisenseBLEDevice(VerisenseBLEDevice);
