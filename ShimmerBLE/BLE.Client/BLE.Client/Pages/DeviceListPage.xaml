@@ -282,6 +282,9 @@
                                                 <Button Text="Upload"
                                                 Command="{Binding UploadCommand}"
                                                 HorizontalOptions="End" />
+                                                <Button Text="Soft Reset"
+                                                 Command="{Binding SoftResetCommand}"
+                                                 HorizontalOptions="End"/>
                                                 <ActivityIndicator IsRunning="{Binding IsRefreshing}"
                                            IsVisible="{Binding IsRefreshing}"
                                            HeightRequest="24"
