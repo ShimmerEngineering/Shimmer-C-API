@@ -261,9 +261,7 @@
                                                 <Button Text="ReadProdConf"
                                                 Command="{Binding ReadProdConfCommand}"
                                                 HorizontalOptions="End" />
-                                                <Button Text="Connect 2"
-                                                Command="{Binding Connect2}"
-                                                HorizontalOptions="End" />
+                                                
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Button Text="ReadOpConf"
@@ -294,6 +292,12 @@
                                            WidthRequest="24"
                                            VerticalOptions="Center"
                                            HorizontalOptions="FillAndExpand" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect Not Initialize"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding NoInitializeConnectCommand}"
+                                                HorizontalOptions="End" />
                                             </StackLayout>
                                         </StackLayout>
                                     </StackLayout>
