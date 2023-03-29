@@ -294,9 +294,9 @@
                                            HorizontalOptions="FillAndExpand" />
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
-                                                <Button Text="Connect Not Initialize"
+                                                <Button Text="Connect Without Initialize"
                                                 Margin="10,0,0,0"
-                                                Command="{Binding NoInitializeConnectCommand}"
+                                                Command="{Binding ConnectWithoutInitializeCommand}"
                                                 HorizontalOptions="End" />
                                             </StackLayout>
                                         </StackLayout>
@@ -448,6 +448,12 @@
                             HorizontalOptions="End" />
                                             <Button Text="Upload"
                             Command="{Binding UploadCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Soft Reset"
+                            Command="{Binding SoftResetCommand}"
+                            HorizontalOptions="End"/>
+                                            <Button Text="Connect Without Initialize"
+                            Command="{Binding ConnectWithoutInitializeCommand}"
                             HorizontalOptions="End" />
                                             <!--
                         <Button Text="Enable Acc"
