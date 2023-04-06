@@ -216,6 +216,8 @@ namespace ShimmerBLEAPI.Devices
         DateTime LastDataPayload { get; set; }
         DateTime LastRX { get; set; }
 
+        readonly int DefaultExecuteRequestTimerDuration = 5000;
+
         protected void UartRX_ValueUpdated(object sender, ByteLevelCommunicationEvent comEvent)
         {
             if (comEvent.Event == ByteLevelCommunicationEvent.CommEvent.NewBytes)
@@ -606,15 +608,16 @@ namespace ShimmerBLEAPI.Devices
 
         #region Execute Requests
 
+
         /// <summary>
         /// Write bytes to the BLE device based on the request type
         /// </summary>
-        /// <param name="reqObjects">1st parameter must be a request type, second parameter is optional and must be a byte array</param>
-        /// <exception>Thrown if 1st parameter is not a request type or second parameter is not a byte array</exception>
+        /// <param name="reqObjects">1st parameter must be a request type, second parameter is optional and can either be a byte array or an integer. An integer value sets a custom execute request timeout.</param>
+        /// <exception>Thrown if 1st parameter is not a request type or second parameter is not a byte array or integer</exception>
         /// <returns>return payload that varies based on request type</returns>
         public async Task<IBasePayload> ExecuteRequest(params Object[] reqObjects)
         {
-
+            int setCustomExecuteRequestTimeout = -1;
             NewCommandPayload = true;
             DataCommandBuffer = new DataChunkNew();
             byte[] additionalBytesToWrite = null;
@@ -628,9 +631,11 @@ namespace ShimmerBLEAPI.Devices
                 if (reqObjects[1] is byte[])
                 {
                     additionalBytesToWrite = (byte[])reqObjects[1];
+                } else if(reqObjects[1] is int){
+                    setCustomExecuteRequestTimeout = (int)reqObjects[1];
                 } else
                 {
-                    throw new Exception("2nd Parameter needs to be a byte []");
+                    throw new Exception("2nd Parameter needs to be a byte [] or integer");
                 }
             }
             if (ReceivingData)
@@ -763,7 +768,7 @@ namespace ShimmerBLEAPI.Devices
                 return null;
             }
 
-            StartExecuteRequestTimer();
+            StartExecuteRequestTimer(setCustomExecuteRequestTimeout);
 
             var result = await RequestTCS.Task;
             TaskCount++;
@@ -859,10 +864,16 @@ namespace ShimmerBLEAPI.Devices
             return null;
         }
 
-        protected virtual void StartExecuteRequestTimer()
+        protected virtual void StartExecuteRequestTimer(int duration)
         {
-            Timer timer = new Timer(ExecuteRequestTimerCallback,null,5000,Timeout.Infinite);
-            
+            if (duration == -1) //no change to timeout duration
+            {
+                Timer timer = new Timer(ExecuteRequestTimerCallback, null, DefaultExecuteRequestTimerDuration, Timeout.Infinite);
+            } else
+            {
+                Timer timer = new Timer(ExecuteRequestTimerCallback, null, duration, Timeout.Infinite);
+            }
+
             /*
             Device.StartTimer(TimeSpan.FromSeconds(5), () =>
             {
@@ -1370,6 +1381,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 NormalLog(LogObject, "HandleEOS", BitConverter.ToString(payload), ASMName);
                 DataRequestTimer.Dispose(); //can stop the timer if the EOS is reached
+                SaveBinFileToDB();
                 DataTCS.TrySetResult(true);
                 return;
             }

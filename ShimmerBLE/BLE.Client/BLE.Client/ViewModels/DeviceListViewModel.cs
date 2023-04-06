@@ -2746,7 +2746,7 @@ namespace BLE.Client.ViewModels
 
             if (selectedSerialDevice != null && (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android))
             {
-                VerisenseBLEDevice = serialPortManager.CreateVerisenseSerialDevice(PreviousGuid.ToString(), selectedSerialDevice.Id);
+                VerisenseBLEDevice = serialPortManager.CreateVerisenseSerialDevice(PreviousGuid.ToString(), "SensorName", selectedSerialDevice.Id);
             }
             else if (VerisenseBLEDevice != null)
             {
