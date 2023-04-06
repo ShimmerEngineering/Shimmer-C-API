@@ -35,6 +35,7 @@ namespace shimmer.Models
         public int? StorageToDel { get; set; } = null;
         public int? StorageBad { get; set; } = null;
         public int? StorageCapacity { get; set; } = null;
+        public int? StatusPayloadByteLength { get; set; } = null;
         public int? Metadata_01 { get; set; } = null;
         public enum BatteryChargerStatus
         {
@@ -112,6 +113,7 @@ namespace shimmer.Models
                 var lengthBytes = reader.ReadBytes(2);
                 Array.Reverse(lengthBytes);
                 Length = int.Parse(BitConverter.ToString(lengthBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
+                StatusPayloadByteLength = Length;
                 
                 var idBytes = reader.ReadBytes(6);
                 Array.Reverse(idBytes);
@@ -220,7 +222,6 @@ namespace shimmer.Models
                     Array.Reverse(storageBadBytes);
                     StorageBad = int.Parse(BitConverter.ToString(storageBadBytes).Replace("-", string.Empty), NumberStyles.HexNumber);
                 }
-
                 if (Length > 56)  
                 {
                     var updatedStorageFullBytes = new byte[4];
