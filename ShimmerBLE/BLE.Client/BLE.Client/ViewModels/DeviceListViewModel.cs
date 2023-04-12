@@ -125,6 +125,8 @@ namespace BLE.Client.ViewModels
         public MvxCommand ConfigureVerisenseDevice => new MvxCommand(() => ConfigureDevice());
         public MvxCommand ConfigureVerisenseSensor => new MvxCommand(() => ConfigureSensor());
         public MvxCommand StopScanCommand => new MvxCommand(() => StopScan());
+        public MvxCommand SoftResetCommand => new MvxCommand(() => ResetSensor());
+        public MvxCommand ConnectWithoutInitializeCommand => new MvxCommand(() => Connect(false));
 
         public ObservableCollection<DeviceListItemViewModel> Devices { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
         public ObservableCollection<VerisenseSerialDevice> SerialDevices { get; set; } = new ObservableCollection<VerisenseSerialDevice>();
@@ -2727,7 +2729,7 @@ namespace BLE.Client.ViewModels
             cloudManager.DeleteAfterUpload = true;
         }
 
-        protected async void Connect()
+        protected async void Connect(bool initialize = true)
         {
             if (VerisenseBLEDevice != null)
             {
@@ -2764,7 +2766,14 @@ namespace BLE.Client.ViewModels
             VerisenseBLEDevice.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             VerisenseBLEDevice.SetParticipantID(ParticipantID);
             VerisenseBLEDevice.SetTrialName(TrialName);
-            VerisenseBLEDevice.Connect(true, VerisenseDevice.GetDeviceOpSettingFromDisplayName(VerisenseDevice.DefaultVerisenseConfiguration.Settings,SelectedDeviceConfiguration),KeepDeviceSettings);
+            if (initialize)
+            {
+                VerisenseBLEDevice.Connect(true, VerisenseDevice.GetDeviceOpSettingFromDisplayName(VerisenseDevice.DefaultVerisenseConfiguration.Settings, SelectedDeviceConfiguration), KeepDeviceSettings);
+            }
+            else
+            {
+                VerisenseBLEDevice.Connect(false);
+            }
 
         }
         bool DisconnectPressed = false;
@@ -2848,6 +2857,12 @@ namespace BLE.Client.ViewModels
         {
             bleManager.StopScanForDevices();
         }
+
+        protected async void ResetSensor()
+        {
+            VerisenseBLEDevice.ExecuteRequest(RequestType.Reset);
+        }
+
         protected async void ConfigureSensor()
         {
             var clone = new VerisenseBLEDevice(VerisenseBLEDevice);
