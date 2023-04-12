@@ -98,6 +98,7 @@ namespace ShimmerBLEAPI.Devices
         protected byte[] DisconnectRequest = new byte[] { 0x2B, 0x00, 0x00 };
         protected byte[] EraseSensorData = new byte[] { 0x29, 0x01, 0x00, 0x0A };
         protected byte[] ReadEventLog = new byte[] { 0x29, 0x01, 0x00, 0x10 };
+        protected byte[] ResetSensor = new byte[] { 0x29, 0x01, 0x00, 0x13 };
 
         #endregion
 
@@ -754,6 +755,9 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.ReadEventLog:
                     request = ReadEventLog;
                     break;
+                case RequestType.Reset:
+                    request = ResetSensor;
+                    break;
             }
 
             if (request == null)
@@ -859,6 +863,8 @@ namespace ShimmerBLEAPI.Devices
                     return WriteResponse;
                 case RequestType.ReadEventLog:
                     return LogEvents;
+                case RequestType.Reset:
+                    return WriteResponse;
             }
 
             return null;

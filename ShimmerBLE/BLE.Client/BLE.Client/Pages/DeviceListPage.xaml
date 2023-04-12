@@ -261,6 +261,7 @@
                                                 <Button Text="ReadProdConf"
                                                 Command="{Binding ReadProdConfCommand}"
                                                 HorizontalOptions="End" />
+                                                
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Button Text="ReadOpConf"
@@ -282,12 +283,21 @@
                                                 <Button Text="Upload"
                                                 Command="{Binding UploadCommand}"
                                                 HorizontalOptions="End" />
+                                                <Button Text="Soft Reset"
+                                                 Command="{Binding SoftResetCommand}"
+                                                 HorizontalOptions="End"/>
                                                 <ActivityIndicator IsRunning="{Binding IsRefreshing}"
                                            IsVisible="{Binding IsRefreshing}"
                                            HeightRequest="24"
                                            WidthRequest="24"
                                            VerticalOptions="Center"
                                            HorizontalOptions="FillAndExpand" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect Without Initialize"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ConnectWithoutInitializeCommand}"
+                                                HorizontalOptions="End" />
                                             </StackLayout>
                                         </StackLayout>
                                     </StackLayout>
@@ -438,6 +448,12 @@
                             HorizontalOptions="End" />
                                             <Button Text="Upload"
                             Command="{Binding UploadCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Soft Reset"
+                            Command="{Binding SoftResetCommand}"
+                            HorizontalOptions="End"/>
+                                            <Button Text="Connect Without Initialize"
+                            Command="{Binding ConnectWithoutInitializeCommand}"
                             HorizontalOptions="End" />
                                             <!--
                         <Button Text="Enable Acc"
