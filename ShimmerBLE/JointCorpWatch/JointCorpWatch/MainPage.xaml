@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:oxyPlotView="clr-namespace:OxyPlot.Xamarin.Forms;assembly=OxyPlot.Xamarin.Forms"
+             x:Class="JointCorpWatch.MainPage">
+
+    <StackLayout>
+        <Label x:Name="macAddress" HorizontalTextAlignment="Center"/>
+        <Button Clicked="getDeviceInfoButton_Clicked" x:Name="getDeviceInfoButton" WidthRequest="150" HeightRequest="50" Text="Get Device Info"></Button>
+        <Button Clicked="streamECGButton_Clicked" x:Name="streamECGButton" WidthRequest="150" HeightRequest="50" Text="Stream ECG"></Button>
+        <Button Clicked="readECGHistoryButton_Clicked" x:Name="readECGHistoryButton" WidthRequest="150" HeightRequest="50" Text="Read ECG History"></Button>
+        <Button Clicked="readECGHistoryRTButton_Clicked" x:Name="readECGHistoryRTButton" WidthRequest="150" HeightRequest="50" Text="Read ECG History RT"></Button>
+        <Button Clicked="sportsMode_Clicked" x:Name="sportsModeButton" WidthRequest="150" HeightRequest="50" Text="Sports Mode"></Button>
+        <Button Clicked="sportsModeStop_Clicked" x:Name="sportsModeStopButton" WidthRequest="150" HeightRequest="50" Text="Sports Mode Stop"></Button>
+        <Button Clicked="ecgppgRealTime_Clicked" x:Name="ecgppgRealTimeButton" WidthRequest="150" HeightRequest="50" Text="ECG PPG Real Time"></Button>
+        <Button Clicked="ppgRealTime_Clicked" x:Name="ppgRealTimeButton" WidthRequest="150" HeightRequest="50" Text="PPG Real Time"></Button>
+
+        <Label x:Name="temp1" HorizontalTextAlignment="Center"/>
+        <Label x:Name="temp2" HorizontalTextAlignment="Center"/>
+        <Label x:Name="temp3" HorizontalTextAlignment="Center"/>
+        <StackLayout x:Name="PlotViewList">
+            <oxyPlotView:PlotView x:Name = "plotView" VerticalOptions = "FillAndExpand" HorizontalOptions = "FillAndExpand" HeightRequest="400"/>
+        </StackLayout>
+    </StackLayout>
+
+</ContentPage>

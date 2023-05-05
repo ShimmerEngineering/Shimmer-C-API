@@ -1,0 +1,120 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace JointCorpWatch
+{
+    public class JCWatchBLEConstant
+    {
+        public const String GetDeviceTime="0";
+        public const String SetDeviceTime="1";
+        public const String GetPersonalInfo="2";
+        public const String SetPersonalInfo="3";
+        public const String GetDeviceInfo="4";
+        public const String SetDeviceInfo="5";//设置手环基本参数
+        public const String CMD_Set_Mac="6";
+        public const String GetStepGoal="7";
+        public const String SetStepGoal="8";
+        public const String GetDeviceBatteryLevel="9";
+        public const String GetDeviceMacAddress="10";
+        public const String GetDeviceVersion="11";
+        public const String CMD_Reset="12";
+        public const String CMD_MCUReset="13";
+        public const String SetMotorVibrationWithTimes ="14";
+        public const String GetDeviceName="15";
+        public const String GetAutomatic="16";
+        public const String SetAutomatic="17";
+        public const String GetAlarmClock="18";
+        public const String SetAlarmClockWithAllClock="19";
+        public const String Notify="20";
+        public const String GetSedentaryReminder="21";
+        public const String SetSedentaryReminder="22";
+        public const String RealTimeStep="23";
+        public const String GetTotalActivityData="24";
+        public const String GetDetailActivityData="25";
+        public const String GetDetailSleepData="26";
+        public const String GetDynamicHR="27";
+        public const String GetStaticHR="28";
+        public const String GetActivityModeData="29";
+        public const String EnterActivityMode="30";
+        public const String DeviceSendDataToAPP="31";
+        public const String BackHomeView="35";
+        public const String GetTempHistoryData="36";
+        public const String ECGDATA="37";
+        public const String EcgppGstatus="38";
+        public const String EcgppG="39";
+        public const String GPSControlCommand="40";
+        public const String Gps="41";//手环发送给app
+        public const String GetHRVData="42";
+        public const String CMD_Set_TemperatureCorrection="43";
+        public const String Weather="44";
+        public const String Braceletdial="45";
+        public const String Braceletdialok="46";
+        public const String SportMode="47";
+        public const String GetSportMode="48";
+        public const String CMD_Set_WorkOutReminder="49";
+        public const String CMD_Get_WorkOutReminder="50";
+        public const String ReadSerialNumber="51";
+        public const String ECG="53";
+        public const String Clear_Bracelet_data="54";
+        public const String Blood_oxygen="55";
+        public const String SocialdistanceGetting="56";
+        public const String SocialdistanceSetting="57";
+        public const String Sos="58";
+        public const String Temperature_history="59";
+        public const String SetDialinterface="60";
+        public const String HeartBeatpacket="61";
+        public const String GetAxillaryTemperatureDataWithMode="62";
+        public const String GetMAC="63";
+        public const String Getppg="64";
+        public const String CloseECGPPG="65";
+        public const String GetEcgPpgStatus="66";
+        public const String ECGdata="67";
+        public const String GetAutomaticSpo2Monitoring="68";
+        public const String SetSpo2="69";
+        public const String GEtSpo2="70";
+        public const String DeleteECGdata="71";
+        public const String DeleteHrv="72";
+        public const String MeasurementHrvCallback="73";
+        public const String MeasurementHeartCallback="74";
+        public const String MeasurementOxygenCallback="75";
+        public const String StopMeasurementHrvCallback="76";
+        public const String StopMeasurementHeartCallback="77";
+        public const String StopMeasurementOxygenCallback="78";
+        public const String ExitQRcode="79";
+        public const String EnterQRcode="80";
+        public const String QRcodebandBack="81";
+        public const String SportData="82";
+        public const String Delete_Obtain_The_data_of_manual_blood_oxygen_test="83";
+        public const String Delete_Blood_oxygen="84";
+        public const String Delete_GetTotalActivityData="85";
+        public const String Delete_AlarmClock="87";
+        public const String Delete_ActivityModeData="88";
+        public const String Delete_GetStaticHR="89";
+        public const String Delete_GetDynamicHR="90";
+        public const String deleteGetTemperature_historyDataWithMode="91";
+        public const String deleteGetAxillaryTemperatureDataWithMode="92";
+        public const String deleteGetDetailActivityDataWithMode="93";
+        public const String Delete_GetDetailSleepData="94";
+        public const String Enter_photo_mode="95";
+        public const String openRRInterval="96";
+        public const String closeRRInterval="97";
+        public const String realtimeRRIntervalData="98";
+        public const String realtimePPGData="99";
+        public const String realtimePPIData="100";
+
+        public const String ppgWithMode="101";
+        public const String ppgStartSucessed="102";
+        public const String ppgStartFailed="103";
+        public const String ppgStop="104";
+        public const String ppgQuit="105";
+        public const String ppgMeasurementProgress="106";
+        public const String ppgResult="107";
+
+        public const String FindMobilePhoneMode="FindMobilePhoneMode";
+        public const String RejectTelMode ="RejectTelMode";
+        public const String TelMode ="TelMode";
+        public const String ECGResult="ECGResult";
+        public const String ENTERECG="ENTERECG";
+    }
+}
