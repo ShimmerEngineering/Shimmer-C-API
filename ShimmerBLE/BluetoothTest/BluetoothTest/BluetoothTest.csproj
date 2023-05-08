@@ -21,6 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="MvvmCross.Plugins.BLE">
+      <HintPath>Libs\MvvmCross.Plugins.BLE.dll</HintPath>
+    </Reference>
     <Reference Include="Plugin.BLE">
       <HintPath>Libs\Plugin.BLE.dll</HintPath>
     </Reference>
