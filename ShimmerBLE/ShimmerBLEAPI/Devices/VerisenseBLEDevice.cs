@@ -219,6 +219,9 @@ namespace ShimmerBLEAPI.Devices
 
         readonly int DefaultExecuteRequestTimerDuration = 5000;
 
+        private int expectedResponseLength = -1;
+        private List<byte> partialData = new List<byte>();
+
         protected void UartRX_ValueUpdated(object sender, ByteLevelCommunicationEvent comEvent)
         {
             if (comEvent.Event == ByteLevelCommunicationEvent.CommEvent.NewBytes)
@@ -276,12 +279,44 @@ namespace ShimmerBLEAPI.Devices
 
                     return;
                 }
-
                 else
                 {
+                    if (partialData.Count > 0)
+                    {
+                        partialData.AddRange(comEvent.Bytes);
+                        bytes = partialData.ToArray();
+                        partialData.Clear();
+                    }
 
+                    if (expectedResponseLength == -1)
+                    {
+                        if (bytes.Length >= 3)
+                        {
+                            byte lengthByte1 = bytes[1];
+                            byte lengthByte2 = bytes[2];
+                            expectedResponseLength = (lengthByte2 << 8) | lengthByte1;
+                            expectedResponseLength += 3;
+                        }
+                        else
+                        {
+                            partialData.AddRange(bytes);
+                            AdvanceLog(LogObject, "Current Length: " + bytes.Length, string.Empty, ASMName);
+                            return;
+                        }
+                    }
+
+                    if (bytes.Length >= expectedResponseLength)
+                    {
+                        expectedResponseLength = -1;
+                        partialData.Clear();
+                    }
+                    else
+                    {
+                        partialData.AddRange(bytes);
+                        AdvanceLog(LogObject, "Current Length: " + bytes.Length, string.Empty, ASMName);
+                        return;
+                    }
                     ResponseBuffer = bytes;
-
 
                     if (bytes.Length == 3 && bytes[0] >> 4 == 4)//if it is an ack
                     {
