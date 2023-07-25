@@ -657,6 +657,7 @@ namespace ShimmerBLEAPI.Devices
             NewCommandPayload = true;
             DataCommandBuffer = new DataChunkNew();
             byte[] additionalBytesToWrite = null;
+            partialData.Clear();
             if (!(reqObjects[0] is RequestType))
             {
                 throw new Exception("1st Parameter needs to be the Request Type");
