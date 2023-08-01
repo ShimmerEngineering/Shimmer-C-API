@@ -17,7 +17,10 @@ The VerisenseConfigureAndSyncConsole provides
 - Run data sync
 
 # BytesParserApp
-This app is to help users diagnose/check/correct/interpret opconfig bytes, status bytes and production config bytes. Note that the header is omitted 5A is omitted. 
+This app is to help users diagnose/check/correct/interpret opconfig bytes, status bytes and production config bytes.
+
+# GenerateVerisenseOpConfigString
+This app is to help users to customize and print the operational config bytes. The user will need to provide a default operational config bytes string and updates it through the code before outputing the bytes in a console.
 
 ## To run in Windows:
 - Build the project
