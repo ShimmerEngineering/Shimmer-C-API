@@ -49,12 +49,14 @@ When using the verisense device you will require knowing what the pairing key. S
 
 ### IOS
 - requires the use of iOS 15, due to issues setting the MTU
+- please use Visual Studio 2022 (v17)
 - ~~requires the use of VS 17.0.0, we've had compatibility issues~~ in order to support VS >17.0.0 we've had to circumvent a [problem](https://developercommunity2.visualstudio.com/t/XamariniOS-getting-FoundationMonoTouch/1610258?space=8) by [updating](https://github.com/ShimmerEngineering/xamarin-bluetooth-le/tree/shimmer_dev) and compiling new dlls for iOS
 - note that the uuid value for a sensor on UWP/Android vs iOS is different, you can typically retrieve the uuid using any common bluetooth scanning app. We recommend either using nrfconnect or https://github.com/xabre/xamarin-bluetooth-le
 - note that uuid value for the same sensor on different iOS devices can be different
 - to retrieve the uuid on iOS an app such as Blue - Bluetooth & developers can be used to retrieve the uuid as highlighted below 
 ![image](https://user-images.githubusercontent.com/2862032/149056918-270fe963-42e2-470a-9dd7-3e6b7be7eeb0.png)
 - will require manual entry of the pairing key by the user
+- if you do not have a mac to pair with, the following [resource](https://learn.microsoft.com/en-us/xamarin/xamarin-forms/deploy-test/hot-restart) might be useful
 
 
 
