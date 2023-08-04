@@ -677,39 +677,176 @@ namespace ShimmerBLETests
         {
             VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
             VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
-            //default value
             bleDevice.SetHRPPGChannel(0);
-            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 0)
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 0))
             {
-                Assert.Pass();
+                Assert.Fail();
             }
             bleDevice.SetHRPPGChannel(1);
-            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 1)
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 1))
             {
-                Assert.Pass();
+                Assert.Fail();
             }
             bleDevice.SetHRPPGChannel(2);
-            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 2)
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 2))
             {
-                Assert.Pass();
+                Assert.Fail();
             }
             bleDevice.SetHRPPGChannel(3);
-            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 3)
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 3))
             {
-                Assert.Pass();
+                Assert.Fail();
             }
 
             try
             {
-                bleDevice.SetHRPPGChannel(1);
-                
+                bleDevice.SetHRPPGChannel(4);
+                Assert.Fail();
             } catch (Exception ex)
             {
-                if (ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                if (!ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
                 {
-                    Assert.Pass();
+                    Assert.Fail();
                 }
+                
+            }
+
+            try
+            {
+                bleDevice.SetHRPPGChannel(-1);
                 Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                {
+                    Assert.Fail();
+                }
+                
+            }
+            Assert.Pass();
+        }
+
+        [Test]
+        public void TestInactiveTimeout()
+        {
+            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
+            bleDevice.SetInactiveTimeout(0);
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] == 0))
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetInactiveTimeout(63);
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] == 63))
+            {
+                Assert.Fail();
+            }
+
+            try
+            {
+                bleDevice.SetInactiveTimeout(-1);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                {
+                    Assert.Fail();
+                }
+            }
+
+            try
+            {
+                bleDevice.SetInactiveTimeout(64);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                {
+                    Assert.Fail();
+                }
+                
+            }
+        }
+
+        [Test]
+        public void TestPendingModeEnable()
+        {
+            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
+            bleDevice.SetPendingEventsEnabled(true);
+            if (((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00010000) == 0))
+            {
+               
+            } 
+            else
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetPendingEventsEnabled(false);
+            if (((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00010000) > 0))
+            {
+                
+            }else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
+        public void TestSetLEDMode()
+        {
+            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
+            bleDevice.SetLEDMode(0);
+            if (!((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_3] & 0b00000011)== 0))
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetLEDMode(1);
+            if (!((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_3] & 0b00000011) == 1))
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetLEDMode(2);
+            if (!((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_3] & 0b00000011) == 2))
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetLEDMode(3);
+            if (!((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_3] & 0b00000011) == 3))
+            {
+                Assert.Fail();
+            }
+
+            try
+            {
+                bleDevice.SetLEDMode(-1);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                {
+                    Assert.Fail();
+                }
+      
+            }
+
+            try
+            {
+                bleDevice.SetLEDMode(4);
+                Assert.Fail();
+            }
+            catch (Exception ex)
+            {
+                if (!ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                {
+                    Assert.Fail();
+                }
+         
             }
         }
 

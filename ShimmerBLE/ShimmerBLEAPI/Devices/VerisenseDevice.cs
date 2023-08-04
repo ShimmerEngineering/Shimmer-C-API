@@ -232,16 +232,43 @@ namespace ShimmerBLEAPI.Devices
         /// <summary>
         /// Selects which HR channel is used when running the on board heart-rate detection algorithm. The corresponding PPG LED channel also needs to be enabled for this to work correctly. The output of this algorithm is available via the Heart-Rate BLE GATT service.
         /// </summary>
-        /// <param name="led">0=Infra-red LED ,1=Red LED 2=Green LED,4=Blue LED</param>
+        /// <param name="led">0=Infra-red LED ,1=Red LED 2=Green LED,3=Blue LED</param>
         public void SetHRPPGChannel(int led)
         {
-            if (led >= 0 && led <= 4)
+            if (led >= 0 && led <= 3)
             {
                 OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00111111);
                 OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | (led << 6));
             }
             else throw new Exception(ExceptionMsgNotSupported);
-            
+
+        }
+
+        /// <summary>
+        /// The duration in minutes wait for inactivity (either motion or Bluetooth connectivity) before putting the sensor in a stand-by state (i.e., stop recording and stop BLE advertising). Once motion is detected again, the sensor will resume BLE advertising only waiting for a Bluetooth connection and subsequent request to resume recording.
+        /// <param name="ledMode">0=Off , 63 is max value</param>
+        public void SetInactiveTimeout(int timeout)
+        {
+            if (timeout >= 0 && timeout <= 63)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] | (byte)timeout);
+            }
+            else throw new Exception(ExceptionMsgNotSupported);
+        }
+
+
+        /// <summary>
+        /// This feature only applies to sensors have LEDs, i.e.:SR62, Wrist GSR+, SR64, Development board, SR68.7.1 and >=SR68.8.0, Wrist Pulse+. Please contact us if you require further clarification.
+        /// </summary>
+        /// <param name="ledMode">0=Off , 1=On , 2=Low Power , 3=Unused</param>
+        public void SetLEDMode(int ledMode)
+        {
+            if (ledMode >= 0 && ledMode <= 3)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_3] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_3] & 0b11111100);
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_3] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_3] | (ledMode));
+            }
+            else throw new Exception(ExceptionMsgNotSupported);
         }
 
         /// <summary>
@@ -268,11 +295,11 @@ namespace ShimmerBLEAPI.Devices
         {
             if (!enabled)
             {
-                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | 0b00001000);
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | 0b00010000);
             }
             else
             {
-                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b11110111);
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b11101111);
             }
         }
 
