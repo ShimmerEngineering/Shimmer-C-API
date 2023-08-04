@@ -672,6 +672,47 @@ namespace ShimmerBLETests
             Assert.Pass();
         }
 
+        [Test]
+        public void TestSetHRPPGChannel()
+        {
+            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
+            //default value
+            bleDevice.SetHRPPGChannel(0);
+            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 0)
+            {
+                Assert.Pass();
+            }
+            bleDevice.SetHRPPGChannel(1);
+            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 1)
+            {
+                Assert.Pass();
+            }
+            bleDevice.SetHRPPGChannel(2);
+            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 2)
+            {
+                Assert.Pass();
+            }
+            bleDevice.SetHRPPGChannel(3);
+            if (bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] >> 6 == 3)
+            {
+                Assert.Pass();
+            }
+
+            try
+            {
+                bleDevice.SetHRPPGChannel(1);
+                
+            } catch (Exception ex)
+            {
+                if (ex.Message.Contains(VerisenseDevice.ExceptionMsgNotSupported))
+                {
+                    Assert.Pass();
+                }
+                Assert.Fail();
+            }
+        }
+
         private byte[] CopyDefaultBytes()
         {
             var bytes = new byte[defaultBytes.Length];
