@@ -279,11 +279,11 @@ namespace ShimmerBLEAPI.Devices
         {
             if (enabled)
             {
-                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | 0b00010000);
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] | 0b00100000);
             }
             else
             {
-                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b11101111);
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b11011111);
             }
         }
 
