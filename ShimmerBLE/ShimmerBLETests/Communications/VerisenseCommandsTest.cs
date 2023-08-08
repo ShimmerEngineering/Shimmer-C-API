@@ -772,6 +772,31 @@ namespace ShimmerBLETests
         }
 
         [Test]
+        public void TestStepCounterEnable()
+        {
+            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
+            bleDevice.SetStepCountEnabled(false);
+            if (((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00100000) == 0))
+            {
+
+            }
+            else
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetStepCountEnabled(true);
+            if (((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.GEN_CFG_2] & 0b00100000) > 0))
+            {
+
+            }
+            else
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
         public void TestPendingModeEnable()
         {
             VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
