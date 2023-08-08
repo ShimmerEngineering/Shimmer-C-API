@@ -246,7 +246,7 @@ namespace ShimmerBLEAPI.Devices
 
         /// <summary>
         /// The duration in minutes wait for inactivity (either motion or Bluetooth connectivity) before putting the sensor in a stand-by state (i.e., stop recording and stop BLE advertising). Once motion is detected again, the sensor will resume BLE advertising only waiting for a Bluetooth connection and subsequent request to resume recording.
-        /// <param name="ledMode">0=Off , 63 is max value</param>
+        /// <param name="timeout">0=Off , 63 is max value</param>
         public void SetInactiveTimeout(int timeout)
         {
             if (timeout >= 0 && timeout <= 63)
