@@ -14,7 +14,7 @@ namespace ShimmerAPI
         private GattCharacteristic UartRX { get; set; }
         protected String macAddress { get; set; }
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
-
+        private static bool Debug = false;
         public ShimmerLogAndStreamBLE(String devID, String bMacAddress)
           : base(devID)
         {
@@ -92,15 +92,20 @@ namespace ShimmerAPI
             //connection lost
             if (!((BluetoothDevice)sender).Gatt.IsConnected)
             {
+                /*
                 Console.WriteLine("Connection Lost. Please reconnect.");
                 bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
                 bluetoothDevice.Gatt.Disconnect();
+                */
             }
         }
 
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
         {
-            Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
+            if (Debug)
+            {
+                Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
+            }
             for (int i = 0; i < args.Value.Length; i++)
             {
                 cq.Enqueue(args.Value[i]);
@@ -112,12 +117,12 @@ namespace ShimmerAPI
             if (GetState() != SHIMMER_STATE_NONE)
             {
                 byte b = 0xFF;
-                Timer timer = new Timer((obj) => throw new TimeoutException(), null, 30000, Timeout.Infinite);
+                //Timer timer = new Timer((obj) => throw new TimeoutException(), null, 30000, Timeout.Infinite);
                 while (!cq.TryDequeue(out b))
                 {
 
                 }
-                timer.Dispose();
+                //timer.Dispose();
                 return b;
             }
             throw new InvalidOperationException();
