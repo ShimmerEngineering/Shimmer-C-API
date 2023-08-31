@@ -112,8 +112,8 @@ namespace ShimmerAPI
         protected int magSamplingRate;
         protected int NumberofChannels;
         protected int BufferSize;
-        private int FirmwareMajor;
-        private int FirmwareMinor;
+        protected int FirmwareMajor;
+        protected int FirmwareMinor;
         protected double FirmwareIdentifier;
         protected int FirmwareInternal;
         protected String FirmwareVersionFullName;
