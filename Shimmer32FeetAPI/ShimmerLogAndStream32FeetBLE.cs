@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace ShimmerAPI
 {
-    public class ShimmerLogAndStreamBLE : ShimmerLogAndStream
+    public class ShimmerLogAndStream32FeetBLE : ShimmerLogAndStream
     {
         private BluetoothDevice bluetoothDevice { get; set; }
         private GattService ServiceTXRX { get; set; }
@@ -15,7 +15,7 @@ namespace ShimmerAPI
         protected String macAddress { get; set; }
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
         private static bool Debug = false;
-        public ShimmerLogAndStreamBLE(String devID, String bMacAddress)
+        public ShimmerLogAndStream32FeetBLE(String devID, String bMacAddress)
           : base(devID)
         {
             macAddress = bMacAddress;

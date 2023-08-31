@@ -1239,7 +1239,7 @@ namespace ShimmerAPI
             }
             else
             {
-                ShimmerDevice = new ShimmerLogAndStreamBLE("Shimmer", comboBoxComPorts.Text);
+                ShimmerDevice = new ShimmerLogAndStream32FeetBLE("Shimmer", comboBoxComPorts.Text);
             }
             ShimmerDevice.UICallback += this.HandleEvent;
 
