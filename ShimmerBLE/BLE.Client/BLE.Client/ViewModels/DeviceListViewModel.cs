@@ -105,6 +105,7 @@ namespace BLE.Client.ViewModels
 
         public MvxCommand<DeviceListItemViewModel> ConnectDisposeCommand => new MvxCommand<DeviceListItemViewModel>(ConnectAndDisposeDevice);
         public MvxCommand TestSpeedCommand => new MvxCommand(() => TestSpeed());
+        public MvxCommand TestSpeedStopCommand => new MvxCommand(() => TestSpeedStop());
         public MvxCommand UploadCommand => new MvxCommand(() => Upload());
         public MvxCommand ConnectCommand => new MvxCommand(() => Connect());
         public MvxCommand DisconnectVRECommand => new MvxCommand(() => Disconnect());
@@ -3243,9 +3244,17 @@ namespace BLE.Client.ViewModels
             }
             LoggingPPG = null;
         }
+        SpeedTestService serv;
+        protected async void TestSpeedStop()
+        {
+            if (serv != null)
+            {
+                serv.Disconnect();
+            }
+        }
         protected async void TestSpeed()
         {
-            SpeedTestService serv = new SpeedTestService(PreviousGuid.ToString());
+            serv = new SpeedTestService(PreviousGuid.ToString());
             serv.Subscribe(this);
             await serv.GetKnownDevice();
             if (serv.ConnectedASM != null)
@@ -3341,7 +3350,10 @@ namespace BLE.Client.ViewModels
         public void OnNext(string value)
         {
             Trace.WriteLine("Works" + value);
-            DeviceMessage = value;
+            if (value.Contains("Transfer rate")) {
+                serv.ExecuteMemoryLookupTableCommand();
+                DeviceMessage = value;
+            }
         }
         VerisenseBLEScannedDevice DeviceToBePaired;
 
