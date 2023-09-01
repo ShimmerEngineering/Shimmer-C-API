@@ -446,6 +446,9 @@
                                             <Button Text="Speed Test"
                             Command="{Binding TestSpeedCommand}"
                             HorizontalOptions="End" />
+                                            <Button Text="Speed Test Stop"
+                            Command="{Binding TestSpeedStopCommand}"
+                            HorizontalOptions="End" />
                                             <Button Text="Upload"
                             Command="{Binding UploadCommand}"
                             HorizontalOptions="End" />
