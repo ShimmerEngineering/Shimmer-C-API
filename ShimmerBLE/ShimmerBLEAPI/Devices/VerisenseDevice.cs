@@ -256,6 +256,22 @@ namespace ShimmerBLEAPI.Devices
             else throw new Exception(ExceptionMsgNotSupported);
         }
 
+        /// <summary>
+        /// Linked with the INACTIVE_TIMEOUT setting (see SetInactiveTimeout method), this controls whether the sensor resumes recording automatically when motion is detected.  
+        /// </summary>
+        /// <param name="enabled"></param>
+        public void SetResumeRecOnActivityEnabled(bool enabled)
+        {
+            if (enabled)
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] | 0b01000000);
+            }
+            else
+            {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] & 0b10111111);
+            }
+        }
+
 
         /// <summary>
         /// This feature only applies to sensors have LEDs, i.e.:SR62, Wrist GSR+, SR64, Development board, SR68.7.1 and >=SR68.8.0, Wrist Pulse+. Please contact us if you require further clarification.

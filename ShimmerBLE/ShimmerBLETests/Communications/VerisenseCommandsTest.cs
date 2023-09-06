@@ -772,6 +772,23 @@ namespace ShimmerBLETests
         }
 
         [Test]
+        public void TestSetResumeRecOnActivityEnabled()
+        {
+            VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
+            VerisenseBLEDevice bleDevice = new VerisenseBLEDevice(clone);
+            bleDevice.SetResumeRecOnActivityEnabled(true);
+            if (!((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] & 0b01000000) > 0))
+            {
+                Assert.Fail();
+            }
+            bleDevice.SetResumeRecOnActivityEnabled(false);
+            if (!((bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] & 0b01000000) == 0))
+            {
+                Assert.Fail();
+            }
+        }
+
+        [Test]
         public void TestStepCounterEnable()
         {
             VerisenseBLEDevice clone = new TestVerisenseBLEDevice(uuid, "", defaultBytes);
