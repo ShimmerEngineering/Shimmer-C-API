@@ -106,6 +106,7 @@ namespace BLE.Client.ViewModels
 
         public MvxCommand<DeviceListItemViewModel> ConnectDisposeCommand => new MvxCommand<DeviceListItemViewModel>(ConnectAndDisposeDevice);
         public MvxCommand TestSpeedCommand => new MvxCommand(() => TestSpeed());
+        public MvxCommand TestSpeedStopCommand => new MvxCommand(() => TestSpeedStop());
         public MvxCommand UploadCommand => new MvxCommand(() => Upload());
         public MvxCommand ConnectCommand => new MvxCommand(() => Connect());
         public MvxCommand ConnectCommandShimmer3 => new MvxCommand(() => Connect());
@@ -127,6 +128,8 @@ namespace BLE.Client.ViewModels
         public MvxCommand ConfigureVerisenseDevice => new MvxCommand(() => ConfigureDevice());
         public MvxCommand ConfigureVerisenseSensor => new MvxCommand(() => ConfigureSensor());
         public MvxCommand StopScanCommand => new MvxCommand(() => StopScan());
+        public MvxCommand SoftResetCommand => new MvxCommand(() => ResetSensor());
+        public MvxCommand ConnectWithoutInitializeCommand => new MvxCommand(() => Connect(false));
 
         public ObservableCollection<DeviceListItemViewModel> Devices { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
         public ObservableCollection<VerisenseSerialDevice> SerialDevices { get; set; } = new ObservableCollection<VerisenseSerialDevice>();
@@ -2728,11 +2731,13 @@ namespace BLE.Client.ViewModels
             cloudManager.CloudManagerEvent += CloudManager_Event;
             cloudManager.DeleteAfterUpload = true;
         }
+
         protected async void ConnectShimmer3()
         {
             ShimmerLogAndStreamBLE devices3 = new ShimmerLogAndStreamBLE("");
         }
-        protected async void Connect()
+
+        protected async void Connect(bool initialize = true)
         {
             if (VerisenseBLEDevice != null)
             {
@@ -2751,7 +2756,7 @@ namespace BLE.Client.ViewModels
 
             if (selectedSerialDevice != null && (Device.RuntimePlatform == Device.UWP || Device.RuntimePlatform == Device.Android))
             {
-                VerisenseBLEDevice = serialPortManager.CreateVerisenseSerialDevice(PreviousGuid.ToString(), selectedSerialDevice.Id);
+                VerisenseBLEDevice = serialPortManager.CreateVerisenseSerialDevice(PreviousGuid.ToString(), "SensorName", selectedSerialDevice.Id);
             }
             else if (VerisenseBLEDevice != null)
             {
@@ -2769,7 +2774,14 @@ namespace BLE.Client.ViewModels
             VerisenseBLEDevice.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
             VerisenseBLEDevice.SetParticipantID(ParticipantID);
             VerisenseBLEDevice.SetTrialName(TrialName);
-            VerisenseBLEDevice.Connect(true, VerisenseDevice.GetDeviceOpSettingFromDisplayName(VerisenseDevice.DefaultVerisenseConfiguration.Settings,SelectedDeviceConfiguration),KeepDeviceSettings);
+            if (initialize)
+            {
+                VerisenseBLEDevice.Connect(true, VerisenseDevice.GetDeviceOpSettingFromDisplayName(VerisenseDevice.DefaultVerisenseConfiguration.Settings, SelectedDeviceConfiguration), KeepDeviceSettings);
+            }
+            else
+            {
+                VerisenseBLEDevice.Connect(false);
+            }
 
         }
         bool DisconnectPressed = false;
@@ -2853,6 +2865,12 @@ namespace BLE.Client.ViewModels
         {
             bleManager.StopScanForDevices();
         }
+
+        protected async void ResetSensor()
+        {
+            VerisenseBLEDevice.ExecuteRequest(RequestType.Reset);
+        }
+
         protected async void ConfigureSensor()
         {
             var clone = new VerisenseBLEDevice(VerisenseBLEDevice);
@@ -3233,9 +3251,17 @@ namespace BLE.Client.ViewModels
             }
             LoggingPPG = null;
         }
+        SpeedTestService serv;
+        protected async void TestSpeedStop()
+        {
+            if (serv != null)
+            {
+                serv.Disconnect();
+            }
+        }
         protected async void TestSpeed()
         {
-            SpeedTestService serv = new SpeedTestService(PreviousGuid.ToString());
+            serv = new SpeedTestService(PreviousGuid.ToString());
             serv.Subscribe(this);
             await serv.GetKnownDevice();
             if (serv.ConnectedASM != null)
@@ -3331,7 +3357,10 @@ namespace BLE.Client.ViewModels
         public void OnNext(string value)
         {
             Trace.WriteLine("Works" + value);
-            DeviceMessage = value;
+            if (value.Contains("Transfer rate")) {
+                serv.ExecuteMemoryLookupTableCommand();
+                DeviceMessage = value;
+            }
         }
         VerisenseBLEScannedDevice DeviceToBePaired;
 

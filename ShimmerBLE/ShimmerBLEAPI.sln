@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.7.34024.191
+VisualStudioVersion = 17.1.32421.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShimmerBLEAPI.UWP", "ShimmerBLEAPI.UWP\ShimmerBLEAPI.UWP.csproj", "{76908925-02BB-433B-A9E5-BB07EDFCB9C9}"
 EndProject
@@ -91,6 +91,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisconnectTest.UWP", "DisconnectTestApp\DisconnectTest.UWP\DisconnectTest.UWP.csproj", "{D0783671-6B8D-4AAE-8CCD-15ACF6662953}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shimmer3BLE", "Shimmer3BLE\Shimmer3BLE.csproj", "{F9CEEFB5-9902-46DC-AA39-36D4418BE9D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenerateVerisenseOpConfigString", "ConsoleTools\GenerateVerisenseOpConfigString\GenerateVerisenseOpConfigString.csproj", "{5E33B693-1445-4E64-8A2D-B128339C2200}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BytesParserApp", "ConsoleTools\BytesParserApp\BytesParserApp.csproj", "{5E50F50F-A0D5-48FF-BCD9-CB91E8CCD00D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -3750,6 +3754,8 @@ Global
 		{86518DFA-4319-4F60-918A-DB08AA77BC46} = {F6FD9304-BB0B-4CDD-BA65-F2B8EDFBC109}
 		{558BD537-9C04-4E71-97EE-D2B33F514E90} = {F6FD9304-BB0B-4CDD-BA65-F2B8EDFBC109}
 		{D0783671-6B8D-4AAE-8CCD-15ACF6662953} = {F6FD9304-BB0B-4CDD-BA65-F2B8EDFBC109}
+		{5E33B693-1445-4E64-8A2D-B128339C2200} = {8BEFC550-C058-4F4A-9911-D738EF97479E}
+		{5E50F50F-A0D5-48FF-BCD9-CB91E8CCD00D} = {8BEFC550-C058-4F4A-9911-D738EF97479E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A9B65653-F48A-47A8-B46B-C9914B9D6063}
