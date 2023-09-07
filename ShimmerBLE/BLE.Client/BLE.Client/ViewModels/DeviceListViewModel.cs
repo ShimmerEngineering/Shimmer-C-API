@@ -40,6 +40,7 @@ using ShimmerBLEAPI.UWP.Communications;
 using Newtonsoft.Json;
 using ShimmerAdvanceBLEAPI;
 using ShimmerBLEAPI.Communications;
+using Shimmer3BLE;
 
 namespace BLE.Client.ViewModels
 {
@@ -107,6 +108,7 @@ namespace BLE.Client.ViewModels
         public MvxCommand TestSpeedCommand => new MvxCommand(() => TestSpeed());
         public MvxCommand UploadCommand => new MvxCommand(() => Upload());
         public MvxCommand ConnectCommand => new MvxCommand(() => Connect());
+        public MvxCommand ConnectCommandShimmer3 => new MvxCommand(() => Connect());
         public MvxCommand DisconnectVRECommand => new MvxCommand(() => Disconnect());
         public MvxCommand ReadStatusCommand => new MvxCommand(() => ReadStatus());
         public MvxCommand ReadProdConfCommand => new MvxCommand(() => ReadProdConf());
@@ -2726,7 +2728,10 @@ namespace BLE.Client.ViewModels
             cloudManager.CloudManagerEvent += CloudManager_Event;
             cloudManager.DeleteAfterUpload = true;
         }
-
+        protected async void ConnectShimmer3()
+        {
+            ShimmerLogAndStreamBLE devices3 = new ShimmerLogAndStreamBLE("");
+        }
         protected async void Connect()
         {
             if (VerisenseBLEDevice != null)

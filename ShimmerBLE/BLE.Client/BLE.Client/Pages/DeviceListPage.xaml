@@ -401,6 +401,8 @@
 
                                     <ScrollView Orientation="Horizontal">
                                         <StackLayout Orientation="Horizontal">
+                                            <Button Text="Connect Shimmer3"
+                            Command="{Binding ConnectCommandShimmer3}"/>
                                             <Button Text="Connect"
                             Command="{Binding ConnectCommand}"/>
                                             <Button Text="Disconnect"
@@ -721,6 +723,8 @@
 
                                     <ScrollView Orientation="Horizontal">
                                         <StackLayout Orientation="Horizontal">
+                                            <Button Text="Connect Shimmer3"
+                            Command="{Binding ConnectCommandShimmer3}"/>
                                             <Button Text="Connect"
                             Command="{Binding ConnectCommand}"/>
                                             <Button Text="Disconnect"
