@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj" />
+    <ProjectReference Include="..\..\Shimmer3BLE\Shimmer3BLE.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI.Android\ShimmerBLEAPI.Android.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI.iOS\ShimmerBLEAPI.iOS.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI.UWP\ShimmerBLEAPI.UWP.csproj" />
