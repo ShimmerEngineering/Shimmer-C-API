@@ -39,8 +39,12 @@ namespace Shimmer3BLE
         protected override void CloseConnection()
         {
             //throw new NotImplementedException();
+            if (ConnectedASM != null)
+            {
+                var timeout = 10000; //might need a longer period for windows
+                var task = adapter.DisconnectDeviceAsync(ConnectedASM);
+            }
         }
-
         protected override void FlushConnection()
         {
             //throw new NotImplementedException();
@@ -66,13 +70,14 @@ namespace Shimmer3BLE
 
         private void UartRX_ValueUpdated(object sender, Plugin.BLE.Abstractions.EventArgs.CharacteristicUpdatedEventArgs e)
         {
-            
-                byte[] bytes = e.Characteristic.Value;
-                for (int i = 0; i < bytes.Length; i++)
-                {
-                    Buffer.Add(bytes[i]);
-                }
-            
+           
+            byte[] bytes = e.Characteristic.Value;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                Buffer.Add(bytes[i]);
+            }
+            RequestTCS.TrySetResult(true);
+
         }
 
         ICharacteristic UartRX { get; set; }
@@ -86,6 +91,7 @@ namespace Shimmer3BLE
             cancel.Cancel();
         }
         CancellationTokenSource cancel = new CancellationTokenSource();
+        TaskCompletionSource<bool> RequestTCS { get; set; }
         public new async Task<bool> Connect()
         {
             BLERadio = new RadioPluginBLE();
@@ -100,6 +106,7 @@ namespace Shimmer3BLE
                     cancel = new CancellationTokenSource();
                     TimeSpan timespan = new TimeSpan(0, 0, 5);
                     Timer timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);
+                    SetState(SHIMMER_STATE_CONNECTING);
                     ConnectedASM = await adapter.ConnectToKnownDeviceAsync(Asm_uuid, new ConnectParameters(false, true), cancel.Token);
                     timer.Dispose();
                     /*if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
@@ -138,6 +145,7 @@ namespace Shimmer3BLE
                         UartRX = await ServiceTXRX.GetCharacteristicAsync(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
                         System.Console.WriteLine("Getting RX Characteristics Completed");
                         UartRX.ValueUpdated += UartRX_ValueUpdated;
+
                         await UartRX.StartUpdatesAsync();
 
                         //StateChange(ShimmerDeviceBluetoothState.Connected);
@@ -180,12 +188,17 @@ namespace Shimmer3BLE
                 FirmwareVersionFullName = "BoilerPlate 0.1.0";
                 FirmwareInternal = 0;
 
-                WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND }, 0, 1);
-                System.Threading.Thread.Sleep(200);
+                RequestTCS = new TaskCompletionSource<bool>();
+
+                //await UartTX.WriteAsync(new byte[1] { (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND });
+                //await WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND }, 0, 1);
+                //System.Threading.Thread.Sleep(200);
+                //var result = await RequestTCS.Task;
 
                 WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND }, 0, 1);
+                //await UartTX.WriteAsync(new byte[1] { (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND });
                 System.Threading.Thread.Sleep(200);
-
+                //var result = await RequestTCS.Task;
                 if (FirmwareMajor == 1 && FirmwareMinor == 2)//FirmwareVersion != 1.2) //Shimmer2r and Shimmer3 commands differ, using FWVersion to determine if its a Shimmer2r for the time being, future revisions of BTStream (Shimmer2r, should update the command to 3F)
                 {
                     WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_SHIMMER_VERSION_COMMAND }, 0, 1);
@@ -193,11 +206,13 @@ namespace Shimmer3BLE
                 else
                 {
                     WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_SHIMMER_VERSION_COMMAND }, 0, 1);
+                    //await UartTX.WriteAsync(new byte[1] { (byte)PacketTypeShimmer3.GET_SHIMMER_VERSION_COMMAND });
+                    //result = await RequestTCS.Task;
                 }
                 System.Threading.Thread.Sleep(400);
 
                 ReadBlinkLED();
-
+                //result = await RequestTCS.Task;
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2)
                 {
                     InitializeShimmer2();
@@ -241,14 +256,8 @@ namespace Shimmer3BLE
 
         protected override void WriteBytes(byte[] b, int index, int length)
         {
-            try
-            {
-                var res = UartTX.WriteAsync(b);
-            }
-            catch (Exception ex)
-            {
-                
-            }
+            var res = UartTX.WriteAsync(b);
+            res.Wait(1000);
         }
 
         protected override void OpenConnection()

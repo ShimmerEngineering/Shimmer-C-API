@@ -231,6 +231,14 @@
 
                                         <StackLayout Orientation="Vertical">
                                             <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect Shimmer3"
+                            Command="{Binding ConnectCommandShimmer3}"/>
+                                                <Button Text="Disconnect Shimmer3"
+Command="{Binding DisconnectCommandShimmer3}"/>
+                                                <Button Text="ios1Start Streaming Shimmer3"
+Command="{Binding StartStreamingCommandShimmer3}"/>
+                                                <Button Text="Stop Streaming Shimmer3"
+Command="{Binding StopStreamingCommandShimmer3}"/>
                                                 <Button Text="Connect"
                                                 Margin="10,0,0,0"
                                                 Command="{Binding ConnectCommand}"/>
@@ -413,6 +421,12 @@
                                         <StackLayout Orientation="Horizontal">
                                             <Button Text="Connect Shimmer3"
                             Command="{Binding ConnectCommandShimmer3}"/>
+                                            <Button Text="Disconnect Shimmer3"
+                            Command="{Binding DisconnectCommandShimmer3}"/>
+                                            <Button Text="Start Streaming Shimmer3"
+                            Command="{Binding StartStreamingCommandShimmer3}"/>
+                                            <Button Text="Stop Streaming Shimmer3"
+                            Command="{Binding StopStreamingCommandShimmer3}"/>
                                             <Button Text="Connect"
                             Command="{Binding ConnectCommand}"/>
                                             <Button Text="Disconnect"
@@ -614,6 +628,14 @@
 
                                         <StackLayout Orientation="Vertical">
                                             <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect Shimmer3"
+                            Command="{Binding ConnectCommandShimmer3}"/>
+                                                <Button Text="Disconnect Shimmer3"
+Command="{Binding DisconnectCommandShimmer3}"/>
+                                                <Button Text="iosStart Streaming Shimmer3"
+Command="{Binding StartStreamingCommandShimmer3}"/>
+                                                <Button Text="Stop Streaming Shimmer3"
+Command="{Binding StopStreamingCommandShimmer3}"/>
                                                 <Button Text="Connect"
                                                 Margin="10,0,0,0"
                                                 Command="{Binding ConnectCommand}"/>
@@ -744,6 +766,12 @@
                                         <StackLayout Orientation="Horizontal">
                                             <Button Text="Connect Shimmer3"
                             Command="{Binding ConnectCommandShimmer3}"/>
+                                            <Button Text="Disconnect Shimmer3"
+Command="{Binding DisconnectCommandShimmer3}"/>
+                                            <Button Text="ios3Start Streaming Shimmer3"
+Command="{Binding StartStreamingCommandShimmer3}"/>
+                                            <Button Text="Stop Streaming Shimmer3"
+Command="{Binding StopStreamingCommandShimmer3}"/>
                                             <Button Text="Connect"
                             Command="{Binding ConnectCommand}"/>
                                             <Button Text="Disconnect"
