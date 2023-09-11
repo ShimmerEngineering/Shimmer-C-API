@@ -3,6 +3,7 @@ using System.IO;
 using InTheHand.Bluetooth;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Diagnostics;
 
 namespace ShimmerAPI
 {

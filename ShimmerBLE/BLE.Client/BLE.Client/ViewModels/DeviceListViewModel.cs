@@ -2735,18 +2735,20 @@ namespace BLE.Client.ViewModels
             cloudManager.CloudManagerEvent += CloudManager_Event;
             cloudManager.DeleteAfterUpload = true;
         }
-        ShimmerLogAndStreamBLE devices3;
-        protected async void ConnectShimmer3()
+        ShimmerLogAndStream32FeetBLE devices3;
+        protected void ConnectShimmer3()
         {
             //ShimmerLogAndStreamBLE devices3 = new ShimmerLogAndStreamBLE("00000000-0000-0000-0000-e8eb1b9767ad");
             //devices3 = new ShimmerLogAndStreamBLE("00000000-0000-0000-0000-E8EB1B713E36");
-            devices3 = new ShimmerLogAndStreamBLE("C01B2C3B-7B83-5245-10BD-C0B57733F7D2");
-            
+            //devices3 = new ShimmerLogAndStreamBLE("C01B2C3B-7B83-5245-10BD-C0B57733F7D2");
+            devices3 = new ShimmerLogAndStream32FeetBLE("Shimmer", "E8EB1B713E36");
             devices3.UICallback += this.HandleEvent;
-            //devices3.StartConnectThread();
+            
+            devices3.StartConnectThread();
             Task.Run(async () =>
             {
-                devices3.Connect();
+                //devices3.Connect();
+                //
             });
         }
         protected async void DisconnectShimmer3()
