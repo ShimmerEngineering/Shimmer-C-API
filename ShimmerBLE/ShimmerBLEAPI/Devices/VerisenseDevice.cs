@@ -251,6 +251,7 @@ namespace ShimmerBLEAPI.Devices
         {
             if (timeout >= 0 && timeout <= 63)
             {
+                OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] & 0xC0);
                 OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] = (byte)(OpConfig.ConfigurationBytes[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] | (byte)timeout);
             }
             else throw new Exception(ExceptionMsgNotSupported);

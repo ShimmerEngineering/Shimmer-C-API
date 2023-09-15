@@ -743,6 +743,12 @@ namespace ShimmerBLETests
                 Assert.Fail();
             }
 
+            bleDevice.SetInactiveTimeout(20);
+            if (!(bleDevice.GetOperationalConfigByteArray()[(int)ConfigurationBytesIndexName.INACTIVE_TIMEOUT] == 20))
+            {
+                Assert.Fail();
+            }
+
             try
             {
                 bleDevice.SetInactiveTimeout(-1);
