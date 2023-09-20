@@ -26,7 +26,7 @@ namespace MultiVerisenseSpeedTest
         ObservableCollection<VerisenseBLEScannedDevice> ListOfScannedDevices = new ObservableCollection<VerisenseBLEScannedDevice>();
         private bool isConnected = false;
         SpeedTestService speedTestService;
-
+        int sensorNumber = 0;
         public MainPage()
         {
             InitializeComponent();
@@ -114,7 +114,6 @@ namespace MultiVerisenseSpeedTest
         }
         private async void connectButton_Clicked(object sender, EventArgs e)
         {
-            
             device = new VerisenseBLEDevice(selectedDevice.Uuid.ToString(), "");
             device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
           
@@ -123,7 +122,7 @@ namespace MultiVerisenseSpeedTest
                 
             });
 
-            await device.Connect(false);
+            await device.Connect(true);
         }
         private async void disconnectButton_Clicked(object sender, EventArgs e)
         {
@@ -131,12 +130,34 @@ namespace MultiVerisenseSpeedTest
         }
         private async void scanDeviceButton_Clicked(object sender, EventArgs e)
         {
+            Button btn = (Button)sender;
+            //GetSensorNumber(int.Parse(btn.StyleId.Substring(btn.StyleId.IndexOf("_") + 1)));
+            
             await bleManager.StartScanForDevices();
         }
         public void OnSelectedItem(object sender, SelectedItemChangedEventArgs e)
         {
             selectedDevice = (VerisenseBLEScannedDevice)e.SelectedItem;
             uuidEntry.Text = selectedDevice.Uuid.ToString();
+        }
+        public void GetSensorNumber(int number)
+        {
+            switch (number)
+            {
+                case 1:
+                    sensorNumber = 1;
+                    break;
+                case 2:
+                    sensorNumber = 2;
+                    break;
+                case 3:
+                    sensorNumber = 3;
+                    break;
+                default:
+                    sensorNumber = 0;
+                    break;
+            }
+
         }
         private async void ShimmerDevice_BLEEvent(object sender, ShimmerBLEEventData e)
         {

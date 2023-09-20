@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>UIFileSharingEnabled</key>
+    <true/>
     <key>UIDeviceFamily</key>
     <array>
         <integer>1</integer>
@@ -21,11 +23,11 @@
         <string>UIInterfaceOrientationLandscapeRight</string>
     </array>
     <key>MinimumOSVersion</key>
-    <string>8.0</string>
+    <string>10.0</string>
     <key>CFBundleDisplayName</key>
-    <string>MultiVerisenseSpeedTest</string>
+    <string>MultiShimmerExample</string>
     <key>CFBundleIdentifier</key>
-    <string>com.companyname.MultiVerisenseSpeedTest</string>
+    <string>com.companyname.MultiShimmerExample</string>
     <key>CFBundleVersion</key>
     <string>1.0</string>
     <key>UILaunchStoryboardName</key>
@@ -34,5 +36,18 @@
     <string>MultiVerisenseSpeedTest</string>
     <key>XSAppIconAssets</key>
     <string>Assets.xcassets/AppIcon.appiconset</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<!--for connecting to devices (client)-->
+		<string>bluetooth-central</string>
+
+		<!--for server configurations if needed-->
+		<string>bluetooth-peripheral</string>
+	</array>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Our app uses bluetooth to find, connect and transfer data between different devices</string>
+
+
+	
 </dict>
 </plist>

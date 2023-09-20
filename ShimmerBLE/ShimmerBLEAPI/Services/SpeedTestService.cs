@@ -288,7 +288,7 @@ namespace shimmer.Services
                     Trace.Message("Transfer rate in KB/s: " + DataBuffer.Transfer);
                     Console.WriteLine("Transfer rate = {0} KB/s", DataBuffer.Transfer);
                     foreach (var observer in observers)
-                        observer.OnNext("Transfer rate in KB/s: " + DataBuffer.Transfer);
+                        observer.OnNext("Transfer rate in KB/s: " + DataBuffer.Transfer + " " + Asm_uuid);
                     HandleMemoryContent(DataBuffer.Packets);
                     SpeedinKBS = DataBuffer.Transfer;
 

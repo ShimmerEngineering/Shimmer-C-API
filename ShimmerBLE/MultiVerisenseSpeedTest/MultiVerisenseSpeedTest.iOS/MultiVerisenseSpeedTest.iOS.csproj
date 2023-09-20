@@ -116,6 +116,22 @@
     </ImageAsset>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MvvmCross.Plugins.BLE, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\MvvmCross.Plugins.BLE.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmCross.Plugins.BLE.iOS, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\MvvmCross.Plugins.BLE.iOS.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.BLE, Version=1.1.21354.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Plugin.BLE.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.BLE.Abstractions, Version=1.1.21354.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libs\Plugin.BLE.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -129,6 +145,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\..\ShimmerBLEAPI.iOS\ShimmerBLEAPI.iOS.csproj">
+      <Project>{7384146a-cbdd-4e65-a20f-cb9597378b26}</Project>
+      <Name>ShimmerBLEAPI.iOS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ShimmerBLEAPI\ShimmerBLEAPI.csproj">
       <Project>{2B423ED5-9DB8-40FE-8C0C-DCDAFE0E6229}</Project>
       <Name>ShimmerBLEAPI</Name>

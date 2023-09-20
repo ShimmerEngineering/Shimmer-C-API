@@ -18,7 +18,7 @@ using System.Collections.ObjectModel;
 
 namespace MultiShimmerExample
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage, IObserver<String>
     {
         public class DeviceInfo : INotifyPropertyChanged
         {
@@ -50,11 +50,13 @@ namespace MultiShimmerExample
             private string _isPaired { get; set; }
             public string IsPaired { get { return _isPaired; } set { _isPaired = value; NotifyPropertyChanged("IsPaired"); } }
             public List<string[]> Signals { get; set; }
+            public SpeedTestService speedTestService { get; set; }
 
             public DeviceInfo(string uuid)
             {
                 Uuid = uuid;
                 Signals = new List<string[]>();
+                speedTestService = new SpeedTestService(uuid);
             }
         }
 
@@ -390,6 +392,91 @@ namespace MultiShimmerExample
         private void syncDevicesButton_Clicked(object sender, EventArgs e)
         {
             StartDataSync();
+        } 
+        
+        private void startSpeedTestButton_Clicked(object sender, EventArgs e)
+        {
+            StartSpeedTest();
+        }
+        private void stopSpeedTestButton_Clicked(object sender, EventArgs e)
+        {
+            StopSpeedTest();
+        }
+        public async void StartSpeedTest()
+        {
+            foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
+            {
+                if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
+                {
+
+                    GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService.Subscribe(this);
+                    await GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService.GetKnownDevice();
+                    if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService.ConnectedASM != null)
+                    {
+                        System.Console.WriteLine("Memory Lookup Execution");
+                        await GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService.ExecuteMemoryLookupTableCommand();
+                    }
+                    else
+                    {
+                        System.Console.WriteLine("Connect Fail");
+                    }
+                }
+            }
+        } 
+        public async void StopSpeedTest()
+        {
+            foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
+            {
+                if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
+                {
+                    
+                    if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService != null)
+                    {
+                        DeviceInfo deviceInfo = GetDeviceInfoFromUUID(device.Asm_uuid.ToString());
+                        if (deviceInfo != null)
+                        {
+                            deviceInfo.TransferSpeed = "";
+                        }
+                        GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService.Disconnect();
+
+                    }
+                }
+            }
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnNext(string value)
+        {
+
+            Trace.WriteLine("Works" + value);
+            if (value.Contains("Transfer rate"))
+            {
+                foreach (VerisenseBLEDevice device in ConnectedDevices.Values)
+                {
+                    if (GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).IsSelected)
+                    {
+                        if (value.Contains(device.Asm_uuid.ToString())){
+                            DeviceInfo deviceInfo = GetDeviceInfoFromUUID(device.Asm_uuid.ToString());
+                            if (deviceInfo != null)
+                            {
+                                deviceInfo.TransferSpeed = value.Replace(device.Asm_uuid.ToString(), "");
+                            }
+                            GetDeviceInfoFromUUID(device.Asm_uuid.ToString()).speedTestService.ExecuteMemoryLookupTableCommand();
+                        }
+                      
+                    }
+                }
+               
+            }
         }
     }
 }
