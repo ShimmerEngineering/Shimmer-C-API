@@ -103,6 +103,7 @@ namespace ShimmerAPI
 
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
         {
+            Console.WriteLine(sender.GetType().ToString());
             if (Debug)
             {
                 Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
