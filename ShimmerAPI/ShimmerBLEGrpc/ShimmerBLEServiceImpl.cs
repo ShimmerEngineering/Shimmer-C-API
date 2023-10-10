@@ -16,6 +16,8 @@ namespace ShimmerBLEGrpc
 {
     public class ShimmerBLEServiceImpl : ShimmerBLEByteServer.ShimmerBLEByteServerBase
     {
+        readonly string Verisense = "Verisense";
+        readonly string Shimmer = "Shimmer";
         bool Debug = false;
         ConcurrentDictionary<string, BluetoothDevice> BluetoohDeviceMap = new ConcurrentDictionary<string, BluetoothDevice>();
         ConcurrentDictionary<string, GattService> ServiceMap = new ConcurrentDictionary<string, GattService>();
@@ -63,25 +65,50 @@ namespace ShimmerBLEGrpc
             BluetoohDeviceMap.TryAdd(request.Name, bluetoothDevice);
             await bluetoothDevice.Gatt.ConnectAsync();
             Console.WriteLine("current mtu value " + bluetoothDevice.Gatt.Mtu);
-            bool shimmer = false;
             BluetoothUuid TxID;
             BluetoothUuid RxID;
             BluetoothUuid ServiceID;
-            if (shimmer)
+            if (bluetoothDevice.Name.Contains(Shimmer))
             {
                 TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
                 RxID = BluetoothUuid.FromGuid(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
                 ServiceID = BluetoothUuid.FromGuid(new Guid("49535343-fe7d-4ae5-8fa9-9fafd205e455"));
             }
-            else
+            else if (bluetoothDevice.Name.Contains(Verisense))
             {
                 TxID = BluetoothUuid.FromGuid(new Guid("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
                 RxID = BluetoothUuid.FromGuid(new Guid("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
                 ServiceID = BluetoothUuid.FromGuid(new Guid("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
+            } else // just assume it is a shimmer device
+            {
+                TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
+                RxID = BluetoothUuid.FromGuid(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
+                ServiceID = BluetoothUuid.FromGuid(new Guid("49535343-fe7d-4ae5-8fa9-9fafd205e455"));
             }
             GattService ServiceTXRX = await bluetoothDevice.Gatt.GetPrimaryServiceAsync(ServiceID);
+            if (ServiceTXRX == null)
+            {
+                return new Reply
+                {
+                    Message = "Connect Failed " + macAddress
+                };
+            }
             GattCharacteristic UartTX = await ServiceTXRX.GetCharacteristicAsync(TxID);
+            if (UartTX == null)
+            {
+                return new Reply
+                {
+                    Message = "Connect Failed " + macAddress
+                };
+            }
             GattCharacteristic UartRX = await ServiceTXRX.GetCharacteristicAsync(RxID);
+            if (UartRX == null)
+            {
+                return new Reply
+                {
+                    Message = "Connect Failed " + macAddress
+                };
+            }
             if (ServiceMap.ContainsKey(macAddress))
             {
                 ServiceMap.TryRemove(macAddress, out var s);
