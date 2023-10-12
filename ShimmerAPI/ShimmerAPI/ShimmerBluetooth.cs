@@ -808,6 +808,8 @@ namespace ShimmerAPI
         protected abstract void WriteBytes(byte[] b, int index, int length);
         protected abstract int ReadByte();
 
+        protected int ConnectWaitDurationinmS = 500;
+
         public void Connect()
         {
             if (!IsConnectionOpen())
@@ -823,7 +825,7 @@ namespace ShimmerAPI
                     ReadThread.Name = "Read Thread for Device: " + DeviceName;
                     ReadThread.Start();
                     // give the shimmer time to make the changes before continuing
-                    System.Threading.Thread.Sleep(10000);
+                    System.Threading.Thread.Sleep(ConnectWaitDurationinmS);
                     // Read Shimmer Profile
                     if (IsConnectionOpen())
                     {

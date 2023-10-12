@@ -1,5 +1,4 @@
-﻿using shimmer.Communications;
-using ShimmerAPI;
+﻿using ShimmerAPI;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,13 +14,16 @@ using System.Diagnostics;
 
 namespace Shimmer3BLE
 {
+    //This class is left uncompleted incase there comes a time where this needs to be picked up again
+    [Obsolete("This class is obsolete and is strictly NOT TO BE USED. Use the ShimmerLogAndStream32FeetBLE instead.")]
     public class ShimmerLogAndStreamBLE : ShimmerLogAndStream
     {
-        protected IVerisenseByteCommunication BLERadio;
+        
         BlockingCollection<int> Buffer = new BlockingCollection<int>(2048);
         public Guid Asm_uuid { get; set; }
         public ShimmerLogAndStreamBLE(string devID) : base(devID)
         {
+            ConnectWaitDurationinmS = 10000;
             Asm_uuid = Guid.Parse(devID);
         }
 
@@ -94,9 +96,6 @@ namespace Shimmer3BLE
         TaskCompletionSource<bool> RequestTCS { get; set; }
         public new async Task<bool> Connect()
         {
-            BLERadio = new RadioPluginBLE();
-
-            BLERadio.Asm_uuid = Asm_uuid;
 
             var localTask = new TaskCompletionSource<bool>();
 

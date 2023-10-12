@@ -19,6 +19,7 @@ namespace ShimmerAPI
         public ShimmerLogAndStream32FeetBLE(String devID, String bMacAddress)
           : base(devID)
         {
+            ConnectWaitDurationinmS = 10000;
             macAddress = bMacAddress;
         }
 
