@@ -2874,7 +2874,7 @@ namespace ShimmerAPI
             SignalNameArray = signalNameArray;
             SignalDataTypeArray = signalDataTypeArray;
             PacketSize = packetSize;
-            Debug.WriteLine("Packet Size : " + PacketSize + "  CRC Mode and starting byte not included");
+            //Debug.WriteLine("Packet Size : " + PacketSize + "  CRC Mode and starting byte not included");
         }
 
         public String[] GetSignalNameArray()
