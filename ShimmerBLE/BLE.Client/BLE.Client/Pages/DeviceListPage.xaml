@@ -611,6 +611,10 @@
                             <CheckBox IsChecked="{Binding SensorGyro}" />
                         </StackLayout>
                         <StackLayout Orientation="Horizontal">
+                            <Label Text="Step Count : " WidthRequest="200"/>
+                            <CheckBox IsChecked="{Binding StepCount}" />
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
                             <Label Text="Sampling Rate : " WidthRequest="200"/>
                             <Picker ItemsSource="{Binding Accel2GyroRates}"
                                 SelectedItem="{Binding SelectedAccel2GyroRate, Mode=TwoWay}" ></Picker>
