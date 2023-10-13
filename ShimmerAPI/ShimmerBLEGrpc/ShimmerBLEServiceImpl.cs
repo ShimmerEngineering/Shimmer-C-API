@@ -25,6 +25,7 @@ namespace ShimmerBLEGrpc
         ConcurrentDictionary<string, GattCharacteristic> UartRXMap = new ConcurrentDictionary<string, GattCharacteristic>();
         ConcurrentDictionary<string, ConcurrentQueue<byte[]>> QueueMap = new ConcurrentDictionary<string, ConcurrentQueue<byte[]>>();
         ConcurrentDictionary<string, bool> StreamThreadMap = new ConcurrentDictionary<string, bool>();
+        ConcurrentDictionary<string, IServerStreamWriter<StateStatus>> ConnectStreamMap = new ConcurrentDictionary<string, IServerStreamWriter<StateStatus>>();
         private readonly ILogger<ShimmerBLEServiceImpl> _logger;
         public ShimmerBLEServiceImpl()
         {
@@ -43,6 +44,7 @@ namespace ShimmerBLEGrpc
 
         public override async Task<Reply> WriteBytesShimmer(WriteBytes bytes, ServerCallContext context)
         {
+            Console.WriteLine("Write Bytes");
             if (UartTXMap.ContainsKey(bytes.Address.ToUpper()))
             {
                 await UartTXMap[bytes.Address.ToUpper()].WriteValueWithoutResponseAsync(bytes.ByteToWrite.ToByteArray());
@@ -54,9 +56,10 @@ namespace ShimmerBLEGrpc
             };
         }
 
-        public override async Task<Reply> ConnectShimmer(Request request, ServerCallContext context)
+        public override async Task ConnectShimmer(Request request, IServerStreamWriter<StateStatus> stateStatusStream, ServerCallContext context)
         {
             string macAddress = request.Name.ToUpper();
+            Console.WriteLine("Attempting to connect " + macAddress);
             BluetoothDevice bluetoothDevice = await BluetoothDevice.FromIdAsync(request.Name);
             if (BluetoohDeviceMap.ContainsKey(macAddress))
             {
@@ -65,6 +68,16 @@ namespace ShimmerBLEGrpc
             BluetoohDeviceMap.TryAdd(request.Name, bluetoothDevice);
             await bluetoothDevice.Gatt.ConnectAsync();
             Console.WriteLine("current mtu value " + bluetoothDevice.Gatt.Mtu);
+            if (bluetoothDevice.Gatt.Mtu == 23)
+            {
+                bluetoothDevice.Gatt.Disconnect();
+                await stateStatusStream.WriteAsync(new StateStatus
+                {
+                    Message = "MTU is 23",
+                    State = BluetoothState.Disconnected
+                });
+                return;
+            }
             BluetoothUuid TxID;
             BluetoothUuid RxID;
             BluetoothUuid ServiceID;
@@ -79,7 +92,8 @@ namespace ShimmerBLEGrpc
                 TxID = BluetoothUuid.FromGuid(new Guid("6E400002-B5A3-F393-E0A9-E50E24DCCA9E"));
                 RxID = BluetoothUuid.FromGuid(new Guid("6E400003-B5A3-F393-E0A9-E50E24DCCA9E"));
                 ServiceID = BluetoothUuid.FromGuid(new Guid("6E400001-B5A3-F393-E0A9-E50E24DCCA9E"));
-            } else // just assume it is a shimmer device
+            }
+            else // just assume it is a shimmer device
             {
                 TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
                 RxID = BluetoothUuid.FromGuid(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
@@ -88,26 +102,32 @@ namespace ShimmerBLEGrpc
             GattService ServiceTXRX = await bluetoothDevice.Gatt.GetPrimaryServiceAsync(ServiceID);
             if (ServiceTXRX == null)
             {
-                return new Reply
+                await stateStatusStream.WriteAsync(new StateStatus
                 {
-                    Message = "Connect Failed " + macAddress
-                };
+                    Message = "Service is null",
+                    State = BluetoothState.Disconnected
+                });
+                return;
             }
             GattCharacteristic UartTX = await ServiceTXRX.GetCharacteristicAsync(TxID);
             if (UartTX == null)
             {
-                return new Reply
+                await stateStatusStream.WriteAsync(new StateStatus
                 {
-                    Message = "Connect Failed " + macAddress
-                };
+                    Message = "UARTTX is null",
+                    State = BluetoothState.Disconnected
+                });
+                return;
             }
             GattCharacteristic UartRX = await ServiceTXRX.GetCharacteristicAsync(RxID);
             if (UartRX == null)
             {
-                return new Reply
+                await stateStatusStream.WriteAsync(new StateStatus
                 {
-                    Message = "Connect Failed " + macAddress
-                };
+                    Message = "UARTRX is null",
+                    State = BluetoothState.Disconnected
+                });
+                return;
             }
             if (ServiceMap.ContainsKey(macAddress))
             {
@@ -124,13 +144,44 @@ namespace ShimmerBLEGrpc
             ServiceMap.TryAdd(macAddress, ServiceTXRX);
             UartTXMap.TryAdd(macAddress, UartTX);
             UartRXMap.TryAdd(macAddress, UartRX);
+            if (QueueMap.ContainsKey(macAddress))
+            {
+                QueueMap[macAddress] = new ConcurrentQueue<byte[]>();
+            }
             UartRX.CharacteristicValueChanged += Gc_ValueChanged;
             await UartRX.StartNotificationsAsync();
-            return new Reply
+            var data = new StateStatus
             {
-                Message = "Connected " + macAddress
+                Message = "Success",
+                State = BluetoothState.Connected
             };
-            
+            bluetoothDevice.GattServerDisconnected += BluetoothDevice_GattServerDisconnected;
+            ConnectStreamMap.TryAdd(macAddress, stateStatusStream);
+            await stateStatusStream.WriteAsync(data);
+            while (BluetoohDeviceMap.ContainsKey(macAddress))
+            {
+                Thread.Sleep(100);
+            }
+        }
+
+        private void BluetoothDevice_GattServerDisconnected(object sender, EventArgs e)
+        {
+            BluetoothDevice bluetoothDevice = (BluetoothDevice)sender;
+            Console.WriteLine(bluetoothDevice.Id);
+            var data = new StateStatus
+            {
+                Message = "Connection Lost",
+                State = BluetoothState.Disconnected
+            };
+            ConnectStreamMap[bluetoothDevice.Id.ToUpper()].WriteAsync(data);
+            ConnectStreamMap.TryRemove(bluetoothDevice.Id.ToUpper(), out var y);
+            UartRXMap[bluetoothDevice.Id.ToUpper()].CharacteristicValueChanged -= Gc_ValueChanged;
+            bluetoothDevice.GattServerDisconnected -= BluetoothDevice_GattServerDisconnected;
+            BluetoohDeviceMap[bluetoothDevice.Id.ToUpper()].Gatt.Disconnect();
+            BluetoohDeviceMap.TryRemove(bluetoothDevice.Id.ToUpper(), out var s);
+            QueueMap.TryRemove(bluetoothDevice.Id.ToUpper(), out var t);
+
+
         }
 
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
@@ -163,6 +214,13 @@ namespace ShimmerBLEGrpc
             {
                 Message = "Disconnect " + request.Name
             };
+            var data = new StateStatus
+            {
+                Message = "Disconnected",
+                State = BluetoothState.Disconnected
+            };
+            await ConnectStreamMap[request.Name.ToUpper()].WriteAsync(data);
+            ConnectStreamMap.TryRemove(request.Name.ToUpper(), out var y);
         }
 
         Dictionary<string, long> hashMap = new Dictionary<string, long>();

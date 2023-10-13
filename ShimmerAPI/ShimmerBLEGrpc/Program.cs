@@ -13,8 +13,11 @@ namespace ShimmerBLEGrpc
         static void Main(string[] args)
         {
 
-            const int Port = 50052; // Port on which the server will listen
-
+            int Port = 50052; // Port on which the server will listen
+            if (args.Length>0)
+            {
+                Port = int.Parse(args[0]);
+            }
             var server = new Server
             {
                 Services = { ShimmerBLEByteServer.BindService(new ShimmerBLEServiceImpl()) },
@@ -22,7 +25,7 @@ namespace ShimmerBLEGrpc
             };
             server.Start();
             Console.WriteLine($"Server listening at port {Port}. Press any key to terminate");
-            Console.ReadKey();
+            Console.Read();
         }
     }
 }

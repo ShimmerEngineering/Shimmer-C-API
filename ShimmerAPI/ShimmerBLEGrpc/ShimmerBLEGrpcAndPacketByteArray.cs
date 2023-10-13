@@ -28,40 +28,54 @@ namespace com.shimmerresearch.grpc {
             "DnNoaW1tZXJCTEVHUlBDIhgKBVJlcGx5Eg8KB21lc3NhZ2UYASABKAkiFwoH",
             "UmVxdWVzdBIMCgRuYW1lGAEgASgJIjQKCldyaXRlQnl0ZXMSDwoHYWRkcmVz",
             "cxgBIAEoCRIVCg1ieXRlX3RvX3dyaXRlGAIgASgMIiAKDVN0cmVhbVJlcXVl",
-            "c3QSDwoHbWVzc2FnZRgBIAEoCSKUAgoWT2JqZWN0Q2x1c3RlckJ5dGVBcnJh",
-            "eRIMCgR1dWlkGAEgASgJEhgKEGJsdWV0b290aEFkZHJlc3MYAiABKAkSUwoR",
-            "Y29tbXVuaWNhdGlvblR5cGUYAyABKA4yOC5zaGltbWVyQkxFR1JQQy5PYmpl",
-            "Y3RDbHVzdGVyQnl0ZUFycmF5LkNvbW11bmljYXRpb25UeXBlEhIKCnN5c3Rl",
-            "bVRpbWUYBCABKAMSGwoTY2FsaWJyYXRlZFRpbWVTdGFtcBgFIAEoARITCgti",
-            "aW5hcnlfZGF0YRgGIAEoDCI3ChFDb21tdW5pY2F0aW9uVHlwZRIGCgJCVBAA",
-            "EgYKAlNEEAESEgoOUmFkaW9fODAyXzE1XzQQAjKyBAoUU2hpbW1lckJMRUJ5",
-            "dGVTZXJ2ZXISWgoNR2V0RGF0YVN0cmVhbRIdLnNoaW1tZXJCTEVHUlBDLlN0",
-            "cmVhbVJlcXVlc3QaJi5zaGltbWVyQkxFR1JQQy5PYmplY3RDbHVzdGVyQnl0",
-            "ZUFycmF5IgAwARJeChFHZXRUZXN0RGF0YVN0cmVhbRIdLnNoaW1tZXJCTEVH",
-            "UlBDLlN0cmVhbVJlcXVlc3QaJi5zaGltbWVyQkxFR1JQQy5PYmplY3RDbHVz",
-            "dGVyQnl0ZUFycmF5IgAwARJTCg5TZW5kRGF0YVN0cmVhbRImLnNoaW1tZXJC",
-            "TEVHUlBDLk9iamVjdENsdXN0ZXJCeXRlQXJyYXkaFS5zaGltbWVyQkxFR1JQ",
-            "Qy5SZXBseSIAKAESQAoOQ29ubmVjdFNoaW1tZXISFy5zaGltbWVyQkxFR1JQ",
-            "Qy5SZXF1ZXN0GhUuc2hpbW1lckJMRUdSUEMuUmVwbHkSQwoRRGlzY29ubmVj",
-            "dFNoaW1tZXISFy5zaGltbWVyQkxFR1JQQy5SZXF1ZXN0GhUuc2hpbW1lckJM",
-            "RUdSUEMuUmVwbHkSRgoRV3JpdGVCeXRlc1NoaW1tZXISGi5zaGltbWVyQkxF",
-            "R1JQQy5Xcml0ZUJ5dGVzGhUuc2hpbW1lckJMRUdSUEMuUmVwbHkSOgoIU2F5",
-            "SGVsbG8SFy5zaGltbWVyQkxFR1JQQy5SZXF1ZXN0GhUuc2hpbW1lckJMRUdS",
-            "UEMuUmVwbHlCRQoYY29tLnNoaW1tZXJyZXNlYXJjaC5ncnBjQg5TaGltbWVy",
-            "QkxFR1JQQ6oCGGNvbS5zaGltbWVycmVzZWFyY2guZ3JwY2IGcHJvdG8z"));
+            "c3QSDwoHbWVzc2FnZRgBIAEoCSJNCgtTdGF0ZVN0YXR1cxItCgVTdGF0ZRgB",
+            "IAEoDjIeLnNoaW1tZXJCTEVHUlBDLkJsdWV0b290aFN0YXRlEg8KB21lc3Nh",
+            "Z2UYAiABKAkilAIKFk9iamVjdENsdXN0ZXJCeXRlQXJyYXkSDAoEdXVpZBgB",
+            "IAEoCRIYChBibHVldG9vdGhBZGRyZXNzGAIgASgJElMKEWNvbW11bmljYXRp",
+            "b25UeXBlGAMgASgOMjguc2hpbW1lckJMRUdSUEMuT2JqZWN0Q2x1c3RlckJ5",
+            "dGVBcnJheS5Db21tdW5pY2F0aW9uVHlwZRISCgpzeXN0ZW1UaW1lGAQgASgD",
+            "EhsKE2NhbGlicmF0ZWRUaW1lU3RhbXAYBSABKAESEwoLYmluYXJ5X2RhdGEY",
+            "BiABKAwiNwoRQ29tbXVuaWNhdGlvblR5cGUSBgoCQlQQABIGCgJTRBABEhIK",
+            "DlJhZGlvXzgwMl8xNV80EAIqQQoOQmx1ZXRvb3RoU3RhdGUSDQoJQ29ubmVj",
+            "dGVkEAASDgoKQ29ubmVjdGluZxABEhAKDERpc2Nvbm5lY3RlZBACMrwEChRT",
+            "aGltbWVyQkxFQnl0ZVNlcnZlchJaCg1HZXREYXRhU3RyZWFtEh0uc2hpbW1l",
+            "ckJMRUdSUEMuU3RyZWFtUmVxdWVzdBomLnNoaW1tZXJCTEVHUlBDLk9iamVj",
+            "dENsdXN0ZXJCeXRlQXJyYXkiADABEl4KEUdldFRlc3REYXRhU3RyZWFtEh0u",
+            "c2hpbW1lckJMRUdSUEMuU3RyZWFtUmVxdWVzdBomLnNoaW1tZXJCTEVHUlBD",
+            "Lk9iamVjdENsdXN0ZXJCeXRlQXJyYXkiADABElMKDlNlbmREYXRhU3RyZWFt",
+            "EiYuc2hpbW1lckJMRUdSUEMuT2JqZWN0Q2x1c3RlckJ5dGVBcnJheRoVLnNo",
+            "aW1tZXJCTEVHUlBDLlJlcGx5IgAoARJKCg5Db25uZWN0U2hpbW1lchIXLnNo",
+            "aW1tZXJCTEVHUlBDLlJlcXVlc3QaGy5zaGltbWVyQkxFR1JQQy5TdGF0ZVN0",
+            "YXR1cyIAMAESQwoRRGlzY29ubmVjdFNoaW1tZXISFy5zaGltbWVyQkxFR1JQ",
+            "Qy5SZXF1ZXN0GhUuc2hpbW1lckJMRUdSUEMuUmVwbHkSRgoRV3JpdGVCeXRl",
+            "c1NoaW1tZXISGi5zaGltbWVyQkxFR1JQQy5Xcml0ZUJ5dGVzGhUuc2hpbW1l",
+            "ckJMRUdSUEMuUmVwbHkSOgoIU2F5SGVsbG8SFy5zaGltbWVyQkxFR1JQQy5S",
+            "ZXF1ZXN0GhUuc2hpbW1lckJMRUdSUEMuUmVwbHlCRQoYY29tLnNoaW1tZXJy",
+            "ZXNlYXJjaC5ncnBjQg5TaGltbWVyQkxFR1JQQ6oCGGNvbS5zaGltbWVycmVz",
+            "ZWFyY2guZ3JwY2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::com.shimmerresearch.grpc.BluetoothState), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::com.shimmerresearch.grpc.Reply), global::com.shimmerresearch.grpc.Reply.Parser, new[]{ "Message" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.shimmerresearch.grpc.Request), global::com.shimmerresearch.grpc.Request.Parser, new[]{ "Name" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.shimmerresearch.grpc.WriteBytes), global::com.shimmerresearch.grpc.WriteBytes.Parser, new[]{ "Address", "ByteToWrite" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.shimmerresearch.grpc.StreamRequest), global::com.shimmerresearch.grpc.StreamRequest.Parser, new[]{ "Message" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::com.shimmerresearch.grpc.StateStatus), global::com.shimmerresearch.grpc.StateStatus.Parser, new[]{ "State", "Message" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::com.shimmerresearch.grpc.ObjectClusterByteArray), global::com.shimmerresearch.grpc.ObjectClusterByteArray.Parser, new[]{ "Uuid", "BluetoothAddress", "CommunicationType", "SystemTime", "CalibratedTimeStamp", "BinaryData" }, null, new[]{ typeof(global::com.shimmerresearch.grpc.ObjectClusterByteArray.Types.CommunicationType) }, null, null)
           }));
     }
     #endregion
 
   }
+  #region Enums
+  public enum BluetoothState {
+    [pbr::OriginalName("Connected")] Connected = 0,
+    [pbr::OriginalName("Connecting")] Connecting = 1,
+    [pbr::OriginalName("Disconnected")] Disconnected = 2,
+  }
+
+  #endregion
+
   #region Messages
   /// <summary>
   /// The response message containing the greetings
@@ -793,6 +807,214 @@ namespace com.shimmerresearch.grpc {
 
   }
 
+  public sealed partial class StateStatus : pb::IMessage<StateStatus>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<StateStatus> _parser = new pb::MessageParser<StateStatus>(() => new StateStatus());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<StateStatus> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::com.shimmerresearch.grpc.ShimmerBLEGrpcAndPacketByteArrayReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StateStatus() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StateStatus(StateStatus other) : this() {
+      state_ = other.state_;
+      message_ = other.message_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public StateStatus Clone() {
+      return new StateStatus(this);
+    }
+
+    /// <summary>Field number for the "State" field.</summary>
+    public const int StateFieldNumber = 1;
+    private global::com.shimmerresearch.grpc.BluetoothState state_ = global::com.shimmerresearch.grpc.BluetoothState.Connected;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::com.shimmerresearch.grpc.BluetoothState State {
+      get { return state_; }
+      set {
+        state_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "message" field.</summary>
+    public const int MessageFieldNumber = 2;
+    private string message_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Message {
+      get { return message_; }
+      set {
+        message_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as StateStatus);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(StateStatus other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (State != other.State) return false;
+      if (Message != other.Message) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (State != global::com.shimmerresearch.grpc.BluetoothState.Connected) hash ^= State.GetHashCode();
+      if (Message.Length != 0) hash ^= Message.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (State != global::com.shimmerresearch.grpc.BluetoothState.Connected) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) State);
+      }
+      if (Message.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Message);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (State != global::com.shimmerresearch.grpc.BluetoothState.Connected) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) State);
+      }
+      if (Message.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Message);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (State != global::com.shimmerresearch.grpc.BluetoothState.Connected) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) State);
+      }
+      if (Message.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Message);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(StateStatus other) {
+      if (other == null) {
+        return;
+      }
+      if (other.State != global::com.shimmerresearch.grpc.BluetoothState.Connected) {
+        State = other.State;
+      }
+      if (other.Message.Length != 0) {
+        Message = other.Message;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            State = (global::com.shimmerresearch.grpc.BluetoothState) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            Message = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            State = (global::com.shimmerresearch.grpc.BluetoothState) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            Message = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
   public sealed partial class ObjectClusterByteArray : pb::IMessage<ObjectClusterByteArray>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -805,7 +1027,7 @@ namespace com.shimmerresearch.grpc {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::com.shimmerresearch.grpc.ShimmerBLEGrpcAndPacketByteArrayReflection.Descriptor.MessageTypes[4]; }
+      get { return global::com.shimmerresearch.grpc.ShimmerBLEGrpcAndPacketByteArrayReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

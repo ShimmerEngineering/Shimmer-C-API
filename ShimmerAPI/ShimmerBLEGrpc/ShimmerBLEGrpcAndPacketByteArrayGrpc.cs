@@ -3,8 +3,10 @@
 //     source: src/ShimmerBLEGrpcAndPacketByteArray.proto
 // </auto-generated>
 // Original file comments:
-// import "C:/Users/Lim/git/Shimmer-Java-Android-API/ShimmerDriver/grpcprotosrc/src/LiteProtocolInstructionSet.proto";
-//
+// using 
+// protoc-3.13.0-win64
+// protoc-gen-grpc-java-1.32.1-windows-x86_64.exe
+// .nuget\packages\grpc.tools\2.34.0\tools\windows_x64\grpc_csharp_plugin.exe
 #pragma warning disable 0414, 1591
 #region Designer generated code
 
@@ -52,6 +54,7 @@ namespace com.shimmerresearch.grpc {
     static readonly grpc::Marshaller<global::com.shimmerresearch.grpc.ObjectClusterByteArray> __Marshaller_shimmerBLEGRPC_ObjectClusterByteArray = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::com.shimmerresearch.grpc.ObjectClusterByteArray.Parser));
     static readonly grpc::Marshaller<global::com.shimmerresearch.grpc.Reply> __Marshaller_shimmerBLEGRPC_Reply = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::com.shimmerresearch.grpc.Reply.Parser));
     static readonly grpc::Marshaller<global::com.shimmerresearch.grpc.Request> __Marshaller_shimmerBLEGRPC_Request = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::com.shimmerresearch.grpc.Request.Parser));
+    static readonly grpc::Marshaller<global::com.shimmerresearch.grpc.StateStatus> __Marshaller_shimmerBLEGRPC_StateStatus = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::com.shimmerresearch.grpc.StateStatus.Parser));
     static readonly grpc::Marshaller<global::com.shimmerresearch.grpc.WriteBytes> __Marshaller_shimmerBLEGRPC_WriteBytes = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::com.shimmerresearch.grpc.WriteBytes.Parser));
 
     static readonly grpc::Method<global::com.shimmerresearch.grpc.StreamRequest, global::com.shimmerresearch.grpc.ObjectClusterByteArray> __Method_GetDataStream = new grpc::Method<global::com.shimmerresearch.grpc.StreamRequest, global::com.shimmerresearch.grpc.ObjectClusterByteArray>(
@@ -75,12 +78,12 @@ namespace com.shimmerresearch.grpc {
         __Marshaller_shimmerBLEGRPC_ObjectClusterByteArray,
         __Marshaller_shimmerBLEGRPC_Reply);
 
-    static readonly grpc::Method<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply> __Method_ConnectShimmer = new grpc::Method<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply>(
-        grpc::MethodType.Unary,
+    static readonly grpc::Method<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.StateStatus> __Method_ConnectShimmer = new grpc::Method<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.StateStatus>(
+        grpc::MethodType.ServerStreaming,
         __ServiceName,
         "ConnectShimmer",
         __Marshaller_shimmerBLEGRPC_Request,
-        __Marshaller_shimmerBLEGRPC_Reply);
+        __Marshaller_shimmerBLEGRPC_StateStatus);
 
     static readonly grpc::Method<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply> __Method_DisconnectShimmer = new grpc::Method<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply>(
         grpc::MethodType.Unary,
@@ -148,7 +151,7 @@ namespace com.shimmerresearch.grpc {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::com.shimmerresearch.grpc.Reply> ConnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task ConnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::IServerStreamWriter<global::com.shimmerresearch.grpc.StateStatus> responseStream, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -257,21 +260,13 @@ namespace com.shimmerresearch.grpc {
       {
         return CallInvoker.AsyncClientStreamingCall(__Method_SendDataStream, null, options);
       }
-      public virtual global::com.shimmerresearch.grpc.Reply ConnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncServerStreamingCall<global::com.shimmerresearch.grpc.StateStatus> ConnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return ConnectShimmer(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::com.shimmerresearch.grpc.Reply ConnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::CallOptions options)
+      public virtual grpc::AsyncServerStreamingCall<global::com.shimmerresearch.grpc.StateStatus> ConnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_ConnectShimmer, null, options, request);
-      }
-      public virtual grpc::AsyncUnaryCall<global::com.shimmerresearch.grpc.Reply> ConnectShimmerAsync(global::com.shimmerresearch.grpc.Request request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
-      {
-        return ConnectShimmerAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
-      }
-      public virtual grpc::AsyncUnaryCall<global::com.shimmerresearch.grpc.Reply> ConnectShimmerAsync(global::com.shimmerresearch.grpc.Request request, grpc::CallOptions options)
-      {
-        return CallInvoker.AsyncUnaryCall(__Method_ConnectShimmer, null, options, request);
+        return CallInvoker.AsyncServerStreamingCall(__Method_ConnectShimmer, null, options, request);
       }
       public virtual global::com.shimmerresearch.grpc.Reply DisconnectShimmer(global::com.shimmerresearch.grpc.Request request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
@@ -351,7 +346,7 @@ namespace com.shimmerresearch.grpc {
       serviceBinder.AddMethod(__Method_GetDataStream, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::com.shimmerresearch.grpc.StreamRequest, global::com.shimmerresearch.grpc.ObjectClusterByteArray>(serviceImpl.GetDataStream));
       serviceBinder.AddMethod(__Method_GetTestDataStream, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::com.shimmerresearch.grpc.StreamRequest, global::com.shimmerresearch.grpc.ObjectClusterByteArray>(serviceImpl.GetTestDataStream));
       serviceBinder.AddMethod(__Method_SendDataStream, serviceImpl == null ? null : new grpc::ClientStreamingServerMethod<global::com.shimmerresearch.grpc.ObjectClusterByteArray, global::com.shimmerresearch.grpc.Reply>(serviceImpl.SendDataStream));
-      serviceBinder.AddMethod(__Method_ConnectShimmer, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply>(serviceImpl.ConnectShimmer));
+      serviceBinder.AddMethod(__Method_ConnectShimmer, serviceImpl == null ? null : new grpc::ServerStreamingServerMethod<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.StateStatus>(serviceImpl.ConnectShimmer));
       serviceBinder.AddMethod(__Method_DisconnectShimmer, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply>(serviceImpl.DisconnectShimmer));
       serviceBinder.AddMethod(__Method_WriteBytesShimmer, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::com.shimmerresearch.grpc.WriteBytes, global::com.shimmerresearch.grpc.Reply>(serviceImpl.WriteBytesShimmer));
       serviceBinder.AddMethod(__Method_SayHello, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::com.shimmerresearch.grpc.Request, global::com.shimmerresearch.grpc.Reply>(serviceImpl.SayHello));
