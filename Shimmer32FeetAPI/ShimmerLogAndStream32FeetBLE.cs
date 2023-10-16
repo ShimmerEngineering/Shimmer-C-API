@@ -19,7 +19,6 @@ namespace ShimmerAPI
         public ShimmerLogAndStream32FeetBLE(String devID, String bMacAddress)
           : base(devID)
         {
-            ConnectWaitDurationinmS = 10000;
             macAddress = bMacAddress;
         }
 
@@ -58,33 +57,59 @@ namespace ShimmerAPI
             return bluetoothDevice.Gatt.IsConnected;
         }
 
-        protected override async void OpenConnection()
+        private void ConnectFail()
+        {
+            
+            CloseConnection();
+            SetState(SHIMMER_STATE_NONE);
+        }
+
+        protected override void OpenConnection()
         {
             try
             {
                 SetState(SHIMMER_STATE_CONNECTING);
-                bluetoothDevice = await BluetoothDevice.FromIdAsync(macAddress);
-                bluetoothDevice.GattServerDisconnected += Device_GattServerDisconnected;
-                await bluetoothDevice.Gatt.ConnectAsync();
+                bluetoothDevice = BluetoothDevice.FromIdAsync(macAddress).GetAwaiter().GetResult();
+                bluetoothDevice.Gatt.ConnectAsync().GetAwaiter().GetResult();
                 Console.WriteLine("current mtu value " + bluetoothDevice.Gatt.Mtu);
                 BluetoothUuid TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
                 BluetoothUuid RxID = BluetoothUuid.FromGuid(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
                 BluetoothUuid ServiceID = BluetoothUuid.FromGuid(new Guid("49535343-fe7d-4ae5-8fa9-9fafd205e455"));
-                ServiceTXRX = await bluetoothDevice.Gatt.GetPrimaryServiceAsync(ServiceID);
+                ServiceTXRX = bluetoothDevice.Gatt.GetPrimaryServiceAsync(ServiceID).GetAwaiter().GetResult();
                 if (ServiceTXRX != null)
                 {
-                    UartTX = await ServiceTXRX.GetCharacteristicAsync(TxID);
-                    UartRX = await ServiceTXRX.GetCharacteristicAsync(RxID);
-
+                    UartTX = ServiceTXRX.GetCharacteristicAsync(TxID).GetAwaiter().GetResult();
+                    if (UartTX == null)
+                    {
+                        Console.WriteLine("UARTTX null");
+                        ConnectFail();
+                        return;
+                    }
+                    UartRX = ServiceTXRX.GetCharacteristicAsync(RxID).GetAwaiter().GetResult();
+                    if (UartRX == null)
+                    {
+                        Console.WriteLine("UARTRX null");
+                        ConnectFail();
+                        return;
+                    }
                     UartRX.CharacteristicValueChanged += Gc_ValueChanged;
-                    await UartRX.StartNotificationsAsync();
+                    UartRX.StartNotificationsAsync().GetAwaiter().GetResult();
+                    bluetoothDevice.GattServerDisconnected += Device_GattServerDisconnected;
                     Console.WriteLine("current mtu value" + bluetoothDevice.Gatt.Mtu);
+                } else
+                {
+                    Console.WriteLine("Service TXRX null");
+                    ConnectFail();
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
-                bluetoothDevice.Gatt.Disconnect();
+                if (bluetoothDevice != null)
+                {
+                    bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
+                    bluetoothDevice.Gatt.Disconnect();
+                }
                 Console.WriteLine("Radio Plugin 32Feet Exception " + ex.Message);
             }
         }
@@ -92,19 +117,22 @@ namespace ShimmerAPI
         private void Device_GattServerDisconnected(object sender, EventArgs e)
         {
             //connection lost
-            if (!((BluetoothDevice)sender).Gatt.IsConnected)
-            {
-                /*
-                Console.WriteLine("Connection Lost. Please reconnect.");
-                bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
-                bluetoothDevice.Gatt.Disconnect();
-                */
-            }
+            /*
+            Console.WriteLine("Connection Lost. Please reconnect.");
+            bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
+            bluetoothDevice.Gatt.Disconnect();
+            */
+            bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
+            bluetoothDevice.Gatt.Disconnect();
+            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, "Connection lost");
+            OnNewEvent(newEventArgs);
+            Disconnect();
+            
         }
 
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
         {
-            Console.WriteLine(sender.GetType().ToString());
+            
             if (Debug)
             {
                 Console.WriteLine("RXB:" + BitConverter.ToString(args.Value).Replace("-", ""));
