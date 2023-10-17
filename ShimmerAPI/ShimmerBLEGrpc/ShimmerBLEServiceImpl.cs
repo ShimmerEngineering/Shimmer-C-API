@@ -243,7 +243,10 @@ namespace ShimmerBLEGrpc
                             if (QueueMap[request.Message.ToUpper()].TryDequeue(out byteArray))
                             {
                                 result = result.Concat(byteArray).ToArray();
-                                Console.WriteLine("Dequeuing");
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Dequeuing");
+                                }
                                 // Get the current UTC time
 
                             }
