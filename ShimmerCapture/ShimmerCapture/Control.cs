@@ -179,6 +179,7 @@ namespace ShimmerAPI
             buttonSetBlinkLED.Visible = false;
             checkBoxTSACheck.Visible = true;
             buttonStreamandLog.Visible = false;
+            buttonStopStreamandLog.Visible = false;
             buttonReadDirectory.Visible = false;
             button1.Visible = false;
             button2.Visible = false;
@@ -1524,7 +1525,9 @@ namespace ShimmerAPI
                     buttonReadDirectory.Enabled = true;
                     buttonReadDirectory.Visible = true;
                     buttonStreamandLog.Visible = true;
-
+                    buttonStopStreamandLog.Visible = true;
+                    buttonStopStreamandLog.Enabled = false;
+                    
                     if (ShimmerDevice.IsCRCSupported())
                     {
                         checkBoxCRC.Visible = true;
@@ -1538,6 +1541,7 @@ namespace ShimmerAPI
                 else
                 {
                     buttonStreamandLog.Visible = false;
+                    buttonStopStreamandLog.Visible = false;
                     buttonReadDirectory.Visible = false;
                 }
                 buttonStream.Enabled = true;
@@ -1551,6 +1555,7 @@ namespace ShimmerAPI
                 buttonConnect.Enabled = false;
                 buttonDisconnect.Enabled = false;
                 buttonStreamandLog.Enabled = false;
+                buttonStopStreamandLog.Enabled = false;
                 buttonReadDirectory.Enabled = false;
                 buttonStream.Enabled = false;
                 buttonStop.Enabled = false;
@@ -1565,6 +1570,7 @@ namespace ShimmerAPI
                 buttonConnect.Enabled = true;
                 buttonDisconnect.Enabled = false;
                 buttonStreamandLog.Enabled = false;
+                buttonStopStreamandLog.Enabled = false;
                 buttonReadDirectory.Enabled = false;
                 buttonStream.Enabled = false;
                 buttonStop.Enabled = false;
@@ -1579,6 +1585,7 @@ namespace ShimmerAPI
                 buttonConnect.Enabled = false;
                 buttonDisconnect.Enabled = true;
                 buttonStreamandLog.Enabled = false;
+                buttonStopStreamandLog.Enabled = true;
                 buttonStream.Enabled = false;
                 buttonStop.Enabled = true;
                 // btsd changes1
@@ -2855,6 +2862,11 @@ namespace ShimmerAPI
                     ShimmerDevice.WriteCRCMode(ShimmerBluetooth.BTCRCMode.OFF);
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            ShimmerDevice.StopStreamingandLog();
         }
     }
 
