@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <PackageReference Include="Acr.UserDialogs" Version="7.0.4" />
-    <PackageReference Include="InTheHand.BluetoothLE" Version="4.0.34" />
     <PackageReference Include="Microcharts.Forms" Version="1.0.0-preview1" />
     <PackageReference Include="MvvmCross" Version="6.3.1" />
     <PackageReference Include="MvvmCross.Forms" Version="6.3.1" />
@@ -22,9 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Shimmer32FeetAPI\Shimmer32FeetAPI.csproj" />
     <ProjectReference Include="..\..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj" />
-    <ProjectReference Include="..\..\Shimmer3BLE\Shimmer3BLE.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI.Android\ShimmerBLEAPI.Android.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI.iOS\ShimmerBLEAPI.iOS.csproj" />
     <ProjectReference Include="..\..\ShimmerBLEAPI.UWP\ShimmerBLEAPI.UWP.csproj" />

@@ -40,7 +40,6 @@ using ShimmerBLEAPI.UWP.Communications;
 using Newtonsoft.Json;
 using ShimmerAdvanceBLEAPI;
 using ShimmerBLEAPI.Communications;
-using Shimmer3BLE;
 using shimmer.DTO;
 
 namespace BLE.Client.ViewModels
@@ -110,10 +109,6 @@ namespace BLE.Client.ViewModels
         public MvxCommand TestSpeedStopCommand => new MvxCommand(() => TestSpeedStop());
         public MvxCommand UploadCommand => new MvxCommand(() => Upload());
         public MvxCommand ConnectCommand => new MvxCommand(() => Connect());
-        public MvxCommand ConnectCommandShimmer3 => new MvxCommand(() => ConnectShimmer3());
-        public MvxCommand DisconnectCommandShimmer3 => new MvxCommand(() => DisconnectShimmer3());
-        public MvxCommand StartStreamingCommandShimmer3 => new MvxCommand(() => StartStreamingShimmer3());
-        public MvxCommand StopStreamingCommandShimmer3 => new MvxCommand(() => StopStreamingShimmer3());
         public MvxCommand DisconnectVRECommand => new MvxCommand(() => Disconnect());
         public MvxCommand ReadStatusCommand => new MvxCommand(() => ReadStatus());
         public MvxCommand ReadProdConfCommand => new MvxCommand(() => ReadProdConf());
@@ -2735,82 +2730,7 @@ namespace BLE.Client.ViewModels
             cloudManager.CloudManagerEvent += CloudManager_Event;
             cloudManager.DeleteAfterUpload = true;
         }
-        ShimmerLogAndStream32FeetBLE devices3;
-        protected void ConnectShimmer3()
-        {
-            //ShimmerLogAndStreamBLE devices3 = new ShimmerLogAndStreamBLE("00000000-0000-0000-0000-e8eb1b9767ad");
-            //devices3 = new ShimmerLogAndStreamBLE("00000000-0000-0000-0000-E8EB1B713E36");
-            //devices3 = new ShimmerLogAndStreamBLE("C01B2C3B-7B83-5245-10BD-C0B57733F7D2");
-            devices3 = new ShimmerLogAndStream32FeetBLE("Shimmer", "E8EB1B713E36");
-            devices3.UICallback += this.HandleEvent;
-            
-            devices3.StartConnectThread();
-            Task.Run(async () =>
-            {
-                //devices3.Connect();
-                //
-            });
-        }
-        protected async void DisconnectShimmer3()
-        {
-            devices3.Disconnect();
-        }
-        protected async void StartStreamingShimmer3()
-        {
-            devices3.StartStreaming();
-        }
-        protected async void StopStreamingShimmer3()
-        {
-            devices3.StopStreaming();
-        }
-        int shimmerlabelcount = 0;
-        public void HandleEvent(object sender, EventArgs args)
-        {
-            CustomEventArgs eventArgs = (CustomEventArgs)args;
-            int indicator = eventArgs.getIndicator();
-            switch (indicator)
-            {
-                case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_STATE_CHANGE:
-
-                    System.Diagnostics.Debug.Write(((ShimmerBluetooth)sender).GetDeviceName() + " State = " + ((ShimmerBluetooth)sender).GetStateString() + System.Environment.NewLine);
-                    int state = (int)eventArgs.getObject();
-                    if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
-                    {
-                        Debug.WriteLine("Connected");   
-                    }
-                    else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTING)
-                    {
-                        
-                    }
-                    else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_NONE)
-                    {
-                       
-                    }
-                    else if (state == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING)
-                    {
-                        Debug.WriteLine("Streaming");
-                    }
-                    break;
-                case (int)ShimmerBluetooth.ShimmerIdentifier.MSG_IDENTIFIER_DATA_PACKET:
-                    // this is essential to ensure the object is not a reference
-                    ObjectCluster objectCluster = new ObjectCluster((ObjectCluster)eventArgs.getObject());
-                    SensorData datax = objectCluster.GetData(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X, "CAL");
-                    SensorData datay = objectCluster.GetData(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y, "CAL");
-                    SensorData dataz = objectCluster.GetData(Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z, "CAL");
-                    string data = "AccelX,Y,Z: " + datax.Data + " , " + datay.Data + " , " + dataz.Data;
-                    Debug.WriteLine(data);
-                    Debug.WriteLine("new packet");
-                    shimmerlabelcount++;
-                    if (shimmerlabelcount % 25 == 0)
-                    {
-                        DeviceState = data;
-                    }
-
-                    break;
-            }
-        }
-
-
+        
         protected async void Connect(bool initialize = true)
         {
             if (VerisenseBLEDevice != null)
