@@ -503,6 +503,8 @@ namespace ShimmerAPI
             DIR_RESPONSE = 0x88,
             GET_DIR_COMMAND = 0x89,
             INSTREAM_CMD_RESPONSE = 0x8A,
+            INFOMEM_RESPONSE = 0x8D,
+            GET_INFOMEM_COMMAND = 0x8E,
             SET_RWC_COMMAND = 0x8F,
             RWC_RESPONSE = 0x90,
             GET_RWC_COMMAND = 0x91,

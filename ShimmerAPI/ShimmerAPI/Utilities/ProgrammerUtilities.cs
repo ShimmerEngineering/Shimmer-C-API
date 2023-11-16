@@ -6,6 +6,17 @@ namespace ShimmerAPI.Utilities
 {
     public static class ProgrammerUtilities
     {
+        public static string ByteArrayToHexString(byte[] byteArray)
+        {
+            StringBuilder hex = new StringBuilder(byteArray.Length * 2);
+            foreach (byte b in byteArray)
+            {
+                hex.AppendFormat("{0:X2}", b);
+            }
+            return hex.ToString();
+        }
+
+
         //Note there is a method Calculatetwoscomplement in ShimmerBluetooth class that would be more suited to be in this class as well
         public static int ByteArrayToInt(byte[] data, bool lsbOrder, bool isSigned)
         {
