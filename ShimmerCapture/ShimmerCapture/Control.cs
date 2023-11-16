@@ -76,7 +76,7 @@ namespace ShimmerAPI
         private Orientation3D Orientation3DForm;
         private System.IO.Ports.SerialPort SerialPort = new SerialPort();
         private string ComPort;
-        public ShimmerLogAndStreamSystemSerialPort ShimmerDevice = new ShimmerLogAndStreamSystemSerialPort("Shimmer", "");
+        public ShimmerLogAndStream ShimmerDevice = null;
         //Plot
         private ZedGraph.ZedGraphControl ZedGraphControl2 = new ZedGraph.ZedGraphControl(); //These need to be defined here for Linux. Otherwise can't later be added
         private ZedGraph.ZedGraphControl ZedGraphControl3 = new ZedGraph.ZedGraphControl();
@@ -191,9 +191,7 @@ namespace ShimmerAPI
             this.Text = ApplicationName + " v" + versionNumber;
             tsStatusLabel.Text = "";
             ComPort = comboBoxComPorts.Text;
-            // btsd changes1
-            ShimmerDevice = new ShimmerLogAndStreamSystemSerialPort("Shimmer", ComPort);
-            ShimmerDevice.UICallback += this.HandleEvent;
+
             buttonReload.Enabled = true;
             String[] names = SerialPort.GetPortNames();
             foreach (String s in names)
@@ -1230,6 +1228,21 @@ namespace ShimmerAPI
 
         public void Connect()
         {
+            if (ShimmerDevice != null)
+            {
+                ShimmerDevice.UICallback -= this.HandleEvent;
+            }
+            // btsd changes1
+            if (comboBoxComPorts.Text.Length != 12 && comboBoxComPorts.Text.StartsWith("COM", StringComparison.OrdinalIgnoreCase))
+            {
+                ShimmerDevice = new ShimmerLogAndStreamSystemSerialPort("Shimmer", comboBoxComPorts.Text);
+            }
+            else
+            {
+                ShimmerDevice = new ShimmerLogAndStream32FeetBLE("Shimmer", comboBoxComPorts.Text);
+            }
+            ShimmerDevice.UICallback += this.HandleEvent;
+
             //for Shimmer and ShimmerSDBT
             ShimmerDevice.SetShimmerAddress(comboBoxComPorts.Text);
 

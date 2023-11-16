@@ -112,8 +112,8 @@ namespace ShimmerAPI
         protected int magSamplingRate;
         protected int NumberofChannels;
         protected int BufferSize;
-        private int FirmwareMajor;
-        private int FirmwareMinor;
+        protected int FirmwareMajor;
+        protected int FirmwareMinor;
         protected double FirmwareIdentifier;
         protected int FirmwareInternal;
         protected String FirmwareVersionFullName;
@@ -808,6 +808,8 @@ namespace ShimmerAPI
         protected abstract void WriteBytes(byte[] b, int index, int length);
         protected abstract int ReadByte();
 
+        protected int ConnectWaitDurationinmS = 500;
+
         public void Connect()
         {
             if (!IsConnectionOpen())
@@ -823,7 +825,7 @@ namespace ShimmerAPI
                     ReadThread.Name = "Read Thread for Device: " + DeviceName;
                     ReadThread.Start();
                     // give the shimmer time to make the changes before continuing
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(ConnectWaitDurationinmS);
                     // Read Shimmer Profile
                     if (IsConnectionOpen())
                     {
@@ -2872,6 +2874,7 @@ namespace ShimmerAPI
             SignalNameArray = signalNameArray;
             SignalDataTypeArray = signalDataTypeArray;
             PacketSize = packetSize;
+            //Debug.WriteLine("Packet Size : " + PacketSize + "  CRC Mode and starting byte not included");
         }
 
         public String[] GetSignalNameArray()
