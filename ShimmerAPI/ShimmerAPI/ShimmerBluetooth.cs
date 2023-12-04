@@ -508,6 +508,8 @@ namespace ShimmerAPI
             SET_RWC_COMMAND = 0x8F,
             RWC_RESPONSE = 0x90,
             GET_RWC_COMMAND = 0x91,
+            CALIB_DUMP_RESPONSE = 0x99,
+            GET_CALIB_DUMP_COMMAND = 0x9A,
             BT_FW_VERSION_STR_RESPONSE = 0xA2,
             GET_BT_FW_VERSION_STR_COMMAND = 0xA1
         };

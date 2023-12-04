@@ -206,6 +206,8 @@ namespace ShimmerAPI
         private int cfgExpPower;//(0)
         private int configSetupByte0;*/
 
+        private byte[] tempCalibDump;
+
         public bool isLogging = false;
         // btsd changes 2
         public const string AppNameCapture = "ShimmerCapture";
@@ -824,6 +826,7 @@ namespace ShimmerAPI
 
         int InfoMemIndex = 0;
         byte[] InfoMem = new byte[128*3];
+        byte[] CalibDump = new byte[128]; 
 
         public void WriteShimmer3Infomem(byte[] infoMem)
         {
@@ -897,6 +900,39 @@ namespace ShimmerAPI
             ReadInfoMem(0, 1);
             System.Console.WriteLine(ProgrammerUtilities.ByteArrayToHexString(InfoMem));
         }
+
+        public void ReadCalibDump()
+        {
+            WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00 }, 0, 4);
+
+            Thread.Sleep(500);
+           
+            CalibDump = tempCalibDump;
+            var length = ((int)(CalibDump[0]) + ((int)(CalibDump[1]) << 8)) + 2;
+            System.Console.WriteLine("Calib Dump Length: " + length);
+            while (CalibDump.Length != length)
+            {
+                byte[] address = BitConverter.GetBytes(CalibDump.Length);
+                var count = length - CalibDump.Length;
+                if (count >= 128)
+                {
+                    count = 128;
+                }
+                WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, (byte)count, address[0], address[1] }, 0, 4);
+                Thread.Sleep(500);
+                //byteresult = await sendGetMemoryCommand(cmd: PacketTypeShimmer.getCalibDumpCommand, val0: UInt8(count), val1: address[0], val2: address[1])
+                //calibdumpresponse.append(contentsOf: byteresult!)
+                CalibDump = ProgrammerUtilities.AppendByteArrays(CalibDump, tempCalibDump);
+                System.Console.WriteLine("Calib Dump Length: " + length + " " + tempCalibDump.Length + " " + CalibDump.Length);
+            }
+            System.Console.WriteLine("Calib Dump: " + ProgrammerUtilities.ByteArrayToHexString(CalibDump));
+        }
+
+        protected void SendGetMemory(byte command, byte val0, byte val1, byte val2)
+        {
+            WriteBytes(new byte[4] { command, val0, val1, val2 }, 0, 4);
+            Thread.Sleep(200);
+        } 
 
         protected void ReadInfoMem(byte val1 , byte val2)
         {
@@ -1679,7 +1715,6 @@ namespace ShimmerAPI
             return 0;
         }
 
-
         public override void SDBT_switch(byte b)
         {
             List<byte> buffer = new List<byte>();
@@ -1864,6 +1899,21 @@ namespace ShimmerAPI
                             }
                             byte[] infoMem = buffer.ToArray();
                             Array.Copy(infoMem, 0, InfoMem, InfoMemIndex, infoMem.Length);
+                            break;
+                        }
+                    case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.CALIB_DUMP_RESPONSE:
+                        {
+                            buffer.Clear();
+                            int length = (int)ReadByte();
+                            ReadByte();//remove the memory address offset
+                            ReadByte();//remove the memory address offset
+                            length = length + (int)BluetoothCRCMode; 
+                            for (i = 0; i < length ; i++)
+                            {
+                                buffer.Add((byte)ReadByte());
+                            }
+                            tempCalibDump = buffer.ToArray();
+                            tempCalibDump = ProgrammerUtilities.RemoveLastBytes(tempCalibDump, (int)BluetoothCRCMode);
                             break;
                         }
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.TRIAL_CONFIG_RESPONSE:
