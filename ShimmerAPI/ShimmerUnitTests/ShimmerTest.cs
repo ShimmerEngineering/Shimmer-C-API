@@ -63,6 +63,24 @@ namespace ShimmerBluetoothTests
         }
 
         [TestMethod]
+        public void CopyAndRemoveBytes_ShouldCopyCorrectNumberOfBytesAndRemoveFromSourceArray()
+        {
+            // Arrange
+            byte[] sourceArray = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
+            byte[] expectedCopiedArray = { 0x01, 0x02, 0x03, 0x04 };
+            byte[] expectedSourceArray = { 0x05, 0x06, 0x07, 0x08 };
+
+            int bytesToCopy = 4;
+
+            // Act
+            byte[] copiedArray = ProgrammerUtilities.CopyAndRemoveBytes(ref sourceArray, bytesToCopy);
+
+            // Assert
+            CollectionAssert.AreEqual(expectedCopiedArray, copiedArray, "Copied array does not match expected.");
+            CollectionAssert.AreEqual(expectedSourceArray, sourceArray, "Source array after removal does not match expected.");
+        }
+
+        [TestMethod]
         public void AppendByteArrays_SuccessfullyAppendsArrays()
         {
             // Arrange

@@ -13,6 +13,23 @@ namespace ShimmerAPI.Utilities
             return Math.Max(minVal, Math.Min(maxVal, valToNudge));
         }
 
+        public static (double[,], double[,], double[,]) RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] bufferCalibrationParameters)
+        {
+            String[] dataType = { "i16r", "i16r", "i16r", "i16r", "i16r", "i16r", "i8", "i8", "i8", "i8", "i8", "i8", "i8", "i8", "i8" };
+            long[] formattedPacket = ParseData(bufferCalibrationParameters, dataType); // using the datatype the calibration parameters are converted
+            double[] AM = new double[9];
+            for (int i = 0; i < 9; i++)
+            {
+                AM[i] = ((double)formattedPacket[6 + i]) / 100;
+            }
+
+            double[,] alignmentMatrix = new double[3, 3] { { AM[0], AM[1], AM[2] }, { AM[3], AM[4], AM[5] }, { AM[6], AM[7], AM[8] } };
+            double[,] sensitivityMatrix = new double[3, 3] { { formattedPacket[3], 0, 0 }, { 0, formattedPacket[4], 0 }, { 0, 0, formattedPacket[5] } };
+            double[,] offsetVector = { { formattedPacket[0] }, { formattedPacket[1] }, { formattedPacket[2] } };
+            return (alignmentMatrix, sensitivityMatrix, offsetVector);
+        }
+
+
         public static double[] CalibrateInertialSensorData(double[] data, double[,] AM, double[,] SM, double[,] OV)
         {
             /*  Based on the theory outlined by Ferraris F, Grimaldi U, and Parvis M.  
