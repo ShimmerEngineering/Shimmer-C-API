@@ -21,7 +21,7 @@ namespace ShimmerAPI.Sensors
                 var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
                 var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
                 var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
-                (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = ShimmerBluetooth.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
                 System.Console.WriteLine("LN Accel calibration parameters");
             }
 

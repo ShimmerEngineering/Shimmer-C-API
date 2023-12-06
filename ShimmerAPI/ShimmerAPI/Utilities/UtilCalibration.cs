@@ -16,7 +16,7 @@ namespace ShimmerAPI.Utilities
         public static (double[,], double[,], double[,]) RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] bufferCalibrationParameters)
         {
             String[] dataType = { "i16r", "i16r", "i16r", "i16r", "i16r", "i16r", "i8", "i8", "i8", "i8", "i8", "i8", "i8", "i8", "i8" };
-            long[] formattedPacket = ParseData(bufferCalibrationParameters, dataType); // using the datatype the calibration parameters are converted
+            long[] formattedPacket = ProgrammerUtilities.ParseData(bufferCalibrationParameters, dataType); // using the datatype the calibration parameters are converted
             double[] AM = new double[9];
             for (int i = 0; i < 9; i++)
             {
