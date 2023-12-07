@@ -230,7 +230,7 @@ namespace ShimmerAPI
         protected GradDes3DOrientation OrientationAlgo;
 
         protected int BufferSyncSizeInSeconds = 15;
-        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         protected long ShimmerRealWorldClock = 0;
         protected List<byte> UnalignedBytesReceived = new List<Byte>();
