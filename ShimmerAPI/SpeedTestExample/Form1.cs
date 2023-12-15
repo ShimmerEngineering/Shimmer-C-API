@@ -40,7 +40,7 @@ namespace SpeedTestExample
 
         private void button4_Click(object sender, EventArgs e)
         {
-            radioBLE = new BLE32FeetRadio(textBox1.Text);
+            radioBLE = new BLE32FeetRadio(textBox1.Text, BLE32FeetRadio.DeviceType.Shimmer3BLE);
             BLE32FeetSpeedTestProtocol = new SpeedTestProtocol(radioBLE);
             BLE32FeetSpeedTestProtocol.Connect();
         }
