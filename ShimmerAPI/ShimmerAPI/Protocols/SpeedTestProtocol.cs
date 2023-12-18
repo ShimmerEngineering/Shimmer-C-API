@@ -100,19 +100,26 @@ namespace ShimmerAPI.Protocols
                         Console.WriteLine("Throughput (bytes per second): " + (TestSignalTotalNumberOfBytes / duration));
                         //Console.WriteLine("RXB OTD:" + BitConverter.ToString(OldTestData).Replace("-", ""));
                         //Console.WriteLine("RXB:" + BitConverter.ToString(data).Replace("-", ""));
-                        for (int i = 0; i < (data.Length / lengthOfPacket); i++)
+                        int i = 0;
+                        while(data.Length >= lengthOfPacket)
                         {
-                            byte[] bytesFullPacket = new byte[lengthOfPacket];
-                            System.Array.Copy(data, i * lengthOfPacket, bytesFullPacket, 0, lengthOfPacket);
-
-                            if (bytesFullPacket[0] == 0xA5)
+                            if (data[0] == 0XA5)
                             {
-                                TestSignalTotalEffectiveNumberOfBytes += 5;
-                                //Array.Reverse(bytes);
-                                byte[] bytes = new byte[lengthOfPacket-1];
-                                System.Array.Copy(bytesFullPacket, 1, bytes, 0, bytes.Length);
-                                int intValue = BitConverter.ToInt32(bytes, 0);
-                                Console.Write(intValue + " , ");
+                                byte[] bytesFullPacket = new byte[lengthOfPacket];
+                                System.Array.Copy(data, i * lengthOfPacket, bytesFullPacket, 0, lengthOfPacket);
+                                data = ProgrammerUtilities.RemoveBytesFromArray(data, lengthOfPacket);
+                                if (bytesFullPacket[0] == 0xA5)
+                                {
+                                    TestSignalTotalEffectiveNumberOfBytes += 5;
+                                    //Array.Reverse(bytes);
+                                    byte[] bytes = new byte[lengthOfPacket - 1];
+                                    System.Array.Copy(bytesFullPacket, 1, bytes, 0, bytes.Length);
+                                    int intValue = BitConverter.ToInt32(bytes, 0);
+                                    Console.Write(intValue + " , ");
+                                }
+                            } else
+                            {
+                                data = ProgrammerUtilities.RemoveBytesFromArray(data, 1);
                             }
                         }
                         testSignalCurrentTime = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;

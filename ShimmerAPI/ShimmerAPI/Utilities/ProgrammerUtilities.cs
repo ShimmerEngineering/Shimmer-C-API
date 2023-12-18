@@ -15,6 +15,20 @@ namespace ShimmerAPI.Utilities
             }
             return hex.ToString();
         }
+        public static byte[] RemoveBytesFromArray(byte[] originalArray, int bytesToRemove)
+        {
+            if (bytesToRemove >= originalArray.Length)
+            {
+                // If the number of bytes to remove is greater than or equal to the array length,
+                // return an empty byte array.
+                return new byte[0];
+            }
+
+            byte[] newArray = new byte[originalArray.Length - bytesToRemove];
+            Array.Copy(originalArray, bytesToRemove, newArray, 0, newArray.Length);
+
+            return newArray;
+        }
 
         public static byte[] RemoveLastBytes(byte[] byteArray, int x)
         {

@@ -210,6 +210,25 @@ namespace ShimmerBluetoothTests
             Assert.AreEqual(NudgeGsrResistance(5000, 3), 4700);
         }
 
+        [TestMethod]
+        public void RemoveBytesFromArray_RemovesCorrectBytes()
+        {
+            // Arrange
+            byte[] originalBytes = { 0x01, 0x02, 0x03, 0x04, 0x05 };
+            int bytesToRemove = 2;
+
+            // Act
+            byte[] modifiedBytes = ProgrammerUtilities.RemoveBytesFromArray(originalBytes, bytesToRemove);
+
+            // Assert
+            byte[] expectedBytes = { 0x03, 0x04, 0x05 };
+            Assert.AreEqual(expectedBytes.Length, modifiedBytes.Length, "Lengths should match after removing bytes");
+
+            for (int i = 0; i < expectedBytes.Length; i++)
+            {
+                Assert.AreEqual(expectedBytes[i], modifiedBytes[i], $"Byte at index {i} does not match");
+            }
+        }
 
 
         public override string GetShimmerAddress()
