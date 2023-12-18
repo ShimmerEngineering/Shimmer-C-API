@@ -16,6 +16,7 @@ namespace ShimmerAPI.Protocols
         protected byte[] OldTestData = new byte[0];
         protected bool TestFirstByteReceived = false;
         protected long TestSignalTotalNumberOfBytes = 0;
+        protected long TestSignalTotalEffectiveNumberOfBytes = 0;
         protected double TestSignalTSStart = 0;
         protected bool TestSignalEnabled = false;
         protected bool ProcessData = false;
@@ -43,6 +44,7 @@ namespace ShimmerAPI.Protocols
             OldTestData = new byte[0];
             TestFirstByteReceived = false;
             TestSignalTotalNumberOfBytes = 0;
+            TestSignalTotalEffectiveNumberOfBytes = 0;
             System.Console.WriteLine("Stop Test Signal");
             TestSignalTSStart = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
             if (Radio.WriteBytes(new byte[2] { (byte)0xA4, (byte)0x00 }))
@@ -70,6 +72,7 @@ namespace ShimmerAPI.Protocols
         private void ProcessDataPackets()
         {
             ProcessData = true;
+            int lengthOfPacket = 5;
             while (ProcessData)
             {
 
@@ -97,17 +100,28 @@ namespace ShimmerAPI.Protocols
                         Console.WriteLine("Throughput (bytes per second): " + (TestSignalTotalNumberOfBytes / duration));
                         //Console.WriteLine("RXB OTD:" + BitConverter.ToString(OldTestData).Replace("-", ""));
                         //Console.WriteLine("RXB:" + BitConverter.ToString(data).Replace("-", ""));
-                        for (int i = 0; i < (data.Length / 4); i++)
+                        for (int i = 0; i < (data.Length / lengthOfPacket); i++)
                         {
-                            byte[] bytes = new byte[4];
-                            System.Array.Copy(data, i * 4, bytes, 0, 4);
-                            //Array.Reverse(bytes);
-                            int intValue = BitConverter.ToInt32(bytes, 0);
-                            Console.Write(intValue + " , ");
-                        }
-                        Console.WriteLine();
+                            byte[] bytesFullPacket = new byte[lengthOfPacket];
+                            System.Array.Copy(data, i * lengthOfPacket, bytesFullPacket, 0, lengthOfPacket);
 
-                        int remainder = data.Length % 4;
+                            if (bytesFullPacket[0] == 0xA5)
+                            {
+                                TestSignalTotalEffectiveNumberOfBytes += 5;
+                                //Array.Reverse(bytes);
+                                byte[] bytes = new byte[lengthOfPacket-1];
+                                System.Array.Copy(bytesFullPacket, 1, bytes, 0, bytes.Length);
+                                int intValue = BitConverter.ToInt32(bytes, 0);
+                                Console.Write(intValue + " , ");
+                            }
+                        }
+                        testSignalCurrentTime = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
+                        duration = (testSignalCurrentTime - TestSignalTSStart) / 1000.0; //make it seconds
+                        Console.WriteLine();
+                        Console.WriteLine("Effective Throughput (bytes per second): " + (TestSignalTotalEffectiveNumberOfBytes / duration));
+                        
+
+                        int remainder = data.Length % lengthOfPacket;
                         if (remainder != 0)
                         {
                             OldTestData = new byte[remainder];
