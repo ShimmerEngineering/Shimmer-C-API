@@ -75,6 +75,7 @@ namespace ShimmerAPI.Protocols
         {
             ProcessData = true;
             int lengthOfPacket = 5;
+            int value = 0;
             while (ProcessData)
             {
 
@@ -117,6 +118,15 @@ namespace ShimmerAPI.Protocols
                                     byte[] bytes = new byte[lengthOfPacket - 1];
                                     System.Array.Copy(bytesFullPacket, 1, bytes, 0, bytes.Length);
                                     int intValue = BitConverter.ToInt32(bytes, 0);
+                                    if (((intValue - value) >= 0) && ((intValue-value) < 5))
+                                    {
+
+                                    } else
+                                    {
+                                        Console.WriteLine("ERROR WITH PARSING");
+                                        StopTestSignal();
+                                    }
+                                    value = intValue;
                                     Console.Write(intValue + " , ");
                                 }
                             } else
