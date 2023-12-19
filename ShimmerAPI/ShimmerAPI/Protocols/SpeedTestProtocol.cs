@@ -18,10 +18,10 @@ namespace ShimmerAPI.Protocols
         protected long TestSignalTotalNumberOfBytes = 0;
         protected long TestSignalTotalEffectiveNumberOfBytes = 0;
         protected long NumberofBytesDropped = 0;
+        protected long NumberofNumbersSkipped = 0;
         protected double TestSignalTSStart = 0;
         protected bool TestSignalEnabled = false;
         protected bool ProcessData = false;
-        protected bool TestCountIncrements = false;
 
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
 
@@ -122,19 +122,18 @@ namespace ShimmerAPI.Protocols
                                     byte[] bytes = new byte[lengthOfPacket - 1];
                                     System.Array.Copy(bytesFullPacket, 1, bytes, 0, bytes.Length);
                                     int intValue = BitConverter.ToInt32(bytes, 0);
-                                    if (TestCountIncrements)
-                                    {
-                                        if (((intValue - keepValue) >= 0) && ((intValue - keepValue) < 1000))
-                                        {
 
-                                        }
-                                        else
+                                    if (keepValue != 0)
+                                    {
+                                        var difference = intValue - keepValue;
+                                        if ((difference) != 1)
                                         {
-                                            Console.WriteLine("ERROR WITH PARSING");
-                                            StopTestSignal();
+                                            NumberofNumbersSkipped += difference;
                                         }
-                                        keepValue = intValue;
                                     }
+
+                                    keepValue = intValue;
+                                   
                                     var intValueString = intValue.ToString();
                                     Console.Write(intValueString + " , ");
                                     charPrintCount+= intValueString.Length;
@@ -152,19 +151,9 @@ namespace ShimmerAPI.Protocols
                         testSignalCurrentTime = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
                         duration = (testSignalCurrentTime - TestSignalTSStart) / 1000.0; //make it seconds
                         Console.WriteLine();
-                        Console.WriteLine("Effective Throughput (bytes per second): " + (TestSignalTotalEffectiveNumberOfBytes / duration) +  " Number of Bytes Dropped (Duration S): " + NumberofBytesDropped + "("+ duration + ")");
-                        
+                        Console.WriteLine("Effective Throughput (bytes per second): " + (TestSignalTotalEffectiveNumberOfBytes / duration) +  ", Number of Bytes Dropped: " + NumberofBytesDropped + ", Numbers Skipped: " + NumberofNumbersSkipped + ", (Duration S): " + duration + "");
 
-                        int remainder = data.Length % lengthOfPacket;
-                        if (remainder != 0)
-                        {
-                            OldTestData = new byte[remainder];
-                            System.Array.Copy(data, data.Length - remainder, OldTestData, 0, remainder);
-                        }
-                        else
-                        {
-                            OldTestData = new byte[0];
-                        }
+                        OldTestData = data;
                     }
                 }
             }
