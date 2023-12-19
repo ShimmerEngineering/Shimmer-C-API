@@ -21,6 +21,7 @@ namespace ShimmerAPI.Protocols
         protected double TestSignalTSStart = 0;
         protected bool TestSignalEnabled = false;
         protected bool ProcessData = false;
+        protected bool TestCountIncrements = false;
 
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
 
@@ -75,7 +76,7 @@ namespace ShimmerAPI.Protocols
         {
             ProcessData = true;
             int lengthOfPacket = 5;
-            int value = 0;
+            int keepValue = 0;
             while (ProcessData)
             {
 
@@ -121,15 +122,19 @@ namespace ShimmerAPI.Protocols
                                     byte[] bytes = new byte[lengthOfPacket - 1];
                                     System.Array.Copy(bytesFullPacket, 1, bytes, 0, bytes.Length);
                                     int intValue = BitConverter.ToInt32(bytes, 0);
-                                    if (((intValue - value) >= 0) && ((intValue-value) < 1000))
+                                    if (TestCountIncrements)
                                     {
+                                        if (((intValue - keepValue) >= 0) && ((intValue - keepValue) < 1000))
+                                        {
 
-                                    } else
-                                    {
-                                        Console.WriteLine("ERROR WITH PARSING");
-                                        StopTestSignal();
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("ERROR WITH PARSING");
+                                            StopTestSignal();
+                                        }
+                                        keepValue = intValue;
                                     }
-                                    value = intValue;
                                     var intValueString = intValue.ToString();
                                     Console.Write(intValueString + " , ");
                                     charPrintCount+= intValueString.Length;
