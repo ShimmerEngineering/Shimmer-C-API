@@ -94,22 +94,25 @@ namespace ShimmerAPI.Protocols
                         }
 
                         TestSignalTotalNumberOfBytes += buffer.Length;
+                        /*
                         Console.WriteLine();
                         Debug.WriteLine(ProgrammerUtilities.ByteArrayToHexString(buffer));
+                        */
+
                         byte[] data = OldTestData.Concat(buffer).ToArray();
                         //byte[] data = newdata;
                         double testSignalCurrentTime = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
                         double duration = (testSignalCurrentTime - TestSignalTSStart) / 1000.0; //make it seconds
-                        Console.WriteLine("Throughput (bytes per second): " + (TestSignalTotalNumberOfBytes / duration));
+                        //Console.WriteLine("Throughput (bytes per second): " + (TestSignalTotalNumberOfBytes / duration));
                         //Console.WriteLine("RXB OTD:" + BitConverter.ToString(OldTestData).Replace("-", ""));
                         //Console.WriteLine("RXB:" + BitConverter.ToString(data).Replace("-", ""));
-                        int i = 0;
+                        int charPrintCount = 0;
                         while(data.Length >= lengthOfPacket+1)
                         {
                             if (data[0] == 0XA5 && data[5] == 0XA5)
                             {
                                 byte[] bytesFullPacket = new byte[lengthOfPacket];
-                                System.Array.Copy(data, i * lengthOfPacket, bytesFullPacket, 0, lengthOfPacket);
+                                System.Array.Copy(data, 0, bytesFullPacket, 0, lengthOfPacket);
                                 data = ProgrammerUtilities.RemoveBytesFromArray(data, lengthOfPacket);
                                 if (bytesFullPacket[0] == 0xA5)
                                 {
@@ -127,7 +130,13 @@ namespace ShimmerAPI.Protocols
                                         StopTestSignal();
                                     }
                                     value = intValue;
-                                    Console.Write(intValue + " , ");
+                                    var intValueString = intValue.ToString();
+                                    Console.Write(intValueString + " , ");
+                                    charPrintCount+= intValueString.Length;
+                                    if (charPrintCount % 120 == 0)
+                                    {
+                                        Console.WriteLine();
+                                    }
                                 }
                             } else
                             {

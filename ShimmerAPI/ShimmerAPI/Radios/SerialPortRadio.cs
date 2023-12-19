@@ -80,7 +80,7 @@ namespace ShimmerAPI.Radios
                 {
                     byte[] buffer = new byte[NumberofBytesToRead];
                     SerialPort.Read(buffer, 0, NumberofBytesToRead);
-                    BytesReceived?.Invoke(this, buffer);
+                    SendBytesReceived(buffer);
                     //Thread.Sleep(1); // Simulate some work
                 }
             }

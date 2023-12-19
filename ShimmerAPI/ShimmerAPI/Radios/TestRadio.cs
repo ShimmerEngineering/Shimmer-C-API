@@ -36,6 +36,7 @@ namespace ShimmerAPI.Radios
         }
         int count = 0;
         byte[] buffer = new byte[] { };
+        byte[] header = new byte[] { 0xA5 };
         public void GenerateBytes()
         {
             bool firstTime = true;
@@ -48,15 +49,22 @@ namespace ShimmerAPI.Radios
                     firstTime = false;
                 }
                 byte[] bytes = BitConverter.GetBytes(count);
+                bytes = ProgrammerUtilities.AppendByteArrays(header, bytes);
                 buffer = ProgrammerUtilities.AppendByteArrays(buffer, bytes);
-                if (buffer.Length>5000)
+                
+                if (buffer.Length>512)
                 {
-                    BytesReceived?.Invoke(this, buffer);
+                    //BytesReceived?.Invoke(this, buffer);
+                    SendBytesReceived(buffer);
                     buffer = new byte[] { };
-                    Thread.Sleep(1);
+                    //Thread.Sleep(1);
                 }
                 count++;
-                
+                if (count % 1000 ==0)
+                {
+                    Thread.Sleep(1);
+                }
+
             }
         }
 

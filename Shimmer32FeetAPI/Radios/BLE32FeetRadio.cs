@@ -197,8 +197,7 @@ namespace Shimmer32FeetAPI.Radios
 
         private void Gc_ValueChanged(object sender, GattCharacteristicValueChangedEventArgs args)
         {
-            byte[] buffer = args.Value;
-            BytesReceived?.Invoke(this, buffer);
+            SendBytesReceived(args.Value);
         }
 
     }
