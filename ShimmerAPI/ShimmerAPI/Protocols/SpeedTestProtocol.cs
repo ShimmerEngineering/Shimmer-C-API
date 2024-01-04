@@ -85,7 +85,7 @@ namespace ShimmerAPI.Protocols
                     int qSize = cq.Count();
                     if (qSize > 0)
                     {
-                        byte[] buffer = DequeueBytes(cq, qSize);
+                        byte[] buffer = ProgrammerUtilities.DequeueBytes(cq, qSize);
                         if (!TestFirstByteReceived)
                         {
                             Console.WriteLine("DISCARD BYTE");
@@ -168,26 +168,7 @@ namespace ShimmerAPI.Protocols
 
         }
 
-        static byte[] DequeueBytes(ConcurrentQueue<byte> queue, int count)
-        {
-            byte[] result = new byte[count];
-            for (int i = 0; i < count; i++)
-            {
-                if (queue.TryDequeue(out byte dequeuedByte))
-                {
-                    result[i] = dequeuedByte;
-                }
-                else
-                {
-                    // Queue is empty before dequeuing the desired count of bytes
-                    // You can handle this case based on your requirements
-                    Array.Resize(ref result, i);
-                    break;
-                }
-            }
-            return result;
-        }
-
+        
 
     }
 }

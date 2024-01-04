@@ -101,5 +101,42 @@ namespace SpeedTestExample
         {
             TestRadioSpeedTestProtocol.StopTestSignal();
         }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            radioBLE = new BLE32FeetRadio(textBox1.Text, BLE32FeetRadio.DeviceType.Shimmer3R);
+            BLE32FeetSpeedTestProtocol = new SpeedTestProtocol(radioBLE);
+            BLE32FeetSpeedTestProtocol.Connect();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            BLE32FeetSpeedTestProtocol.StartTestSignal();
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            BLE32FeetSpeedTestProtocol.StopTestSignal();
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            BLE32FeetSpeedTestProtocol.Disconnect();
+        }
     }
 }

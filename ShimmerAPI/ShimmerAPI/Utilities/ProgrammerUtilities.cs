@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,6 +16,28 @@ namespace ShimmerAPI.Utilities
             }
             return hex.ToString();
         }
+
+        public static byte[] DequeueBytes(ConcurrentQueue<byte> queue, int count)
+        {
+            byte[] result = new byte[count];
+            for (int i = 0; i < count; i++)
+            {
+                if (queue.TryDequeue(out byte dequeuedByte))
+                {
+                    result[i] = dequeuedByte;
+                }
+                else
+                {
+                    // Queue is empty before dequeuing the desired count of bytes
+                    // You can handle this case based on your requirements
+                    Array.Resize(ref result, i);
+                    break;
+                }
+            }
+            return result;
+        }
+
+
         public static byte[] RemoveBytesFromArray(byte[] originalArray, int bytesToRemove)
         {
             if (bytesToRemove >= originalArray.Length)
