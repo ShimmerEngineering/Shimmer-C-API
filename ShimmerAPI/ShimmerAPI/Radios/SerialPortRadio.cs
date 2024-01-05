@@ -22,6 +22,8 @@ namespace ShimmerAPI.Radios
 
         public override bool Connect()
         {
+            CurrentRadioStatus = RadioStatus.Connecting;
+            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
             SerialPort.BaudRate = 115200;
             SerialPort.PortName = ComPort;
             SerialPort.ReadTimeout = this.ReadTimeout;
@@ -33,6 +35,8 @@ namespace ShimmerAPI.Radios
             }
             catch (Exception ex)
             {
+                CurrentRadioStatus = RadioStatus.Disconnected;
+                RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
                 return false;
             }
             SerialPort.DiscardInBuffer();
@@ -41,6 +45,8 @@ namespace ShimmerAPI.Radios
             Thread thread = new Thread(ReadData);
             // Start the thread
             thread.Start();
+            CurrentRadioStatus = RadioStatus.Connected;
+            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
             return true;
         }
 
@@ -55,6 +61,8 @@ namespace ShimmerAPI.Radios
             {
                 return false;
             }
+            CurrentRadioStatus = RadioStatus.Disconnected;
+            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
             return true;
         }
 

@@ -12,6 +12,7 @@ namespace ShimmerAPI.Protocols
 {
     public class SpeedTestProtocol
     {
+        public EventHandler<String> ResultUpdate;
         AbstractRadio Radio;
         protected byte[] OldTestData = new byte[0];
         protected bool TestFirstByteReceived = false;
@@ -151,8 +152,9 @@ namespace ShimmerAPI.Protocols
                         testSignalCurrentTime = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
                         duration = (testSignalCurrentTime - TestSignalTSStart) / 1000.0; //make it seconds
                         Console.WriteLine();
-                        Console.WriteLine("Effective Throughput (bytes per second): " + (TestSignalTotalEffectiveNumberOfBytes / duration) +  ", Number of Bytes Dropped: " + NumberofBytesDropped + ", Numbers Skipped: " + NumberofNumbersSkipped + ", (Duration S): " + duration + "");
-
+                        String result = "Effective Throughput (bytes per second): " + (TestSignalTotalEffectiveNumberOfBytes / duration) + ", Number of Bytes Dropped: " + NumberofBytesDropped + ", Numbers Skipped: " + NumberofNumbersSkipped + ", (Duration S): " + duration + "";
+                        Console.WriteLine(result);
+                        ResultUpdate?.Invoke(this, result);
                         OldTestData = data;
                     }
                 }

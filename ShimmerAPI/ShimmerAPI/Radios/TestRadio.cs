@@ -11,12 +11,16 @@ namespace ShimmerAPI.Radios
         private bool StartThread = false;
         public override bool Connect()
         {
+            CurrentRadioStatus = RadioStatus.Connected;
+            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
             return true;
         }
 
         public override bool Disconnect()
         {
-            throw new NotImplementedException();
+            CurrentRadioStatus = RadioStatus.Disconnected;
+            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
+            return true;
         }
 
         public override bool WriteBytes(byte[] bytes)

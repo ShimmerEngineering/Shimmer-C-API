@@ -37,6 +37,8 @@ namespace Shimmer32FeetAPI.Radios
         {
             try
             {
+                CurrentRadioStatus = RadioStatus.Connecting;
+                RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
                 //SetState(SHIMMER_STATE_CONNECTING);
                 bluetoothDevice = BluetoothDevice.FromIdAsync(MacAddress).GetAwaiter().GetResult();
                 bluetoothDevice.Gatt.ConnectAsync().GetAwaiter().GetResult();
@@ -73,9 +75,13 @@ namespace Shimmer32FeetAPI.Radios
                     UartRX.StartNotificationsAsync().GetAwaiter().GetResult();
                     bluetoothDevice.GattServerDisconnected += Device_GattServerDisconnected;
                     Console.WriteLine("current mtu value" + bluetoothDevice.Gatt.Mtu);
+                    CurrentRadioStatus = RadioStatus.Connected;
+                    RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
                 }
                 else
                 {
+                    CurrentRadioStatus = RadioStatus.Disconnected;
+                    RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
                     Console.WriteLine("Service TXRX null");
                     //return false;
                 }
@@ -88,10 +94,13 @@ namespace Shimmer32FeetAPI.Radios
                     bluetoothDevice.GattServerDisconnected -= Device_GattServerDisconnected;
                     bluetoothDevice.Gatt.Disconnect();
                 }
+                CurrentRadioStatus = RadioStatus.Disconnected;
+                RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
                 Console.WriteLine("Radio Plugin 32Feet Exception " + ex.Message);
                 //return false;
             }
             //return true;
+
         }
 
         public override bool Connect()
@@ -162,6 +171,8 @@ namespace Shimmer32FeetAPI.Radios
             {
                 return false;
             }
+            CurrentRadioStatus = RadioStatus.Disconnected;
+            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
             return true;
         }
 

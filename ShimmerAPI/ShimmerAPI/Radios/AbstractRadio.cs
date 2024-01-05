@@ -7,8 +7,17 @@ namespace ShimmerAPI.Radios
 {
     public abstract class AbstractRadio
     {
-        
+        public enum RadioStatus
+        {
+            Connected,
+            Disconnected,
+            Connecting
+        }
+
+        protected RadioStatus CurrentRadioStatus = RadioStatus.Disconnected;
+
         public EventHandler<byte[]> BytesReceived;
+        public EventHandler<RadioStatus> RadioStatusChanged;
         public abstract bool Connect();
         public abstract bool Disconnect();
         public abstract bool WriteBytes(byte[] bytes);

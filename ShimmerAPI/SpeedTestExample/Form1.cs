@@ -10,14 +10,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SpeedTestExample
 {
     public partial class Form1 : Form
     {
+        private static bool canUpdate = true;
         public Form1()
         {
             InitializeComponent();
+
+        }
+        System.Threading.Timer timer = new System.Threading.Timer(EnableUpdate, null, 0, 1000); // Enable update every second
+        private static void EnableUpdate(object state)
+        {
+            canUpdate = true; // Enable update every second
         }
 
         SerialPortRadio radio;
@@ -28,9 +36,28 @@ namespace SpeedTestExample
         TestRadio testRadio;
         private void button1_Click(object sender, EventArgs e)
         {
+            if (radio != null)
+            {
+                radio.RadioStatusChanged -= RadioStateChanged;
+            }
             radio = new SerialPortRadio(textBox2.Text);
+            radio.RadioStatusChanged += RadioStateChanged;
+            if (SerialPortSpeedTestProtocol != null)
+            {
+                SerialPortSpeedTestProtocol.ResultUpdate -= ResultUpdated;
+            }
             SerialPortSpeedTestProtocol = new SpeedTestProtocol(radio);
+            SerialPortSpeedTestProtocol.ResultUpdate += ResultUpdated;
             SerialPortSpeedTestProtocol.Connect();
+        }
+
+        private void ResultUpdated(object sender, string e)
+        {
+            if (canUpdate)
+            {
+                SetTextResult(e);
+                canUpdate = false;
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -40,9 +67,63 @@ namespace SpeedTestExample
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (radioBLE != null)
+            {
+                radioBLE.RadioStatusChanged -= RadioStateChanged;
+            }
             radioBLE = new BLE32FeetRadio(textBox1.Text, BLE32FeetRadio.DeviceType.Shimmer3BLE);
+            radioBLE.RadioStatusChanged += RadioStateChanged;
+            if (BLE32FeetSpeedTestProtocol != null)
+            {
+                BLE32FeetSpeedTestProtocol.ResultUpdate -= ResultUpdated;
+            }
             BLE32FeetSpeedTestProtocol = new SpeedTestProtocol(radioBLE);
+            BLE32FeetSpeedTestProtocol.ResultUpdate += ResultUpdated;
             BLE32FeetSpeedTestProtocol.Connect();
+        }
+
+        delegate void SetTextCallback(string text);
+
+        private void SetText(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.label5.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.label5.Text = text;
+            }
+        }
+
+
+        delegate void SetTextResultCallback(string text);
+
+        private void SetTextResult(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.label5.InvokeRequired)
+            {
+                SetTextResultCallback d = new SetTextResultCallback(SetTextResult);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.label8.Text = text;
+            }
+        }
+
+
+
+        private void RadioStateChanged(object sender, AbstractRadio.RadioStatus e)
+        {
+            SetText(e.ToString());
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -87,8 +168,18 @@ namespace SpeedTestExample
 
         private void button12_Click(object sender, EventArgs e)
         {
+            if (testRadio != null)
+            {
+                testRadio.RadioStatusChanged -= RadioStateChanged;
+            }
             testRadio = new TestRadio();
+            testRadio.RadioStatusChanged += RadioStateChanged;
+            if (TestRadioSpeedTestProtocol != null)
+            {
+                TestRadioSpeedTestProtocol.ResultUpdate -= ResultUpdated;
+            }
             TestRadioSpeedTestProtocol = new SpeedTestProtocol(testRadio);
+            TestRadioSpeedTestProtocol.ResultUpdate += ResultUpdated;
             TestRadioSpeedTestProtocol.Connect();
         }
 
@@ -119,8 +210,18 @@ namespace SpeedTestExample
 
         private void button16_Click(object sender, EventArgs e)
         {
+            if (radioBLE != null)
+            {
+                radioBLE.RadioStatusChanged -= RadioStateChanged;
+            }
             radioBLE = new BLE32FeetRadio(textBox1.Text, BLE32FeetRadio.DeviceType.Shimmer3R);
+            radioBLE.RadioStatusChanged += RadioStateChanged;
+            if (BLE32FeetSpeedTestProtocol != null)
+            {
+                BLE32FeetSpeedTestProtocol.ResultUpdate -= ResultUpdated;
+            }
             BLE32FeetSpeedTestProtocol = new SpeedTestProtocol(radioBLE);
+            BLE32FeetSpeedTestProtocol.ResultUpdate += ResultUpdated;
             BLE32FeetSpeedTestProtocol.Connect();
         }
 
@@ -137,6 +238,21 @@ namespace SpeedTestExample
         private void button13_Click(object sender, EventArgs e)
         {
             BLE32FeetSpeedTestProtocol.Disconnect();
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            testRadio.Disconnect();
         }
     }
 }
