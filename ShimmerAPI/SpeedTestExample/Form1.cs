@@ -214,7 +214,7 @@ namespace SpeedTestExample
             {
                 radioBLE.RadioStatusChanged -= RadioStateChanged;
             }
-            radioBLE = new BLE32FeetRadio(textBox1.Text, BLE32FeetRadio.DeviceType.Shimmer3R);
+            radioBLE = new BLE32FeetRadio(textBox3.Text, BLE32FeetRadio.DeviceType.Shimmer3R);
             radioBLE.RadioStatusChanged += RadioStateChanged;
             if (BLE32FeetSpeedTestProtocol != null)
             {
