@@ -41,6 +41,12 @@ namespace Shimmer32FeetAPI.Radios
                 RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
                 //SetState(SHIMMER_STATE_CONNECTING);
                 bluetoothDevice = BluetoothDevice.FromIdAsync(MacAddress).GetAwaiter().GetResult();
+                if (bluetoothDevice == null)
+                {
+                    CurrentRadioStatus = RadioStatus.Disconnected;
+                    RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
+                    return;
+                }
                 bluetoothDevice.Gatt.ConnectAsync().GetAwaiter().GetResult();
                 Console.WriteLine("current mtu value " + bluetoothDevice.Gatt.Mtu);
                 BluetoothUuid TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
