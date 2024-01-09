@@ -169,6 +169,7 @@
             this.button2 = new System.Windows.Forms.Button();
             this.textBoxSawtoothValue = new System.Windows.Forms.TextBox();
             this.checkBoxCRC = new System.Windows.Forms.CheckBox();
+            this.buttonStopStreamandLog = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -176,7 +177,8 @@
             // buttonStreamandLog
             // 
             this.buttonStreamandLog.Enabled = false;
-            this.buttonStreamandLog.Location = new System.Drawing.Point(188, 71);
+            this.buttonStreamandLog.Location = new System.Drawing.Point(189, 71);
+            this.buttonStreamandLog.Margin = new System.Windows.Forms.Padding(4);
             this.buttonStreamandLog.Name = "buttonStreamandLog";
             this.buttonStreamandLog.Size = new System.Drawing.Size(124, 23);
             this.buttonStreamandLog.TabIndex = 2;
@@ -198,7 +200,7 @@
             // 
             this.textBoxShimmerState.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxShimmerState.Enabled = false;
-            this.textBoxShimmerState.Location = new System.Drawing.Point(633, 77);
+            this.textBoxShimmerState.Location = new System.Drawing.Point(698, 75);
             this.textBoxShimmerState.Name = "textBoxShimmerState";
             this.textBoxShimmerState.Size = new System.Drawing.Size(100, 13);
             this.textBoxShimmerState.TabIndex = 122;
@@ -207,7 +209,7 @@
             // labelState
             // 
             this.labelState.AutoSize = true;
-            this.labelState.Location = new System.Drawing.Point(549, 77);
+            this.labelState.Location = new System.Drawing.Point(614, 75);
             this.labelState.Name = "labelState";
             this.labelState.Size = new System.Drawing.Size(78, 13);
             this.labelState.TabIndex = 121;
@@ -216,9 +218,10 @@
             // buttonStop
             // 
             this.buttonStop.Enabled = false;
-            this.buttonStop.Location = new System.Drawing.Point(396, 71);
+            this.buttonStop.Location = new System.Drawing.Point(513, 67);
+            this.buttonStop.Margin = new System.Windows.Forms.Padding(4);
             this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(124, 23);
+            this.buttonStop.Size = new System.Drawing.Size(100, 28);
             this.buttonStop.TabIndex = 3;
             this.buttonStop.Text = "Stop";
             this.buttonStop.UseVisualStyleBackColor = true;
@@ -227,9 +230,10 @@
             // buttonDisconnect
             // 
             this.buttonDisconnect.Enabled = false;
-            this.buttonDisconnect.Location = new System.Drawing.Point(396, 38);
+            this.buttonDisconnect.Location = new System.Drawing.Point(513, 27);
+            this.buttonDisconnect.Margin = new System.Windows.Forms.Padding(4);
             this.buttonDisconnect.Name = "buttonDisconnect";
-            this.buttonDisconnect.Size = new System.Drawing.Size(124, 23);
+            this.buttonDisconnect.Size = new System.Drawing.Size(100, 28);
             this.buttonDisconnect.TabIndex = 4;
             this.buttonDisconnect.Text = "Disconnect";
             this.buttonDisconnect.UseVisualStyleBackColor = true;
@@ -239,8 +243,8 @@
             // 
             this.ZedGraphControl1.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.ZedGraphControl1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ZedGraphControl1.Location = new System.Drawing.Point(30, 131);
-            this.ZedGraphControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.ZedGraphControl1.Location = new System.Drawing.Point(30, 142);
+            this.ZedGraphControl1.Margin = new System.Windows.Forms.Padding(4);
             this.ZedGraphControl1.Name = "ZedGraphControl1";
             this.ZedGraphControl1.ScrollGrace = 0D;
             this.ZedGraphControl1.ScrollMaxX = 0D;
@@ -521,7 +525,7 @@
             // labelComPort
             // 
             this.labelComPort.AutoSize = true;
-            this.labelComPort.Location = new System.Drawing.Point(571, 42);
+            this.labelComPort.Location = new System.Drawing.Point(636, 40);
             this.labelComPort.Name = "labelComPort";
             this.labelComPort.Size = new System.Drawing.Size(56, 13);
             this.labelComPort.TabIndex = 113;
@@ -530,7 +534,7 @@
             // comboBoxComPorts
             // 
             this.comboBoxComPorts.FormattingEnabled = true;
-            this.comboBoxComPorts.Location = new System.Drawing.Point(633, 39);
+            this.comboBoxComPorts.Location = new System.Drawing.Point(698, 37);
             this.comboBoxComPorts.Name = "comboBoxComPorts";
             this.comboBoxComPorts.Size = new System.Drawing.Size(95, 21);
             this.comboBoxComPorts.Sorted = true;
@@ -546,7 +550,7 @@
             this.toolStripSplitButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1419, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1931, 25);
             this.toolStrip1.TabIndex = 38;
             this.toolStrip1.Text = "Check For Updates";
             this.toolStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip1_ItemClicked);
@@ -1036,7 +1040,7 @@
             // 
             // buttonAddGraph
             // 
-            this.buttonAddGraph.Location = new System.Drawing.Point(99, 103);
+            this.buttonAddGraph.Location = new System.Drawing.Point(99, 114);
             this.buttonAddGraph.Name = "buttonAddGraph";
             this.buttonAddGraph.Size = new System.Drawing.Size(33, 23);
             this.buttonAddGraph.TabIndex = 112;
@@ -1046,7 +1050,7 @@
             // 
             // buttonRemoveGraph
             // 
-            this.buttonRemoveGraph.Location = new System.Drawing.Point(256, 103);
+            this.buttonRemoveGraph.Location = new System.Drawing.Point(256, 114);
             this.buttonRemoveGraph.Name = "buttonRemoveGraph";
             this.buttonRemoveGraph.Size = new System.Drawing.Size(33, 23);
             this.buttonRemoveGraph.TabIndex = 111;
@@ -1057,7 +1061,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(35, 107);
+            this.label1.Location = new System.Drawing.Point(35, 118);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(58, 13);
             this.label1.TabIndex = 78;
@@ -1066,7 +1070,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(171, 108);
+            this.label2.Location = new System.Drawing.Point(171, 119);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 13);
             this.label2.TabIndex = 79;
@@ -1409,7 +1413,8 @@
             this.tsStatusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 1053);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1419, 22);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1931, 22);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -1433,7 +1438,7 @@
             // buttonReload
             // 
             this.buttonReload.Enabled = false;
-            this.buttonReload.Location = new System.Drawing.Point(734, 38);
+            this.buttonReload.Location = new System.Drawing.Point(799, 36);
             this.buttonReload.Name = "buttonReload";
             this.buttonReload.Size = new System.Drawing.Size(82, 23);
             this.buttonReload.TabIndex = 124;
@@ -1444,7 +1449,7 @@
             // labelPRR
             // 
             this.labelPRR.AutoSize = true;
-            this.labelPRR.Location = new System.Drawing.Point(739, 77);
+            this.labelPRR.Location = new System.Drawing.Point(804, 75);
             this.labelPRR.Name = "labelPRR";
             this.labelPRR.Size = new System.Drawing.Size(122, 13);
             this.labelPRR.TabIndex = 125;
@@ -1453,35 +1458,35 @@
             // 
             // textBoxLeadOffStatus1
             // 
-            this.textBoxLeadOffStatus1.Location = new System.Drawing.Point(969, 69);
+            this.textBoxLeadOffStatus1.Location = new System.Drawing.Point(1034, 67);
             this.textBoxLeadOffStatus1.Name = "textBoxLeadOffStatus1";
             this.textBoxLeadOffStatus1.Size = new System.Drawing.Size(35, 20);
             this.textBoxLeadOffStatus1.TabIndex = 136;
             // 
             // textBoxLeadOffStatus3
             // 
-            this.textBoxLeadOffStatus3.Location = new System.Drawing.Point(1051, 69);
+            this.textBoxLeadOffStatus3.Location = new System.Drawing.Point(1116, 67);
             this.textBoxLeadOffStatus3.Name = "textBoxLeadOffStatus3";
             this.textBoxLeadOffStatus3.Size = new System.Drawing.Size(35, 20);
             this.textBoxLeadOffStatus3.TabIndex = 137;
             // 
             // textBoxLeadOffStatus2
             // 
-            this.textBoxLeadOffStatus2.Location = new System.Drawing.Point(1010, 69);
+            this.textBoxLeadOffStatus2.Location = new System.Drawing.Point(1075, 67);
             this.textBoxLeadOffStatus2.Name = "textBoxLeadOffStatus2";
             this.textBoxLeadOffStatus2.Size = new System.Drawing.Size(35, 20);
             this.textBoxLeadOffStatus2.TabIndex = 138;
             // 
             // textBoxLeadOffStatus4
             // 
-            this.textBoxLeadOffStatus4.Location = new System.Drawing.Point(1092, 69);
+            this.textBoxLeadOffStatus4.Location = new System.Drawing.Point(1157, 67);
             this.textBoxLeadOffStatus4.Name = "textBoxLeadOffStatus4";
             this.textBoxLeadOffStatus4.Size = new System.Drawing.Size(35, 20);
             this.textBoxLeadOffStatus4.TabIndex = 139;
             // 
             // textBoxLeadOffStatus5
             // 
-            this.textBoxLeadOffStatus5.Location = new System.Drawing.Point(1133, 68);
+            this.textBoxLeadOffStatus5.Location = new System.Drawing.Point(1198, 66);
             this.textBoxLeadOffStatus5.Name = "textBoxLeadOffStatus5";
             this.textBoxLeadOffStatus5.Size = new System.Drawing.Size(35, 20);
             this.textBoxLeadOffStatus5.TabIndex = 140;
@@ -1490,7 +1495,7 @@
             // 
             this.labelLeadOffStatus2.AutoSize = true;
             this.labelLeadOffStatus2.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLeadOffStatus2.Location = new System.Drawing.Point(1008, 57);
+            this.labelLeadOffStatus2.Location = new System.Drawing.Point(1073, 55);
             this.labelLeadOffStatus2.Name = "labelLeadOffStatus2";
             this.labelLeadOffStatus2.Size = new System.Drawing.Size(16, 9);
             this.labelLeadOffStatus2.TabIndex = 141;
@@ -1500,7 +1505,7 @@
             // 
             this.labelLeadOffStatus1.AutoSize = true;
             this.labelLeadOffStatus1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLeadOffStatus1.Location = new System.Drawing.Point(967, 57);
+            this.labelLeadOffStatus1.Location = new System.Drawing.Point(1032, 55);
             this.labelLeadOffStatus1.Name = "labelLeadOffStatus1";
             this.labelLeadOffStatus1.Size = new System.Drawing.Size(14, 9);
             this.labelLeadOffStatus1.TabIndex = 142;
@@ -1510,7 +1515,7 @@
             // 
             this.labelLeadOffStatus5.AutoSize = true;
             this.labelLeadOffStatus5.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLeadOffStatus5.Location = new System.Drawing.Point(1131, 57);
+            this.labelLeadOffStatus5.Location = new System.Drawing.Point(1196, 55);
             this.labelLeadOffStatus5.Name = "labelLeadOffStatus5";
             this.labelLeadOffStatus5.Size = new System.Drawing.Size(21, 9);
             this.labelLeadOffStatus5.TabIndex = 143;
@@ -1520,7 +1525,7 @@
             // 
             this.labelLeadOffStatus3.AutoSize = true;
             this.labelLeadOffStatus3.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLeadOffStatus3.Location = new System.Drawing.Point(1049, 57);
+            this.labelLeadOffStatus3.Location = new System.Drawing.Point(1114, 55);
             this.labelLeadOffStatus3.Name = "labelLeadOffStatus3";
             this.labelLeadOffStatus3.Size = new System.Drawing.Size(13, 9);
             this.labelLeadOffStatus3.TabIndex = 144;
@@ -1530,7 +1535,7 @@
             // 
             this.labelLeadOffStatus4.AutoSize = true;
             this.labelLeadOffStatus4.Font = new System.Drawing.Font("Microsoft Sans Serif", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelLeadOffStatus4.Location = new System.Drawing.Point(1090, 57);
+            this.labelLeadOffStatus4.Location = new System.Drawing.Point(1155, 55);
             this.labelLeadOffStatus4.Name = "labelLeadOffStatus4";
             this.labelLeadOffStatus4.Size = new System.Drawing.Size(14, 9);
             this.labelLeadOffStatus4.TabIndex = 145;
@@ -1539,7 +1544,7 @@
             // labelExGLeadOffDetection
             // 
             this.labelExGLeadOffDetection.AutoSize = true;
-            this.labelExGLeadOffDetection.Location = new System.Drawing.Point(966, 33);
+            this.labelExGLeadOffDetection.Location = new System.Drawing.Point(1031, 31);
             this.labelExGLeadOffDetection.Name = "labelExGLeadOffDetection";
             this.labelExGLeadOffDetection.Size = new System.Drawing.Size(120, 13);
             this.labelExGLeadOffDetection.TabIndex = 146;
@@ -1547,7 +1552,7 @@
             // 
             // buttonReadDirectory
             // 
-            this.buttonReadDirectory.Location = new System.Drawing.Point(822, 38);
+            this.buttonReadDirectory.Location = new System.Drawing.Point(887, 36);
             this.buttonReadDirectory.Name = "buttonReadDirectory";
             this.buttonReadDirectory.Size = new System.Drawing.Size(124, 23);
             this.buttonReadDirectory.TabIndex = 147;
@@ -1557,7 +1562,8 @@
             // 
             // buttonSetBlinkLED
             // 
-            this.buttonSetBlinkLED.Location = new System.Drawing.Point(188, 38);
+            this.buttonSetBlinkLED.Location = new System.Drawing.Point(189, 35);
+            this.buttonSetBlinkLED.Margin = new System.Windows.Forms.Padding(4);
             this.buttonSetBlinkLED.Name = "buttonSetBlinkLED";
             this.buttonSetBlinkLED.Size = new System.Drawing.Size(124, 25);
             this.buttonSetBlinkLED.TabIndex = 148;
@@ -1568,7 +1574,7 @@
             // checkBoxTSACheck
             // 
             this.checkBoxTSACheck.AutoSize = true;
-            this.checkBoxTSACheck.Location = new System.Drawing.Point(1192, 40);
+            this.checkBoxTSACheck.Location = new System.Drawing.Point(1257, 38);
             this.checkBoxTSACheck.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBoxTSACheck.Name = "checkBoxTSACheck";
             this.checkBoxTSACheck.Size = new System.Drawing.Size(165, 17);
@@ -1587,8 +1593,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(1192, 64);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(1257, 62);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(93, 21);
             this.button1.TabIndex = 150;
@@ -1598,10 +1604,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(396, 98);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Location = new System.Drawing.Point(513, 101);
+            this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(124, 27);
+            this.button2.Size = new System.Drawing.Size(100, 33);
             this.button2.TabIndex = 151;
             this.button2.Text = "EXG Saw";
             this.button2.UseVisualStyleBackColor = true;
@@ -1609,8 +1615,8 @@
             // 
             // textBoxSawtoothValue
             // 
-            this.textBoxSawtoothValue.Location = new System.Drawing.Point(539, 102);
-            this.textBoxSawtoothValue.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBoxSawtoothValue.Location = new System.Drawing.Point(925, 72);
+            this.textBoxSawtoothValue.Margin = new System.Windows.Forms.Padding(2);
             this.textBoxSawtoothValue.Name = "textBoxSawtoothValue";
             this.textBoxSawtoothValue.Size = new System.Drawing.Size(86, 20);
             this.textBoxSawtoothValue.TabIndex = 152;
@@ -1621,7 +1627,7 @@
             // 
             this.checkBoxCRC.AutoSize = true;
             this.checkBoxCRC.Location = new System.Drawing.Point(99, 43);
-            this.checkBoxCRC.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBoxCRC.Margin = new System.Windows.Forms.Padding(2);
             this.checkBoxCRC.Name = "checkBoxCRC";
             this.checkBoxCRC.Size = new System.Drawing.Size(84, 17);
             this.checkBoxCRC.TabIndex = 153;
@@ -1630,12 +1636,25 @@
             this.checkBoxCRC.Visible = false;
             this.checkBoxCRC.CheckedChanged += new System.EventHandler(this.checkBox91_CheckedChanged);
             // 
+            // buttonStopStreamandLog
+            // 
+            this.buttonStopStreamandLog.Enabled = false;
+            this.buttonStopStreamandLog.Location = new System.Drawing.Point(335, 69);
+            this.buttonStopStreamandLog.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonStopStreamandLog.Name = "buttonStopStreamandLog";
+            this.buttonStopStreamandLog.Size = new System.Drawing.Size(156, 28);
+            this.buttonStopStreamandLog.TabIndex = 154;
+            this.buttonStopStreamandLog.Text = "Stop Stream and Log";
+            this.buttonStopStreamandLog.UseVisualStyleBackColor = true;
+            this.buttonStopStreamandLog.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Control
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
-            this.ClientSize = new System.Drawing.Size(1436, 597);
+            this.ClientSize = new System.Drawing.Size(1948, 735);
+            this.Controls.Add(this.buttonStopStreamandLog);
             this.Controls.Add(this.checkBoxCRC);
             this.Controls.Add(this.textBoxSawtoothValue);
             this.Controls.Add(this.button2);
@@ -1916,6 +1935,7 @@
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TextBox textBoxSawtoothValue;
         private System.Windows.Forms.CheckBox checkBoxCRC;
+        private System.Windows.Forms.Button buttonStopStreamandLog;
     }
 }
 

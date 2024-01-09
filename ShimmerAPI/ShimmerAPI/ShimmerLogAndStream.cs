@@ -388,6 +388,19 @@ namespace ShimmerAPI
             WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_DIR_COMMAND }, 0, 1);
         }
 
+        public void StopStreamingandLog()
+        {
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.STOP_SDBT_COMMAND }, 0, 1);
+            System.Threading.Thread.Sleep(200);
+            isLogging = false;
+            FlushInputConnection();
+            ObjectClusterBuffer.Clear();
+            if (IsConnectionOpen())
+            {
+                SetState(SHIMMER_STATE_CONNECTED);
+            }
+        }
+
         public override void StopStreaming()
         {
             base.StopStreaming();
