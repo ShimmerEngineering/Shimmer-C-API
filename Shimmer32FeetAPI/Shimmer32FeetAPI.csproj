@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Radios\BLE32FeetRadio.cs" />
     <Compile Include="Shimmer32Feet.cs" />
     <Compile Include="ShimmerLogAndStream32Feet.cs" />
     <Compile Include="ShimmerLogAndStream32FeetBLE.cs" />
@@ -69,5 +70,6 @@
       <Version>4.0.34</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
