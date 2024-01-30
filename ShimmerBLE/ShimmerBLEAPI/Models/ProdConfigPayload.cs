@@ -286,10 +286,13 @@ namespace shimmer.Models
                 if (Length >= 14)
                 {
                     byte[] hwInternalArray = reader.ReadBytes(2);
-                    REV_HW_INTERNAL = BitConverter.ToUInt16(hwInternalArray, 0);
-                    if(REV_HW_INTERNAL == 65535)    //default value
+                    if (IsAllFFs(hwInternalArray))
                     {
                         REV_HW_INTERNAL = 0;
+                    }
+                    else
+                    {
+                        REV_HW_INTERNAL = BitConverter.ToUInt16(hwInternalArray, 0);
                     }
 
                     byte[] passkeyIdArray = reader.ReadBytes(PasskeyIDLength);
