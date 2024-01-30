@@ -66,7 +66,8 @@ namespace shimmer.Models
                 SetAdvertisingNamePrefix("");
                 SetPasskey("");
                 SetPasskeyID("");
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -79,7 +80,7 @@ namespace shimmer.Models
         public void EnableNoPasskey(string advertisingName)
         {
             try
-            {   
+            {
                 if (advertisingName.Equals("Verisense"))
                 {
                     advertisingName = "";
@@ -110,7 +111,8 @@ namespace shimmer.Models
                 SetAdvertisingNamePrefix(advertisingName);
                 SetPasskey("123456");
                 SetPasskeyID(passkeyID);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -166,7 +168,7 @@ namespace shimmer.Models
                         throw new Exception("Passkey Must Be Numeric Values");
                     }
                 }
-                
+
                 byte[] passkeyArray = Encoding.UTF8.GetBytes(passkey);
                 for (int i = 0; i < PasskeyLength; i++)
                 {
@@ -181,7 +183,7 @@ namespace shimmer.Models
             Array.Copy(payloadArrayWithoutHeader, 0, payloadArrayWithHeader, 3, payloadArrayWithoutHeader.Length);
             Payload = BitConverter.ToString(payloadArrayWithHeader);
         }
-        
+
         protected void SetAdvertisingNamePrefix(string advertisingNamePrefix)
         {
             byte[] payloadArrayWithoutHeader = GetPayload();
@@ -269,7 +271,7 @@ namespace shimmer.Models
                 ASMID = BitConverter.ToString(idBytes).Replace("-", string.Empty);
 
                 REV_HW_MAJOR = int.Parse(BitConverter.ToString(reader.ReadBytes(1)), NumberStyles.HexNumber);
-                
+
                 HardwareIdentifier = (HardwareIdentifier)REV_HW_MAJOR;
 
                 REV_HW_MINOR = int.Parse(BitConverter.ToString(reader.ReadBytes(1)), NumberStyles.HexNumber);
@@ -285,6 +287,10 @@ namespace shimmer.Models
                 {
                     byte[] hwInternalArray = reader.ReadBytes(2);
                     REV_HW_INTERNAL = BitConverter.ToUInt16(hwInternalArray, 0);
+                    if(REV_HW_INTERNAL == 65535)    //default value
+                    {
+                        REV_HW_INTERNAL = 0;
+                    }
 
                     byte[] passkeyIdArray = reader.ReadBytes(PasskeyIDLength);
                     if (IsAllFFs(passkeyIdArray))
