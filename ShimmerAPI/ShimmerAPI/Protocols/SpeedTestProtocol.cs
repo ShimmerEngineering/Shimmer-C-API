@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using static ShimmerAPI.Radios.AbstractRadio;
 
 namespace ShimmerAPI.Protocols
 {
@@ -26,9 +27,24 @@ namespace ShimmerAPI.Protocols
 
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
 
+        readonly byte[] ShimmerStopTestSignalCommand = new byte[2] { (byte)0xA4, (byte)0x00 };
+        readonly byte[] ShimmerStartTestSignalCommand = new byte[2] { (byte)0xA4, (byte)0x01 };
+        readonly byte[] VerisenseStopTestSignalCommand = new byte[5] { (byte)0x29, (byte)0x02, (byte)0x00, (byte)0x15, (byte)0x00};
+        readonly byte[] VerisenseStartTestSignalCommand = new byte[5] { (byte)0x29, (byte)0x02, (byte)0x00, (byte)0x15, (byte)0x01};
+        protected byte[] StopTestSignalCommand;
+        protected byte[] StartTestSignalCommand;
+
         public SpeedTestProtocol(AbstractRadio radio)
         {
             Radio = radio;
+            if (Radio.getDeviceType().Equals(DeviceType.Verisense)){
+                StartTestSignalCommand = VerisenseStartTestSignalCommand;
+                StopTestSignalCommand = VerisenseStopTestSignalCommand;
+            } else
+            {
+                StopTestSignalCommand = ShimmerStopTestSignalCommand;
+                StartTestSignalCommand = ShimmerStartTestSignalCommand;
+            }
             Radio.BytesReceived += Radio_BytesReceived;
         }
 
@@ -51,7 +67,7 @@ namespace ShimmerAPI.Protocols
             NumberofBytesDropped = 0;
             System.Console.WriteLine("Stop Test Signal");
             TestSignalTSStart = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
-            if (Radio.WriteBytes(new byte[2] { (byte)0xA4, (byte)0x00 }))
+            if (Radio.WriteBytes(StopTestSignalCommand))
             {
                 TestSignalEnabled = false;
             }
@@ -67,7 +83,7 @@ namespace ShimmerAPI.Protocols
             TestSignalTotalNumberOfBytes = 0;
             System.Console.WriteLine("Start Test Signal");
             TestSignalTSStart = (DateTime.UtcNow - ShimmerBluetooth.UnixEpoch).TotalMilliseconds;
-            if (Radio.WriteBytes(new byte[2] { (byte)0xA4, (byte)0x01 }))
+            if (Radio.WriteBytes(StartTestSignalCommand))
             {
                 TestSignalEnabled = true;
             }

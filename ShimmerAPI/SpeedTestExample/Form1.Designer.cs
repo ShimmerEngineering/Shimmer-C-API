@@ -56,6 +56,12 @@ namespace SpeedTestExample
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.button17 = new System.Windows.Forms.Button();
+            this.button18 = new System.Windows.Forms.Button();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.button19 = new System.Windows.Forms.Button();
+            this.button20 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -158,7 +164,7 @@ namespace SpeedTestExample
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(641, 224);
+            this.button9.Location = new System.Drawing.Point(797, 224);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(104, 23);
             this.button9.TabIndex = 13;
@@ -168,7 +174,7 @@ namespace SpeedTestExample
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(641, 181);
+            this.button10.Location = new System.Drawing.Point(797, 181);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(104, 23);
             this.button10.TabIndex = 12;
@@ -178,7 +184,7 @@ namespace SpeedTestExample
             // 
             // button11
             // 
-            this.button11.Location = new System.Drawing.Point(641, 138);
+            this.button11.Location = new System.Drawing.Point(797, 138);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(104, 23);
             this.button11.TabIndex = 11;
@@ -188,7 +194,7 @@ namespace SpeedTestExample
             // 
             // button12
             // 
-            this.button12.Location = new System.Drawing.Point(641, 97);
+            this.button12.Location = new System.Drawing.Point(797, 97);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(104, 23);
             this.button12.TabIndex = 10;
@@ -209,7 +215,7 @@ namespace SpeedTestExample
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(638, 29);
+            this.label2.Location = new System.Drawing.Point(794, 29);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 15;
@@ -321,11 +327,75 @@ namespace SpeedTestExample
             this.label8.Text = "0 Byte/s";
             this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(630, 31);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 13);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "Verisense";
+            // 
+            // button17
+            // 
+            this.button17.Location = new System.Drawing.Point(633, 224);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(104, 23);
+            this.button17.TabIndex = 31;
+            this.button17.Text = "Disconnect";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
+            // button18
+            // 
+            this.button18.Location = new System.Drawing.Point(633, 181);
+            this.button18.Name = "button18";
+            this.button18.Size = new System.Drawing.Size(104, 23);
+            this.button18.TabIndex = 30;
+            this.button18.Text = "Stop Test";
+            this.button18.UseVisualStyleBackColor = true;
+            this.button18.Click += new System.EventHandler(this.button18_Click);
+            // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(633, 61);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(104, 20);
+            this.textBox4.TabIndex = 29;
+            this.textBox4.Text = "E7452C6D6F14";
+            this.textBox4.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
+            // 
+            // button19
+            // 
+            this.button19.Location = new System.Drawing.Point(633, 138);
+            this.button19.Name = "button19";
+            this.button19.Size = new System.Drawing.Size(104, 23);
+            this.button19.TabIndex = 28;
+            this.button19.Text = "Start Test";
+            this.button19.UseVisualStyleBackColor = true;
+            this.button19.Click += new System.EventHandler(this.button19_Click);
+            // 
+            // button20
+            // 
+            this.button20.Location = new System.Drawing.Point(633, 97);
+            this.button20.Name = "button20";
+            this.button20.Size = new System.Drawing.Size(104, 23);
+            this.button20.TabIndex = 27;
+            this.button20.Text = "Connect BLE";
+            this.button20.UseVisualStyleBackColor = true;
+            this.button20.Click += new System.EventHandler(this.button20_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(813, 450);
+            this.ClientSize = new System.Drawing.Size(1060, 450);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.button17);
+            this.Controls.Add(this.button18);
+            this.Controls.Add(this.textBox4);
+            this.Controls.Add(this.button19);
+            this.Controls.Add(this.button20);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label6);
@@ -390,6 +460,12 @@ namespace SpeedTestExample
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.Button button18;
+        private System.Windows.Forms.TextBox textBox4;
+        private System.Windows.Forms.Button button19;
+        private System.Windows.Forms.Button button20;
     }
 }
 
