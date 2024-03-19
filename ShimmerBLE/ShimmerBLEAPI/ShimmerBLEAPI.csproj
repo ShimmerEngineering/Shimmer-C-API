@@ -16,10 +16,6 @@
     <PackageReference Include="Flurl" Version="2.8.1" />
     <PackageReference Include="Flurl.Http" Version="2.4.1" />
     <PackageReference Include="Flurl.Http.Xml" Version="1.6.0" />
-    <PackageReference Include="Microsoft.AppCenter" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AppCenter.Analytics" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AppCenter.Crashes" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AppCenter.Distribute" Version="2.1.1" />
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="OxyPlot.Xamarin.Forms" Version="1.1.0-unstable0011" />
     <PackageReference Include="Plugin.BluetoothLE" Version="6.2.3" />
@@ -84,9 +80,6 @@
     </Reference>
     <Reference Include="Java.Interop">
       <HintPath>Libs\Java.Interop.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Android">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v8.1\Mono.Android.dll</HintPath>
     </Reference>
     <Reference Include="Plugin.BLE">
       <HintPath>Libs\Plugin.BLE.dll</HintPath>

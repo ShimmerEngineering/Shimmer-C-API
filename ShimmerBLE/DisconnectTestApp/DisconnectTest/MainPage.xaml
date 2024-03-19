@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DisconnectTest.MainPage">
+    <StackLayout>
+        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
+            <Label Text="Verisense Disconnect Test" HorizontalTextAlignment="Center" TextColor="White" FontSize="30"/>
+        </Frame>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ScrollView Grid.Row="1">
+                <StackLayout Orientation="Vertical" Padding="6,18,6,18" Spacing="10">
+                    <Button Margin="0,10,0,0" Clicked="scanDeviceButton_Clicked" x:Name="scanDeviceButton" HeightRequest="40" Text="Scan Device"></Button>
+                    <ListView
+                        x:Name="deviceList"
+                        HasUnevenRows="True"
+                        HeightRequest="100"
+                        ItemSelected="OnSelectedItem"
+                        SelectedItem="{Binding selectedDevice, Mode=TwoWay}"
+                        HorizontalOptions="Center"
+                        CachingStrategy="RecycleElement">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <ViewCell>
+                                    <StackLayout Orientation="Vertical" VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Label Text="{Binding Name, StringFormat='{0}'}" FontSize="Small" />
+                                        <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Small" />
+                                    </StackLayout>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <StackLayout Orientation="Vertical" Padding="6,18,6,18" Spacing="10" HorizontalOptions="Center">
+                        <Picker x:Name="picker"
+                            SelectedIndexChanged ="OnPickerSelectedIndexChanged"
+                            Title="Select your test"
+                            TitleColor="Red">
+                            <Picker.ItemsSource>
+                                <x:Array Type="{x:Type x:String}">
+                                    <x:String>Test 1</x:String>
+                                    <x:String>Test 2</x:String>
+                                    <x:String>Test 3</x:String>
+                                    <x:String>Test 4</x:String>
+                                </x:Array>
+                            </Picker.ItemsSource>
+                        </Picker>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="UUID : " WidthRequest="60" HorizontalTextAlignment="Start"/>
+                            <Entry x:Name="uuidEntry" FontSize="Micro">
+                                <Entry.WidthRequest>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS">280</On>
+                                        <On Platform="UWP,WPF">400</On>
+                                    </OnPlatform>
+                                </Entry.WidthRequest>
+                            </Entry>
+                        </StackLayout>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="Device Model : " WidthRequest="60" HorizontalTextAlignment="Start"/>
+                            <Entry x:Name="deviceModelEntry" FontSize="Small">
+                                <Entry.WidthRequest>
+                                    <OnPlatform x:TypeArguments="x:Double">
+                                        <On Platform="Android,iOS">280</On>
+                                        <On Platform="UWP,WPF">400</On>
+                                    </OnPlatform>
+                                </Entry.WidthRequest>
+                            </Entry>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Padding="6,6,6,6" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Test Iterations : " WidthRequest="180" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="totalIterationEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Bt Connection Attempt Interval(s) : " WidthRequest="270" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="intervalEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Padding="6,6,6,6" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Shimmer Status : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="statusEntry" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" Padding="6,6,6,6" Spacing="10" HorizontalOptions="Center">
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Test Progress : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="testProgressEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Success : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="successCountEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                        <StackLayout Orientation="Vertical">
+                            <Label Text="Fail : " WidthRequest="200" HeightRequest="30" HorizontalTextAlignment="Center" FontSize="Micro"/>
+                            <Entry x:Name="failureCountEntry" HorizontalTextAlignment="Center"/>
+                        </StackLayout>
+                    </StackLayout>
+                    <Button Margin="0,10,0,0" Clicked="startTestButton_Clicked" x:Name="startTestButton" HeightRequest="40" Text="Start Test"></Button>
+                    <Button Margin="0,0,0,0" Clicked="stopTestButton_Clicked" x:Name="stopTestButton" HeightRequest="40" Text="Stop Test"></Button>
+                </StackLayout>
+            </ScrollView>
+        </Grid>
+    </StackLayout>
+</ContentPage>

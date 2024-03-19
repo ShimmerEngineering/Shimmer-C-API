@@ -11,6 +11,8 @@ using shimmer.Services;
 using System.Threading.Tasks;
 using Android;
 
+using ShimmerBLEAPI.Android.Communications;
+
 namespace BLE.Client.Droid
 {
     [Activity(ScreenOrientation = ScreenOrientation.Portrait
@@ -38,6 +40,8 @@ namespace BLE.Client.Droid
 
             Android.Support.V7.Widget.Toolbar toolbar = this.FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
+
+            SerialPortByteCommunicationAndroid.setContext(Android.App.Application.Context);
         }
         private void CheckPermissions()
         {

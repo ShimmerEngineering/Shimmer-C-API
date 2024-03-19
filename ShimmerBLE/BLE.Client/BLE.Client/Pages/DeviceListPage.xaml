@@ -48,6 +48,29 @@
                     </Grid>
                 </ViewCell>
             </DataTemplate>
+            <DataTemplate x:Key="SerialDeviceItemTemplate">
+                <ViewCell>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Triggers>
+                            <DataTrigger TargetType="Grid"
+                                         Binding="{Binding IsConnected}"
+                                         Value="true">
+                                <Setter Property="BackgroundColor"
+                                        Value="#1A00FF00"></Setter>
+                            </DataTrigger>
+                        </Grid.Triggers>
+                        <StackLayout Orientation="Vertical"
+                                     VerticalOptions="Center">
+                            <Label Text="{Binding Id}"
+                                   FontSize="Small" />
+                        </StackLayout>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
         </ResourceDictionary>
     </views:MvxTabbedPage.Resources>
     <views:MvxTabbedPage.Children>
@@ -238,6 +261,7 @@
                                                 <Button Text="ReadProdConf"
                                                 Command="{Binding ReadProdConfCommand}"
                                                 HorizontalOptions="End" />
+                                                
                                             </StackLayout>
                                             <StackLayout Orientation="Horizontal">
                                                 <Button Text="ReadOpConf"
@@ -259,12 +283,21 @@
                                                 <Button Text="Upload"
                                                 Command="{Binding UploadCommand}"
                                                 HorizontalOptions="End" />
+                                                <Button Text="Soft Reset"
+                                                 Command="{Binding SoftResetCommand}"
+                                                 HorizontalOptions="End"/>
                                                 <ActivityIndicator IsRunning="{Binding IsRefreshing}"
                                            IsVisible="{Binding IsRefreshing}"
                                            HeightRequest="24"
                                            WidthRequest="24"
                                            VerticalOptions="Center"
                                            HorizontalOptions="FillAndExpand" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect Without Initialize"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ConnectWithoutInitializeCommand}"
+                                                HorizontalOptions="End" />
                                             </StackLayout>
                                         </StackLayout>
                                     </StackLayout>
@@ -413,6 +446,335 @@
                                             <Button Text="Speed Test"
                             Command="{Binding TestSpeedCommand}"
                             HorizontalOptions="End" />
+                                            <Button Text="Speed Test Stop"
+                            Command="{Binding TestSpeedStopCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Upload"
+                            Command="{Binding UploadCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Soft Reset"
+                            Command="{Binding SoftResetCommand}"
+                            HorizontalOptions="End"/>
+                                            <Button Text="Connect Without Initialize"
+                            Command="{Binding ConnectWithoutInitializeCommand}"
+                            HorizontalOptions="End" />
+                                            <!--
+                        <Button Text="Enable Acc"
+                            Command="{Binding EnableAcc}"
+                            HorizontalOptions="End" />
+                        <Button Text="Disable Acc"
+                            Command="{Binding DisableAcc}"
+                            HorizontalOptions="End" />
+                        <Button Text="Enable Acc2 Gyro"
+                            Command="{Binding EnableAcc2Gyro}"
+                            HorizontalOptions="End" />
+                        <Button Text="Disable Acc2 Gyro"
+                            Command="{Binding DisableAcc2Gyro}"
+                            HorizontalOptions="End" />
+                            -->
+                                            <ActivityIndicator IsRunning="{Binding IsRefreshing}"
+                                           IsVisible="{Binding IsRefreshing}"
+                                           HeightRequest="24"
+                                           WidthRequest="24"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="FillAndExpand" />
+                                        </StackLayout>
+                                    </ScrollView>
+                                </StackLayout>
+                            </On>
+                        </OnPlatform>
+                    </ContentView>
+                </Grid>
+            </ScrollView>
+        </ContentPage>
+        <ContentPage Title="Serial Ports">
+            <ScrollView Orientation="Vertical">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition>
+                            <RowDefinition.Height>
+                                <OnPlatform x:TypeArguments="GridLength">
+                                    <On Platform="Android,iOS">200</On>
+                                    <On Platform="UWP,WPF">400</On>
+                                </OnPlatform>
+                            </RowDefinition.Height>
+                        </RowDefinition>
+                        <RowDefinition>
+                            <RowDefinition.Height>
+                                <OnPlatform x:TypeArguments="GridLength">
+                                    <On Platform="Android,iOS">*</On>
+                                    <On Platform="UWP,WPF">*</On>
+                                </OnPlatform>
+                            </RowDefinition.Height>
+                        </RowDefinition>
+                        <RowDefinition>
+                            <RowDefinition.Height>
+                                <OnPlatform x:TypeArguments="GridLength">
+                                    <On Platform="Android,iOS">Auto</On>
+                                    <On Platform="UWP,WPF">Auto</On>
+                                </OnPlatform>
+                            </RowDefinition.Height>
+                        </RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackLayout BackgroundColor="#FF6969"
+                             Padding="10"
+                             IsVisible="{Binding IsStateOn, Converter={StaticResource InverseBoolean}}">
+                        <Label Text="{Binding StateText}"
+                           FontSize="18"
+                           HorizontalTextAlignment="Center">
+                        </Label>
+                    </StackLayout>
+                    <ContentView>
+                        <OnPlatform x:TypeArguments="View">
+                            <On Platform="UWP,Android">
+                                <ListView
+                                   ItemsSource="{Binding SerialDevices}"
+                                   SelectedItem="{Binding SelectedSerialDevice, Mode=TwoWay}"
+                                   IsPullToRefreshEnabled="True"
+                                   RefreshCommand="{Binding RefreshCommand}"
+                                   IsRefreshing="{Binding IsRefreshing, Mode=OneWay}"
+                                   RowHeight="80"
+                                   ItemTemplate="{StaticResource SerialDeviceItemTemplate}">
+                                </ListView>
+                            </On>
+                        </OnPlatform>
+                    </ContentView>
+
+                    <ContentView Grid.Row="2">
+                        <OnPlatform x:TypeArguments="View">
+                            <On Platform="Android">
+                                <ScrollView Orientation="Vertical">
+                                    <StackLayout Orientation="Vertical">
+                                        <StackLayout Orientation="Vertical">
+                                            <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                            <Label Text="1) Enable USB on your Verisense! 2) Connect your Verisense device through USB 3) Start Speed Test or Data Sync"
+                                                   Margin="10,0,10,0"
+                                                   FontSize="Small"
+                                                   TextColor="Gray"
+                                                   VerticalTextAlignment="End" />
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Button Text="Refresh"
+                                                        Margin="10,0,0,0"
+                                                        Command="{Binding RefreshCommand}"
+                                                        HorizontalOptions="End" />
+                                                </StackLayout>
+                                            <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                            <ScrollView Orientation="Horizontal">
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="{Binding DeviceState}"
+                                                       Margin="10,0,0,0"
+                                                       FontSize="Small"
+                                                       TextColor="Gray"
+                                                       VerticalTextAlignment="Start" />
+                                                    <StackLayout Orientation="Vertical">
+                                                        <Label Text="Trial Name: " Margin="10,0,0,0" VerticalTextAlignment="Center" />
+                                                        <Entry Text="{Binding TrialName}" WidthRequest="200"/>
+                                                    </StackLayout>
+                                                    <StackLayout Orientation="Vertical">
+                                                        <Label Text="Participant ID: " Margin="10,0,10,0" VerticalTextAlignment="Center" />
+                                                        <Entry Text="{Binding ParticipantID}" WidthRequest="200"/>
+                                                    </StackLayout>
+                                                </StackLayout>
+                                            </ScrollView>
+                                            <Label Text="{Binding DeviceMessage}"
+                                           Margin="10,0,10,0"
+                                           FontSize="Small"
+                                           TextColor="Gray"
+                                           VerticalTextAlignment="End" />
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Vertical">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Using Default Config:" WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <Picker ItemsSource="{Binding DeviceConfigurations}"
+                                                    SelectedItem="{Binding SelectedDeviceConfiguration, Mode=TwoWay}" >
+                                                </Picker>
+                                            </StackLayout>
+                                            <Label Text="This allows you to select the default sensor configuration upon connecting." VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Keep Device Settings : " WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <CheckBox IsChecked="{Binding KeepDeviceSettings}" WidthRequest="30" />
+                                            </StackLayout>
+                                            <Label Text="Enable this before connecting to a sensor to keep device level settings unchanged when using default config settings above." VerticalTextAlignment="Center" Margin="10,0,10,0"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Log to file (when Streaming) : " WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <CheckBox IsChecked="{Binding LogToFile}" WidthRequest="30" />
+                                            </StackLayout>
+                                            <Label Text="{Binding LogPath}" VerticalTextAlignment="Center" Margin="10,0,10,0"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Auto-Reconnect : " WidthRequest="140" VerticalTextAlignment="Center" FontSize="Small" Margin="10,0,10,0"/>
+                                                <CheckBox IsChecked="{Binding AutoReconnect}" />
+                                            </StackLayout>
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Horizontal">
+                                        </StackLayout>
+
+                                        <StackLayout Orientation="Vertical">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Connect"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ConnectCommand}"/>
+                                                <Button Text="Disconnect"
+                                                Command="{Binding DisconnectVRECommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Data Sync"
+                                                Command="{Binding DownloadDataCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Data Stream"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding StreamDataCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Stop Stream"
+                                                Command="{Binding StopStreamCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Erase Data"
+                                                Command="{Binding EraseDataCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="ReadStatus"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ReadStatusCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="ReadProdConf"
+                                                Command="{Binding ReadProdConfCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="ReadOpConf"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding ReadOpConfCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="WriteTime"
+                                                Command="{Binding WriteTimeCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="ReadTime"
+                                                Command="{Binding ReadTimeCommand}"
+                                                HorizontalOptions="End" />
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Button Text="Speed Test"
+                                                Margin="10,0,0,0"
+                                                Command="{Binding TestSpeedCommand}"
+                                                HorizontalOptions="End" />
+                                                <Button Text="Upload"
+                                                Command="{Binding UploadCommand}"
+                                                HorizontalOptions="End" />
+                                                <ActivityIndicator IsRunning="{Binding IsRefreshing}"
+                                           IsVisible="{Binding IsRefreshing}"
+                                           HeightRequest="24"
+                                           WidthRequest="24"
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="FillAndExpand" />
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </StackLayout>
+                                </ScrollView>
+                            </On>
+                            <On Platform="UWP">
+                                <StackLayout Orientation="Vertical">
+                                    <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                    <Label Text="1) Enable USB on your Verisense! 2) Connect your Verisense device through USB 3) Start Speed Test or Data Sync"
+                                       Margin="10,0,10,0"
+                                       FontSize="Small"
+                                       TextColor="Gray"
+                                       VerticalTextAlignment="End" />
+                                    <StackLayout Orientation="Horizontal">
+                                        <Button Text="Refresh"
+                                            Margin="10,0,0,0"
+                                            Command="{Binding RefreshCommand}"
+                                            HorizontalOptions="End" />
+                                    </StackLayout>
+                                    <BoxView BackgroundColor="Gray" HeightRequest="1"/>
+                                    <StackLayout Orientation="Vertical">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="{Binding DeviceState}"
+                                               FontSize="Small"
+                                               TextColor="Gray"
+                                               VerticalTextAlignment="End" />
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Trial Name: " Margin="120,0,0,0" VerticalTextAlignment="Center" />
+                                                <Entry Text="{Binding TrialName}" WidthRequest="150"/>
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="Participant ID: " VerticalTextAlignment="Center" />
+                                                <Entry Text="{Binding ParticipantID}" WidthRequest="160"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                        <Label Text="{Binding DeviceMessage}"
+                                           FontSize="Small"
+                                           TextColor="Gray"
+                                           VerticalTextAlignment="End" />
+                                    </StackLayout>
+
+                                    <StackLayout Orientation="Vertical">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Using Default Config:" WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <Picker ItemsSource="{Binding DeviceConfigurations}"
+                                SelectedItem="{Binding SelectedDeviceConfiguration, Mode=TwoWay}" >
+                                            </Picker>
+                                            <Label Text="This allows you to select the default sensor configuration upon connecting." VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Keep Device Settings : " WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding KeepDeviceSettings}" WidthRequest="30" />
+                                            <Label Text="Enable this before connecting to a sensor to keep device level settings unchanged when using default config settings above." VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Log to file (when Streaming) : " WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding LogToFile}" WidthRequest="30" />
+                                            <Label Text="{Binding LogPath}" VerticalTextAlignment="Center"/>
+                                        </StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Label Text="Auto-Reconnect : " WidthRequest="140" VerticalTextAlignment="Center"/>
+                                            <CheckBox IsChecked="{Binding AutoReconnect}" />
+                                        </StackLayout>
+                                    </StackLayout>
+
+
+                                    <StackLayout Orientation="Horizontal">
+                                    </StackLayout>
+
+                                    <ScrollView Orientation="Horizontal">
+                                        <StackLayout Orientation="Horizontal">
+                                            <Button Text="Connect"
+                            Command="{Binding ConnectCommand}"/>
+                                            <Button Text="Disconnect"
+                            Command="{Binding DisconnectVRECommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Data Sync"
+                                Command="{Binding DownloadDataCommand}"
+                                HorizontalOptions="End" />
+                                            <Button Text="Data Stream"
+                            Command="{Binding StreamDataCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Stop Stream"
+                            Command="{Binding StopStreamCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Erase Data"
+                            Command="{Binding EraseDataCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadStatus"
+                            Command="{Binding ReadStatusCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadProdConf"
+                            Command="{Binding ReadProdConfCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadOpConf"
+                            Command="{Binding ReadOpConfCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="WriteTime"
+                            Command="{Binding WriteTimeCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="ReadTime"
+                            Command="{Binding ReadTimeCommand}"
+                            HorizontalOptions="End" />
+                                            <Button Text="Speed Test"
+                            Command="{Binding TestSpeedCommand}"
+                            HorizontalOptions="End" />
                                             <Button Text="Upload"
                             Command="{Binding UploadCommand}"
                             HorizontalOptions="End" />
@@ -462,6 +824,10 @@
                         <CheckBox IsChecked="{Binding DeviceEnabled}" VerticalOptions="Start" />
                         <Label Text="Device Logging : " VerticalOptions="Start" />
                         <CheckBox IsChecked="{Binding DeviceLogging}" VerticalOptions="Start" />
+                        <Label Text="Enable Bluetooth : " VerticalOptions="Start" />
+                        <CheckBox IsChecked="{Binding BluetoothEnabled}" VerticalOptions="Start" />
+                        <Label Text="Enable USB : " VerticalOptions="Start" />
+                        <CheckBox IsChecked="{Binding USBEnabled}" VerticalOptions="Start" />
                     </StackLayout>
                     <StackLayout Orientation="Vertical">
                         <StackLayout Orientation="Horizontal">
