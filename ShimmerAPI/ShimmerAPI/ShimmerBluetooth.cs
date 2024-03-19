@@ -112,8 +112,8 @@ namespace ShimmerAPI
         protected int magSamplingRate;
         protected int NumberofChannels;
         protected int BufferSize;
-        private int FirmwareMajor;
-        private int FirmwareMinor;
+        protected int FirmwareMajor;
+        protected int FirmwareMinor;
         protected double FirmwareIdentifier;
         protected int FirmwareInternal;
         protected String FirmwareVersionFullName;
@@ -230,7 +230,7 @@ namespace ShimmerAPI
         protected GradDes3DOrientation OrientationAlgo;
 
         protected int BufferSyncSizeInSeconds = 15;
-        private static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        public static readonly DateTime UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
         protected long ShimmerRealWorldClock = 0;
         protected List<byte> UnalignedBytesReceived = new List<Byte>();
@@ -503,9 +503,14 @@ namespace ShimmerAPI
             DIR_RESPONSE = 0x88,
             GET_DIR_COMMAND = 0x89,
             INSTREAM_CMD_RESPONSE = 0x8A,
+            INFOMEM_RESPONSE = 0x8D,
+            GET_INFOMEM_COMMAND = 0x8E,
             SET_RWC_COMMAND = 0x8F,
             RWC_RESPONSE = 0x90,
             GET_RWC_COMMAND = 0x91,
+            CALIB_DUMP_RESPONSE = 0x99,
+            GET_CALIB_DUMP_COMMAND = 0x9A,
+            STOP_SDBT_COMMAND = 0x97,
             BT_FW_VERSION_STR_RESPONSE = 0xA2,
             GET_BT_FW_VERSION_STR_COMMAND = 0xA1
         };
@@ -808,6 +813,8 @@ namespace ShimmerAPI
         protected abstract void WriteBytes(byte[] b, int index, int length);
         protected abstract int ReadByte();
 
+        protected int ConnectWaitDurationinmS = 500;
+
         public void Connect()
         {
             if (!IsConnectionOpen())
@@ -823,7 +830,7 @@ namespace ShimmerAPI
                     ReadThread.Name = "Read Thread for Device: " + DeviceName;
                     ReadThread.Start();
                     // give the shimmer time to make the changes before continuing
-                    System.Threading.Thread.Sleep(500);
+                    System.Threading.Thread.Sleep(ConnectWaitDurationinmS);
                     // Read Shimmer Profile
                     if (IsConnectionOpen())
                     {
@@ -2872,6 +2879,7 @@ namespace ShimmerAPI
             SignalNameArray = signalNameArray;
             SignalDataTypeArray = signalDataTypeArray;
             PacketSize = packetSize;
+            //Debug.WriteLine("Packet Size : " + PacketSize + "  CRC Mode and starting byte not included");
         }
 
         public String[] GetSignalNameArray()

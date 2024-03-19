@@ -28,7 +28,7 @@ namespace Hoho.Android.UsbSerial.Util
             var usbPermissionReceiver = new UsbPermissionReceiver(completionSource);
             context.RegisterReceiver(usbPermissionReceiver, new IntentFilter(ACTION_USB_PERMISSION));
 
-            var intent = PendingIntent.GetBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+            var intent = PendingIntent.GetBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), PendingIntentFlags.Mutable);
             manager.RequestPermission(device, intent);
 
             return completionSource.Task;

@@ -63,6 +63,123 @@ namespace ShimmerBluetoothTests
         }
 
         [TestMethod]
+        public void CopyAndRemoveBytes_ShouldCopyCorrectNumberOfBytesAndRemoveFromSourceArray()
+        {
+            // Arrange
+            byte[] sourceArray = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
+            byte[] expectedCopiedArray = { 0x01, 0x02, 0x03, 0x04 };
+            byte[] expectedSourceArray = { 0x05, 0x06, 0x07, 0x08 };
+
+            int bytesToCopy = 4;
+
+            // Act
+            byte[] copiedArray = ProgrammerUtilities.CopyAndRemoveBytes(ref sourceArray, bytesToCopy);
+
+            // Assert
+            CollectionAssert.AreEqual(expectedCopiedArray, copiedArray, "Copied array does not match expected.");
+            CollectionAssert.AreEqual(expectedSourceArray, sourceArray, "Source array after removal does not match expected.");
+        }
+
+        [TestMethod]
+        public void AppendByteArrays_SuccessfullyAppendsArrays()
+        {
+            // Arrange
+            byte[] array1 = new byte[] { 0x01, 0x02, 0x03 };
+            byte[] array2 = new byte[] { 0x04, 0x05, 0x06 };
+            byte[] expectedArray = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 };
+
+            // Act
+            byte[] combinedArray = ProgrammerUtilities.AppendByteArrays(array1, array2);
+
+            // Assert
+            CollectionAssert.AreEqual(expectedArray, combinedArray, "Arrays should be equal after appending.");
+        }
+        [TestMethod]
+        public void AppendByteArrays_WithEmptyArray1_ReturnsArray2()
+        {
+            // Arrange
+            byte[] array1 = new byte[0];
+            byte[] array2 = new byte[] { 0x01, 0x02, 0x03 };
+
+            // Act
+            byte[] combinedArray = ProgrammerUtilities.AppendByteArrays(array1, array2);
+
+            // Assert
+            CollectionAssert.AreEqual(array2, combinedArray, "Combined array should be equal to array2.");
+        }
+
+        [TestMethod]
+        public void AppendByteArrays_WithEmptyArray2_ReturnsArray1()
+        {
+            // Arrange
+            byte[] array1 = new byte[] { 0x01, 0x02, 0x03 };
+            byte[] array2 = new byte[0];
+
+            // Act
+            byte[] combinedArray = ProgrammerUtilities.AppendByteArrays(array1, array2);
+
+            // Assert
+            CollectionAssert.AreEqual(array1, combinedArray, "Combined array should be equal to array1.");
+        }
+
+        [TestMethod]
+        public void AppendByteArrays_WithBothEmptyArrays_ReturnsEmptyArray()
+        {
+            // Arrange
+            byte[] array1 = new byte[0];
+            byte[] array2 = new byte[0];
+
+            // Act
+            byte[] combinedArray = ProgrammerUtilities.AppendByteArrays(array1, array2);
+
+            // Assert
+            CollectionAssert.AreEqual(array1, combinedArray, "Combined array should be an empty array.");
+        }
+
+        [TestMethod]
+        public void RemoveLastBytes_RemovesCorrectNumberOfBytes()
+        {
+            // Arrange
+            byte[] originalArray = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05 };
+            int numberOfBytesToRemove = 2;
+            byte[] expectedArray = new byte[] { 0x01, 0x02, 0x03 };
+
+            // Act
+            byte[] modifiedArray = ProgrammerUtilities.RemoveLastBytes(originalArray, numberOfBytesToRemove);
+
+            // Assert
+            CollectionAssert.AreEqual(expectedArray, modifiedArray, "Arrays should be equal after removing bytes.");
+        }
+
+        [TestMethod]
+        public void RemoveLastBytes_RemovesAllBytes()
+        {
+            // Arrange
+            byte[] originalArray = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05 };
+            int numberOfBytesToRemove = 5;
+
+            // Act
+            byte[] modifiedArray = ProgrammerUtilities.RemoveLastBytes(originalArray, numberOfBytesToRemove);
+            byte[] testExpectation = new byte[0];
+            // Assert
+            Assert.AreEqual(modifiedArray.Length, 0, "Modified array should be empty after removing all bytes.");
+        }
+
+        [TestMethod]
+        public void RemoveLastBytes_TriesToRemoveMoreBytesThanArrayLength()
+        {
+            // Arrange
+            byte[] originalArray = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05 };
+            int numberOfBytesToRemove = 6;
+
+            // Act
+            byte[] modifiedArray = ProgrammerUtilities.RemoveLastBytes(originalArray, numberOfBytesToRemove);
+
+            // Assert
+            Assert.AreEqual(modifiedArray,null, "Modified array should be empty when trying to remove more bytes than the array length.");
+        }
+
+        [TestMethod]
         public void TestNudgeDouble()
         {
             Assert.AreEqual(UtilCalibration.NudgeDouble(1000, 0, 500), 500);
@@ -93,6 +210,25 @@ namespace ShimmerBluetoothTests
             Assert.AreEqual(NudgeGsrResistance(5000, 3), 4700);
         }
 
+        [TestMethod]
+        public void RemoveBytesFromArray_RemovesCorrectBytes()
+        {
+            // Arrange
+            byte[] originalBytes = { 0x01, 0x02, 0x03, 0x04, 0x05 };
+            int bytesToRemove = 2;
+
+            // Act
+            byte[] modifiedBytes = ProgrammerUtilities.RemoveBytesFromArray(originalBytes, bytesToRemove);
+
+            // Assert
+            byte[] expectedBytes = { 0x03, 0x04, 0x05 };
+            Assert.AreEqual(expectedBytes.Length, modifiedBytes.Length, "Lengths should match after removing bytes");
+
+            for (int i = 0; i < expectedBytes.Length; i++)
+            {
+                Assert.AreEqual(expectedBytes[i], modifiedBytes[i], $"Byte at index {i} does not match");
+            }
+        }
 
 
         public override string GetShimmerAddress()

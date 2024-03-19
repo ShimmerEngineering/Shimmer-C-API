@@ -40,6 +40,7 @@ using ShimmerBLEAPI.UWP.Communications;
 using Newtonsoft.Json;
 using ShimmerAdvanceBLEAPI;
 using ShimmerBLEAPI.Communications;
+using shimmer.DTO;
 
 namespace BLE.Client.ViewModels
 {
@@ -2729,7 +2730,7 @@ namespace BLE.Client.ViewModels
             cloudManager.CloudManagerEvent += CloudManager_Event;
             cloudManager.DeleteAfterUpload = true;
         }
-
+        
         protected async void Connect(bool initialize = true)
         {
             if (VerisenseBLEDevice != null)
