@@ -47,5 +47,10 @@
     <Capability Name="internetClient" />
     <DeviceCapability Name="bluetooth" />
 	<DeviceCapability Name="radios" />  <!--This line is important-->
+	<DeviceCapability Name="serialcommunication">
+		<Device Id="any">
+			<Function Type="name:serialPort" />
+		</Device>
+	</DeviceCapability>
   </Capabilities>
 </Package>

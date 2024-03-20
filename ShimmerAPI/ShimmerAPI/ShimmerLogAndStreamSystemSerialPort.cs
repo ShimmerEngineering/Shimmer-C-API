@@ -26,6 +26,11 @@ namespace ShimmerAPI
         {
             ComPort = bComPort;
         }
+        public ShimmerLogAndStreamSystemSerialPort(String devName, String bComPort, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower, BTCRCMode CRCmode)
+            : base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower, CRCmode)
+        {
+            ComPort = bComPort;
+        }
 
         public ShimmerLogAndStreamSystemSerialPort(String devID, String bComPort, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
             : base(devID, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)

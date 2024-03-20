@@ -16,7 +16,7 @@ namespace shimmer.Communications
 
         event EventHandler<BLEManagerEvent> BLEManagerEvent;
         EventHandler<BLEManagerEvent> GetBLEManagerEvent();
-        
+        Task<List<string>> GetSystemConnectedOrPairedDevices();
     }
 
     /// <summary>

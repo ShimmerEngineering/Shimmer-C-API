@@ -419,11 +419,15 @@ namespace shimmer.Sensors
         /// <returns></returns>
         public double NudgeGSRResistance(double gsrResistancekOHMs) 
         {
-            if (GSRRangeSetting.GetConfigurationValue() != 4)
+            if (GSRRangeSetting.GetConfigurationValue() == 4)
             {
-                gsrResistancekOHMs = UtilCalibration.NudgeDouble(gsrResistancekOHMs, ((double[])GSRRangeSetting.GetSettingsValue())[0], ((double[])GSRRangeSetting.GetSettingsValue())[1]);
+                /* If auto-range is enabled, limit the lower range of the resistance due to circuit design */
+                return Math.Max(((double[])GSRRangeSetting.GetSettingsValue())[0], gsrResistancekOHMs);
             }
-            return gsrResistancekOHMs;
+            else
+            {
+                return UtilCalibration.NudgeDouble(gsrResistancekOHMs, ((double[])GSRRangeSetting.GetSettingsValue())[0], ((double[])GSRRangeSetting.GetSettingsValue())[1]);
+            }
         }
         /// <summary>
         /// Converts kOhms To Microsiemens

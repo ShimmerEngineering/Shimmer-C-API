@@ -17,7 +17,7 @@ namespace shimmer.Communications
     /// </summary>
     public class RadioPluginBLE : IVerisenseByteCommunication
     {
-        public int GallCallBackErrorCount = 0;
+        public int GattCallBackErrorCount = 0;
         public Guid Asm_uuid { get; set; }
         public event EventHandler<ByteLevelCommunicationEvent> CommunicationEvent;
         public IDevice ConnectedASM { get; set; }
@@ -55,7 +55,7 @@ namespace shimmer.Communications
                     var timeout = 5000;
                     cancel = new CancellationTokenSource();
                     TimeSpan timespan = new TimeSpan(0, 0, 5);
-                    Timer timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);
+                    Timer timer = new Timer(TimeoutConnect, null, 10000, Timeout.Infinite);                 
                     ConnectedASM = await adapter.ConnectToKnownDeviceAsync(Asm_uuid, new ConnectParameters(false, true),cancel.Token);
                     timer.Dispose();
                     /*if (await Task.WhenAny(task, Task.Delay(timeout)) == task)
@@ -72,7 +72,9 @@ namespace shimmer.Communications
                         localTask.TrySetResult(false);
                         return;
                     }*/
-                    await Task.Delay(500);
+
+                    ConnectedASM.UpdateConnectionInterval(ConnectionInterval.High);
+                    await ConnectedASM.RequestMtuAsync(251);
 
                     if (ConnectedASM.State != DeviceState.Connected)
                     {
@@ -80,13 +82,10 @@ namespace shimmer.Communications
                         return;
                     }
 
-                    ConnectedASM.UpdateConnectionInterval(ConnectionInterval.High);
-                    await ConnectedASM.RequestMtuAsync(251);
-
                     AdvanceLog(nameof(RadioPluginBLE), "Connect ASM Hash", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
                     await Task.Delay(500);
                     System.Console.WriteLine("Getting Service");
-                     ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
+                    ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
 
                     if (ServiceTXRX != null)
                     {
@@ -110,11 +109,12 @@ namespace shimmer.Communications
                 catch (Exception ex)
                 {
                     Debug.WriteLine("Radio Plugin BLE Exception " + ex.Message);
-                    AdvanceLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", ex.Message, Asm_uuid.ToString());
+                    NormalLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", ex.Message, Asm_uuid.ToString());
                     //GattCallback error: Failure
                     if (ex.Message.Contains("GattCallback error: Failure")) //might want to have a look at this error as well in the future GattCallback error: 133 
                     {
-                        GallCallBackErrorCount++;
+                        GattCallBackErrorCount++;
+                        NormalLog(nameof(RadioPluginBLE), "ConnectToKnownDeviceAsync Exception", "GattCallBackErrorCount", Asm_uuid.ToString());
                     }
                     foreach (IDevice device in adapter.ConnectedDevices)
                     {
@@ -190,11 +190,11 @@ namespace shimmer.Communications
         /// <returns>Disconnected or Limited <see cref="ConnectivityState"/></returns>
         public async Task<ConnectivityState> Disconnect()
         {
-            
+
             ConnectivityState state = ConnectivityState.Unknown;
             try
             {
-                
+
                 if (UartRX != null)
                 {
                     UartRX.ValueUpdated -= UartRX_ValueUpdated;
@@ -211,7 +211,7 @@ namespace shimmer.Communications
                     ServiceTXRX.Dispose();
                     ServiceTXRX = null;
                 }
-                
+
                 //ResponseBuffer = null;
 
                 if (ConnectedASM != null)
@@ -239,7 +239,7 @@ namespace shimmer.Communications
             }
             catch (Exception ex)
             {
-                AdvanceLog(nameof(RadioPluginBLE), "DisconnectException", ex.Message, Asm_uuid.ToString());
+                NormalLog(nameof(RadioPluginBLE), "DisconnectException", ex.Message, Asm_uuid.ToString());
             }
             finally
             {
@@ -247,6 +247,7 @@ namespace shimmer.Communications
                 {
                     ConnectedASM.Dispose();
                     ConnectedASM = null;
+                    Dispose(true);
                 }
             }
             return state;
@@ -271,7 +272,7 @@ namespace shimmer.Communications
                 }
                 catch (Exception ex)
                 {
-                    AdvanceLog(nameof(RadioPluginBLE), "WriteRequestException", ex.Message, Asm_uuid.ToString());
+                    NormalLog(nameof(RadioPluginBLE), "WriteRequestException", ex.Message, Asm_uuid.ToString());
                     writeTCS.TrySetResult(false);
                 }
             });
@@ -321,7 +322,7 @@ namespace shimmer.Communications
                     }
                     catch (Exception ex)
                     {
-                        AdvanceLog(nameof(RadioPluginBLE), "Dispose Exception", ex.Message, Asm_uuid.ToString());
+                        NormalLog(nameof(RadioPluginBLE), "Dispose Exception", ex.Message, Asm_uuid.ToString());
                     }
                     finally
                     {
@@ -329,6 +330,7 @@ namespace shimmer.Communications
                         {
                             ConnectedASM.Dispose();
                         }
+                        adapter.DeviceConnected -= Adapter_DeviceConnected;
                         adapter.DeviceDisconnected -= Adapter_DeviceDisconnected;
                         adapter.DeviceConnectionLost -= Adapter_DeviceConnectionLost;
 
@@ -356,6 +358,13 @@ namespace shimmer.Communications
         /// <param name="Data"></param>
         /// <param name="asmid"></param>
         public virtual void AdvanceLog(string ObjectName, string Action, object Data, string asmid)
+        {
+            //Just print to console
+            System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+            Debug.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
+        }
+
+        public virtual void NormalLog(string ObjectName, string Action, object Data, string asmid)
         {
             //Just print to console
             System.Console.WriteLine(ObjectName + " " + Action + " " + Data + " " + asmid);
