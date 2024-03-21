@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShimmerBLEAPI\ShimmerBLEAPI.csproj" />
+    <ProjectReference Include="..\UsbSerialForAndroid\UsbSerialForAndroid.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Android">
+		<HintPath>..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Community2\Common7\IDE\ReferenceAssemblies\Microsoft\Framework\MonoAndroid\v12.0\Mono.Android.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.BLE">
+      <HintPath>..\ShimmerBLEAPI\Libs\Plugin.BLE.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.BLE.Abstractions">
+      <HintPath>..\ShimmerBLEAPI\Libs\Plugin.BLE.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

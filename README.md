@@ -1,5 +1,12 @@
-# Shimmer-C-API
-The Shimmer C# API is used to control and stream data from a Shimmer3 Bluetooth Device running LogAndStream firmware. **First open the ShimmerAPI solution. The examples will be opened along with the ShimmerAPI project. Build the ShimmerAPI first before proceeding to using the examples as the examples references the ShimmerAPI dll**.
+# Shimmer C# API
+
+The Shimmer C# API is used to control and stream data from both a Verisense Device and a Shimmer3 Bluetooth Device running LogAndStream firmware. 
+
+## Verisense
+As a starting point please refer to the [readme](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE) and [wiki](https://github.com/ShimmerEngineering/Shimmer-C-API/wiki/Verisense-General)
+
+## Shimmer 3
+**First open the ShimmerAPI solution. The examples will be opened along with the ShimmerAPI project. Build the ShimmerAPI first before proceeding to using the examples as the examples references the ShimmerAPI dll**.
 
 This API is broken into the following projects, please refer to the Readme of each project for further info
 
@@ -29,7 +36,14 @@ NOTE: The ShimmerClosedLibrary provides
 - ECG to Heart Rate/Inter Beat Interval(IBI) algorithm
 - PPG to Heart Rate/Inter Beat Interval(IBI) algorithm
 
+NOTE: Currently we are in the process of updating to the use of .net standard, previous .net framework versions can be found in the links below
+- [NET3.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET3.5) 
+- [NET4.5](https://github.com/ShimmerEngineering/Shimmer-C-API/tree/NET4.5)
+
+
 User's should note that IBI derived from ECG is more accurate than IBI derived from PPG.
+# Rev 1.0.2
+- Prior to switching to the use of the .net standard
 
 # Rev 1.0.1
 - Bugfix for #14 (internal reference: CCF18-036)

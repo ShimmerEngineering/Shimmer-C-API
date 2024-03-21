@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShimmerAPI</RootNamespace>
     <AssemblyName>ShimmerCapture v0.7</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -119,6 +119,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Ports, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\ShimmerAPI\packages\System.IO.Ports.5.0.1\lib\net461\System.IO.Ports.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -204,6 +207,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Control.resx">
       <DependentUpon>Control.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Configuration.resx">
       <DependentUpon>Configuration.cs</DependentUpon>
@@ -287,8 +291,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Shimmer32FeetAPI\Shimmer32FeetAPI.csproj">
+      <Project>{843a9807-2d14-42d4-866c-f898f46056e4}</Project>
+      <Name>Shimmer32FeetAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ShimmerAPI\ShimmerAPI\ShimmerAPI.csproj">
-      <Project>{428cb744-8e79-4f56-9d71-b9027f4113da}</Project>
+      <Project>{6e320423-1d88-47ee-97ba-51113e538d33}</Project>
       <Name>ShimmerAPI</Name>
     </ProjectReference>
   </ItemGroup>

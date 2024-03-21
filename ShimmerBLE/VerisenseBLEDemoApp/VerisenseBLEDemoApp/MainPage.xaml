@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VerisenseBLEDemoApp.MainPage">
+    <ScrollView Orientation="Vertical">
+        <StackLayout>
+            <ScrollView Orientation="Horizontal">
+                <StackLayout Padding='0,30,0,0'
+                 Orientation="Horizontal">
+                    <Label Text="Trial Name: " VerticalTextAlignment="Center" />
+                    <Entry Text="{Binding TrialName}"/>
+
+                    <Label Text="Participant ID: " VerticalTextAlignment="Center" />
+                    <Entry Text="{Binding ParticipantID}"/>
+                </StackLayout>
+            </ScrollView>
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Start Demo"
+                            Command="{Binding StartDemo}"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedStartDemo"
+                IsEnabled="{Binding ShowStartDemoButton}"/>
+                <Button Text="Stop Demo"
+                            Command="{Binding StopDemo}"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedStopDemo"
+                IsEnabled="{Binding ShowStopDemoButton}"/>
+            </StackLayout>
+            <Label Text="Bluetooth Manager:" FontSize="Small"/>
+            <Label x:Name="LBLScanning"  Text="Scan Results" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+            <Button Text="Scan"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedScan"/>
+            <Label x:Name="LBLPairingKey" Text="Pairing Key"  FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" >
+                <Label.IsVisible>
+                    <OnPlatform x:TypeArguments="x:Boolean">
+                        <On Platform="Android">false</On>
+                        <On Platform="iOS">true</On>
+                        <On Platform="UWP">false</On>
+                    </OnPlatform>
+                </Label.IsVisible>
+            </Label>
+            <Label x:Name="LBLPairing" Text="Pairing Result"  FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+            <Button Text="Pair Device" HorizontalOptions="Start" 
+                Clicked="OnButtonClickedPair"/>
+            <Label Text="Verisense Device:" FontSize="Small"/>
+            <StackLayout Orientation="Horizontal">
+            <Label Text="Auto Reconnect : " FontSize="Micro" VerticalTextAlignment="Center"/>
+            <CheckBox CheckedChanged="OnCheckBoxCheckedChanged" />
+        </StackLayout>
+        <Label x:Name="LBLDeviceState"  Text="Device State" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Connect"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedConnect"/>
+            <Button Text="Disconnect"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedDisconnect"/>
+        </StackLayout>
+        <Label x:Name="LBLProdConfig"  Text="Production Config" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <Button Text="Read Production Config"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedReadProdConf"/>
+        <Label x:Name="LBLStatusConfig"  Text="Device Status" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <Button Text="Read Status Config"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedReadStatusConf"/>
+        <Label x:Name="LBLOpConfig"  Text="Operational Config" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <Button Text="Write Configuration"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedConfigure"/>
+        <Label x:Name="LBLStreaming" Text="Streaming Data" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <StackLayout Orientation="Horizontal">
+            <Button Text="StartStreaming"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedStartStreaming"/>
+            <Button Text="StopStreaming"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedStopStreaming"/>
+        </StackLayout>
+        <Label x:Name="LBLTransferLoggedData" Text="Transfer Status" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <Button Text="Transfer Logged Data"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedTransferLoggedData"/>
+        <Label Text="S3 Cloud Manager:" FontSize="Small"/>
+        <Label x:Name="LBLCloud"  Text="Upload Status" FontSize="Micro"
+                           TextColor="Gray"
+                           VerticalTextAlignment="Start" />
+        <Button Text="Upload"
+                            HorizontalOptions="Start" 
+                Clicked="OnButtonClickedUpload"/>
+        
+    </StackLayout>
+    </ScrollView>
+</ContentPage>

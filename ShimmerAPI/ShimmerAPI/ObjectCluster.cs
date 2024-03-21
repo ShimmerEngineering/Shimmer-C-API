@@ -106,6 +106,19 @@ namespace ShimmerAPI
             return sensorData;
         }
 
+        public SensorData GetData(String name, String format, String unit)
+        {
+            SensorData sensorData = null;
+            for (int i = 0; i < SignalNames.Count; i++)
+            {
+                if (SignalNames[i].Equals(name) && Format[i].Equals(format) && Units[i].Equals(unit))
+                {
+                    sensorData = new SensorData(Units[i], Data[i]);
+                }
+            }
+            return sensorData;
+        }
+
         public String GetCOMPort()
         {
             return COMPort;

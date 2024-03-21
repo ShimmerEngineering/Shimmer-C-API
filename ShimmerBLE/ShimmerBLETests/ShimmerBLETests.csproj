@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="7.1.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShimmerBLEAPI\ShimmerBLEAPI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ShimmerAPI">
+      <HintPath>..\..\ShimmerAPI\ShimmerAPI\bin\Debug\netstandard2.0\ShimmerAPI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

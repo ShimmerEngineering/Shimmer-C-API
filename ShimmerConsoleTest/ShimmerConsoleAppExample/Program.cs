@@ -38,7 +38,7 @@ namespace ShimmerConsoleAppExample
             byte[] defaultECGReg1 = ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG1; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG1
             byte[] defaultECGReg2 = ShimmerBluetooth.SHIMMER3_DEFAULT_TEST_REG2; //also see ShimmerBluetooth.SHIMMER3_DEFAULT_ECG_REG2
             //The constructor below allows the user to specify the shimmer configurations which is set upon connection to the device
-            shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM12", 1, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
+            shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM11", 1, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
             //shimmer = new ShimmerLogAndStreamSystemSerialPort("ShimmerID1", "COM35", 1, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
 
             //shimmer = new ShimmerLogAndStream32Feet("ShimmerID1", "00:06:66:66:96:A9", 1, 0, 4, enabledSensors, false, false, false, 0, 0, defaultECGReg1, defaultECGReg2, false);
