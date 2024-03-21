@@ -20,20 +20,19 @@ namespace _32FeetConsoleAppLib
         {
             try
             {
-                if (args.Length > 0)
+                Console.WriteLine("Please Key In Shimmer Address You Want To Pair:");
+                string keyinAddress = Console.ReadLine();
+                BluetoothAddress address = BluetoothAddress.Parse(keyinAddress);
+                bool isPaired = BluetoothSecurity.PairRequest(address, "1234");
+                if (isPaired)
                 {
-                    //"00066679E454"
-                    BluetoothAddress address = BluetoothAddress.Parse(args[0]);
-                    bool isPaired = BluetoothSecurity.PairRequest(address, "1234");
-                    if (isPaired)
-                    {
-                        BluetoothDeviceInfo bdinfo = new BluetoothDeviceInfo(address);
-                        bdinfo.SetServiceState(BluetoothService.SerialPort, true, true);
-                        Console.WriteLine(bdinfo.DeviceAddress + " Is Paired");
-                    }
+                    BluetoothDeviceInfo bdinfo = new BluetoothDeviceInfo(address);
+                    bdinfo.SetServiceState(BluetoothService.SerialPort, true, true);
+                    Console.WriteLine(bdinfo.DeviceAddress + " Is Paired");
                 }
-                
-            } catch (Exception ex)
+
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Fail");
             }
