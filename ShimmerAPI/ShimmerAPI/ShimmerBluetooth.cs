@@ -5193,6 +5193,11 @@ namespace ShimmerAPI
             System.Threading.Thread.Sleep(200);
         }
 
+        public BTCRCMode GetCRCMode()
+        {
+            return BluetoothCRCMode;
+        }
+
         public void WriteCRCMode(BTCRCMode mode) {
             if (IsCRCSupported())
             {
