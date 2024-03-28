@@ -1519,7 +1519,6 @@ namespace ShimmerAPI
 
             if (state == (int)ShimmerBluetooth.SHIMMER_STATE_CONNECTED)
             {
-
                 if (ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
                 {
                     button2.Visible = true;
@@ -1545,6 +1544,15 @@ namespace ShimmerAPI
                     {
                         checkBoxCRC.Visible = true;
                         checkBoxCRC.Enabled = true;
+
+                        if (ShimmerDevice.GetCRCMode().Equals(ShimmerBluetooth.BTCRCMode.OFF))
+                        {
+                            checkBoxCRC.Checked = false;
+                        } else
+                        {
+                            checkBoxCRC.Checked = true;
+                        }
+
                     } else
                     {
                         checkBoxCRC.Visible = false;
