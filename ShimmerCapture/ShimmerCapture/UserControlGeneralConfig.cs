@@ -70,6 +70,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Text = "ECG";                  //Change ExG -> ECG/EMG
                     checkBoxSensor16.Text = "EMG";
                     checkBoxSensor17.Text = "ExG Test Signal";
+                    checkBoxSensor23.Text = "Respiration";
 
                     checkBoxSensor19.Text = "Bridge Amplifier";
                     checkBoxSensor11.Visible = true;
@@ -180,12 +181,14 @@ namespace ShimmerAPI
                         checkBoxSensor15.Enabled = true;
                         checkBoxSensor16.Enabled = true;
                         checkBoxSensor17.Enabled = true;
+                        checkBoxSensor23.Enabled = true;
                     }
                     else
                     {
                         checkBoxSensor15.Enabled = false;
                         checkBoxSensor16.Enabled = false;
                         checkBoxSensor17.Enabled = false;
+                        checkBoxSensor23.Enabled = false;
                     }
                     // strain gauge only supported from BTStream 0.3.1 onwards. 
                     if (PConfiguration.PControlForm.ShimmerDevice.VersionLaterThan(1, 0, 2, 8) ||
@@ -219,6 +222,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Visible = false;
                     checkBoxSensor16.Visible = false;
                     checkBoxSensor17.Visible = false;
+                    checkBoxSensor23.Visible = false;
 
                     checkBoxSensor19.Visible = false;
 
@@ -964,12 +968,14 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = true; //15 ecg 
                             checkBoxSensor16.Checked = false;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
                         }
                         else if (PConfiguration.PControlForm.ShimmerDevice.IsDefaultEMGConfigurationEnabled())
                         {
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = true;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
 
                         }
                         else if (PConfiguration.PControlForm.ShimmerDevice.IsDefaultExgTestSignalConfigurationEnabled())
@@ -977,12 +983,21 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = false;
                             checkBoxSensor17.Checked = true;
+                            checkBoxSensor23.Checked = false;
+                        }
+                        else if (PConfiguration.PControlForm.ShimmerDevice.IsDefaultRespirationConfigurationEnabled())
+                        {
+                            checkBoxSensor15.Checked = false; //15 ecg 
+                            checkBoxSensor16.Checked = false;
+                            checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = true;
                         }
                         else
                         {
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = false;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
                         }
                     }
                     else if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0)
@@ -993,6 +1008,7 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = true;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
                         }
 
                     }
@@ -1004,7 +1020,7 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = true; //15 ecg 
                             checkBoxSensor16.Checked = false;
                             checkBoxSensor17.Checked = false;
-
+                            checkBoxSensor23.Checked = false;
 
                         }
                         else if (PConfiguration.PControlForm.ShimmerDevice.IsDefaultEMGConfigurationEnabled())
@@ -1012,6 +1028,7 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = true;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
 
                         }
                         else if (PConfiguration.PControlForm.ShimmerDevice.IsDefaultExgTestSignalConfigurationEnabled())
@@ -1019,12 +1036,21 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = false;
                             checkBoxSensor17.Checked = true;
+                            checkBoxSensor23.Checked = false;
+                        }
+                        else if (PConfiguration.PControlForm.ShimmerDevice.IsDefaultRespirationConfigurationEnabled())
+                        {
+                            checkBoxSensor15.Checked = false; //15 ecg 
+                            checkBoxSensor16.Checked = false;
+                            checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = true;
                         }
                         else
                         {
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = false;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
 
                         }
                     }
@@ -1036,6 +1062,7 @@ namespace ShimmerAPI
                             checkBoxSensor15.Checked = false; //15 ecg 
                             checkBoxSensor16.Checked = true;
                             checkBoxSensor17.Checked = false;
+                            checkBoxSensor23.Checked = false;
 
                         }
                     }
@@ -1047,7 +1074,7 @@ namespace ShimmerAPI
                     }
                     if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0 || (enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0 || (enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0 || (enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)
                     {
-                        if (!PConfiguration.PControlForm.ShimmerDevice.IsDefaultECGConfigurationEnabled() && !PConfiguration.PControlForm.ShimmerDevice.IsDefaultEMGConfigurationEnabled() && !PConfiguration.PControlForm.ShimmerDevice.IsDefaultExgTestSignalConfigurationEnabled())
+                        if (!PConfiguration.PControlForm.ShimmerDevice.IsDefaultECGConfigurationEnabled() && !PConfiguration.PControlForm.ShimmerDevice.IsDefaultEMGConfigurationEnabled() && !PConfiguration.PControlForm.ShimmerDevice.IsDefaultExgTestSignalConfigurationEnabled() && !PConfiguration.PControlForm.ShimmerDevice.IsDefaultRespirationConfigurationEnabled())
                         {
                             MessageBox.Show("Custom ExG Configuration Detected.", Control.ApplicationName,
                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -1366,6 +1393,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
 
                     groupBoxECGtoHR.Enabled = false;
                     checkBoxEnableECGtoHR.Checked = false;
@@ -1410,6 +1438,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
 
                     checkBoxSensor19.Checked = false;
                     groupBoxECGtoHR.Enabled = false;
@@ -1463,6 +1492,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
 
                     checkBoxSensor19.Checked = false;
                     if (checkBoxIntExpPower.Checked)
@@ -1509,6 +1539,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     checkBoxSensor19.Checked = false;
                     groupBoxECGtoHR.Enabled = false;
                     checkBoxEnableECGtoHR.Checked = false;
@@ -1583,6 +1614,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     checkBoxSensor19.Checked = false;
                     groupBoxECGtoHR.Enabled = false;
                     checkBoxEnableECGtoHR.Checked = false;
@@ -1677,6 +1709,7 @@ namespace ShimmerAPI
 
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
 
                     comboBoxExGResolution.SelectedIndex = 0;
                     comboBoxExgGain.SelectedIndex = 6;
@@ -1718,6 +1751,7 @@ namespace ShimmerAPI
 
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     comboBoxExGResolution.Enabled = true;
                     comboBoxExgGain.Enabled = true;
                     comboBoxExGResolution.SelectedIndex = 0;
@@ -1729,6 +1763,48 @@ namespace ShimmerAPI
             }
         }
 
+        private void checkBoxSensor23_Click(object sender, EventArgs e)
+        {
+            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+            {
+                if (checkBoxSensor23.Checked)
+                {
+                    byte[] exg1Reg = { 2, 168, 16, 64, 64, 32, 0, 0, 2, 1 };
+                    byte[] exg2Reg = { 2, 160, 16, 64, 64, 0, 0, 0, 234, 1 };
+                    string sr = PConfiguration.userControlGeneralConfig1.comboBoxSamplingRate.SelectedItem.ToString();
+                    string subsr = sr.Substring(0, sr.Length - 2);
+                    double samplingRate = Double.Parse(subsr);
+
+                    int exgSR = getExGSamplingSetting(samplingRate);
+
+                    //adjust for sampling rate
+                    exg1Reg[0] = (byte)(((exg1Reg[0] >> 3) << 3) | exgSR);
+                    exg2Reg[0] = (byte)(((exg2Reg[0] >> 3) << 3) | exgSR);
+
+                    byte[] reg1 = PConfiguration.ExgReg1UI;
+                    byte[] reg2 = PConfiguration.ExgReg2UI;
+                    byte byte4exg1 = (byte)((exg1Reg[3] & 143) | (0x40)); // recommended ExG gain for ExG Test Signal is 4 (0x40 byte value) so set this when ExG Test enabled
+                    byte byte5exg1 = (byte)((exg1Reg[4] & 143) | (0x40));
+                    byte byte4exg2 = (byte)((exg2Reg[3] & 143) | (0x40));
+                    byte byte5exg2 = (byte)((exg2Reg[4] & 143) | (0x40));
+                    exg1Reg[3] = byte4exg1;
+                    exg1Reg[4] = byte5exg1;
+                    exg2Reg[3] = byte4exg2;
+                    exg2Reg[4] = byte5exg2;
+
+                    checkBoxSensor15.Checked = false;
+                    checkBoxSensor16.Checked = false;
+                    checkBoxSensor17.Checked = false;
+                    comboBoxExGResolution.Enabled = true;
+                    comboBoxExgGain.Enabled = true;
+                    comboBoxExGResolution.SelectedIndex = 0;
+                    comboBoxExgGain.SelectedIndex = 3;
+
+                    PConfiguration.ExgReg1UI = exg1Reg;
+                    PConfiguration.ExgReg2UI = exg2Reg;
+                }
+            }
+        }
 
 
         private void checkBoxSensor19_Click(object sender, EventArgs e)
@@ -1744,6 +1820,7 @@ namespace ShimmerAPI
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     groupBoxPPGtoHR.Enabled = false;
                     checkBoxEnablePPGtoHR.Checked = false;
                     groupBoxECGtoHR.Enabled = false;
@@ -2245,6 +2322,21 @@ namespace ShimmerAPI
                     PConfiguration.PControlForm.ShimmerDevice.WriteEXGConfigurations(PConfiguration.ExgReg1UI, PConfiguration.ExgReg2UI);
                 }
 
+                if (checkBoxSensor23.Checked)
+                {
+                    if (comboBoxExGResolution.SelectedIndex == 0)
+                    {
+                        ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT;
+                        ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT;
+                    }
+                    else
+                    {
+                        ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT;
+                        ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT;
+                    }
+                    PConfiguration.PControlForm.ShimmerDevice.WriteEXGConfigurations(PConfiguration.ExgReg1UI, PConfiguration.ExgReg2UI);
+                }
+
                 if (checkBoxSensor19.Checked)
                 {
                     ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP;
@@ -2428,6 +2520,20 @@ namespace ShimmerAPI
 
                 }
                 if (checkBoxSensor17.Checked)
+                {
+                    if (comboBoxExGResolution.SelectedIndex == 0)
+                    {
+                        returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT;
+                        returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT;
+                    }
+                    else
+                    {
+                        returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT;
+                        returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT;
+                    }
+
+                }
+                if (checkBoxSensor23.Checked)
                 {
                     if (comboBoxExGResolution.SelectedIndex == 0)
                     {
@@ -2873,6 +2979,7 @@ namespace ShimmerAPI
                     checkBoxSensor14.Checked = false;
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     checkBoxSensor19.Checked = false;
                     groupBoxPPGtoHR.Enabled = false;
                     checkBoxEnablePPGtoHR.Checked = false;
@@ -2921,7 +3028,8 @@ namespace ShimmerAPI
 
                     checkBoxSensor16.Checked = false;
                     checkBoxSensor17.Checked = false;
-                    
+                    checkBoxSensor23.Checked = false;
+
                     comboBoxExGResolution.Enabled = true;
                     comboBoxExgGain.Enabled = true;
 
@@ -2934,7 +3042,7 @@ namespace ShimmerAPI
                     comboBoxExgGain.Enabled = false;
                     groupBoxECGtoHR.Enabled = false;
                     checkBoxEnableECGtoHR.Checked = false;
-                    if (!checkBoxSensor16.Checked && !checkBoxSensor17.Checked)
+                    if (!checkBoxSensor16.Checked && !checkBoxSensor17.Checked && !checkBoxSensor23.Checked)
                     {
                         PConfiguration.tabControl1.TabPages[1].Enabled = false;
                     }
@@ -2996,6 +3104,7 @@ namespace ShimmerAPI
                     checkBoxSensor14.Checked = false;
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     checkBoxSensor19.Checked = false;
                     groupBoxPPGtoHR.Enabled = false;
                     checkBoxEnablePPGtoHR.Checked = false;
@@ -3045,6 +3154,7 @@ namespace ShimmerAPI
 
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor17.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     comboBoxExGResolution.Enabled = true;
                     comboBoxExgGain.Enabled = true;
 
@@ -3056,7 +3166,7 @@ namespace ShimmerAPI
                 {
                     comboBoxExGResolution.Enabled = false;
                     comboBoxExgGain.Enabled = false;
-                    if (!checkBoxSensor15.Checked && !checkBoxSensor17.Checked)
+                    if (!checkBoxSensor15.Checked && !checkBoxSensor17.Checked && !checkBoxSensor23.Checked)
                     {
                         PConfiguration.tabControl1.TabPages[1].Enabled = false;
                     }
@@ -3090,6 +3200,7 @@ namespace ShimmerAPI
                     checkBoxSensor14.Checked = false;
                     checkBoxSensor15.Checked = false;
                     checkBoxSensor16.Checked = false;
+                    checkBoxSensor23.Checked = false;
                     checkBoxSensor19.Checked = false;
                     groupBoxPPGtoHR.Enabled = false;
                     checkBoxEnablePPGtoHR.Checked = false;
@@ -3152,7 +3263,7 @@ namespace ShimmerAPI
                     comboBoxExgGain.Enabled = false;
                     groupBoxECGtoHR.Enabled = false;
                     checkBoxEnableECGtoHR.Checked = false;
-                    if (!checkBoxSensor15.Checked && !checkBoxSensor16.Checked)
+                    if (!checkBoxSensor15.Checked && !checkBoxSensor16.Checked && !checkBoxSensor23.Checked)
                     {
                         PConfiguration.tabControl1.TabPages[1].Enabled = false;
                     }
@@ -3167,6 +3278,92 @@ namespace ShimmerAPI
                 else
                 {
 
+                }
+            }
+        }
+
+        private void checkBoxSensor23_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+            {
+                if (checkBoxSensor23.Checked)
+                {
+
+                    checkBoxSensor12.Checked = false;
+                    checkBoxSensor9.Checked = false;
+                    checkBoxSensor10.Checked = false;
+                    checkBoxSensor11.Checked = false;
+                    checkBoxSensor14.Checked = false;
+                    checkBoxSensor15.Checked = false;
+                    checkBoxSensor16.Checked = false;
+                    checkBoxSensor17.Checked = false;
+                    checkBoxSensor19.Checked = false;
+                    groupBoxPPGtoHR.Enabled = false;
+                    checkBoxEnablePPGtoHR.Checked = false;
+                    groupBoxECGtoHR.Enabled = false;
+                    //Enable ExG tab
+                    PConfiguration.tabControl1.TabPages[1].Enabled = true;
+
+                    checkBoxSensor18.Visible = false;
+                    checkBoxSensor18.Enabled = false;
+                    checkBoxSensor18.Checked = false;
+                    checkBoxSensor20.Visible = false;
+                    checkBoxSensor20.Enabled = false;
+                    checkBoxSensor20.Checked = false;
+                    checkBoxSensor21.Visible = false;
+                    checkBoxSensor21.Enabled = false;
+                    checkBoxSensor21.Checked = false;
+                    checkBoxSensor22.Visible = false;
+                    checkBoxSensor22.Enabled = false;
+                    checkBoxSensor22.Checked = false;
+
+                    byte[] exg1Reg = { 2, 168, 16, 64, 64, 32, 0, 0, 2, 1 };
+                    byte[] exg2Reg = { 2, 160, 16, 64, 64, 0, 0, 0, 234, 1 };
+                    string sr = PConfiguration.userControlGeneralConfig1.comboBoxSamplingRate.SelectedItem.ToString();
+                    string subsr = sr.Substring(0, sr.Length - 2);
+                    double samplingRate = Double.Parse(subsr);
+
+                    int exgSR = getExGSamplingSetting(samplingRate);
+
+                    //adjust for sampling rate
+                    exg1Reg[0] = (byte)(((exg1Reg[0] >> 3) << 3) | exgSR);
+                    exg2Reg[0] = (byte)(((exg2Reg[0] >> 3) << 3) | exgSR);
+
+                    if (comboBoxExgGain.SelectedIndex != 7) // if not custom, adjust according to comboboxexggain
+                    {
+                        int gain = (int)Double.Parse(PConfiguration.userControlGeneralConfig1.comboBoxExgGain.SelectedItem.ToString());
+                        int gainSetting = ConvertEXGGainValuetoSetting(gain);
+                        byte byte4exg1 = (byte)((exg1Reg[3] & 143) | (gainSetting << 4));
+                        byte byte5exg1 = (byte)((exg1Reg[4] & 143) | (gainSetting << 4));
+                        byte byte4exg2 = (byte)((exg2Reg[3] & 143) | (gainSetting << 4));
+                        byte byte5exg2 = (byte)((exg2Reg[4] & 143) | (gainSetting << 4));
+                        exg1Reg[3] = byte4exg1;
+                        exg1Reg[4] = byte5exg1;
+                        exg2Reg[3] = byte4exg2;
+                        exg2Reg[4] = byte5exg2;
+                    }
+
+                    checkBoxSensor15.Checked = false;
+                    checkBoxSensor16.Checked = false;
+                    checkBoxSensor17.Checked = false;
+                    comboBoxExGResolution.Enabled = true;
+                    comboBoxExgGain.Enabled = true;
+
+                    PConfiguration.ExgReg1UI = exg1Reg;
+                    PConfiguration.ExgReg2UI = exg2Reg;
+
+                }
+                else
+                {
+                    comboBoxExGResolution.Enabled = false;
+                    comboBoxExgGain.Enabled = false;
+                    groupBoxECGtoHR.Enabled = false;
+                    checkBoxEnableECGtoHR.Checked = false;
+                    if (!checkBoxSensor15.Checked && !checkBoxSensor16.Checked && !checkBoxSensor17.Checked)
+                    {
+                        PConfiguration.tabControl1.TabPages[1].Enabled = false;
+                    }
                 }
             }
         }
@@ -3426,6 +3623,7 @@ namespace ShimmerAPI
             }
             return isUsing;
         }
+
         /// <summary>
         /// This can be used to check the registers on the ExG Daughter board and determine whether it is using default EMG configurations
         /// </summary>
@@ -3434,6 +3632,21 @@ namespace ShimmerAPI
         {
             bool isUsing = false;
             if (((Exg1RegArray[3] & 15) == 9) && ((Exg1RegArray[4] & 15) == 0) && ((Exg2RegArray[3] & 15) == 1) && ((Exg2RegArray[4] & 15) == 1))
+            {
+                isUsing = true;
+            }
+
+            return isUsing;
+        }
+
+        /// <summary>
+        /// This can be used to check the registers on the ExG Daughter board and determine whether it is using default respiration configurations
+        /// </summary>
+        /// <returns>Returns true if default respiration configurations is being used</returns>
+        public bool IsDefaultRespirationConfigurationEnabled(byte[] Exg1RegArray, byte[] Exg2RegArray)
+        {
+            bool isUsing = false;
+            if (((Exg1RegArray[3] & 15) == 0) && ((Exg1RegArray[4] & 15) == 0) && ((Exg2RegArray[3] & 15) == 0) && ((Exg2RegArray[4] & 15) == 0))
             {
                 isUsing = true;
             }
@@ -3533,6 +3746,10 @@ namespace ShimmerAPI
             else if (IsDefaultECGConfigurationEnabled(reg1, reg2) && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)) || (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) && ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0))))
             {
                 checkBoxSensor15.Checked = true;
+            }
+            else if (IsDefaultRespirationConfigurationEnabled(reg1, reg2) && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)) || (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) && ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0))))
+            {
+                checkBoxSensor23.Checked = true;
             }
             else
             {

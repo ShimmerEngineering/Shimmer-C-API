@@ -682,6 +682,8 @@ namespace ShimmerAPI
         public static readonly byte[] SHIMMER3_DEFAULT_EMG_REG2 = new byte[10] { 0x00, 0xA0, 0x10, 0xE1, 0xE1, 0x00, 0x00, 0x00, 0x02, 0x01 };
         public static readonly byte[] SHIMMER3_DEFAULT_TEST_REG1 = new byte[10] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
         public static readonly byte[] SHIMMER3_DEFAULT_TEST_REG2 = new byte[10] { 0x00, 0xA3, 0x10, 0x45, 0x45, 0x00, 0x00, 0x00, 0x02, 0x01 };
+        public static readonly byte[] SHIMMER3_DEFAULT_RESPIRATION_REG1 = new byte[10] { 0x02, 0xA8, 0x10, 0x40, 0x40, 0x20, 0x00, 0x00, 0x02, 0x03 };
+        public static readonly byte[] SHIMMER3_DEFAULT_RESPIRATION_REG2 = new byte[10] { 0x02, 0xA0, 0x10, 0x40, 0x40, 0x00, 0x00, 0x00, 0xEA, 0x01 };
 
 
 
@@ -709,8 +711,8 @@ namespace ShimmerAPI
         /// <param name="devName">User Defined Device Name</param>
         /// <param name="samplingRate">Sampling rate in Hz</param>
         /// <param name="setEnabledSensors">see Shimmer.SensorBitmapShimmer3</param>
-        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param>
-        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param>
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1/SHIMMER3_DEFAULT_RESPIRATION_REG1</param>
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2/SHIMMER3_DEFAULT_RESPIRATION_REG2</param>
         public ShimmerBluetooth(String devName, double samplingRate, int setEnabledSensors, byte[] exg1configuration, byte[] exg2configuration)
         {
             DeviceName = devName;
@@ -735,8 +737,8 @@ namespace ShimmerAPI
         /// <param name="enableLowPowerMag"></param>
         /// <param name="gyroRange">Options are 0,1,2,3. Where 0 = 250 Degree/s, 1 = 500 Degree/s, 2 = 1000 Degree/s, 3 = 2000 Degree/s</param>
         /// <param name="magRange">Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1</param>
-        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1</param> , note that the EXG data rate is automatically updated based on the Shimmer sampling rate
-        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2</param> , note that the EXG data rate is automatically updated based on the Shimmer sampling rate
+        /// <param name="exg1configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG1/SHIMMER3_DEFAULT_EMG_REG1/SHIMMER3_DEFAULT_TEST_REG1/SHIMMER3_DEFAULT_RESPIRATION_REG1</param> , note that the EXG data rate is automatically updated based on the Shimmer sampling rate
+        /// <param name="exg2configuration">10 byte value, see SHIMMER3_DEFAULT_ECG_REG2/SHIMMER3_DEFAULT_EMG_REG2/SHIMMER3_DEFAULT_TEST_REG2/SHIMMER3_DEFAULT_RESPIRATION_REG2</param> , note that the EXG data rate is automatically updated based on the Shimmer sampling rate
         /// <param name="internalExpPower"></param>
         public ShimmerBluetooth(String devName, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalExpPower)
         {
@@ -3256,7 +3258,7 @@ namespace ShimmerAPI
                     gain = ConvertEXGGainSettingToValue((Exg1RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_STATUS, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iStatus]);
-                    if (IsDefaultECGConfigurationEnabled())
+                    if (IsDefaultRespirationConfigurationEnabled() || IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
                         objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
@@ -3289,7 +3291,14 @@ namespace ShimmerAPI
                     gain = ConvertEXGGainSettingToValue((Exg2RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / gain) / (Math.Pow(2, 23) - 1));
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_STATUS, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iStatus]);
-                    if (IsDefaultECGConfigurationEnabled())
+                    if (IsDefaultRespirationConfigurationEnabled())
+                    {
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_RESP, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_RESP, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[2]);
+                    }
+                    else if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
                         objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
@@ -3322,7 +3331,7 @@ namespace ShimmerAPI
                     gain = ConvertEXGGainSettingToValue((Exg1RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / (gain * 2)) / (Math.Pow(2, 15) - 1));
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXG1_STATUS, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iStatus]);
-                    if (IsDefaultECGConfigurationEnabled())
+                    if (IsDefaultRespirationConfigurationEnabled() || IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
                         objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_LL_RA, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
@@ -3355,7 +3364,15 @@ namespace ShimmerAPI
                     gain = ConvertEXGGainSettingToValue((Exg2RegArray[4] >> 4) & 7);
                     datatemp[2] = datatemp[2] * (((2.42 * 1000) / (gain * 2)) / (Math.Pow(2, 15) - 1));
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_STATUS, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iStatus]);
-                    if (IsDefaultECGConfigurationEnabled())
+
+                    if (IsDefaultRespirationConfigurationEnabled())
+                    {
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_RESP, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_RESP, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh2]);
+                        objectCluster.Add(Shimmer3Configuration.SignalNames.ECG_VX_RL, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[2]);
+                    }
+                    else if (IsDefaultECGConfigurationEnabled())
                     {
                         objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iCh1]);
                         objectCluster.Add(Shimmer3Configuration.SignalNames.EXG2_CH1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
@@ -5810,6 +5827,21 @@ namespace ShimmerAPI
             return isUsing;
         }
 
+        /// <summary>
+        /// This can be used to check the registers on the ExG Daughter board and determine whether it is using default respiration configurations
+        /// </summary>
+        /// <returns>Returns true if default respiration configurations is being used</returns>
+        public bool IsDefaultRespirationConfigurationEnabled()
+        {
+            bool isUsing = false;
+            if (((Exg1RegArray[3] & 15) == 0) && ((Exg1RegArray[4] & 15) == 0) && ((Exg2RegArray[3] & 15) == 0) && ((Exg2RegArray[4] & 15) == 0))
+            {
+                isUsing = true;
+            }
+
+            return isUsing;
+        }
+
         protected int ConvertEXGGainSettingToValue(int setting)
         {
             if (setting == 0)
@@ -6503,6 +6535,7 @@ namespace ShimmerAPI
             public static readonly String ECG_LL_RA = "ECG LL-RA";
             public static readonly String ECG_LA_RA = "ECG LA-RA";
             public static readonly String ECG_VX_RL = "ECG Vx-RL";
+            public static readonly String ECG_RESP = "ECG RESP";
             public static readonly String EMG_CH1 = "EMG CH1";
             public static readonly String EMG_CH2 = "EMG CH2";
             public static readonly String EXG1_CH1 = "EXG1 CH1";
