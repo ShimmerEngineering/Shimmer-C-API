@@ -1,5 +1,4 @@
-# This is a GUI Example showing the use of ShimmerLogAndStreamSystemSerialPort
-
--**Before using this example create the ShimmerAPI dll by building the ShimmerAPI project**
-
--**When using this example ensure that the reference to the ShimmerAPI dll is correct**
+# This is a GUI Example showing the use of the API on Streaming/Configuring/Connecting to a Shimmer3 device 
+* Both Bluetooth Classic and BLE is supported
+* For Bluetooth Classic please pair the device first and use the com port to connect
+* For BLE, the device does not require pairing, use the mac address to connect to the device
