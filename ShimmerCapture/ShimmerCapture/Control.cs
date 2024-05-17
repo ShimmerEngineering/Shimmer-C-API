@@ -1234,8 +1234,9 @@ namespace ShimmerAPI
                 ShimmerDevice.UICallback -= this.HandleEvent;
             }
             // btsd changes1
-            if (comboBoxComPorts.Text.Length != 12 && comboBoxComPorts.Text.StartsWith("COM", StringComparison.OrdinalIgnoreCase))
+            if (comboBoxComPorts.Text.Contains("COM") || comboBoxComPorts.Text.Contains("dev"))
             {
+                System.Console.WriteLine("TRY CONNECT" + comboBoxComPorts.Text);
                 ShimmerDevice = new ShimmerLogAndStreamSystemSerialPort("Shimmer", comboBoxComPorts.Text);
             }
             else
