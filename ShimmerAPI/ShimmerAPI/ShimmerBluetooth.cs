@@ -889,7 +889,15 @@ namespace ShimmerAPI
                                 InitializeShimmerECGMD();
                             }
                         }
-
+                        else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                        {
+                            if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
+                            {
+                                //WriteBatteryFrequency(0);
+                                ReadExpansionBoard();
+                                InitializeShimmer3SDBT();
+                            }
+                        }
                     }
                 }
                 catch
@@ -1280,6 +1288,20 @@ namespace ShimmerAPI
                                     }
                                     InterpretInquiryResponseShimmer3(buffer);
                                 }
+                                else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                                {
+                                    for (i = 0; i < 8; i++)
+                                    {
+                                        // get Sampling rate, accel range, config setup byte0, num chans and buffer size
+                                        buffer.Add((byte)ReadByte());
+                                    }
+                                    for (i = 0; i < (int)buffer[6]; i++)
+                                    {
+                                        // read each channel type for the num channels
+                                        buffer.Add((byte)ReadByte());
+                                    }
+                                    InterpretInquiryResponseShimmer3(buffer);
+                                }
                                 if (ShimmerState != SHIMMER_STATE_CONNECTED)
                                 {
                                     SetupDevice = false; //device has been setup
@@ -1289,6 +1311,13 @@ namespace ShimmerAPI
                                 break;
                             case (byte)PacketTypeShimmer2.SAMPLING_RATE_RESPONSE:
                                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                                {
+                                    int value = 0;
+                                    value = (int)ReadByte();
+                                    value += (((int)ReadByte() << 8) & 0xFF00);
+                                    ADCRawSamplingRateValue = value;
+                                    SamplingRate = (double)32768 / ADCRawSamplingRateValue;
+                                } else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                                 {
                                     int value = 0;
                                     value = (int)ReadByte();
@@ -1438,7 +1467,7 @@ namespace ShimmerAPI
 
                                 }
                                 RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer2.MAG_CALIBRATION_RESPONSE);
-                                if (HardwareVersion != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2 || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R)
                                 {
                                     //Retrieve EMG n ECG
                                     bufferbyte = new byte[12];
@@ -2351,7 +2380,7 @@ namespace ShimmerAPI
             {
                 if ((byte)signalid[i] == (byte)0x00)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2368,7 +2397,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x01)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2385,7 +2414,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x02)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2403,7 +2432,7 @@ namespace ShimmerAPI
                 else if ((byte)signalid[i] == (byte)0x03)
                 {
 
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.V_SENSE_BATT; //should be the battery but this will do for now
                         signalDataTypeArray[i + 1] = "i16";
@@ -2421,7 +2450,7 @@ namespace ShimmerAPI
                 else if ((byte)signalid[i] == (byte)0x04)
                 {
 
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
@@ -2438,7 +2467,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x05)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
@@ -2455,7 +2484,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x06)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
@@ -2473,7 +2502,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x07)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
                         if (!isShimmer3withUpdatedSensors())
@@ -2499,7 +2528,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x08)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
                         if (!isShimmer3withUpdatedSensors())
@@ -2524,7 +2553,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x09)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
                         if (!isShimmer3withUpdatedSensors())
@@ -2550,7 +2579,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0A)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_X;
                         signalDataTypeArray[i + 1] = "i16*";
@@ -2568,7 +2597,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0B)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Y;
                         signalDataTypeArray[i + 1] = "i16*";
@@ -2585,7 +2614,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0C)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Z;
                         signalDataTypeArray[i + 1] = "i16*";
@@ -2602,7 +2631,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0D)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2619,7 +2648,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0E)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2636,7 +2665,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0F)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2653,7 +2682,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x10)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2671,7 +2700,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x11)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2688,7 +2717,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x12)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2713,7 +2742,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x13)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2723,7 +2752,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1A)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.TEMPERATURE;
                         signalDataTypeArray[i + 1] = "u16r";
@@ -2733,7 +2762,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1B)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.PRESSURE;
                         signalDataTypeArray[i + 1] = "u24r";
@@ -2743,7 +2772,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1C)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GSR;
                         signalDataTypeArray[i + 1] = "u16";
@@ -2753,7 +2782,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1D)
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_STATUS;
                         signalDataTypeArray[i + 1] = "u8";
@@ -2762,7 +2791,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1E)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH1;
                         signalDataTypeArray[i + 1] = "i24r";
@@ -2772,7 +2801,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1F)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH2;
                         signalDataTypeArray[i + 1] = "i24r";
@@ -2782,7 +2811,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x20)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_STATUS;
                         signalDataTypeArray[i + 1] = "u8";
@@ -2791,7 +2820,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x21)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH1;
                         signalDataTypeArray[i + 1] = "i24r";
@@ -2801,7 +2830,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x22)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH2;
                         signalDataTypeArray[i + 1] = "i24r";
@@ -2811,7 +2840,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x23)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
@@ -2821,7 +2850,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x24)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
@@ -2831,7 +2860,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x25)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
@@ -2841,7 +2870,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x26)//EXG
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT;
                         signalDataTypeArray[i + 1] = "i16r";
@@ -2851,7 +2880,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x27)//BRIDGE AMPLIFIER
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2861,7 +2890,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x28)//BRIDGE AMPLIFIER
                 {
-                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW;
                         signalDataTypeArray[i + 1] = "u12";
@@ -2923,7 +2952,7 @@ namespace ShimmerAPI
             double[] gyroscope = new double[3];
             double[] magnetometer = new double[3];
 
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0))
                 {
@@ -4891,6 +4920,13 @@ namespace ShimmerAPI
                     {
                         CompatibilityCode = 1;
                     }
+                }
+            }
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+            {
+                if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
+                {
+                    CompatibilityCode = 8;
                 }
             }
         }
