@@ -1945,12 +1945,13 @@ namespace ShimmerAPI
 
         public Boolean isShimmer3withUpdatedSensors()
         {
-            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 && (
+            if ((HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R )
+                || (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 && (
                     (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev >= 3)
                     || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED && ExpansionBoardRev >= 3)
                     || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_BR_AMP_UNIFIED && ExpansionBoardRev >= 2)
                     || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.SHIMMER3 && ExpansionBoardRev >= 6)
-                    || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE && ExpansionBoardRev >= 3)))//??????
+                    || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE && ExpansionBoardRev >= 3))))//??????
             //				|| (expBrdId==HW_ID_SR_CODES.EXP_BRD_PROTO3_MINI && expBrdRev>=3) //??????
             {
                 return true;
@@ -5270,7 +5271,7 @@ namespace ShimmerAPI
         public void WriteSamplingRate(double rate)
         {
             SamplingRate = rate;
-            if (!(HardwareVersion == (int)ShimmerVersion.SHIMMER3))
+            if (!(HardwareVersion == (int)ShimmerVersion.SHIMMER3) && !(HardwareVersion == (int)ShimmerVersion.SHIMMER3R))
             {
                 rate = 1024 / rate; //the equivalent hex setting
 
@@ -5288,7 +5289,7 @@ namespace ShimmerAPI
             {
                 SetLowPowerMag(LowPowerMagEnabled);
             }
-            if ((HardwareVersion == (int)ShimmerVersion.SHIMMER3))
+            if ((HardwareVersion == (int)ShimmerVersion.SHIMMER3) || (HardwareVersion == (int)ShimmerVersion.SHIMMER3R))
             {
                 if (GetFirmwareIdentifier() != FW_IDENTIFIER_SHIMMERECGMD)
                 {
