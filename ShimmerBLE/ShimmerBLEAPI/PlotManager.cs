@@ -133,7 +133,7 @@ namespace ShimmerBLEAPI
 
             foreach (string[] properties in ListOfPropertiesToPlot)
             {
-                if (properties[(int)SignalArrayIndex.ShimmerID].Equals(deviceName))
+                if (properties[(int)SignalArrayIndex.ShimmerID].Equals(deviceName) && ojc.GetNames().Contains(properties[(int)SignalArrayIndex.Name]))
                 {
                     double yData = ojc.GetData(properties[(int)SignalArrayIndex.Name], properties[(int)SignalArrayIndex.Format], properties[(int)SignalArrayIndex.Unit]).Data;
                     LineSeries lineSeries = ListOfLineSeries[count];
