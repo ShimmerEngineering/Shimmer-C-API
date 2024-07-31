@@ -1182,7 +1182,7 @@
         </ContentPage>
         <ContentPage Title="Plot">
             <ContentView>
-                <ScrollView Orientation="Horizontal">
+                <ScrollView Orientation="Both">
                     <!--
                 <StackLayout Orientation="Vertical">
                     
@@ -1214,7 +1214,7 @@
                                 HorizontalOptions="End" />
                         </StackLayout>
                         -->
-                            <StackLayout Orientation="Horizontal">
+                                <StackLayout Orientation="Horizontal">
                                 <Label Text="SIGNALS TO PLOT" FontAttributes="Bold">
                                     <Label.FontSize>
                                         <OnPlatform x:TypeArguments="x:Double">
@@ -1223,26 +1223,26 @@
                                     </Label.FontSize>
                                 </Label>
                             </StackLayout>
-                            <StackLayout Orientation="Horizontal" HeightRequest="400">
-                                <ListView x:Name="PopulateSignals" HeightRequest="400" ItemsSource="{Binding PopulateSignalsListView}">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <ViewCell>
-                                                <StackLayout Orientation="Horizontal">
-                                                    <CheckBox IsChecked="{Binding IsChecked}"></CheckBox>
-                                                    <Label Text="{Binding Title}">
-                                                        <Label.FontSize>
-                                                            <OnPlatform x:TypeArguments="x:Double">
-                                                                <On Platform="Android,iOS">10</On>
-                                                            </OnPlatform>
-                                                        </Label.FontSize>
-                                                    </Label>
-                                                </StackLayout>
-                                            </ViewCell>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </StackLayout>
+                                <StackLayout Orientation="Horizontal" HeightRequest="400">
+                                    <ListView x:Name="PopulateSignals" HeightRequest="400" ItemsSource="{Binding PopulateSignalsListView}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <ViewCell>
+                                                    <StackLayout Orientation="Horizontal">
+                                                        <CheckBox IsChecked="{Binding IsChecked}"></CheckBox>
+                                                        <Label Text="{Binding Title}">
+                                                            <Label.FontSize>
+                                                                <OnPlatform x:TypeArguments="x:Double">
+                                                                    <On Platform="Android,iOS">10</On>
+                                                                </OnPlatform>
+                                                            </Label.FontSize>
+                                                        </Label>
+                                                    </StackLayout>
+                                                </ViewCell>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="Set plot update interval to 100(ms): ">
                                     <Label.FontSize>

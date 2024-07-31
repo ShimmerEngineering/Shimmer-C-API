@@ -1587,27 +1587,30 @@ namespace BLE.Client.ViewModels
         public string SelectedPlotSignal { get; set; }
         private List<string[]> PlotSignalsArray = new List<string[]>();
         public ObservableCollection<CheckBoxModel> PopulateSignalsListView { get; set; } = new ObservableCollection<CheckBoxModel>();
+        ObservableCollection<CheckBoxModel> populateSignalsListView = new ObservableCollection<CheckBoxModel>();
+        List<CheckBoxModel> populateSignalsListViewTemp = new List<CheckBoxModel>();
+        List<string> plotSignalsAvailableTemp = new List<string>();
 
         private bool IsFirstOjc = true;
+        private bool IsUpdateSignalsToPlot = false;
 
         private void OxyPlotDataProcess(ObjectCluster ojc)
         {
             try
             {
-                if (IsFirstOjc)
+                List<string[]> signalsToPlotList = PlotManager.GetAllSignalPropertiesFromOjc(ojc);
+                foreach (string[] signalsToPlotArray in signalsToPlotList)
                 {
-                    List<string[]> signalsToPlotList = PlotManager.GetAllSignalPropertiesFromOjc(ojc);
-                    List<string> plotSignalsAvailableTemp = new List<string>();
-                    ObservableCollection<CheckBoxModel> populateSignalsListView = new ObservableCollection<CheckBoxModel>();
-                    foreach (string[] signalsToPlotArray in signalsToPlotList)
+                    string signal = GetSignalToPlotStringFromArray(signalsToPlotArray);
+
+                    if (IsFirstOjc || !plotSignalsAvailableTemp.Contains(signal))
                     {
-                        string signal = GetSignalToPlotStringFromArray(signalsToPlotArray);
-
+                        IsUpdateSignalsToPlot = true;
                         plotSignalsAvailableTemp.Add(signal);
-
                         PlotSignalsArray.Add(signalsToPlotArray);
-
+                        populateSignalsListView = new ObservableCollection<CheckBoxModel>(populateSignalsListViewTemp);
                         CheckBoxModel checkBoxModel = new CheckBoxModel { Title = signal, Signals = PlotSignalsArray, CBMPlotManager = PlotManager };
+                        populateSignalsListViewTemp.Add(checkBoxModel);
                         populateSignalsListView.Add(checkBoxModel);
 
                         if (signalsToPlotArray[(int)SignalArrayIndex.Name].Equals(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP))
@@ -1615,14 +1618,14 @@ namespace BLE.Client.ViewModels
                             PlotManager.AddXAxis(signalsToPlotArray);
                         }
                     }
+                }
+                if (IsUpdateSignalsToPlot)
+                {
                     PopulateSignalsListView = populateSignalsListView;
                     RaisePropertyChanged(nameof(this.PopulateSignalsListView));
-
-                    PlotSignalsAvailable = plotSignalsAvailableTemp;
-                    RaisePropertyChanged(nameof(this.PlotSignalsAvailable));
                     IsFirstOjc = false;
+                    IsUpdateSignalsToPlot = false;
                 }
-
                 PlotManager.FilterDataAndPlot(ojc);
                 RaisePropertyChanged(nameof(this.PlotModel));
             }
@@ -2786,6 +2789,7 @@ namespace BLE.Client.ViewModels
         protected async void Disconnect()
         {
             DisconnectPressed = true;
+            ResetPlotVars();
             if (ReconnectTimer != null)
             {
                 ReconnectTimer.Dispose();
@@ -3094,6 +3098,7 @@ namespace BLE.Client.ViewModels
             var compare = VerisenseBLEDevice.GetOperationalConfigByteArray(); //make sure the byte values havent changed
             Debug.WriteLine(BitConverter.ToString(opconfigbytes).Replace("-", ",0x"));
             VerisenseBLEDevice.WriteAndReadOperationalConfiguration(opconfigbytes);
+            ResetPlotVars();
         }
         protected async void ConfigureDevice()
         {
@@ -3436,6 +3441,10 @@ namespace BLE.Client.ViewModels
         private void ResetPlotVars()
         {
             IsFirstOjc = true;
+            populateSignalsListView.Clear();
+            populateSignalsListViewTemp.Clear();
+            plotSignalsAvailableTemp.Clear();
+
             PlotSignalsAvailable.Clear();
             PlotSignalsArray.Clear();
             SelectedPlotSignal = "";
