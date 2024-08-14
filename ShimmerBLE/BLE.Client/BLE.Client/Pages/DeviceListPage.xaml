@@ -348,13 +348,16 @@
                     -->
                                     <ScrollView Orientation="Horizontal">
                                         <StackLayout Orientation="Horizontal">
-                                            <Button Text="Start Scan"
+                                            <Button Text="Start Scan" 
+                                IsEnabled="{Binding IsScanPairAndConnectEnabled}"
                                 Command="{Binding RefreshCommand}"
                                 HorizontalOptions="End" />
-                                            <Button Text="Stop Scan"
+                                            <Button Text="Stop Scan" 
+                                IsEnabled="{Binding IsScanPairAndConnectEnabled}"
                                 Command="{Binding StopScanCommand}"
                                 HorizontalOptions="End" />
-                                            <Button Text="Pair"
+                                            <Button Text="Pair" 
+                            IsEnabled="{Binding IsScanPairAndConnectEnabled}"
                             Command="{Binding PairCommand}"
                             HorizontalOptions="End" />
                                         </StackLayout>
@@ -411,7 +414,8 @@
 
                                     <ScrollView Orientation="Horizontal">
                                         <StackLayout Orientation="Horizontal">
-                                            <Button Text="Connect"
+                                            <Button Text="Connect" 
+                            IsEnabled="{Binding IsScanPairAndConnectEnabled}"
                             Command="{Binding ConnectCommand}"/>
                                             <Button Text="Disconnect"
                             Command="{Binding DisconnectVRECommand}"
@@ -456,6 +460,7 @@
                             Command="{Binding SoftResetCommand}"
                             HorizontalOptions="End"/>
                                             <Button Text="Connect Without Initialize"
+                            IsEnabled="{Binding IsScanPairAndConnectEnabled}"
                             Command="{Binding ConnectWithoutInitializeCommand}"
                             HorizontalOptions="End" />
                                             <!--
