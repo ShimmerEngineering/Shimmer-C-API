@@ -230,7 +230,66 @@ namespace ShimmerBluetoothTests
             }
         }
 
+        [TestMethod]
+        public void TestBMP390_PressureTemperature()
+        {
+            byte[] pressureResoResTest = { 0xE7, 0x6B, 0xF0, 0x4A, 0xF9, 0xAB, 0x1C, 0x9B, 0x15, 0x06, 0x01, 0xD2, 0x49, 0x18, 0x5F, 0x03, 0xFA, 0x3A, 0x0F, 0x07, 0xF5 };
 
+            CalculateBMP390PressureCalibrationCoefficientsResponse(pressureResoResTest);
+
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParT1, 7071488);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParT2, 0.00001786649227142334);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParT3, -0.000000000000024868995751603507);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP1, -0.0086259841918945312);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP2, -0.000020215287804603577);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP3, 0.0000000013969838619232178);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP4, 0.0000000000072759576141834259);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP5, 151184);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP6, 380.375);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP7, 0.01171875);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP8, -0.00018310546875);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP9, 0.000000000013848477919964353);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP10, 0.000000000000024868995751603507);
+            Assert.AreEqual(Bmp3QuantizedCalibData.ParP11, -0.00000000000000000029815559743351372);
+
+            Bmp3QuantizedCalibData.TLin = 23.17016986780799;
+            
+            //byte[] sensorData = { 0x00, 0x0D, 0x64, 0x00, 0xBA, 0x7F };
+            byte[] sensorDataP = { 0x00, 0x0D, 0x64};
+            byte[] sensorDataT = { 0x00, 0xBA, 0x7F };
+
+            string[] sensorDataType = { "u24"};
+            long[] uncalibResultP = ProgrammerUtilities.ParseData(sensorDataP, sensorDataType); 
+            long[] uncalibResultT = ProgrammerUtilities.ParseData(sensorDataT, sensorDataType);
+
+            Assert.AreEqual(uncalibResultP[0], 6556928);
+            Assert.AreEqual(uncalibResultT[0], 8370688);
+
+            double resultT = CompensateBMP390Temperature(uncalibResultT[0]);
+            Bmp3QuantizedCalibData.TLin = resultT;
+            double resultP = CompensateBMP390Pressure(uncalibResultP[0]);
+
+            //Assert.AreEqual(resultP, 100911.8245324826);
+            //Assert.AreEqual(resultT, 23.170169867807999);
+            Assert.AreEqual(Math.Round(resultP, 4), 100911.8245);
+            Assert.AreEqual(Math.Round(resultT, 4), 23.1702);
+
+            //byte[] sensorData2 = { 0x00, 0x17, 0x64, 0x00, 0xCF, 0x7F };
+            byte[] sensorDataP2 = { 0x00, 0x17, 0x64 };
+            byte[] sensorDataT2 = { 0x00, 0xCF, 0x7F };
+
+            long[] uncalibResultP2 = ProgrammerUtilities.ParseData(sensorDataP2, sensorDataType);
+            long[] uncalibResultT2 = ProgrammerUtilities.ParseData(sensorDataT2, sensorDataType); 
+            
+            double resultT2 = CompensateBMP390Temperature(uncalibResultT2[0]);
+            Bmp3QuantizedCalibData.TLin = resultT2;
+            double resultP2 = CompensateBMP390Pressure(uncalibResultP2[0]);
+
+            //Assert.AreEqual(resultP2, 100912.81758676282);
+            //Assert.AreEqual(resultT2, 23.26587201654911);
+            Assert.AreEqual(Math.Round(resultP2, 4), 100912.8176);
+            Assert.AreEqual(Math.Round(resultT2, 4), 23.2659);
+        }
         public override string GetShimmerAddress()
         {
             throw new NotImplementedException();

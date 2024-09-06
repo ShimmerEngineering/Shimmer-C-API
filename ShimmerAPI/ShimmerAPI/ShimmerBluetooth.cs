@@ -190,6 +190,17 @@ namespace ShimmerAPI
         public double dig_P8 = -14600;
         public double dig_P9 = 6000;
 
+        //constant
+        public const double BMP3_MIN_PRES_DOUBLE = 30000.0f;
+        public const double BMP3_MAX_PRES_DOUBLE = 125000.0f;
+        public const double BMP3_MIN_TEMP_DOUBLE = -40.0f;
+        public const double BMP3_MAX_TEMP_DOUBLE = 85.0f;
+        public const sbyte BMP3_OK = 0;
+        public const sbyte BMP3_W_MIN_TEMP = 3;
+        public const sbyte BMP3_W_MAX_TEMP = 4;
+        public const sbyte BMP3_W_MIN_PRES = 5;
+        public const sbyte BMP3_W_MAX_PRES = 6;
+
         public double OffsetECGRALL = 2060;
         public double GainECGRALL = 175;
         public double OffsetECGLALL = 2060;
@@ -1489,17 +1500,7 @@ namespace ShimmerAPI
                                 {
                                     bufferbyte[p] = (byte)ReadByte();
                                 }
-                                AC1 = Calculatetwoscomplement((int)((int)(bufferbyte[1] & 0xFF) + ((int)(bufferbyte[0] & 0xFF) << 8)), 16);
-                                AC2 = Calculatetwoscomplement((int)((int)(bufferbyte[3] & 0xFF) + ((int)(bufferbyte[2] & 0xFF) << 8)), 16);
-                                AC3 = Calculatetwoscomplement((int)((int)(bufferbyte[5] & 0xFF) + ((int)(bufferbyte[4] & 0xFF) << 8)), 16);
-                                AC4 = (int)((int)(bufferbyte[7] & 0xFF) + ((int)(bufferbyte[6] & 0xFF) << 8));
-                                AC5 = (int)((int)(bufferbyte[9] & 0xFF) + ((int)(bufferbyte[8] & 0xFF) << 8));
-                                AC6 = (int)((int)(bufferbyte[11] & 0xFF) + ((int)(bufferbyte[10] & 0xFF) << 8));
-                                B1 = Calculatetwoscomplement((int)((int)(bufferbyte[13] & 0xFF) + ((int)(bufferbyte[12] & 0xFF) << 8)), 16);
-                                B2 = Calculatetwoscomplement((int)((int)(bufferbyte[15] & 0xFF) + ((int)(bufferbyte[14] & 0xFF) << 8)), 16);
-                                MB = Calculatetwoscomplement((int)((int)(bufferbyte[17] & 0xFF) + ((int)(bufferbyte[16] & 0xFF) << 8)), 16);
-                                MC = Calculatetwoscomplement((int)((int)(bufferbyte[19] & 0xFF) + ((int)(bufferbyte[18] & 0xFF) << 8)), 16);
-                                MD = Calculatetwoscomplement((int)((int)(bufferbyte[21] & 0xFF) + ((int)(bufferbyte[20] & 0xFF) << 8)), 16);
+                                CalculateBMP180PressureCalibrationCoefficientsResponse(bufferbyte);
                                 break;
                             case (byte)InstructionsResponse.Bmp280CalibrationCoefficientsResponse:
                                 bufferbyte = new byte[24];
@@ -1507,20 +1508,32 @@ namespace ShimmerAPI
                                 {
                                     bufferbyte[p] = (byte)ReadByte();
                                 }
-                                byte[] pressureResoRes = bufferbyte;
-                                dig_T1 = (int)((int)(pressureResoRes[0] & 0xFF) + ((int)(pressureResoRes[1] & 0xFF) << 8));
-                                dig_T2 = Calculatetwoscomplement((int)((int)(pressureResoRes[2] & 0xFF) + ((int)(pressureResoRes[3] & 0xFF) << 8)), 16);
-                                dig_T3 = Calculatetwoscomplement((int)((int)(pressureResoRes[4] & 0xFF) + ((int)(pressureResoRes[5] & 0xFF) << 8)), 16);
 
-                                dig_P1 = (int)((int)(pressureResoRes[6] & 0xFF) + ((int)(pressureResoRes[7] & 0xFF) << 8));
-                                dig_P2 = Calculatetwoscomplement((int)((int)(pressureResoRes[8] & 0xFF) + ((int)(pressureResoRes[9] & 0xFF) << 8)), 16);
-                                dig_P3 = Calculatetwoscomplement((int)((int)(pressureResoRes[10] & 0xFF) + ((int)(pressureResoRes[11] & 0xFF) << 8)), 16);
-                                dig_P4 = Calculatetwoscomplement((int)((int)(pressureResoRes[12] & 0xFF) + ((int)(pressureResoRes[13] & 0xFF) << 8)), 16);
-                                dig_P5 = Calculatetwoscomplement((int)((int)(pressureResoRes[14] & 0xFF) + ((int)(pressureResoRes[15] & 0xFF) << 8)), 16);
-                                dig_P6 = Calculatetwoscomplement((int)((int)(pressureResoRes[16] & 0xFF) + ((int)(pressureResoRes[17] & 0xFF) << 8)), 16);
-                                dig_P7 = Calculatetwoscomplement((int)((int)(pressureResoRes[18] & 0xFF) + ((int)(pressureResoRes[19] & 0xFF) << 8)), 16);
-                                dig_P8 = Calculatetwoscomplement((int)((int)(pressureResoRes[20] & 0xFF) + ((int)(pressureResoRes[21] & 0xFF) << 8)), 16);
-                                dig_P9 = Calculatetwoscomplement((int)((int)(pressureResoRes[22] & 0xFF) + ((int)(pressureResoRes[23] & 0xFF) << 8)), 16);
+                                CalculateBMP280PressureCalibrationCoefficientsResponse(bufferbyte);
+
+                                break;
+                            case (byte)InstructionsResponse.PressureCalibrationCoefficientsResponse:
+                                bufferbyte = new byte[24];
+                                for (int p = 0; p < 24; p++)
+                                {
+                                    bufferbyte[p] = (byte)ReadByte();
+                                }
+
+
+                                if (bufferbyte[1] == 0)
+                                {
+                                    CalculateBMP180PressureCalibrationCoefficientsResponse(bufferbyte);
+
+                                }
+                                else if (bufferbyte[1] == 1)
+                                {
+                                    CalculateBMP280PressureCalibrationCoefficientsResponse(bufferbyte);
+
+                                }
+                                else if (bufferbyte[1] == 2)
+                                {
+                                    CalculateBMP390PressureCalibrationCoefficientsResponse(bufferbyte);
+                                }
 
                                 break;
                             case (byte)PacketTypeShimmer2.BLINK_LED_RESPONSE:
@@ -1699,6 +1712,132 @@ namespace ShimmerAPI
             // only stop reading when disconnecting, so disconnect serial port here too
             CloseConnection();
 
+        }
+        public void CalculateBMP180PressureCalibrationCoefficientsResponse(byte[] bufferbyte)
+        {
+            AC1 = Calculatetwoscomplement((int)((int)(bufferbyte[1] & 0xFF) + ((int)(bufferbyte[0] & 0xFF) << 8)), 16);
+            AC2 = Calculatetwoscomplement((int)((int)(bufferbyte[3] & 0xFF) + ((int)(bufferbyte[2] & 0xFF) << 8)), 16);
+            AC3 = Calculatetwoscomplement((int)((int)(bufferbyte[5] & 0xFF) + ((int)(bufferbyte[4] & 0xFF) << 8)), 16);
+            AC4 = (int)((int)(bufferbyte[7] & 0xFF) + ((int)(bufferbyte[6] & 0xFF) << 8));
+            AC5 = (int)((int)(bufferbyte[9] & 0xFF) + ((int)(bufferbyte[8] & 0xFF) << 8));
+            AC6 = (int)((int)(bufferbyte[11] & 0xFF) + ((int)(bufferbyte[10] & 0xFF) << 8));
+            B1 = Calculatetwoscomplement((int)((int)(bufferbyte[13] & 0xFF) + ((int)(bufferbyte[12] & 0xFF) << 8)), 16);
+            B2 = Calculatetwoscomplement((int)((int)(bufferbyte[15] & 0xFF) + ((int)(bufferbyte[14] & 0xFF) << 8)), 16);
+            MB = Calculatetwoscomplement((int)((int)(bufferbyte[17] & 0xFF) + ((int)(bufferbyte[16] & 0xFF) << 8)), 16);
+            MC = Calculatetwoscomplement((int)((int)(bufferbyte[19] & 0xFF) + ((int)(bufferbyte[18] & 0xFF) << 8)), 16);
+            MD = Calculatetwoscomplement((int)((int)(bufferbyte[21] & 0xFF) + ((int)(bufferbyte[20] & 0xFF) << 8)), 16);
+        }
+        public void CalculateBMP280PressureCalibrationCoefficientsResponse(byte[] bufferbyte)
+        {
+            byte[] pressureResoRes = bufferbyte;
+            dig_T1 = (int)((int)(pressureResoRes[0] & 0xFF) + ((int)(pressureResoRes[1] & 0xFF) << 8));
+            dig_T2 = Calculatetwoscomplement((int)((int)(pressureResoRes[2] & 0xFF) + ((int)(pressureResoRes[3] & 0xFF) << 8)), 16);
+            dig_T3 = Calculatetwoscomplement((int)((int)(pressureResoRes[4] & 0xFF) + ((int)(pressureResoRes[5] & 0xFF) << 8)), 16);
+
+            dig_P1 = (int)((int)(pressureResoRes[6] & 0xFF) + ((int)(pressureResoRes[7] & 0xFF) << 8));
+            dig_P2 = Calculatetwoscomplement((int)((int)(pressureResoRes[8] & 0xFF) + ((int)(pressureResoRes[9] & 0xFF) << 8)), 16);
+            dig_P3 = Calculatetwoscomplement((int)((int)(pressureResoRes[10] & 0xFF) + ((int)(pressureResoRes[11] & 0xFF) << 8)), 16);
+            dig_P4 = Calculatetwoscomplement((int)((int)(pressureResoRes[12] & 0xFF) + ((int)(pressureResoRes[13] & 0xFF) << 8)), 16);
+            dig_P5 = Calculatetwoscomplement((int)((int)(pressureResoRes[14] & 0xFF) + ((int)(pressureResoRes[15] & 0xFF) << 8)), 16);
+            dig_P6 = Calculatetwoscomplement((int)((int)(pressureResoRes[16] & 0xFF) + ((int)(pressureResoRes[17] & 0xFF) << 8)), 16);
+            dig_P7 = Calculatetwoscomplement((int)((int)(pressureResoRes[18] & 0xFF) + ((int)(pressureResoRes[19] & 0xFF) << 8)), 16);
+            dig_P8 = Calculatetwoscomplement((int)((int)(pressureResoRes[20] & 0xFF) + ((int)(pressureResoRes[21] & 0xFF) << 8)), 16);
+            dig_P9 = Calculatetwoscomplement((int)((int)(pressureResoRes[22] & 0xFF) + ((int)(pressureResoRes[23] & 0xFF) << 8)), 16);
+
+            Debug.WriteLine("dig_T1 = " + dig_T1);
+            Debug.WriteLine("dig_T2 = " + dig_T2);
+            Debug.WriteLine("dig_T3 = " + dig_T3);
+            Debug.WriteLine("dig_P1 = " + dig_P1);
+            Debug.WriteLine("dig_P2 = " + dig_P2);
+            Debug.WriteLine("dig_P3 = " + dig_P3);
+            Debug.WriteLine("dig_P4 = " + dig_P4);
+            Debug.WriteLine("dig_P5 = " + dig_P5);
+            Debug.WriteLine("dig_P6 = " + dig_P6);
+            Debug.WriteLine("dig_P7 = " + dig_P7);
+            Debug.WriteLine("dig_P8 = " + dig_P8);
+        }
+        public void CalculateBMP390PressureCalibrationCoefficientsResponse(byte[] bufferbyte)
+        {
+            byte[] pressureResoResTest = bufferbyte;
+            double tempVar = 0;
+
+            // 1 / 2^8
+            tempVar = 0.00390625;
+            Bmp3RegCalibData.ParT1 = ConcatenateBytes(pressureResoResTest[1], pressureResoResTest[0]);
+            Bmp3QuantizedCalibData.ParT1 = ((double)Bmp3RegCalibData.ParT1 / tempVar);
+
+            Bmp3RegCalibData.ParT2 = ConcatenateBytes(pressureResoResTest[3], pressureResoResTest[2]);
+            tempVar = 1073741824.0;
+            Bmp3QuantizedCalibData.ParT2 = ((double)Bmp3RegCalibData.ParT2 / tempVar);
+
+            Bmp3RegCalibData.ParT3 = (sbyte)pressureResoResTest[4];
+            tempVar = 281474976710656.0;
+            Bmp3QuantizedCalibData.ParT3 = ((double)Bmp3RegCalibData.ParT3 / tempVar);
+
+            Bmp3RegCalibData.ParP1 = (short)ConcatenateBytes(pressureResoResTest[6], pressureResoResTest[5]);
+            tempVar = 1048576.0;
+            Bmp3QuantizedCalibData.ParP1 = ((double)(Bmp3RegCalibData.ParP1 - 16384) / tempVar);
+
+            Bmp3RegCalibData.ParP2 = (short)ConcatenateBytes(pressureResoResTest[8], pressureResoResTest[7]);
+            tempVar = 536870912.0;
+            Bmp3QuantizedCalibData.ParP2 = ((double)(Bmp3RegCalibData.ParP2 - 16384) / tempVar);
+
+            Bmp3RegCalibData.ParP3 = (sbyte)pressureResoResTest[9];
+            tempVar = 4294967296.0;
+            Bmp3QuantizedCalibData.ParP3 = ((double)Bmp3RegCalibData.ParP3 / tempVar);
+
+            Bmp3RegCalibData.ParP4 = (sbyte)pressureResoResTest[10];
+            tempVar = 137438953472.0;
+            Bmp3QuantizedCalibData.ParP4 = ((double)Bmp3RegCalibData.ParP4 / tempVar);
+
+            Bmp3RegCalibData.ParP5 = ConcatenateBytes(pressureResoResTest[12], pressureResoResTest[11]);
+
+            // 1 / 2^3
+            tempVar = 0.125;
+            Bmp3QuantizedCalibData.ParP5 = ((double)Bmp3RegCalibData.ParP5 / tempVar);
+
+            Bmp3RegCalibData.ParP6 = ConcatenateBytes(pressureResoResTest[14], pressureResoResTest[13]);
+            tempVar = 64.0;
+            Bmp3QuantizedCalibData.ParP6 = ((double)Bmp3RegCalibData.ParP6 / tempVar);
+
+            Bmp3RegCalibData.ParP7 = (sbyte)pressureResoResTest[15];
+            tempVar = 256.0;
+            Bmp3QuantizedCalibData.ParP7 = ((double)Bmp3RegCalibData.ParP7 / tempVar);
+
+            Bmp3RegCalibData.ParP8 = (sbyte)pressureResoResTest[16];
+            tempVar = 32768.0;
+            Bmp3QuantizedCalibData.ParP8 = ((double)Bmp3RegCalibData.ParP8 / tempVar);
+
+            Bmp3RegCalibData.ParP9 = (short)ConcatenateBytes(pressureResoResTest[18], pressureResoResTest[17]);
+            tempVar = 281474976710656.0;
+            Bmp3QuantizedCalibData.ParP9 = ((double)Bmp3RegCalibData.ParP9 / tempVar);
+
+            Bmp3RegCalibData.ParP10 = (sbyte)pressureResoResTest[19];
+            tempVar = 281474976710656.0;
+            Bmp3QuantizedCalibData.ParP10 = ((double)Bmp3RegCalibData.ParP10 / tempVar);
+
+            Bmp3RegCalibData.ParP11 = (sbyte)pressureResoResTest[20];
+            tempVar = 36893488147419103232.0;
+            Bmp3QuantizedCalibData.ParP11 = ((double)Bmp3RegCalibData.ParP11 / tempVar);
+
+            Debug.WriteLine("par_T1 = " + Bmp3QuantizedCalibData.ParT1);
+            Debug.WriteLine("par_T2 = " + Bmp3QuantizedCalibData.ParT2);
+            Debug.WriteLine("par_T3 = " + Bmp3QuantizedCalibData.ParT3);
+            Debug.WriteLine("par_P1 = " + Bmp3QuantizedCalibData.ParP1);
+            Debug.WriteLine("par_P2 = " + Bmp3QuantizedCalibData.ParP2);
+            Debug.WriteLine("par_P3 = " + Bmp3QuantizedCalibData.ParP3);
+            Debug.WriteLine("par_P4 = " + Bmp3QuantizedCalibData.ParP4);
+            Debug.WriteLine("par_P5 = " + Bmp3QuantizedCalibData.ParP5);
+            Debug.WriteLine("par_P6 = " + Bmp3QuantizedCalibData.ParP6);
+            Debug.WriteLine("par_P7 = " + Bmp3QuantizedCalibData.ParP7);
+            Debug.WriteLine("par_P8 = " + Bmp3QuantizedCalibData.ParP8);
+            Debug.WriteLine("par_P9 = " + Bmp3QuantizedCalibData.ParP9);
+            Debug.WriteLine("par_P10 = " + Bmp3QuantizedCalibData.ParP10);
+            Debug.WriteLine("par_P11 = " + Bmp3QuantizedCalibData.ParP11);
+        }
+        private static ushort ConcatenateBytes(byte highByte, byte lowByte)
+        {
+            return (ushort)((highByte << 8) | lowByte);
         }
         public virtual void SDBT_switch(byte b)
         {
@@ -3169,6 +3308,10 @@ namespace ShimmerAPI
                         UP = UP / Math.Pow(2, 4);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
                         bmpX80caldata = CalibratePressure280SensorData(UP, UT);
+          
+                        CompensateBMP390Temperature(UT);
+                        CompensateBMP390Pressure(UP);
+
                     }
                     else
                     {
@@ -4853,7 +4996,11 @@ namespace ShimmerAPI
                 }
                 else if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
                 {
-                    if (compareVersions(0, 13, 7)) //(FirmwareVersion >= 0.13.7)
+                    if (compareVersions(0, 16, 6)) //(FirmwareVersion >= 0.16.6)
+                    {
+                        CompatibilityCode = 9;
+                    }
+                    else if (compareVersions(0, 13, 7)) //(FirmwareVersion >= 0.13.7)
                     {
                         CompatibilityCode = 8;
                     }
@@ -5149,8 +5296,16 @@ namespace ShimmerAPI
                 //if (FirmwareVersion > 0.1)
                 if (isShimmer3withUpdatedSensors())
                 {
-                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
-                    System.Threading.Thread.Sleep(800);
+                    if (FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 8)
+                    {
+                        WriteBytes(new byte[1] { (byte)InstructionsGet.GetPressureCalibrationCoefficientsCommand }, 0, 1);
+                        System.Threading.Thread.Sleep(800);
+                    }
+                    else
+                    {
+                        WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
+                        System.Threading.Thread.Sleep(800);
+                    }                
                 }
                 else
                 {
@@ -6126,6 +6281,95 @@ namespace ShimmerAPI
             return caldata;
         }
 
+        // Method to compute power, equivalent to pow_bmp3 function in C
+        private static double PowBmp3(double baseValue, int exponent)
+        {
+            return Math.Pow(baseValue, exponent);
+        }
+        public double CompensateBMP390Temperature(double UT)
+        {
+            sbyte rslt = BMP3_OK;
+
+            double uncompTemp = UT;
+            double partialData1;
+            double partialData2;
+
+            partialData1 = uncompTemp - Bmp3QuantizedCalibData.ParT1;
+            partialData2 = partialData1 * Bmp3QuantizedCalibData.ParT2;
+
+            // Update the compensated temperature in calib structure since this is needed for pressure calculation
+            Bmp3QuantizedCalibData.TLin = partialData2 + (partialData1 * partialData1) *
+                                                 Bmp3QuantizedCalibData.ParT3;
+
+            // Returns compensated temperature
+            if (Bmp3QuantizedCalibData.TLin < BMP3_MIN_TEMP_DOUBLE)
+            {
+                Bmp3QuantizedCalibData.TLin = BMP3_MIN_TEMP_DOUBLE;
+                rslt = BMP3_W_MIN_TEMP;
+            }
+
+            if (Bmp3QuantizedCalibData.TLin > BMP3_MAX_TEMP_DOUBLE)
+            {
+                Bmp3QuantizedCalibData.TLin = BMP3_MAX_TEMP_DOUBLE;
+                rslt = BMP3_W_MAX_TEMP;
+            }
+
+            //temperature = Bmp3QuantizedCalibData.TLin;
+
+            return Bmp3QuantizedCalibData.TLin;
+        }
+        public double CompensateBMP390Pressure(double UP)
+        {
+            sbyte result = BMP3_OK;
+
+            // Variable to store the compensated pressure
+            double compPress;
+
+            // Temporary variables used for compensation
+            double partialData1;
+            double partialData2;
+            double partialData3;
+            double partialData4;
+            double partialOut1;
+            double partialOut2;
+
+            Debug.WriteLine("Seeeeee T_Lin = " + Bmp3QuantizedCalibData.TLin);
+
+
+            partialData1 = Bmp3QuantizedCalibData.ParP6 * Bmp3QuantizedCalibData.TLin;
+            partialData2 = Bmp3QuantizedCalibData.ParP7 * PowBmp3(Bmp3QuantizedCalibData.TLin, 2);
+            partialData3 = Bmp3QuantizedCalibData.ParP8 * PowBmp3(Bmp3QuantizedCalibData.TLin, 3);
+            partialOut1 = Bmp3QuantizedCalibData.ParP5 + partialData1 + partialData2 + partialData3;
+
+            partialData1 = Bmp3QuantizedCalibData.ParP2 * Bmp3QuantizedCalibData.TLin;
+            partialData2 = Bmp3QuantizedCalibData.ParP3 * PowBmp3(Bmp3QuantizedCalibData.TLin, 2);
+            partialData3 = Bmp3QuantizedCalibData.ParP4 * PowBmp3(Bmp3QuantizedCalibData.TLin, 3);
+            partialOut2 = UP *
+                          (Bmp3QuantizedCalibData.ParP1 + partialData1 + partialData2 + partialData3);
+
+            partialData1 = PowBmp3((double)UP, 2);
+            partialData2 = Bmp3QuantizedCalibData.ParP9 + Bmp3QuantizedCalibData.ParP10 * Bmp3QuantizedCalibData.TLin;
+            partialData3 = partialData1 * partialData2;
+            partialData4 = partialData3 + PowBmp3((double)UP, 3) * Bmp3QuantizedCalibData.ParP11;
+            compPress = partialOut1 + partialOut2 + partialData4;
+
+            if (compPress < BMP3_MIN_PRES_DOUBLE)
+            {
+                compPress = BMP3_MIN_PRES_DOUBLE;
+                result = BMP3_W_MIN_PRES;
+            }
+
+            if (compPress > BMP3_MAX_PRES_DOUBLE)
+            {
+                compPress = BMP3_MAX_PRES_DOUBLE;
+                result = BMP3_W_MAX_PRES;
+            }
+
+            //pressure = compPress;
+
+            return compPress;
+        }
+
         protected int countDigits(int number)
         {
             if (number == 0)
@@ -6372,6 +6616,77 @@ namespace ShimmerAPI
         }
 
     }
+    // Define the bmp3_quantized_calib_data class
+    public class Bmp3QuantizedCalibData
+    {
+        // Quantized Trim Variables
+        public static double ParT1 { get; set; }
+        public static double ParT2 { get; set; }
+        public static double ParT3 { get; set; }
+        public static double ParP1 { get; set; }
+        public static double ParP2 { get; set; }
+        public static double ParP3 { get; set; }
+        public static double ParP4 { get; set; }
+        public static double ParP5 { get; set; }
+        public static double ParP6 { get; set; }
+        public static double ParP7 { get; set; }
+        public static double ParP8 { get; set; }
+        public static double ParP9 { get; set; }
+        public static double ParP10 { get; set; }
+        public static double ParP11 { get; set; }
+        public static double TLin { get; set; }
+    }
+
+    // Define the bmp3_reg_calib_data class
+    public class Bmp3RegCalibData
+    {
+        // Trim Variables
+        public static ushort ParT1 { get; set; }
+        public static ushort ParT2 { get; set; }
+        public static sbyte ParT3 { get; set; }
+        public static short ParP1 { get; set; }
+        public static short ParP2 { get; set; }
+        public static sbyte ParP3 { get; set; }
+        public static sbyte ParP4 { get; set; }
+        public static ushort ParP5 { get; set; }
+        public static ushort ParP6 { get; set; }
+        public static sbyte ParP7 { get; set; }
+        public static sbyte ParP8 { get; set; }
+        public static short ParP9 { get; set; }
+        public static sbyte ParP10 { get; set; }
+        public static sbyte ParP11 { get; set; }
+        public static long TLin { get; set; }
+    }
+
+
+    // Define the bmp3_calib_data class
+    public class Bmp3CalibData
+    {
+        // Quantized calibration data
+        public Bmp3QuantizedCalibData QuantizedCalibData { get; set; }
+
+        // Register calibration data
+        public Bmp3RegCalibData RegCalibData { get; set; }
+    }
+
+    // Define the bmp3_data class
+    public class Bmp3Data
+    {
+        // Compensated temperature
+        public double Temperature { get; set; }
+
+        // Compensated pressure
+        public double Pressure { get; set; }
+    }
+    public class Bmp3UncompData
+    {
+        // Un-compensated pressure
+        public ulong Pressure { get; set; }
+
+        // Un-compensated temperature
+        public long Temperature { get; set; }
+    }
+
 
     public class CustomEventArgs : EventArgs
     {
