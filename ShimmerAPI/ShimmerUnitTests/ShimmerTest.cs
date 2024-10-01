@@ -264,31 +264,29 @@ namespace ShimmerBluetoothTests
 
             Assert.AreEqual(uncalibResultP[0], 6556928);
             Assert.AreEqual(uncalibResultT[0], 8370688);
-
-            double resultT = CompensateBMP390Temperature(uncalibResultT[0]);
-            Bmp3QuantizedCalibData.TLin = resultT;
-            double resultP = CompensateBMP390Pressure(uncalibResultP[0]);
+            double[] bmpX80caldata = new double[2];
+            bmpX80caldata = CalibratePressure390SensorData(uncalibResultP[0], uncalibResultT[0]);
+            Bmp3QuantizedCalibData.TLin = bmpX80caldata[1];
 
             //Assert.AreEqual(resultP, 100911.8245324826);
             //Assert.AreEqual(resultT, 23.170169867807999);
-            Assert.AreEqual(Math.Round(resultP, 4), 100911.8245);
-            Assert.AreEqual(Math.Round(resultT, 4), 23.1702);
+            Assert.AreEqual(Math.Round(bmpX80caldata[0], 4), 100911.8245);
+            Assert.AreEqual(Math.Round(bmpX80caldata[1], 4), 23.1702);
 
             //byte[] sensorData2 = { 0x00, 0x17, 0x64, 0x00, 0xCF, 0x7F };
             byte[] sensorDataP2 = { 0x00, 0x17, 0x64 };
             byte[] sensorDataT2 = { 0x00, 0xCF, 0x7F };
 
             long[] uncalibResultP2 = ProgrammerUtilities.ParseData(sensorDataP2, sensorDataType);
-            long[] uncalibResultT2 = ProgrammerUtilities.ParseData(sensorDataT2, sensorDataType); 
-            
-            double resultT2 = CompensateBMP390Temperature(uncalibResultT2[0]);
-            Bmp3QuantizedCalibData.TLin = resultT2;
-            double resultP2 = CompensateBMP390Pressure(uncalibResultP2[0]);
+            long[] uncalibResultT2 = ProgrammerUtilities.ParseData(sensorDataT2, sensorDataType);
+            double[] bmpX80caldata2 = new double[2];
+            bmpX80caldata2 = CalibratePressure390SensorData(uncalibResultP2[0], uncalibResultT2[0]);
+            Bmp3QuantizedCalibData.TLin = bmpX80caldata2[1];
 
             //Assert.AreEqual(resultP2, 100912.81758676282);
             //Assert.AreEqual(resultT2, 23.26587201654911);
-            Assert.AreEqual(Math.Round(resultP2, 4), 100912.8176);
-            Assert.AreEqual(Math.Round(resultT2, 4), 23.2659);
+            Assert.AreEqual(Math.Round(bmpX80caldata2[0], 4), 100912.8176);
+            Assert.AreEqual(Math.Round(bmpX80caldata2[1], 4), 23.2659);
         }
         public override string GetShimmerAddress()
         {

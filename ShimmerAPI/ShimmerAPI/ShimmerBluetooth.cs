@@ -1513,25 +1513,41 @@ namespace ShimmerAPI
 
                                 break;
                             case (byte)InstructionsResponse.PressureCalibrationCoefficientsResponse:
-                                bufferbyte = new byte[24];
-                                for (int p = 0; p < 24; p++)
+
+                                byte[] length_chipidbytes = new byte[2];
+
+                                for (int m = 0; m < 2; m++)
                                 {
-                                    bufferbyte[p] = (byte)ReadByte();
+                                    length_chipidbytes[m] = (byte)ReadByte();
                                 }
 
-
-                                if (bufferbyte[1] == 0)
+                                if (length_chipidbytes[1] == 0) //bmp180
                                 {
+                                    bufferbyte = new byte[22];
+                                    for (int p = 0; p < 22; p++)
+                                    {
+                                        bufferbyte[p] = (byte)ReadByte();
+                                    }
                                     CalculateBMP180PressureCalibrationCoefficientsResponse(bufferbyte);
 
                                 }
-                                else if (bufferbyte[1] == 1)
+                                else if (length_chipidbytes[1] == 1)    //bmp280
                                 {
+                                    bufferbyte = new byte[24];
+                                    for (int p = 0; p < 24; p++)
+                                    {
+                                        bufferbyte[p] = (byte)ReadByte();
+                                    }
                                     CalculateBMP280PressureCalibrationCoefficientsResponse(bufferbyte);
 
                                 }
-                                else if (bufferbyte[1] == 2)
+                                else if (length_chipidbytes[1] == 2)    //bmp390
                                 {
+                                    bufferbyte = new byte[21];
+                                    for (int p = 0; p < 21; p++)
+                                    {
+                                        bufferbyte[p] = (byte)ReadByte();
+                                    }
                                     CalculateBMP390PressureCalibrationCoefficientsResponse(bufferbyte);
                                 }
 
@@ -2868,6 +2884,12 @@ namespace ShimmerAPI
                         signalDataTypeArray[i + 1] = "u16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
+                    }else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.TEMPERATURE;
+                        signalDataTypeArray[i + 1] = "u24";
+                        packetSize = packetSize + 3;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
                     }
                 }
                 else if ((byte)signalid[i] == (byte)0x1B)
@@ -2876,6 +2898,12 @@ namespace ShimmerAPI
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.PRESSURE;
                         signalDataTypeArray[i + 1] = "u24r";
+                        packetSize = packetSize + 3;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
+                    }else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.PRESSURE;
+                        signalDataTypeArray[i + 1] = "u24";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
                     }
@@ -3307,11 +3335,15 @@ namespace ShimmerAPI
                         UT = UT * Math.Pow(2, 4);
                         UP = UP / Math.Pow(2, 4);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmpX80caldata = CalibratePressure280SensorData(UP, UT);
-          
-                        CompensateBMP390Temperature(UT);
-                        CompensateBMP390Pressure(UP);
 
+                        if (CompatibilityCode >= 9)
+                        {
+                            bmpX80caldata = CalibratePressure390SensorData(UP, UT);
+                        }
+                        else
+                        {
+                            bmpX80caldata = CalibratePressure280SensorData(UP, UT);
+                        }
                     }
                     else
                     {
@@ -3319,7 +3351,7 @@ namespace ShimmerAPI
                         UP = (double)newPacket[iUP];
                         UP = UP / Math.Pow(2, 8 - PressureResolution);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmpX80caldata = CalibratePressureSensorData(UP, datatemp[1]);
+                        bmpX80caldata = CalibratePressure180SensorData(UP, datatemp[1]);
                     }
 
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, UP);
@@ -5293,19 +5325,14 @@ namespace ShimmerAPI
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
             {
-                //if (FirmwareVersion > 0.1)
-                if (isShimmer3withUpdatedSensors())
+                if (FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 8)
                 {
-                    if (FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 8)
-                    {
-                        WriteBytes(new byte[1] { (byte)InstructionsGet.GetPressureCalibrationCoefficientsCommand }, 0, 1);
-                        System.Threading.Thread.Sleep(800);
-                    }
-                    else
-                    {
-                        WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
-                        System.Threading.Thread.Sleep(800);
-                    }                
+                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetPressureCalibrationCoefficientsCommand }, 0, 1);
+                    System.Threading.Thread.Sleep(800);
+                }else if (isShimmer3withUpdatedSensors())
+                {
+                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
+                    System.Threading.Thread.Sleep(800);
                 }
                 else
                 {
@@ -5315,6 +5342,11 @@ namespace ShimmerAPI
                         System.Threading.Thread.Sleep(800);
                     }
                 }
+            }
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+            {
+                WriteBytes(new byte[1] { (byte)InstructionsGet.GetPressureCalibrationCoefficientsCommand }, 0, 1);
+                System.Threading.Thread.Sleep(800);
             }
         }
 
@@ -6280,47 +6312,30 @@ namespace ShimmerAPI
             caldata[1] = T;///10; // TODO divided by 10 in BMP180, needed here?
             return caldata;
         }
-
-        // Method to compute power, equivalent to pow_bmp3 function in C
-        private static double PowBmp3(double baseValue, int exponent)
+        protected double[] CalibratePressure390SensorData(double UP, double UT)
         {
-            return Math.Pow(baseValue, exponent);
-        }
-        public double CompensateBMP390Temperature(double UT)
-        {
-            sbyte rslt = BMP3_OK;
-
             double uncompTemp = UT;
-            double partialData1;
-            double partialData2;
+            double partialDataT1;
+            double partialDataT2;
 
-            partialData1 = uncompTemp - Bmp3QuantizedCalibData.ParT1;
-            partialData2 = partialData1 * Bmp3QuantizedCalibData.ParT2;
+            partialDataT1 = uncompTemp - Bmp3QuantizedCalibData.ParT1;
+            partialDataT2 = partialDataT1 * Bmp3QuantizedCalibData.ParT2;
 
             // Update the compensated temperature in calib structure since this is needed for pressure calculation
-            Bmp3QuantizedCalibData.TLin = partialData2 + (partialData1 * partialData1) *
+            Bmp3QuantizedCalibData.TLin = partialDataT2 + (partialDataT1 * partialDataT1) *
                                                  Bmp3QuantizedCalibData.ParT3;
 
             // Returns compensated temperature
             if (Bmp3QuantizedCalibData.TLin < BMP3_MIN_TEMP_DOUBLE)
             {
                 Bmp3QuantizedCalibData.TLin = BMP3_MIN_TEMP_DOUBLE;
-                rslt = BMP3_W_MIN_TEMP;
             }
 
             if (Bmp3QuantizedCalibData.TLin > BMP3_MAX_TEMP_DOUBLE)
             {
                 Bmp3QuantizedCalibData.TLin = BMP3_MAX_TEMP_DOUBLE;
-                rslt = BMP3_W_MAX_TEMP;
             }
 
-            //temperature = Bmp3QuantizedCalibData.TLin;
-
-            return Bmp3QuantizedCalibData.TLin;
-        }
-        public double CompensateBMP390Pressure(double UP)
-        {
-            sbyte result = BMP3_OK;
 
             // Variable to store the compensated pressure
             double compPress;
@@ -6332,9 +6347,6 @@ namespace ShimmerAPI
             double partialData4;
             double partialOut1;
             double partialOut2;
-
-            Debug.WriteLine("Seeeeee T_Lin = " + Bmp3QuantizedCalibData.TLin);
-
 
             partialData1 = Bmp3QuantizedCalibData.ParP6 * Bmp3QuantizedCalibData.TLin;
             partialData2 = Bmp3QuantizedCalibData.ParP7 * PowBmp3(Bmp3QuantizedCalibData.TLin, 2);
@@ -6356,20 +6368,25 @@ namespace ShimmerAPI
             if (compPress < BMP3_MIN_PRES_DOUBLE)
             {
                 compPress = BMP3_MIN_PRES_DOUBLE;
-                result = BMP3_W_MIN_PRES;
             }
 
             if (compPress > BMP3_MAX_PRES_DOUBLE)
             {
                 compPress = BMP3_MAX_PRES_DOUBLE;
-                result = BMP3_W_MAX_PRES;
             }
 
-            //pressure = compPress;
-
-            return compPress;
+            double[] caldata = new double[2];
+            caldata[0] = compPress;
+            caldata[1] = Bmp3QuantizedCalibData.TLin;
+            return caldata;
         }
 
+        // Method to compute power, equivalent to pow_bmp3 function in C
+        private static double PowBmp3(double baseValue, int exponent)
+        {
+            return Math.Pow(baseValue, exponent);
+        }
+      
         protected int countDigits(int number)
         {
             if (number == 0)
@@ -6379,7 +6396,7 @@ namespace ShimmerAPI
             return (int)Math.Floor(Math.Log10(Math.Abs(number)) + 1);
         }
 
-        protected double[] CalibratePressureSensorData(double UP, double UT)
+        protected double[] CalibratePressure180SensorData(double UP, double UT)
         {
             double X1 = (UT - AC6) * AC5 / 32768;
             double X2 = (MC * 2048 / (X1 + MD));
