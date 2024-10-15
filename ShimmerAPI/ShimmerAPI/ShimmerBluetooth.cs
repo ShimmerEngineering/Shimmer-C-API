@@ -1512,7 +1512,7 @@ namespace ShimmerAPI
                                 CalculateBMP280PressureCalibrationCoefficientsResponse(bufferbyte);
 
                                 break;
-                            case (byte)InstructionsResponse.PressureCalibrationCoefficientsResponse:
+                            case (byte)InstructionsResponse.PressureCalibrationCoefficientsResponse:    
 
                                 byte[] length_chipidbytes = new byte[2];
 
@@ -3328,22 +3328,23 @@ namespace ShimmerAPI
                     int iUT = getSignalIndex(Shimmer3Configuration.SignalNames.TEMPERATURE);
                     double UP;
                     double UT;
-                    if (isShimmer3withUpdatedSensors())
+
+                    if(HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        //CA-124
+                        UT = (double)newPacket[iUT];
+                        UP = (double)newPacket[iUP];
+                        double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
+                        bmpX80caldata = CalibratePressure390SensorData(UP, UT);
+                    }
+                    else if (isShimmer3withUpdatedSensors())
                     {
                         UT = (double)newPacket[iUT];
                         UP = (double)newPacket[iUP];
                         UT = UT * Math.Pow(2, 4);
                         UP = UP / Math.Pow(2, 4);
                         double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-
-                        if (CompatibilityCode >= 9)
-                        {
-                            bmpX80caldata = CalibratePressure390SensorData(UP, UT);
-                        }
-                        else
-                        {
-                            bmpX80caldata = CalibratePressure280SensorData(UP, UT);
-                        }
+                        bmpX80caldata = CalibratePressure280SensorData(UP, UT);
                     }
                     else
                     {
