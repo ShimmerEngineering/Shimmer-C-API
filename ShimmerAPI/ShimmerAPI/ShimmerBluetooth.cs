@@ -2908,7 +2908,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1A)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.TEMPERATURE;
                         signalDataTypeArray[i + 1] = "u16r";
@@ -2924,7 +2924,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x1B)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.PRESSURE;
                         signalDataTypeArray[i + 1] = "u24r";
