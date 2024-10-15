@@ -3359,22 +3359,25 @@ namespace ShimmerAPI
                     double UP;
                     double UT;
 
-                    if(HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    if (isShimmer3withUpdatedSensors())
                     {
-                        //CA-124
-                        UT = (double)newPacket[iUT];
-                        UP = (double)newPacket[iUP];
-                        double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmpX80caldata = CalibratePressure390SensorData(UP, UT);
-                    }
-                    else if (isShimmer3withUpdatedSensors())
-                    {
-                        UT = (double)newPacket[iUT];
-                        UP = (double)newPacket[iUP];
-                        UT = UT * Math.Pow(2, 4);
-                        UP = UP / Math.Pow(2, 4);
-                        double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
-                        bmpX80caldata = CalibratePressure280SensorData(UP, UT);
+                        if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                        {
+                            //CA-124
+                            UT = (double)newPacket[iUT];
+                            UP = (double)newPacket[iUP];
+                            double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
+                            bmpX80caldata = CalibratePressure390SensorData(UP, UT);
+                        }
+                        else
+                        {
+                            UT = (double)newPacket[iUT];
+                            UP = (double)newPacket[iUP];
+                            UT = UT * Math.Pow(2, 4);
+                            UP = UP / Math.Pow(2, 4);
+                            double[] datatemp = new double[2] { newPacket[iUP], newPacket[iUT] };
+                            bmpX80caldata = CalibratePressure280SensorData(UP, UT);
+                        }
                     }
                     else
                     {
