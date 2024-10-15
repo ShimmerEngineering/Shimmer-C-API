@@ -50,7 +50,8 @@ namespace ShimmerAPI
                 //Only enable ExG config if Shimmer3 and BtStream > 0.2.8 and if ExG sensors are enabled
                 int enabledSensors = PControlForm.ShimmerDevice.GetEnabledSensors();
 
-                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R
+                    || PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
                     ExgReg1UI = PControlForm.ShimmerDevice.GetEXG1RegisterContents();
                     ExgReg2UI = PControlForm.ShimmerDevice.GetEXG2RegisterContents();
@@ -132,7 +133,8 @@ namespace ShimmerAPI
             buttonOk.Text = "Configuring";
             buttonOk.Enabled = false;
             buttonCancel.Enabled = false;
-            if (userControlGeneralConfig1.comboBoxBaudRate.SelectedIndex != PControlForm.ShimmerDevice.GetBaudRate() && PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+            if (userControlGeneralConfig1.comboBoxBaudRate.SelectedIndex != PControlForm.ShimmerDevice.GetBaudRate() && (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3
+                || PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R))
             {
                 userControlGeneralConfig1.BaudRateChangeFlag = true;
             }
@@ -151,7 +153,8 @@ namespace ShimmerAPI
         {
             if (ExgTabOpened)
             {
-                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R
+                    || PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
                     userControlExgConfig1.setExGRegBytesinForm(false);
                 }
