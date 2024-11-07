@@ -11,43 +11,61 @@ namespace ShimmerAPI.Radios
 
     public class SerialPortRadio : AbstractRadio
     {
-        public System.IO.Ports.SerialPort SerialPort = new System.IO.Ports.SerialPort();
+        //public System.IO.Ports.SerialPort SerialPort = new System.IO.Ports.SerialPort();
+        public AbstractRadio mByteCommunication;
         protected String ComPort;
         public int ReadTimeout = 1000; //ms
         public int WriteTimeout = 1000; //ms
         protected bool ReadDataThread = false;
-        public SerialPortRadio(String comPort){
+        private bool mTesting = false;
+        public SerialPortRadio(String comPort)
+        {
             ComPort = comPort;
+        }
+
+        public void SetTestRadio(AbstractRadio radio)
+        {
+            mTesting = true;
+            mByteCommunication = radio;
         }
 
         public override bool Connect()
         {
             CurrentRadioStatus = RadioStatus.Connecting;
             RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
-            SerialPort.BaudRate = 115200;
-            SerialPort.PortName = ComPort;
-            SerialPort.ReadTimeout = this.ReadTimeout;
-            SerialPort.WriteTimeout = this.WriteTimeout;
-            
-            try
+            //SerialPort.BaudRate = 115200;
+            //SerialPort.PortName = ComPort;
+            //SerialPort.ReadTimeout = this.ReadTimeout;
+            //SerialPort.WriteTimeout = this.WriteTimeout;
+
+            if (mTesting || mByteCommunication == null)
             {
-                SerialPort.Open();
-            }
-            catch (Exception ex)
-            {
-                CurrentRadioStatus = RadioStatus.Disconnected;
+                if (!mTesting)
+                {
+                    mByteCommunication = new AbstractRadioJSSC(ComPort, ReadTimeout, WriteTimeout);
+                }
+
+                try
+                {
+                    mByteCommunication.Open();
+                }
+                catch (Exception ex)
+                {
+                    CurrentRadioStatus = RadioStatus.Disconnected;
+                    RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
+                    return false;
+                }
+                mByteCommunication.DiscardInBuffer();
+                mByteCommunication.DiscardOutBuffer();
+                ReadDataThread = true;
+                Thread thread = new Thread(ReadData);
+                // Start the thread
+                thread.Start();
+                CurrentRadioStatus = RadioStatus.Connected;
                 RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
-                return false;
             }
-            SerialPort.DiscardInBuffer();
-            SerialPort.DiscardOutBuffer();
-            ReadDataThread = true;
-            Thread thread = new Thread(ReadData);
-            // Start the thread
-            thread.Start();
-            CurrentRadioStatus = RadioStatus.Connected;
-            RadioStatusChanged?.Invoke(this, CurrentRadioStatus);
             return true;
+
         }
 
         public override bool Disconnect()
@@ -55,7 +73,7 @@ namespace ShimmerAPI.Radios
             ReadDataThread = false;
             try
             {
-                SerialPort.Close();
+                mByteCommunication.Close();
             }
             catch
             {
@@ -70,7 +88,7 @@ namespace ShimmerAPI.Radios
         {
             try
             {
-                SerialPort.Write(bytes, 0, bytes.Length);
+                mByteCommunication.Write(bytes, 0, bytes.Length);
             }
             catch (Exception)
             {
@@ -81,13 +99,13 @@ namespace ShimmerAPI.Radios
 
         protected void ReadData()
         {
-            while(ReadDataThread)
+            while (ReadDataThread)
             {
-                int NumberofBytesToRead = SerialPort.BytesToRead;
+                int NumberofBytesToRead = mByteCommunication.BytesToRead;
                 if (NumberofBytesToRead > 0)
                 {
                     byte[] buffer = new byte[NumberofBytesToRead];
-                    SerialPort.Read(buffer, 0, NumberofBytesToRead);
+                    mByteCommunication.Read(buffer, 0, NumberofBytesToRead);
                     SendBytesReceived(buffer);
                     //Thread.Sleep(1); // Simulate some work
                 }
