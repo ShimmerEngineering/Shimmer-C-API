@@ -9,30 +9,40 @@ namespace ShimmerAPI.Protocols
 {
     public class RadioSimulatorS3Protocol
     {
-        SerialPortRadio mDevice;
+        ShimmerLogAndStreamSimulator mDevice;
         String ComPort = "COM99";
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
 
         [SetUp]
         public void SetUp()
         {
-            mDevice = new SerialPortRadio(ComPort);
+            mDevice = new ShimmerLogAndStreamSimulator("", ComPort);
             mDevice.SetTestRadio(new RadioSimulatorS3(ComPort));
         }
 
         [Test]
         public void Test001_testConnectandDisconnect()
         {
-            bool isConnected = mDevice.Connect();
-            if (!isConnected)
+            try
             {
-                Assert.False(false);
+                mDevice.OpenConnection2();
+
+                // Check device connection
+                Assert.IsTrue(mDevice.IsConnectionOpen2(), "Device should be connected.");
+
+                // Check firmware version
+                Assert.AreSame("LogAndStream v0.16.9", mDevice.GetFirmwareVersionFullName(), "Firmware version should be 'LogAndStream v0.16.9'.");
+
+                // Check hardware version
+                Assert.AreSame(3, mDevice.GetShimmerVersion(), "Hardware version should be SHIMMER_3.");
+
             }
-            else
+            catch (Exception ex)
             {
-                Assert.True(true);
+                Assert.Fail($"Test aborted due to exception: {ex.Message}");
             }
         }
+
 
     }
 }

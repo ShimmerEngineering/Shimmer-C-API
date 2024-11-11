@@ -75,5 +75,11 @@ namespace ShimmerAPI.Radios
             }
         }
 
+        public String ReadExisting() { return null; }
+
+        public bool isOpen() { return true; }
+
+        public int ReadByte() { return 0; }
+
     }
 }
