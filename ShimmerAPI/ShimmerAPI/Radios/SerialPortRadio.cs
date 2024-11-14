@@ -15,7 +15,7 @@ namespace ShimmerAPI.Radios
         protected String ComPort;
         public int ReadTimeout = 1000; //ms
         public int WriteTimeout = 1000; //ms
-        public bool ReadDataThread = false;
+        protected bool ReadDataThread = false;
         public SerialPortRadio(String comPort)
         {
             ComPort = comPort;
@@ -29,7 +29,6 @@ namespace ShimmerAPI.Radios
             SerialPort.PortName = ComPort;
             SerialPort.ReadTimeout = this.ReadTimeout;
             SerialPort.WriteTimeout = this.WriteTimeout;
-
             try
             {
                 SerialPort.Open();
