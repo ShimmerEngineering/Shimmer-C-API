@@ -5,7 +5,7 @@ using ShimmerAPI.Radios;
 using ShimmerAPI.Utilities;
 using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 
-namespace ShimmerAPI.Protocols
+namespace ShimmerAPI.Simulators
 {
     public class ShimmerLogAndStreamS3Simulator : ShimmerLogAndStream
     {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ShimmerAPI.Radios;
+using ShimmerAPI.Simulators;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShimmerAPI.Protocols
+namespace ShimmerBluetoothTests
 {
     [TestClass]
     public class ShimmerLogAndStreamS3SimulatorTest
@@ -15,13 +15,11 @@ namespace ShimmerAPI.Protocols
         ShimmerLogAndStreamS3Simulator mDevice;
         String ComPort = "COM99";
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
-        TaskCompletionSource<bool> mConnectTask;
 
         [TestInitialize]
         public void SetUp()
         {
             mDevice = new ShimmerLogAndStreamS3Simulator("", ComPort);
-            mConnectTask = new TaskCompletionSource<bool>();
         }
 
         [TestMethod]
@@ -43,7 +41,7 @@ namespace ShimmerAPI.Protocols
                         Assert.Fail();
                     }
 
-                    if (!mDevice.GetShimmerVersion().Equals(3))
+                    if (!mDevice.GetShimmerVersion().Equals(3)) //Shimmer3
                     {
                         Assert.Fail();
                     }
