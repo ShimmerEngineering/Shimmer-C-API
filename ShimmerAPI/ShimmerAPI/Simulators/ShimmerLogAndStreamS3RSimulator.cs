@@ -1,23 +1,24 @@
-﻿using System;
+﻿using ShimmerAPI.Protocols;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShimmerAPI.Radios
+namespace ShimmerAPI.Simulators
 {
-    public class RadioSimulatorS3R : RadioSimulatorS3
+    public class ShimmerLogAndStreamS3RSimulator : ShimmerLogAndStreamS3Simulator
     {
-        public RadioSimulatorS3R(String address) : base(address)
+        public ShimmerLogAndStreamS3RSimulator(string devID, string bComPort) : base(devID, bComPort)
         {
         }
 
-    protected void TxShimmerVersion()
+        protected override void TxShimmerVersion()
         {
             mBuffer.Add((byte)0xff);
             mBuffer.Add((byte)0x25);
             mBuffer.Add((byte)0x0A);
         }
 
-    protected void TxFirmwareVersion()
+        protected override void TxFirmwareVersion()
         {
             mBuffer.Add((byte)0xff);
             mBuffer.Add((byte)0x2f);
@@ -29,4 +30,5 @@ namespace ShimmerAPI.Radios
             mBuffer.Add((byte)0x01);
         }
     }
+
 }

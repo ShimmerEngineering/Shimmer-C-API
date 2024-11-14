@@ -4,21 +4,24 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ShimmerAPI.Protocols
 {
     [TestClass]
-    public class Shimmer3RadioSimulatorTest
+    public class ShimmerLogAndStreamS3SimulatorTest
     {
-        ShimmerLogAndStreamSimulator mDevice;
+        ShimmerLogAndStreamS3Simulator mDevice;
         String ComPort = "COM99";
         ConcurrentQueue<byte> cq = new ConcurrentQueue<byte>();
+        TaskCompletionSource<bool> mConnectTask;
 
         [TestInitialize]
         public void SetUp()
         {
-            mDevice = new ShimmerLogAndStreamSimulator("", ComPort);
-            mDevice.SetTestRadio(new RadioSimulatorS3(ComPort));
+            mDevice = new ShimmerLogAndStreamS3Simulator("", ComPort);
+            mConnectTask = new TaskCompletionSource<bool>();
         }
 
         [TestMethod]
@@ -28,14 +31,14 @@ namespace ShimmerAPI.Protocols
             {
                 try
                 {
-                    mDevice.OpenConnection2();
-
-                    if (!mDevice.IsConnectionOpen2())
+                    mDevice.StartConnectThread();
+                    Thread.Sleep(30000);
+                    if (!mDevice.IsConnected())
                     {
                         Assert.Fail();
                     }
 
-                    if (!mDevice.GetFirmwareVersionFullName().Equals("LogAndStream v0.16.9"))
+                    if (!mDevice.GetFirmwareVersionFullName().Equals("LogAndStream 0.16.9"))
                     {
                         Assert.Fail();
                     }
@@ -56,7 +59,6 @@ namespace ShimmerAPI.Protocols
             }
             
         }
-
 
     }
 }

@@ -1,47 +1,95 @@
-﻿using ShimmerAPI.Utilities;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
+using ShimmerAPI.Radios;
+using ShimmerAPI.Utilities;
+using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 
-namespace ShimmerAPI.Radios
+namespace ShimmerAPI.Protocols
 {
-    public class RadioSimulatorS3 : AbstractRadio
+    public class ShimmerLogAndStreamS3Simulator : ShimmerLogAndStream
     {
-
+        public string ComPort;
+        public AbstractRadio mAbstractRadio;
+        TaskCompletionSource<bool> mConnectTask = new TaskCompletionSource<bool>();
+        public bool isConnectionOpen = false;
         protected BlockingCollection<byte> mBuffer = new BlockingCollection<byte>(1000); // Fixed size 1000
 
-        public class ShimmerObject 
+
+        public ShimmerLogAndStreamS3Simulator(string devID, string bComPort)
+    : base(devID)
         {
-            public const byte GET_SAMPLING_RATE_COMMAND = 0x03;
-            public const byte GET_SHIMMER_VERSION_COMMAND_NEW = (byte)0x3F;
-            public const byte GET_VBATT_COMMAND = (byte)0x95;
-            public const byte SET_CRC_COMMAND = (byte)0x8B;
-            public const byte GET_FW_VERSION_COMMAND = (byte)0x2E;
-            public const byte GET_DAUGHTER_CARD_ID_COMMAND = (byte)0x66;
-            public const byte GET_INFOMEM_COMMAND = (byte)0x8E;
-            public const byte GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND = (byte)0xA0;
-            public const byte GET_BLINK_LED = (byte)0x32;
-            public const byte GET_STATUS_COMMAND = (byte)0x72;
-            public const byte INQUIRY_COMMAND = (byte)0x01;
-            public const byte GET_BT_FW_VERSION_STR_COMMAND = (byte)0xA1;
-            public const byte GET_CALIB_DUMP_COMMAND = (byte)0x9A;
-            public const byte SET_RWC_COMMAND = (byte)0x8F;
+            ComPort = bComPort;
         }
 
-        public RadioSimulatorS3(String address)
+        public ShimmerLogAndStreamS3Simulator(string devName, string bComPort, double samplingRate, int setEnabledSensors, byte[] exg1configuration, byte[] exg2configuration)
+            : base(devName, samplingRate, setEnabledSensors, exg1configuration, exg2configuration)
         {
-            // TODO Auto-generated constructor stub
+            ComPort = bComPort;
         }
 
-        protected void TxShimmerVersion()
+        public ShimmerLogAndStreamS3Simulator(string devName, string bComPort, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower)
+            : base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower)
+        {
+            ComPort = bComPort;
+        }
+        public ShimmerLogAndStreamS3Simulator(string devName, string bComPort, double samplingRate, int accelRange, int gsrRange, int setEnabledSensors, bool enableLowPowerAccel, bool enableLowPowerGyro, bool enableLowPowerMag, int gyroRange, int magRange, byte[] exg1configuration, byte[] exg2configuration, bool internalexppower, BTCRCMode CRCmode)
+            : base(devName, samplingRate, accelRange, gsrRange, setEnabledSensors, enableLowPowerAccel, enableLowPowerGyro, enableLowPowerMag, gyroRange, magRange, exg1configuration, exg2configuration, internalexppower, CRCmode)
+        {
+            ComPort = bComPort;
+        }
+
+        public ShimmerLogAndStreamS3Simulator(string devID, string bComPort, double samplingRate, int AccelRange, int GyroRange, int gsrRange, int setEnabledSensors)
+            : base(devID, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)
+        {
+            ComPort = bComPort;
+        }
+
+        public override string GetShimmerAddress()
+        {
+            return ComPort;
+        }
+
+        public override void SetShimmerAddress(string address)
+        {
+            ComPort = address;
+        }
+
+        protected override void CloseConnection()
+        {
+        }
+
+        protected override void FlushConnection()
+        {
+        }
+
+        protected override void FlushInputConnection()
+        {
+        }
+
+        protected override bool IsConnectionOpen()
+        {
+            return isConnectionOpen;
+
+        }
+
+        protected override void OpenConnection()
+        {
+            isConnectionOpen = true;
+        }
+
+        protected override int ReadByte()
+        {
+            return mBuffer.Take();
+        }
+        protected virtual void TxShimmerVersion()
         {
             mBuffer.Add(0xff);
             mBuffer.Add(0x25);
             mBuffer.Add(0x03);
         }
 
-        protected void TxFirmwareVersion()
+        protected virtual void TxFirmwareVersion()
         {
             mBuffer.Add(0xff);
             mBuffer.Add(0x2f);
@@ -52,48 +100,15 @@ namespace ShimmerAPI.Radios
             mBuffer.Add(0x10);
             mBuffer.Add(0x09);
         }
-
-        public override bool Connect()
+        protected override void WriteBytes(byte[] buffer, int index, int length)
         {
-            throw new NotImplementedException();
-        }
 
-        public override bool Disconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] ReadBytes(int byteCount, int timeout)
-        {
-            if (byteCount <= 0)
-            {
-                throw new ArgumentException("Number of bytes to read must be positive.");
-            }
-            byte[] result = new byte[byteCount];
-
-            for (int index = 0; index < byteCount; index++)
-            {
-                try
-                {
-                    result[index] = mBuffer.Take();
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message);
-                }
-            }
-
-            return result;
-        }
-
-        public override bool WriteBytes(byte[] buffer)
-        {
-            if (buffer[0] == ShimmerObject.GET_SHIMMER_VERSION_COMMAND_NEW)
+            if (buffer[0] == (byte)PacketTypeShimmer3.GET_SHIMMER_VERSION_COMMAND)
             {
                 Console.WriteLine(UtilShimmer.BytesToHexString(buffer));
                 TxShimmerVersion();
             }
-            else if (buffer[0] == ShimmerObject.GET_VBATT_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3.GET_VBATT_COMMAND)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x8A);
@@ -105,24 +120,18 @@ namespace ShimmerAPI.Radios
                 }
                 mBuffer.Add((byte)0x61);
             }
-            else if (buffer[0] == ShimmerObject.GET_SAMPLING_RATE_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer2.GET_SAMPLING_RATE_COMMAND)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x04);
                 mBuffer.Add((byte)0x80);
                 mBuffer.Add((byte)0x02);
             }
-            else if (buffer[0] == ShimmerObject.SET_CRC_COMMAND)
-            {
-                mBuffer.Add((byte)0xff);
-                mBuffer.Add((byte)0x04);
-                mBuffer.Add((byte)0xf4);
-            }
-            else if (buffer[0] == ShimmerObject.GET_FW_VERSION_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer2.GET_FW_VERSION_COMMAND)
             {
                 TxFirmwareVersion();
             }
-            else if (buffer[0] == ShimmerObject.GET_DAUGHTER_CARD_ID_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3.GET_EXPANSION_BOARD_COMMAND)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x65);
@@ -131,7 +140,7 @@ namespace ShimmerAPI.Radios
                 mBuffer.Add((byte)0x04);
                 mBuffer.Add((byte)0x02);
             }
-            else if (buffer[0] == ShimmerObject.GET_INFOMEM_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3SDBT.GET_INFOMEM_COMMAND)
             {
                 if (buffer[1] == (byte)0x80 && buffer[2] == (byte)0x00 && buffer[3] == (byte)0x00) //0x8E 0x80 0x00 0x00
                 {
@@ -172,7 +181,7 @@ namespace ShimmerAPI.Radios
                     mBuffer.Add((byte)0x9B);
                 }
             }
-            else if (buffer[0] == ShimmerObject.GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND)
+            else if (buffer[0] == (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x9f);
@@ -183,14 +192,14 @@ namespace ShimmerAPI.Radios
                 }
                 mBuffer.Add((byte)0xDF);
             }
-            else if (buffer[0] == ShimmerObject.GET_BLINK_LED)
+            else if (buffer[0] == (byte)PacketTypeShimmer2.GET_BLINK_LED)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x31);
                 mBuffer.Add((byte)0x01);
                 mBuffer.Add((byte)0xE0);
             }
-            else if (buffer[0] == ShimmerObject.GET_STATUS_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3SDBT.GET_STATUS_COMMAND)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x8A);
@@ -198,7 +207,7 @@ namespace ShimmerAPI.Radios
                 mBuffer.Add((byte)0x21);
                 mBuffer.Add((byte)0xF4);
             }
-            else if (buffer[0] == ShimmerObject.INQUIRY_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer2.INQUIRY_COMMAND)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x02);
@@ -209,7 +218,7 @@ namespace ShimmerAPI.Radios
                 }
                 mBuffer.Add((byte)0x86);
             }
-            else if (buffer[0] == ShimmerObject.GET_BT_FW_VERSION_STR_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3SDBT.GET_BT_FW_VERSION_STR_COMMAND)
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0xa2);
@@ -221,7 +230,7 @@ namespace ShimmerAPI.Radios
                 }
                 mBuffer.Add((byte)0x79);
             }
-            else if (buffer[0] == ShimmerObject.GET_CALIB_DUMP_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND)
             {
                 if (buffer[1] == (byte)0x80 && buffer[2] == (byte)0x00 && buffer[3] == (byte)0x00) //[0x9A 0x80 0x00 0x00]
                 {
@@ -257,18 +266,13 @@ namespace ShimmerAPI.Radios
                     mBuffer.Add((byte)0x6A);
                 }
             }
-            else if (buffer[0] == ShimmerObject.SET_RWC_COMMAND)
-            {
-                mBuffer.Add((byte)0xff);
-                mBuffer.Add((byte)0xf4);
-            }
             else
             {
 
                 Console.WriteLine("Unresolved: " + UtilShimmer.BytesToHexString(buffer));
             }
 
-            return true;
         }
+
     }
 }
