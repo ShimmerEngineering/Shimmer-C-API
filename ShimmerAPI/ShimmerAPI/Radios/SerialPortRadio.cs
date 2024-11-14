@@ -12,7 +12,7 @@ namespace ShimmerAPI.Radios
     public class SerialPortRadio : AbstractRadio
     {
         public System.IO.Ports.SerialPort SerialPort = new System.IO.Ports.SerialPort();
-        public String ComPort;
+        protected String ComPort;
         public int ReadTimeout = 1000; //ms
         public int WriteTimeout = 1000; //ms
         public bool ReadDataThread = false;
@@ -80,9 +80,9 @@ namespace ShimmerAPI.Radios
             return true;
         }
 
-        public void ReadData()
+        protected void ReadData()
         {
-            while (ReadDataThread)
+            while(ReadDataThread)
             {
                 int NumberofBytesToRead = SerialPort.BytesToRead;
                 if (NumberofBytesToRead > 0)

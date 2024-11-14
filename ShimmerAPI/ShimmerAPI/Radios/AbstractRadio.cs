@@ -55,31 +55,5 @@ namespace ShimmerAPI.Radios
 
             BytesReceived?.Invoke(this, buffer);
         }
-
-        public void Open() { }
-
-        public void Close() { }
-
-        public void DiscardInBuffer() { }
-
-        public void DiscardOutBuffer() { }
-
-        public void Write(byte[] buffer, int offset, int count) { }
-
-        public int Read(byte[] buffer, int offset, int count) { return 0; }
-        public int BytesToRead
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
-        public String ReadExisting() { return null; }
-
-        public bool isOpen() { return true; }
-
-        public int ReadByte() { return 0; }
-
     }
 }
