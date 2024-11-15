@@ -284,7 +284,7 @@ namespace ShimmerAPI
         {
             SENSOR_A_ACCEL = 0x80,
             SENSOR_MPU9150_GYRO = 0x040,
-            SENSOR_LSM303DLHC_MAG = 0x20,
+            SENSOR_MAG = 0x20,
             SENSOR_GSR = 0x04,
             SENSOR_EXT_A7 = 0x02,
             SENSOR_EXT_A6 = 0x01,
@@ -302,12 +302,6 @@ namespace ShimmerAPI
             SENSOR_EXG2_16BIT = 0x080000,
             SENSOR_BRIDGE_AMP = 0x8000
         }
-
-        public enum SensorBitmapShimmer3R
-        {
-            SENSOR_LIS3MDL_MAG = 0x29,
-        }
-
 
         public enum ChannelContentsShimmer3
         {
@@ -2695,7 +2689,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x07)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
                         if (!isShimmer3withUpdatedSensors())
@@ -2707,22 +2701,7 @@ namespace ShimmerAPI
                             signalDataTypeArray[i + 1] = "i16";
                         }
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
-
-                    }
-                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
-                    {
-                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
-                        if (!isShimmer3withUpdatedSensors())
-                        {
-                            signalDataTypeArray[i + 1] = "i16*";
-                        }
-                        else
-                        {
-                            signalDataTypeArray[i + 1] = "i16";
-                        }
-                        packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_LIS3MDL_MAG);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -2736,7 +2715,7 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x08)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
                         if (!isShimmer3withUpdatedSensors())
@@ -2748,21 +2727,7 @@ namespace ShimmerAPI
                             signalDataTypeArray[i + 1] = "i16";
                         }
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
-                    }
-                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
-                    {
-                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
-                        if (!isShimmer3withUpdatedSensors())
-                        {
-                            signalDataTypeArray[i + 1] = "i16*";
-                        }
-                        else
-                        {
-                            signalDataTypeArray[i + 1] = "i16";
-                        }
-                        packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_LIS3MDL_MAG);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -2787,21 +2752,7 @@ namespace ShimmerAPI
                             signalDataTypeArray[i + 1] = "i16";
                         }
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG);
-                    }
-                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
-                    {
-                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
-                        if (!isShimmer3withUpdatedSensors())
-                        {
-                            signalDataTypeArray[i + 1] = "i16*";
-                        }
-                        else
-                        {
-                            signalDataTypeArray[i + 1] = "i16";
-                        }
-                        packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_LIS3MDL_MAG);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3312,35 +3263,7 @@ namespace ShimmerAPI
                         }
                     }
                 }
-                if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0))
-                {
-                    int iMagX = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_X);
-                    int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y);
-                    int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z);
-                    double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
-                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
-                    string units;
-                    if (DefaultMagParams)
-                    {
-                        units = ShimmerConfiguration.SignalUnits.Local_DefaultCal;
-                    }
-                    else
-                    {
-                        units = ShimmerConfiguration.SignalUnits.Local;
-                    }
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagX]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[0]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagY]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagZ]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
-
-                    magnetometer[0] = datatemp[0];
-                    magnetometer[1] = datatemp[1];
-                    magnetometer[2] = datatemp[2];
-                }
-
-                if (((EnabledSensors & (int)SensorBitmapShimmer3R.SENSOR_LIS3MDL_MAG) > 0))
+                if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG) > 0))
                 {
                     int iMagX = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_X);
                     int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y);
@@ -3724,7 +3647,7 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
                 }
                 if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
-                    && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3R.SENSOR_LIS3MDL_MAG) > 0))
+                    && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG) > 0))
                     && Orientation3DEnabled)
                 {
                     if (OrientationAlgo == null)
