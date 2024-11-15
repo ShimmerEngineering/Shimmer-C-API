@@ -767,7 +767,7 @@ namespace ShimmerAPI
                     checkBoxSensor3.Checked = false;
                     comboBoxGyroRange.Enabled = false;
                 }
-                if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
+                if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG) > 0)
                 {
                     checkBoxSensor4.Checked = true;
                     if (PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors()) //new mag sensor (updated Shimmer 3) has no variable mag range
@@ -2227,7 +2227,7 @@ namespace ShimmerAPI
                 }
                 if (checkBoxSensor4.Checked)
                 {
-                    ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG;
+                    ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG;
                 }
                 if (checkBoxSensor5.Checked)
                 {
@@ -2454,7 +2454,7 @@ namespace ShimmerAPI
                 }
                 if (checkBoxSensor4.Checked)
                 {
-                    returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG;
+                    returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG;
                 }
                 if (checkBoxSensor5.Checked)
                 {

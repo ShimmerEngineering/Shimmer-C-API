@@ -861,7 +861,7 @@ namespace ShimmerAPI
 
             file.WriteLine("accel=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) == 0 ? 0 : 1));//SensorBitmapShimmer3.SensorAAccel
             file.WriteLine("gyro=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) == 0 ? 0 : 1));
-            file.WriteLine("mag=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) == 0 ? 0 : 1));
+            file.WriteLine("mag=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_MAG) == 0 ? 0 : 1));
             file.WriteLine("exg1_24bit=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT) == 0 ? 0 : 1));
             file.WriteLine("exg2_24bit=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_EXG2_24BIT) == 0 ? 0 : 1));
             file.WriteLine("gsr=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_GSR) == 0 ? 0 : 1));
@@ -1026,7 +1026,7 @@ namespace ShimmerAPI
                     else if (line.Contains("mag="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG;
+                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG;
                     }
                     else if (line.Contains("exg1_24bit="))
                     {
@@ -1116,7 +1116,7 @@ namespace ShimmerAPI
                     else if (line.Contains("mag="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG;
+                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG;
                     }
                     else if (line.Contains("sample_rate="))
                         freq = Convert.ToDouble(line.Substring(equals, line.Length - equals));
@@ -1383,7 +1383,7 @@ namespace ShimmerAPI
                     buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.ZWRAccel);
                     nbrDigiChans += 3;
                 }
-                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) != 0)
+                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG) != 0)
                 {
                     buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.XMag);
                     buffer_channelContents.Add((byte)ShimmerSDBT.ChannelContents.YMag);
