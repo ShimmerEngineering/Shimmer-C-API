@@ -2473,7 +2473,7 @@ namespace ShimmerAPI
                         SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3_LSM303DLHC;
                     }
                 }
-                else //using Shimmer3R with updated sensors 
+                else //using Shimmer3 with updated sensors 
                 {
                     AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH;
                     OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH;
@@ -2505,7 +2505,7 @@ namespace ShimmerAPI
                         SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                     }
                 }
-                else //using Shimmer3 with updated sensors 
+                else //using Shimmer3R with updated sensors 
                 {
                     AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
                     OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
