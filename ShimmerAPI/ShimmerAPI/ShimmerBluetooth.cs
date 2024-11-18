@@ -300,7 +300,9 @@ namespace ShimmerAPI
             SENSOR_EXG2_24BIT = 0x08,
             SENSOR_EXG1_16BIT = 0x100000,
             SENSOR_EXG2_16BIT = 0x080000,
-            SENSOR_BRIDGE_AMP = 0x8000
+            SENSOR_BRIDGE_AMP = 0x8000,
+            SENSOR_MAG_ALT = 0X200000,
+
         }
 
         public enum ChannelContentsShimmer3
@@ -458,6 +460,11 @@ namespace ShimmerAPI
             GET_MPU9150_GYRO_RANGE_COMMAND = 0x4B,
             SET_MPU9150_SAMPLING_RATE_COMMAND = 0x4C,
             SET_MPU9150_GYRO_RANGE_COMMAND = 0x49,
+            ALT_MAG_CALIBRATION_RESPONSE = 0x18, //TBD; currently used default mag command
+            GET_ALT_MAG_CALIBRATION_COMMAND = 0x19, //TBD; currently used default mag command
+            SET_ALT_MAG_SAMPLING_RATE_RESPONSE = 0x3A, //TBD; currently used default mag command
+            ALT_MAG_SAMPLING_RATE_RESPONSE = 0x3B, //TBD; currently used default mag command
+            GET_ALT_MAG_SAMPLING_RATE_COMMAND = 0x3C, //TBD; currently used default mag command
             SET_BMP180_PRES_RESOLUTION_COMMAND = 0x52,
             BMP180_PRES_RESOLUTION_RESPONSE = 0x53,
             GET_BMP180_PRES_RESOLUTION_COMMAND = 0x54,
@@ -691,6 +698,10 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 3421, 0, 0 }, { 0, 3421, 0 }, { 0, 0, 3421 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 2281, 0, 0 }, { 0, 2281, 0 }, { 0, 0, 2281 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1711, 0, 0 }, { 0, 1711, 0 }, { 0, 0, 1711 } };
+
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }; 				//Default Values for Magnetometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
         public static readonly byte[] SHIMMER3_DEFAULT_ECG_REG1 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x40, 0x2D, 0x00, 0x00, 0x02, 0x03 };
         public static readonly byte[] SHIMMER3_DEFAULT_ECG_REG2 = new byte[10] { 0x00, 0xA0, 0x10, 0x40, 0x47, 0x00, 0x00, 0x00, 0x02, 0x01 };
@@ -2462,7 +2473,7 @@ namespace ShimmerAPI
                         SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8_1GA_SHIMMER3_LSM303DLHC;
                     }
                 }
-                else //using Shimmer3 with updated sensors 
+                else //using Shimmer3R with updated sensors 
                 {
                     AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH;
                     OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH;
@@ -2494,7 +2505,12 @@ namespace ShimmerAPI
                         SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                     }
                 }
-
+                else //using Shimmer3 with updated sensors 
+                {
+                    AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
+                    OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
+                }
             }
 
         }
