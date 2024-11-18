@@ -159,6 +159,9 @@ namespace ShimmerAPI
         public double[,] AlignmentMatrixMag = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };
         public double[,] SensitivityMatrixMag = new double[3, 3] { { 580, 0, 0 }, { 0, 580, 0 }, { 0, 0, 580 } };
         public double[,] OffsetVectorMag = new double[3, 1] { { 0 }, { 0 }, { 0 } };
+        public double[,] AlignmentMatrixMag2 = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };
+        public double[,] SensitivityMatrixMag2 = new double[3, 3] { { 580, 0, 0 }, { 0, 580, 0 }, { 0, 0, 580 } };
+        public double[,] OffsetVectorMag2 = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public double[,] AlignmentMatrixAccel2 = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, 1 } };
         public double[,] SensitivityMatrixAccel2 = new double[3, 3] { { 38, 0, 0 }, { 0, 38, 0 }, { 0, 0, 38 } };
         public double[,] OffsetVectorAccel2 = new double[3, 1] { { 2048 }, { 2048 }, { 2048 } };
@@ -220,6 +223,7 @@ namespace ShimmerAPI
         public bool DefaultWRAccelParams = true;
         public bool DefaultGyroParams = true;
         public bool DefaultMagParams = true;
+        public bool DefaultWRMagParams = true;
         public bool DefaultECGParams = true;
         public bool DefaultEMGParams = true;
         protected int CurrentLEDStatus = 0;
@@ -2506,15 +2510,19 @@ namespace ShimmerAPI
                     }
                 }
             }
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                AlignmentMatrixMag2 = alignmentMatrix;
+                OffsetVectorMag2 = offsetVector;
+                SensitivityMatrixMag2 = sensitivityMatrix;
+                DefaultWRMagParams = false;
+            }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                DefaultMagParams = true;
-                if (!isShimmer3withUpdatedSensors())
-                {
-                    AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
-                    OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
-                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
-                }
+                DefaultWRMagParams = true;
+                AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
+                OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+                SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
             }
 
         }
@@ -2957,6 +2965,36 @@ namespace ShimmerAPI
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_INT_A14);
                     }
                 }
+                else if ((byte)signalid[i] == (byte)0x17)
+                {
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X;
+                        signalDataTypeArray[i + 1] = "i16*"; //TBD; used Signal Datatype from Mag as placeholder
+                        packetSize = packetSize + 2;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
+                    }
+                }
+                else if ((byte)signalid[i] == (byte)0x18)
+                {
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y;
+                        signalDataTypeArray[i + 1] = "i16*"; //TBD; used Signal Datatype from Mag as placeholder
+                        packetSize = packetSize + 2;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
+                    }
+                }
+                else if ((byte)signalid[i] == (byte)0x19)
+                {
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z;
+                        signalDataTypeArray[i + 1] = "i16*"; //TBD; used Signal Datatype from Mag as placeholder
+                        packetSize = packetSize + 2;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
+                    }
+                }
                 else if ((byte)signalid[i] == (byte)0x1A)
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
@@ -3305,6 +3343,33 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagZ]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
+
+                    magnetometer[0] = datatemp[0];
+                    magnetometer[1] = datatemp[1];
+                    magnetometer[2] = datatemp[2];
+                }
+                if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0))
+                {
+                    int iMagX = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X);
+                    int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y);
+                    int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z);
+                    double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
+                    string units;
+                    if (DefaultWRMagParams)
+                    {
+                        units = ShimmerConfiguration.SignalUnits.Local_DefaultCal;
+                    }
+                    else
+                    {
+                        units = ShimmerConfiguration.SignalUnits.Local;
+                    }
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
 
                     magnetometer[0] = datatemp[0];
                     magnetometer[1] = datatemp[1];
@@ -6940,6 +7005,9 @@ namespace ShimmerAPI
             public static readonly String MAGNETOMETER_X = "Magnetometer X";
             public static readonly String MAGNETOMETER_Y = "Magnetometer Y";
             public static readonly String MAGNETOMETER_Z = "Magnetometer Z";
+            public static readonly String WIDE_RANGE_MAGNETOMETER_X = "Wide Range Magnetometer X";
+            public static readonly String WIDE_RANGE_MAGNETOMETER_Y = "Wide Range Magnetometer Y";
+            public static readonly String WIDE_RANGE_MAGNETOMETER_Z = "Wide Range Magnetometer Z";
             public static readonly String GYROSCOPE_X = "Gyroscope X";
             public static readonly String GYROSCOPE_Y = "Gyroscope Y";
             public static readonly String GYROSCOPE_Z = "Gyroscope Z";
