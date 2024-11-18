@@ -2505,7 +2505,11 @@ namespace ShimmerAPI
                         SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                     }
                 }
-                else //using Shimmer3R with updated sensors 
+            }
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                DefaultMagParams = true;
+                if (!isShimmer3withUpdatedSensors())
                 {
                     AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
                     OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
