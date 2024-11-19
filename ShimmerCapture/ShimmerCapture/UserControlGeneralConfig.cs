@@ -757,7 +757,7 @@ namespace ShimmerAPI
                     checkBoxSensor2.Checked = false;
                     comboBoxAccelRange.Enabled = false;
                 }
-                if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0)
+                if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GYRO) > 0)
                 {
                     checkBoxSensor3.Checked = true;
                     comboBoxGyroRange.Enabled = true;
@@ -2223,7 +2223,7 @@ namespace ShimmerAPI
                 }
                 if (checkBoxSensor3.Checked)
                 {
-                    ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MPU9150_GYRO;
+                    ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GYRO;
                 }
                 if (checkBoxSensor4.Checked)
                 {
@@ -2450,7 +2450,7 @@ namespace ShimmerAPI
                 }
                 if (checkBoxSensor3.Checked)
                 {
-                    returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MPU9150_GYRO;
+                    returnEnabledSensors = returnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GYRO;
                 }
                 if (checkBoxSensor4.Checked)
                 {

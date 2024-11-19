@@ -283,7 +283,7 @@ namespace ShimmerAPI
         public enum SensorBitmapShimmer3
         {
             SENSOR_A_ACCEL = 0x80,
-            SENSOR_MPU9150_GYRO = 0x040,
+            SENSOR_GYRO = 0x040,
             SENSOR_LSM303DLHC_MAG = 0x20,
             SENSOR_GSR = 0x04,
             SENSOR_EXT_A7 = 0x02,
@@ -628,14 +628,21 @@ namespace ShimmerAPI
         public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH = new double[3, 3] { { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
         public static readonly double[,] OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
 
-
-
         public static readonly double[,] ALIGNMENT_MATRIX_GYRO_SHIMMER3 = new double[3, 3] { { 0, -1, 0 }, { -1, 0, 0 }, { 0, 0, -1 } }; 				//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3 = new double[3, 3] { { 131, 0, 0 }, { 0, 131, 0 }, { 0, 0, 131 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3 = new double[3, 3] { { 65.5, 0, 0 }, { 0, 65.5, 0 }, { 0, 0, 65.5 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3 = new double[3, 3] { { 32.8, 0, 0 }, { 0, 32.8, 0 }, { 0, 0, 32.8 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3 = new double[3, 3] { { 16.4, 0, 0 }, { 0, 16.4, 0 }, { 0, 0, 16.4 } }; 		//Default Values for Gyroscope Calibration
-        public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
+        public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3 = new double[3, 1] { { 0 }, { 0 }, { 0 } };                        //Default Values for Gyroscope Calibration
+
+        public static readonly double[,] ALIGNMENT_MATRIX_GYRO_SHIMMER3R_LSM6DSV = new double[3, 3] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } };               //Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_125DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 229, 0, 0 }, { 0, 229, 0 }, { 0, 0, 229 } };      //Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 114, 0, 0 }, { 0, 114, 0 }, { 0, 0, 114 } }; 		//Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 57, 0, 0 }, { 0, 57, 0 }, { 0, 0, 57 } }; 		//Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 29, 0, 0 }, { 0, 29, 0 }, { 0, 0, 29 } }; 		//Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 14, 0, 0 }, { 0, 14, 0 }, { 0, 0, 14 } };      //Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
+        public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
         public static readonly double[] SHIMMER3_GSR_REF_RESISTORS_KOHMS = new double[] {
             40.200, 	//Range 0
@@ -2367,6 +2374,37 @@ namespace ShimmerAPI
                 OffsetVectorGyro = OFFSET_VECTOR_GYRO_SHIMMER3;
 
             }
+            else if (packetType == (byte)PacketTypeShimmer3.GYRO_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                DefaultGyroParams = true;
+                if (GyroRange == 0)
+                {
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_125DPS_SHIMMER3R_LSM6DSV;
+                }
+                else if (GyroRange == 1)
+                {
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3R_LSM6DSV;
+                }
+                else if (GyroRange == 2)
+                {
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV;
+                }
+                else if (GyroRange == 3)
+                {
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV;
+                }
+                else if (GyroRange == 4)
+                {
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV;
+                }
+                else if (GyroRange == 5)
+                {
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV;
+                }
+                AlignmentMatrixGyro = ALIGNMENT_MATRIX_GYRO_SHIMMER3R_LSM6DSV;
+                OffsetVectorGyro = OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV;
+
+            }
             else if (packetType == (byte)PacketTypeShimmer2.MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2))
             {
                 DefaultMagParams = false;
@@ -2740,7 +2778,7 @@ namespace ShimmerAPI
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_X;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -2758,7 +2796,7 @@ namespace ShimmerAPI
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Y;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -2775,7 +2813,7 @@ namespace ShimmerAPI
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Z;
                         signalDataTypeArray[i + 1] = "i16*";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3176,7 +3214,7 @@ namespace ShimmerAPI
                     accelerometer[2] = datatemp[2];
 
                 }
-                if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0))
+                if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_GYRO) > 0))
                 {
                     int iGyroX = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_X);
                     int iGyroY = getSignalIndex(Shimmer3Configuration.SignalNames.GYROSCOPE_Y);
@@ -3616,7 +3654,7 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
                 }
                 if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
-                    && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
+                    && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_GYRO) > 0) && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
                     && Orientation3DEnabled)
                 {
                     if (OrientationAlgo == null)
