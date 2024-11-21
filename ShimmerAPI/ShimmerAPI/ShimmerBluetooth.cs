@@ -162,6 +162,9 @@ namespace ShimmerAPI
         public double[,] AlignmentMatrixAccel2 = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, 1 } };
         public double[,] SensitivityMatrixAccel2 = new double[3, 3] { { 38, 0, 0 }, { 0, 38, 0 }, { 0, 0, 38 } };
         public double[,] OffsetVectorAccel2 = new double[3, 1] { { 2048 }, { 2048 }, { 2048 } };
+        public double[,] AlignmentMatrixAltAccel = new double[3, 3] { { 0 , 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };
+        public double[,] SensitivityMatrixAltAccel = new double[3, 3] { { 16, 0, 0 }, { 0, 16, 0 }, { 0, 0, 16 } };
+        public double[,] OffsetVectorAltAccel = new double[3, 1] { { 0 }, { 0 }, { 0 } };
 
         //Default Values for Magnetometer Calibration
 
@@ -2327,13 +2330,20 @@ namespace ShimmerAPI
                     OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH;
                 }
             }
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1)
+            {
+                AlignmentMatrixAltAccel = alignmentMatrix;
+                OffsetVectorAltAccel = offsetVector;
+                SensitivityMatrixAltAccel = sensitivityMatrix;
+                DefaultHighGAccelParams = false;
+            }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultHighGAccelParams = true;
-                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371;
-                AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371;
-                OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371;
-        }
+                SensitivityMatrixAltAccel = SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371;
+                AlignmentMatrixAltAccel = ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371;
+                OffsetVectorAltAccel = OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371;
+            }
             else if (packetType == (byte)PacketTypeShimmer2.GYRO_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2))
             {
                 AlignmentMatrixGyro = alignmentMatrix;
@@ -3232,9 +3242,9 @@ namespace ShimmerAPI
                     int iAccelY = getSignalIndex(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Y); //find index
                     int iAccelZ = getSignalIndex(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Z); //find index
                     double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
-                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixAccel2, SensitivityMatrixAccel2, OffsetVectorAccel2);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixAltAccel, SensitivityMatrixAltAccel, OffsetVectorAltAccel);
                     string units;
-                    if (DefaultWRAccelParams)
+                    if (DefaultHighGAccelParams)
                     {
                         units = ShimmerConfiguration.SignalUnits.MeterPerSecondSquared_DefaultCal;
                     }
@@ -3693,7 +3703,7 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iSGLow]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
                 }
-                if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
+                if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT) >0))
                     && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) > 0)
                     && Orientation3DEnabled)
                 {
