@@ -165,6 +165,9 @@ namespace ShimmerAPI
         public double[,] AlignmentMatrixAccel2 = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, 1 } };
         public double[,] SensitivityMatrixAccel2 = new double[3, 3] { { 38, 0, 0 }, { 0, 38, 0 }, { 0, 0, 38 } };
         public double[,] OffsetVectorAccel2 = new double[3, 1] { { 2048 }, { 2048 }, { 2048 } };
+        public double[,] AlignmentMatrixAltMag = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
+        public double[,] SensitivityMatrixAltMag = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
+        public double[,] OffsetVectorAltMag = new double[3, 1] { { 0 }, { 0 }, { 0 } };
 
         //Default Values for Magnetometer Calibration
 
@@ -2512,17 +2515,17 @@ namespace ShimmerAPI
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                AlignmentMatrixMag2 = alignmentMatrix;
-                OffsetVectorMag2 = offsetVector;
-                SensitivityMatrixMag2 = sensitivityMatrix;
+                AlignmentMatrixAltMag = alignmentMatrix;
+                OffsetVectorAltMag = offsetVector;
+                SensitivityMatrixAltMag = sensitivityMatrix;
                 DefaultWRMagParams = false;
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultWRMagParams = true;
-                AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
-                OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
-                SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
+                AlignmentMatrixAltMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
+                OffsetVectorAltMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+                SensitivityMatrixAltMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
             }
 
         }
@@ -3732,7 +3735,7 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
                 }
                 if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
-                    && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG) > 0))
+                    && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0))
                     && Orientation3DEnabled)
                 {
                     if (OrientationAlgo == null)
