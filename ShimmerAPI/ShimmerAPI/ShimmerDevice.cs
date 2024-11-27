@@ -46,7 +46,7 @@ namespace ShimmerAPI
             {
                 clockConstant = 1024;
             }
-            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 clockConstant = 32768;
             }
