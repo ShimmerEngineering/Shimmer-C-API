@@ -74,6 +74,7 @@ using System.Timers;
 using System.ComponentModel;
 using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 using ShimmerAPI.Utilities;
+using static ShimmerAPI.ShimmerBluetooth;
 
 namespace ShimmerAPI
 {
@@ -165,6 +166,9 @@ namespace ShimmerAPI
         public double[,] AlignmentMatrixAccel2 = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, 1 } };
         public double[,] SensitivityMatrixAccel2 = new double[3, 3] { { 38, 0, 0 }, { 0, 38, 0 }, { 0, 0, 38 } };
         public double[,] OffsetVectorAccel2 = new double[3, 1] { { 2048 }, { 2048 }, { 2048 } };
+        public double[,] AlignmentMatrixAltAccel = new double[3, 3] { { 0 , 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };
+        public double[,] SensitivityMatrixAltAccel = new double[3, 3] { { 16, 0, 0 }, { 0, 16, 0 }, { 0, 0, 16 } };
+        public double[,] OffsetVectorAltAccel = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public double[,] AlignmentMatrixAltMag = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
         public double[,] SensitivityMatrixAltMag = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
         public double[,] OffsetVectorAltMag = new double[3, 1] { { 0 }, { 0 }, { 0 } };
@@ -224,6 +228,7 @@ namespace ShimmerAPI
         public double FirstSystemTimeStampValue;
         public bool DefaultAccelParams = true;
         public bool DefaultWRAccelParams = true;
+        public bool DefaultHighGAccelParams = true;
         public bool DefaultGyroParams = true;
         public bool DefaultMagParams = true;
         public bool DefaultWRMagParams = true;
@@ -308,6 +313,7 @@ namespace ShimmerAPI
             SENSOR_EXG1_16BIT = 0x100000,
             SENSOR_EXG2_16BIT = 0x080000,
             SENSOR_BRIDGE_AMP = 0x8000,
+            SENSOR_ACCEL_ALT = 0x400000,
             SENSOR_MAG_ALT = 0X200000,
 
         }
@@ -467,6 +473,12 @@ namespace ShimmerAPI
             GET_MPU9150_GYRO_RANGE_COMMAND = 0x4B,
             SET_MPU9150_SAMPLING_RATE_COMMAND = 0x4C,
             SET_MPU9150_GYRO_RANGE_COMMAND = 0x49,
+            SET_ALT_ACCEL_CALIBRATION_COMMAND = 0x1A, //TBD; used WR Accel command as placeholder
+            ALT_ACCEL_CALIBRATION_RESPONSE = 0x1B, //TBD; used WR Accel command as placeholder
+            GET_ALT_ACCEL_CALIBRATION_COMMAND = 0x1C, //TBD; used WR Accel command as placeholder
+            SET_ALT_ACCEL_SAMPLING_RATE_COMMAND = 0x40, //TBD; used WR Accel command as placeholder
+            ALT_ACCEL_SAMPLING_RATE_COMMAND = 0x41, //TBD; used WR Accel command as placeholder
+            GET_ALT_ACCEL_SAMPLING_RATE_COMMAND = 0x42, //TBD; used WR Accel command as placeholder
             ALT_MAG_CALIBRATION_RESPONSE = 0x18, //TBD; currently used default mag command
             GET_ALT_MAG_CALIBRATION_COMMAND = 0x19, //TBD; currently used default mag command
             SET_ALT_MAG_SAMPLING_RATE_RESPONSE = 0x3A, //TBD; currently used default mag command
@@ -641,6 +653,9 @@ namespace ShimmerAPI
         public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH = new double[3, 3] { { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
         public static readonly double[,] OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
 
+        public static readonly double[,] SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371 = new double[3, 3] { { 16, 0, 0 }, { 0, 16, 0 }, { 0, 0, 16 } };
+        public static readonly double[,] ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371 = new double[3, 3] { { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371 = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3R_LIS2DW12 = new double[3, 3] { { 1671, 0, 0 }, { 0, 1671, 0 }, { 0, 0, 1671 } };
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3R_LIS2DW12 = new double[3, 3] { { 836, 0, 0 }, { 0, 836, 0 }, { 0, 0, 836 } };
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3R_LIS2DW12 = new double[3, 3] { { 418, 0, 0 }, { 0, 418, 0 }, { 0, 0, 418 } };
@@ -2345,6 +2360,20 @@ namespace ShimmerAPI
                     OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH;
                 }
             }
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                AlignmentMatrixAltAccel = alignmentMatrix;
+                OffsetVectorAltAccel = offsetVector;
+                SensitivityMatrixAltAccel = sensitivityMatrix;
+                DefaultHighGAccelParams = false;
+            }
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                DefaultHighGAccelParams = true;
+                SensitivityMatrixAltAccel = SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371;
+                AlignmentMatrixAltAccel = ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371;
+                OffsetVectorAltAccel = OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371;
+            }
             else if (packetType == (byte)PacketTypeShimmer3.WR_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultWRAccelParams = true;
@@ -2995,6 +3024,37 @@ namespace ShimmerAPI
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_INT_A14);
                     }
                 }
+                else if ((byte)signalid[i] == (byte)0x14)
+                {
+
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalDataTypeArray[i + 1] = "i16"; //TBD; used WR Accel signal datatype as placeholder
+                        packetSize = packetSize + 2;
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_X;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT);
+                    }
+                }
+                else if ((byte)signalid[i] == (byte)0x15)
+                {
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalDataTypeArray[i + 1] = "i16"; //TBD; used WR Accel signal datatype as placeholder
+                        packetSize = packetSize + 2;
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Y;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT);
+                    }
+                }
+                else if ((byte)signalid[i] == (byte)0x16)
+                {
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalDataTypeArray[i + 1] = "i16"; //TBD; used WR Accel signal datatype as placeholder
+                        packetSize = packetSize + 2;
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Z;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT);
+                    }
+                }
                 else if ((byte)signalid[i] == (byte)0x17)
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
@@ -3033,7 +3093,8 @@ namespace ShimmerAPI
                         signalDataTypeArray[i + 1] = "u16r";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
-                    }else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    }
+                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.TEMPERATURE;
                         signalDataTypeArray[i + 1] = "u24";
@@ -3049,7 +3110,8 @@ namespace ShimmerAPI
                         signalDataTypeArray[i + 1] = "u24r";
                         packetSize = packetSize + 3;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_BMP180_PRESSURE);
-                    }else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    }
+                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.PRESSURE;
                         signalDataTypeArray[i + 1] = "u24";
@@ -3289,6 +3351,34 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iAccelZ]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
+
+                    accelerometer[0] = datatemp[0];
+                    accelerometer[1] = datatemp[1];
+                    accelerometer[2] = datatemp[2];
+
+                }
+                if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT) > 0))
+                {
+                    int iAccelX = getSignalIndex(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_X); //find index
+                    int iAccelY = getSignalIndex(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Y); //find index
+                    int iAccelZ = getSignalIndex(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Z); //find index
+                    double[] datatemp = new double[3] { newPacket[iAccelX], newPacket[iAccelY], newPacket[iAccelZ] };
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixAltAccel, SensitivityMatrixAltAccel, OffsetVectorAltAccel);
+                    string units;
+                    if (DefaultHighGAccelParams)
+                    {
+                        units = ShimmerConfiguration.SignalUnits.MeterPerSecondSquared_DefaultCal;
+                    }
+                    else
+                    {
+                        units = ShimmerConfiguration.SignalUnits.MeterPerSecondSquared;
+                    }
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_X, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iAccelX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_X, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Y, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iAccelY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iAccelZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
 
                     accelerometer[0] = datatemp[0];
                     accelerometer[1] = datatemp[1];
@@ -3761,7 +3851,7 @@ namespace ShimmerAPI
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iSGLow]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[1]);
                 }
-                if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0))
+                   if ((((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT) >0))
                     && ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) > 0) && (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG) > 0) || ((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0))
                     && Orientation3DEnabled)
                 {
@@ -7032,6 +7122,9 @@ namespace ShimmerAPI
             public static readonly String WIDE_RANGE_ACCELEROMETER_X = "Wide Range Accelerometer X";
             public static readonly String WIDE_RANGE_ACCELEROMETER_Y = "Wide Range Accelerometer Y";
             public static readonly String WIDE_RANGE_ACCELEROMETER_Z = "Wide Range Accelerometer Z";
+            public static readonly String HIGH_G_ACCELEROMETER_X = "High G Accelerometer X";
+            public static readonly String HIGH_G_ACCELEROMETER_Y = "High G Accelerometer Y";
+            public static readonly String HIGH_G_ACCELEROMETER_Z = "High G Accelerometer Z";
             public static readonly String MAGNETOMETER_X = "Magnetometer X";
             public static readonly String MAGNETOMETER_Y = "Magnetometer Y";
             public static readonly String MAGNETOMETER_Z = "Magnetometer Z";
