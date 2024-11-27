@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShimmerAPI.Sensors
 {
-    class MagSensor
+    public class WRMag
     {
         public readonly int CALIBRATION_ID = 2;
         public double[,] AlignmentMatrixMag = new double[3, 3];
@@ -22,7 +22,7 @@ namespace ShimmerAPI.Sensors
                 var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
                 var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
                 (AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                System.Console.WriteLine("Mag calibration parameters");
+                System.Console.WriteLine("WR Mag calibration parameters");
             }
 
         }
