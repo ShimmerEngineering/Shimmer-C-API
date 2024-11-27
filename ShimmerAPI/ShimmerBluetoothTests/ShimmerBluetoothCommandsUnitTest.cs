@@ -47,7 +47,7 @@ namespace ShimmerBluetoothTests
             String[] array = shimmerDevice.GetSignalNameArray();
             Assert.AreEqual(array[1], Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X);
 
-            shimmerDevice.WriteSensors((int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO);
+            shimmerDevice.WriteSensors((int)SensorBitmapShimmer3.SENSOR_GYRO);
             Thread.Sleep(1000);
             array = shimmerDevice.GetSignalNameArray();
             Assert.AreEqual(array[1], Shimmer3Configuration.SignalNames.GYROSCOPE_X);
