@@ -2453,7 +2453,7 @@ namespace ShimmerAPI
                 SensitivityMatrixGyro[2, 2] = SensitivityMatrixGyro[2, 2] / 100;
                 DefaultGyroParams = false;
             }
-            else if (packetType == (byte)PacketTypeShimmer3.GYRO_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+            else if (packetType == (byte)PacketTypeShimmer3.GYRO_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
                 AlignmentMatrixGyro = alignmentMatrix;
                 OffsetVectorGyro = offsetVector;
