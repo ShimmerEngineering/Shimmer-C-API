@@ -2953,10 +2953,17 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0A)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_X;
                         signalDataTypeArray[i + 1] = "i16*";
+                        packetSize = packetSize + 2;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
+                    }
+                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_X;
+                        signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
                     }
@@ -2971,10 +2978,17 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0B)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Y;
                         signalDataTypeArray[i + 1] = "i16*";
+                        packetSize = packetSize + 2;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
+                    }
+                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Y;
+                        signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
                     }
@@ -2988,10 +3002,17 @@ namespace ShimmerAPI
                 }
                 else if ((byte)signalid[i] == (byte)0x0C)
                 {
-                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Z;
                         signalDataTypeArray[i + 1] = "i16*";
+                        packetSize = packetSize + 2;
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
+                    }
+                    else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Z;
+                        signalDataTypeArray[i + 1] = "i16";
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_GYRO);
                     }
