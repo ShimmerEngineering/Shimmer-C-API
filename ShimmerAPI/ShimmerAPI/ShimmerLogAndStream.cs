@@ -697,7 +697,16 @@ namespace ShimmerAPI
             status_text = "Acquiring Calibration settings...";
             //PControlForm.status_text = "Acquiring Calibration settings...";
             //worker.ReportProgress(40, status_text);
-            ReadCalibrationParameters("All");
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                //ReadCalibDump();
+                ReadCalibrationParameters("All");
+            }
+            else
+            {
+                //ReadCalibDump();
+                ReadCalibrationParameters("All");
+            }
 
             status_text = "Acquiring EXG1 configure settings...";
             newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
@@ -917,10 +926,46 @@ namespace ShimmerAPI
         [Obsolete("This method is unfinished and should not be used.")]
         public void ReadCalibDump()
         {
+
+            List<byte> calibDumpResponse = new List<byte>();
+            
+            byte[] byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00);
+
+            if (byteResult == null || byteResult.Length < 2)
+            {
+                Console.WriteLine("Failed to retrieve calibration dump.");
+                return;
+            }
+
+            int length = byteResult[0] + (byteResult[1] << 8) + 2;
+            Console.WriteLine($"Calibration Dump Length: {length}");
+
+            calibDumpResponse.AddRange(byteResult);
+
+            while (calibDumpResponse.Count < length)
+            {
+                byte[] address = BitConverter.GetBytes((short)(calibDumpResponse.Count & 0xFFFF));
+                Array.Reverse(address);
+                int count = length - calibDumpResponse.Count;
+                if (count >= 128)
+                {
+                    count = 128;
+                }
+
+                byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, (byte)count, address[0], address[1]);
+                if (byteResult != null)
+                {
+                    calibDumpResponse.AddRange(byteResult);
+                }
+            }
+
+            /*
             WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00 }, 0, 4);
 
             Thread.Sleep(500);
            
+
+            
             CalibDump = tempCalibDump;
             var length = ((int)(CalibDump[0]) + ((int)(CalibDump[1]) << 8)) + 2;
             System.Console.WriteLine("Calib Dump Length: " + length);
@@ -940,13 +985,19 @@ namespace ShimmerAPI
                 System.Console.WriteLine("Calib Dump Length: " + length + " " + tempCalibDump.Length + " " + CalibDump.Length);
             }
             System.Console.WriteLine("Calib Dump: " + ProgrammerUtilities.ByteArrayToHexString(CalibDump));
+            */
         }
 
-        protected void SendGetMemory(byte command, byte val0, byte val1, byte val2)
+        protected byte[] SendGetMemoryCommand(byte cmd, byte val0, byte val1, byte val2)
         {
-            WriteBytes(new byte[4] { command, val0, val1, val2 }, 0, 4);
-            Thread.Sleep(200);
-        } 
+
+            // Create the byte array
+            byte[] bytes = { cmd, val0, val1, val2 };
+            WriteBytes(bytes, 0, bytes.Length);
+            Thread.Sleep(500);
+
+            return tempCalibDump;
+        }
 
         protected void ReadInfoMem(byte val1 , byte val2)
         {

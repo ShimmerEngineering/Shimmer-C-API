@@ -8,6 +8,25 @@ namespace ShimmerAPI.Utilities
 {
     public class UtilCalibration
     {
+        public static bool AllElementsAre(double[,] matrix, double value)
+        {
+            int rows = matrix.GetLength(0); // Number of rows
+            int cols = matrix.GetLength(1); // Number of columns
+
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    if (matrix[row, col] != value)
+                    {
+                        return false; // Return false if any element does not match
+                    }
+                }
+            }
+
+            return true; // Return true if all elements match
+        }
+
         public static double NudgeDouble(double valToNudge, double minVal, double maxVal)
         {
             return Math.Max(minVal, Math.Min(maxVal, valToNudge));
