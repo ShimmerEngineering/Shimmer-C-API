@@ -2146,8 +2146,9 @@ namespace ShimmerAPI
             PConfiguration.PControlForm.ShimmerDevice.WriteSamplingRate(samplingRate);
 
             //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
-            if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
-            {
+            if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD
+                && (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R))
+                {
                 PConfiguration.PControlForm.ShimmerDevice.SetLowPowerMag(checkBoxLowPowerMag.Checked);
                 PConfiguration.PControlForm.ShimmerDevice.SetLowPowerAccel(checkBoxLowPowerAccel.Checked);
                 PConfiguration.PControlForm.ShimmerDevice.SetLowPowerGyro(checkBoxLowPowerGyro.Checked);
