@@ -2202,20 +2202,42 @@ namespace ShimmerAPI
                 InternalExpPower = (int)((ConfigSetupByte0 >> 24) & 0x01);
                 Mpu9150AccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03);
 
-                if ((magSamplingRate == 4 && ADCRawSamplingRateValue < 3200)) //3200 us the raw ADC value and not in HZ
-                {
-                    LowPowerMagEnabled = true;
+                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3) { 
+                    if ((magSamplingRate == 4 && ADCRawSamplingRateValue < 3200)) //3200 us the raw ADC value and not in HZ
+                    {
+                        LowPowerMagEnabled = true;
+                    }
+
+                    if ((AccelSamplingRate == 2 && ADCRawSamplingRateValue < 3200))
+                    {
+                        LowPowerAccelEnabled = true;
+                    }
+
+                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    {
+                        LowPowerGyroEnabled = true;
+                    }
                 }
 
-                if ((AccelSamplingRate == 2 && ADCRawSamplingRateValue < 3200))
+                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    LowPowerAccelEnabled = true;
+                    if (magSamplingRate == 8) //3200 us the raw ADC value and not in HZ
+                    {
+                        LowPowerMagEnabled = true;
+                    }
+                    
+                    if ((AccelSamplingRate == 1))
+                    {
+                        LowPowerAccelEnabled = true;
+                    }
+                    /*
+                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    {
+                        LowPowerGyroEnabled = true;
+                    }
+                    */
                 }
 
-                if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
-                {
-                    LowPowerGyroEnabled = true;
-                }
 
                 NumberofChannels = (int)packet[6];
                 BufferSize = (int)packet[7];
@@ -6156,6 +6178,36 @@ namespace ShimmerAPI
                     }
                 }
             }
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R) //Shimmer3R
+            {
+                if (!LowPowerMagEnabled)
+                {
+                    if (SamplingRate >= 100)
+                    {
+                        WriteMagSamplingRate(0x21);
+                    }
+                    else if (SamplingRate >= 50)
+                    {
+                        WriteMagSamplingRate(0x2e);
+                    }
+                    else if (SamplingRate >= 20)
+                    {
+                        WriteMagSamplingRate(0x2a);
+                    }
+                    else if (SamplingRate >= 10)
+                    {
+                        WriteMagSamplingRate(0x28);
+                    }
+                    else
+                    {
+                        WriteMagSamplingRate(0x08);
+                    }
+                }
+                else //Low power mag for shimmer3R enabled
+                {
+                    WriteMagSamplingRate(0x08);
+                }
+            }
             else //Shimmer2r
             {
                 if (!LowPowerMagEnabled)
@@ -6281,7 +6333,84 @@ namespace ShimmerAPI
             LowPowerAccelEnabled = enable;
             if (!LowPowerAccelEnabled)
             {
-                if (isShimmer3withUpdatedSensors())
+                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                {
+                    if (isShimmer3withUpdatedSensors())
+                    {
+                        if (SamplingRate <= 12.5)
+                        {
+                            WriteWRAccelSamplingRate(1);
+                        }
+                        else if (SamplingRate <= 25)
+                        {
+                            WriteWRAccelSamplingRate(2);
+                        }
+                        else if (SamplingRate <= 50)
+                        {
+                            WriteWRAccelSamplingRate(3);
+                        }
+                        else if (SamplingRate <= 100)
+                        {
+                            WriteWRAccelSamplingRate(4);
+                        }
+                        else if (SamplingRate <= 200)
+                        {
+                            WriteWRAccelSamplingRate(5);
+                        }
+                        else if (SamplingRate <= 400)
+                        {
+                            WriteWRAccelSamplingRate(6);
+                        }
+                        else if (SamplingRate <= 800)
+                        {
+                            WriteWRAccelSamplingRate(7);
+                        }
+                        else if (SamplingRate <= 1600)
+                        {
+                            WriteWRAccelSamplingRate(8);
+                        }
+                        else if (SamplingRate <= 3200)
+                        {
+                            WriteWRAccelSamplingRate(9);
+                        }
+                        else
+                        {
+                            WriteWRAccelSamplingRate(10);
+                        }
+                    }
+                    else
+                    {
+                        //enableLowResolutionMode(false);
+                        if (SamplingRate <= 1)
+                        {
+                            WriteWRAccelSamplingRate(1);
+                        }
+                        else if (SamplingRate <= 10)
+                        {
+                            WriteWRAccelSamplingRate(2);
+                        }
+                        else if (SamplingRate <= 25)
+                        {
+                            WriteWRAccelSamplingRate(3);
+                        }
+                        else if (SamplingRate <= 50)
+                        {
+                            WriteWRAccelSamplingRate(4);
+                        }
+                        else if (SamplingRate <= 100)
+                        {
+                            WriteWRAccelSamplingRate(5);
+                        }
+                        else if (SamplingRate <= 200)
+                        {
+                            WriteWRAccelSamplingRate(6);
+                        }
+                        else
+                        {
+                            WriteWRAccelSamplingRate(7);
+                        }
+                    }
+                } else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
                     if (SamplingRate <= 12.5)
                     {
@@ -6289,83 +6418,50 @@ namespace ShimmerAPI
                     }
                     else if (SamplingRate <= 25)
                     {
-                        WriteWRAccelSamplingRate(2);
+                        WriteWRAccelSamplingRate(3);
                     }
                     else if (SamplingRate <= 50)
                     {
-                        WriteWRAccelSamplingRate(3);
+                        WriteWRAccelSamplingRate(4);
                     }
                     else if (SamplingRate <= 100)
                     {
-                        WriteWRAccelSamplingRate(4);
+                        WriteWRAccelSamplingRate(5);
                     }
                     else if (SamplingRate <= 200)
                     {
-                        WriteWRAccelSamplingRate(5);
+                        WriteWRAccelSamplingRate(6);
                     }
                     else if (SamplingRate <= 400)
                     {
-                        WriteWRAccelSamplingRate(6);
+                        WriteWRAccelSamplingRate(7);
                     }
                     else if (SamplingRate <= 800)
                     {
-                        WriteWRAccelSamplingRate(7);
-                    }
-                    else if (SamplingRate <= 1600)
-                    {
                         WriteWRAccelSamplingRate(8);
                     }
-                    else if (SamplingRate <= 3200)
+                    else
                     {
                         WriteWRAccelSamplingRate(9);
-                    }
-                    else
-                    {
-                        WriteWRAccelSamplingRate(10);
-                    }
-                }
-                else
-                {
-                    //enableLowResolutionMode(false);
-                    if (SamplingRate <= 1)
-                    {
-                        WriteWRAccelSamplingRate(1);
-                    }
-                    else if (SamplingRate <= 10)
-                    {
-                        WriteWRAccelSamplingRate(2);
-                    }
-                    else if (SamplingRate <= 25)
-                    {
-                        WriteWRAccelSamplingRate(3);
-                    }
-                    else if (SamplingRate <= 50)
-                    {
-                        WriteWRAccelSamplingRate(4);
-                    }
-                    else if (SamplingRate <= 100)
-                    {
-                        WriteWRAccelSamplingRate(5);
-                    }
-                    else if (SamplingRate <= 200)
-                    {
-                        WriteWRAccelSamplingRate(6);
-                    }
-                    else
-                    {
-                        WriteWRAccelSamplingRate(7);
                     }
                 }
             }
             else
             {
-                if (isShimmer3withUpdatedSensors())
+                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                {
+                    if (isShimmer3withUpdatedSensors())
+                    {
+                        WriteWRAccelSamplingRate(1);
+                    }
+                    else
+                    {
+                        WriteWRAccelSamplingRate(2);
+                    }
+                }
+                else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
                     WriteWRAccelSamplingRate(1);
-                }
-                else
-                {
-                    WriteWRAccelSamplingRate(2);
                 }
             }
         }

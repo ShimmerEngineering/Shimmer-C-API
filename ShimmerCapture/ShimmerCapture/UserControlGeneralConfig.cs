@@ -535,23 +535,43 @@ namespace ShimmerAPI
             }
             else //updated Shimmer3 (0,2,3,1) 
             {
-                if (accelRange == 0)
+                if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
-                    comboBoxAccelRange.SelectedIndex = 0;
-                }
-                else if (accelRange == 1)
+                    if (accelRange == 0)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 0;
+                    }
+                    else if (accelRange == 1)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 3;
+                    }
+                    else if (accelRange == 2)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 1;
+                    }
+                    else if (accelRange == 3)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 2;
+                    }
+                } else if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    comboBoxAccelRange.SelectedIndex = 3;
+                    if (accelRange == 0)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 0;
+                    }
+                    else if (accelRange == 1)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 1;
+                    }
+                    else if (accelRange == 2)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 2;
+                    }
+                    else if (accelRange == 3)
+                    {
+                        comboBoxAccelRange.SelectedIndex = 3;
+                    }
                 }
-                else if (accelRange == 2)
-                {
-                    comboBoxAccelRange.SelectedIndex = 1;
-                }
-                else if (accelRange == 3)
-                {
-                    comboBoxAccelRange.SelectedIndex = 2;
-                }
-
             }
 
 
@@ -770,7 +790,7 @@ namespace ShimmerAPI
                 if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG) > 0)
                 {
                     checkBoxSensor4.Checked = true;
-                    if (PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors()) //new mag sensor (updated Shimmer 3) has no variable mag range
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 && PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors()) //new mag sensor (updated Shimmer 3) has no variable mag range
                     {
                         checkBoxLowPowerMag.Enabled = false;
                         checkBoxLowPowerMag.Visible = false;
@@ -2146,26 +2166,26 @@ namespace ShimmerAPI
             PConfiguration.PControlForm.ShimmerDevice.WriteSamplingRate(samplingRate);
 
             //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
-            if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD
-                && (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R))
+            if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
                 {
                 PConfiguration.PControlForm.ShimmerDevice.SetLowPowerMag(checkBoxLowPowerMag.Checked);
                 PConfiguration.PControlForm.ShimmerDevice.SetLowPowerAccel(checkBoxLowPowerAccel.Checked);
-                PConfiguration.PControlForm.ShimmerDevice.SetLowPowerGyro(checkBoxLowPowerGyro.Checked);
+                //PConfiguration.PControlForm.ShimmerDevice.SetLowPowerGyro(checkBoxLowPowerGyro.Checked);
                 PConfiguration.PControlForm.ShimmerDevice.Set3DOrientation(checkBox3DOrientation.Checked);
                 PConfiguration.PControlForm.ShimmerDevice.SetGyroOnTheFlyCalibration(checkBoxGyroOnTheFly.Checked, 100, 1.2);
             }
-            if ((PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R))
+           
+            if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
             {
-                if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
+                //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
+                if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
                 {
-                    //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
-                    {
-                        PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(comboBoxAccelRange.SelectedIndex);
-                    }
+                    PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(comboBoxAccelRange.SelectedIndex);
                 }
-                else //updated Shimmer3 (0,2,3,1)
+            }
+            else //updated Shimmer3 (0,2,3,1)
+            {
+                if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
                     if (comboBoxAccelRange.SelectedIndex == 0)
                     {
@@ -2183,9 +2203,30 @@ namespace ShimmerAPI
                     {
                         PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(1);
                     }
-
                 }
+                if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                {
+                    if (comboBoxAccelRange.SelectedIndex == 0)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(0);
+                    }
+                    else if (comboBoxAccelRange.SelectedIndex == 1)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(1);
+                    }
+                    else if (comboBoxAccelRange.SelectedIndex == 2)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(2);
+                    }
+                    else if (comboBoxAccelRange.SelectedIndex == 3)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(3);
+                    }
+                }
+
             }
+            
+            
             //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
             if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
             {
