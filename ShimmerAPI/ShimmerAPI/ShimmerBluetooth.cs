@@ -3203,7 +3203,7 @@ namespace ShimmerAPI
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X;
-                        signalDataTypeArray[i + 1] = "i16*"; //TBD; used Signal Datatype from Mag as placeholder
+                        signalDataTypeArray[i + 1] = "i16"; //TBD; used Signal Datatype from Mag as placeholder
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
                     }
@@ -3213,7 +3213,7 @@ namespace ShimmerAPI
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y;
-                        signalDataTypeArray[i + 1] = "i16*"; //TBD; used Signal Datatype from Mag as placeholder
+                        signalDataTypeArray[i + 1] = "i16"; //TBD; used Signal Datatype from Mag as placeholder
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
                     }
@@ -3223,7 +3223,7 @@ namespace ShimmerAPI
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z;
-                        signalDataTypeArray[i + 1] = "i16*"; //TBD; used Signal Datatype from Mag as placeholder
+                        signalDataTypeArray[i + 1] = "i16"; //TBD; used Signal Datatype from Mag as placeholder
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
                     }
