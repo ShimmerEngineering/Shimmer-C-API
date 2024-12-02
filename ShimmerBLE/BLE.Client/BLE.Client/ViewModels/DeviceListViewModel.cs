@@ -3362,7 +3362,7 @@ namespace BLE.Client.ViewModels
             Trace.WriteLine("Works" + value);
             if (value.Contains("Transfer rate")) {
                 serv.ExecuteMemoryLookupTableCommand();
-                DeviceMessage = value;
+                DeviceMessage = value.Replace(PreviousGuid.ToString(), ""); ;
             }
         }
         VerisenseBLEScannedDevice DeviceToBePaired;
