@@ -72,6 +72,7 @@ namespace ShimmerAPI
                     checkBoxSensor16.Text = "EMG";
                     checkBoxSensor17.Text = "ExG Test Signal";
                     checkBoxSensor23.Text = "Respiration";
+                    //checkBoxSensor24.Text = "High G Accel";
 
                     checkBoxSensor19.Text = "Bridge Amplifier";
                     checkBoxSensor11.Visible = true;

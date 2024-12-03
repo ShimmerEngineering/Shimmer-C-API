@@ -1054,6 +1054,7 @@
         private System.Windows.Forms.CheckBox checkBoxSensor18;
         private System.Windows.Forms.CheckBox checkBoxSensor22;
         private System.Windows.Forms.CheckBox checkBoxSensor21;
+        private System.Windows.Forms.CheckBox checkBoxSensor24;
         protected internal System.Windows.Forms.ComboBox comboBoxBaudRate;
         private System.Windows.Forms.Label labelBaudRate;
         private System.Windows.Forms.Button buttonDetectExpansionBoard;
