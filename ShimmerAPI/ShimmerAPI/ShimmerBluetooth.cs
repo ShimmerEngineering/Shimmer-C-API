@@ -588,6 +588,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
+        public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3R = { "+/- 4Ga", "+/- 8Ga", "+/- 12Ga", "+/- 16Ga" };
         public static readonly String[] LIST_OF_PRESSURE_RESOLUTION_SHIMMER3 = { "Low", "Standard", "High", "Very High" };
         public static readonly String[] LIST_OF_GSR_RANGE = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_EXG_GAINS_SHIMMER3 = new string[] { "1", "2", "3", "4", "6", "8", "12" };
@@ -2222,7 +2223,7 @@ namespace ShimmerAPI
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    if (magSamplingRate == 8) //3200 us the raw ADC value and not in HZ
+                    if (magSamplingRate == 0) //3200 us the raw ADC value and not in HZ
                     {
                         LowPowerMagEnabled = true;
                     }
@@ -5914,7 +5915,7 @@ namespace ShimmerAPI
             }
             else
             {
-                if (isShimmer3withUpdatedSensors())
+                if (isShimmer3withUpdatedSensors() && HardwareVersion == (int) ShimmerBluetooth.ShimmerVersion.SHIMMER3)
                 {
 
                 }
@@ -6185,28 +6186,28 @@ namespace ShimmerAPI
                 {
                     if (SamplingRate >= 100)
                     {
-                        WriteMagSamplingRate(0x21);
+                        WriteMagSamplingRate(1);
                     }
                     else if (SamplingRate >= 50)
                     {
-                        WriteMagSamplingRate(0x2e);
+                        WriteMagSamplingRate(1);
                     }
                     else if (SamplingRate >= 20)
                     {
-                        WriteMagSamplingRate(0x2a);
+                        WriteMagSamplingRate(1);
                     }
                     else if (SamplingRate >= 10)
                     {
-                        WriteMagSamplingRate(0x28);
+                        WriteMagSamplingRate(1);
                     }
                     else
                     {
-                        WriteMagSamplingRate(0x08);
+                        WriteMagSamplingRate(1);
                     }
                 }
                 else //Low power mag for shimmer3R enabled
                 {
-                    WriteMagSamplingRate(0x08);
+                    WriteMagSamplingRate(0x0);
                 }
             }
             else //Shimmer2r

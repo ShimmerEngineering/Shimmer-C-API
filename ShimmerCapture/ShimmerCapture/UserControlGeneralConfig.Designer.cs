@@ -39,6 +39,7 @@
             this.checkBoxSensor9 = new System.Windows.Forms.CheckBox();
             this.groupBoxSensors = new System.Windows.Forms.GroupBox();
             this.checkBoxSensor23 = new System.Windows.Forms.CheckBox();
+            this.checkBoxSensor24 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor22 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor21 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor20 = new System.Windows.Forms.CheckBox();
@@ -217,6 +218,7 @@
             // 
             // groupBoxSensors
             // 
+            this.groupBoxSensors.Controls.Add(this.checkBoxSensor24);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor23);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor22);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor21);
@@ -320,7 +322,20 @@
             this.checkBoxSensor23.Text = "checkBox23";
             this.checkBoxSensor23.UseVisualStyleBackColor = true;
             this.checkBoxSensor23.CheckedChanged += new System.EventHandler(this.checkBoxSensor23_CheckedChanged);
-            this.checkBoxSensor23.Click += new System.EventHandler(this.checkBoxSensor23_Click);
+            this.checkBoxSensor23.Click += new System.EventHandler(this.checkBoxSensor23_Click);            
+            // 
+            // checkBoxSensor24
+            // 
+            this.checkBoxSensor24.AutoSize = true;
+            this.checkBoxSensor24.Location = new System.Drawing.Point(267, 138+23*2);
+            this.checkBoxSensor24.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSensor24.Name = "checkBoxSensor24";
+            this.checkBoxSensor24.Size = new System.Drawing.Size(106, 21);
+            this.checkBoxSensor24.TabIndex = 23;
+            this.checkBoxSensor24.Text = "checkBox24";
+            this.checkBoxSensor24.UseVisualStyleBackColor = true;
+            this.checkBoxSensor24.CheckedChanged += new System.EventHandler(this.checkBoxSensor24_CheckedChanged);
+            this.checkBoxSensor24.Click += new System.EventHandler(this.checkBoxSensor24_Click);
             // 
             // checkBoxSensor17
             // 

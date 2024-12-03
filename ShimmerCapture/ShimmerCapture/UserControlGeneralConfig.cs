@@ -72,7 +72,7 @@ namespace ShimmerAPI
                     checkBoxSensor16.Text = "EMG";
                     checkBoxSensor17.Text = "ExG Test Signal";
                     checkBoxSensor23.Text = "Respiration";
-                    //checkBoxSensor24.Text = "High G Accel";
+                    checkBoxSensor24.Text = "High G Accel";
 
                     checkBoxSensor19.Text = "Bridge Amplifier";
                     checkBoxSensor11.Visible = true;
@@ -93,8 +93,14 @@ namespace ShimmerAPI
                     comboBoxSamplingRate.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxSamplingRate.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxSamplingRate.DropDownStyle = ComboBoxStyle.DropDownList;
-
-                    comboBoxMagRange.Items.AddRange(ShimmerBluetooth.LIST_OF_MAG_RANGE_SHIMMER3);
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxMagRange.Items.AddRange(ShimmerBluetooth.LIST_OF_MAG_RANGE_SHIMMER3R);
+                    } else
+                    {
+                        comboBoxMagRange.Items.AddRange(ShimmerBluetooth.LIST_OF_MAG_RANGE_SHIMMER3);
+                    }
+                    
                     comboBoxMagRange.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxMagRange.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxMagRange.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -184,6 +190,7 @@ namespace ShimmerAPI
                         checkBoxSensor16.Enabled = true;
                         checkBoxSensor17.Enabled = true;
                         checkBoxSensor23.Enabled = true;
+                        
                     }
                     else
                     {
@@ -203,6 +210,17 @@ namespace ShimmerAPI
                     {
                         checkBoxSensor19.Enabled = false;
                     }
+
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        checkBoxSensor24.Enabled = true;
+                        checkBoxSensor24.Visible = true;
+                    } else
+                    {
+                        checkBoxSensor24.Enabled = false;
+                        checkBoxSensor24.Visible = false;
+                    }
+
                 }
                 else
                 {
@@ -447,7 +465,12 @@ namespace ShimmerAPI
                 }
                 this.comboBoxExgGain.SelectedIndexChanged += new System.EventHandler(this.comboBoxExgGain_SelectedIndexChanged);
 
-                comboBoxMagRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetMagRange() - 1;
+                if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) {
+                    comboBoxMagRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetMagRange();
+                } else
+                {
+                    comboBoxMagRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetMagRange() - 1;
+                }
                 comboBoxGyroRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetGyroRange();
                 comboBoxPressureRes.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetPressureResolution();
                 comboBoxBaudRate.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetBaudRate();
@@ -1793,6 +1816,11 @@ namespace ShimmerAPI
             }
         }
 
+        private void checkBoxSensor24_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void checkBoxSensor23_Click(object sender, EventArgs e)
         {
             if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
@@ -2049,7 +2077,13 @@ namespace ShimmerAPI
                 //ECGmd unit does not contain IMU's - IMU configuration calls are not supported
                 if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() != (int)ShimmerBluetooth.FW_IDENTIFIER_SHIMMERECGMD)
                 {
-                    PConfiguration.PControlForm.ShimmerDevice.WriteMagRange(comboBoxMagRange.SelectedIndex + 1);
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteMagRange(comboBoxMagRange.SelectedIndex + 1);
+                    } else if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteMagRange(comboBoxMagRange.SelectedIndex);
+                    }
                     PConfiguration.PControlForm.ShimmerDevice.WriteGyroRange(comboBoxGyroRange.SelectedIndex);
                     PConfiguration.PControlForm.ShimmerDevice.WritePressureResolution(comboBoxPressureRes.SelectedIndex);
                 }
@@ -2420,6 +2454,11 @@ namespace ShimmerAPI
                 if (checkBoxSensor18.Checked || checkBoxSensor20.Checked || checkBoxSensor21.Checked || checkBoxSensor22.Checked) //CUSTOM EXG
                 {
                     PConfiguration.PControlForm.ShimmerDevice.WriteEXGConfigurations(PConfiguration.ExgReg1UI, PConfiguration.ExgReg2UI);
+                }
+
+                if (checkBoxSensor24.Checked)
+                {
+                    ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_ACCEL_ALT;
                 }
 
             }
@@ -3336,7 +3375,10 @@ namespace ShimmerAPI
                 }
             }
         }
+        private void checkBoxSensor24_CheckedChanged(object sender, EventArgs e)
+        {
 
+        }
         private void checkBoxSensor23_CheckedChanged(object sender, EventArgs e)
         {
 
