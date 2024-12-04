@@ -73,6 +73,7 @@ namespace ShimmerAPI
                     checkBoxSensor17.Text = "ExG Test Signal";
                     checkBoxSensor23.Text = "Respiration";
                     checkBoxSensor24.Text = "High G Accel";
+                    checkBoxSensor25.Text = "Alt Mag";
 
                     checkBoxSensor19.Text = "Bridge Amplifier";
                     checkBoxSensor11.Visible = true;
@@ -215,10 +216,14 @@ namespace ShimmerAPI
                     {
                         checkBoxSensor24.Enabled = true;
                         checkBoxSensor24.Visible = true;
+                        checkBoxSensor25.Enabled = true;
+                        checkBoxSensor25.Visible = true;
                     } else
                     {
                         checkBoxSensor24.Enabled = false;
                         checkBoxSensor24.Visible = false;
+                        checkBoxSensor25.Enabled = false;
+                        checkBoxSensor25.Visible = false;
                     }
 
                 }
@@ -1187,6 +1192,24 @@ namespace ShimmerAPI
                     }
                 }
 
+                if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_ACCEL_ALT) > 0)
+                {
+                    checkBoxSensor24.Checked = true;
+                }
+                else
+                {
+                    checkBoxSensor24.Checked = false;
+                }
+
+                if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0)
+                {
+                    checkBoxSensor25.Checked = true;
+                }
+                else
+                {
+                    checkBoxSensor25.Checked = false;
+                }
+
                 if (((enabledSensors & 0xFF00) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP) > 0)
                 {
                     checkBoxSensor19.Checked = true;
@@ -1814,6 +1837,11 @@ namespace ShimmerAPI
                     PConfiguration.ExgReg2UI = exg2Reg;
                 }
             }
+        }
+
+        private void checkBoxSensor25_Click(object sender, EventArgs e)
+        {
+
         }
 
         private void checkBoxSensor24_Click(object sender, EventArgs e)
@@ -2460,7 +2488,10 @@ namespace ShimmerAPI
                 {
                     ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_ACCEL_ALT;
                 }
-
+                if (checkBoxSensor25.Checked)
+                {
+                    ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG_ALT;
+                }
             }
             else
             {
@@ -3376,6 +3407,10 @@ namespace ShimmerAPI
             }
         }
         private void checkBoxSensor24_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+        private void checkBoxSensor25_CheckedChanged(object sender, EventArgs e)
         {
 
         }
