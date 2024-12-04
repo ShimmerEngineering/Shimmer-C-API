@@ -1367,17 +1367,17 @@ namespace ShimmerAPI
                                 }
                                 else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                                 {
-                                    for (i = 0; i < 8; i++)
+                                    for (i = 0; i < 8+3; i++)
                                     {
                                         // get Sampling rate, accel range, config setup byte0, num chans and buffer size
                                         buffer.Add((byte)ReadByte());
                                     }
-                                    for (i = 0; i < (int)buffer[6]; i++)
+                                    for (i = 0; i < (int)buffer[6+3]; i++)
                                     {
                                         // read each channel type for the num channels
                                         buffer.Add((byte)ReadByte());
                                     }
-                                    InterpretInquiryResponseShimmer3(buffer);
+                                    InterpretInquiryResponseShimmer3R(buffer);
                                 }
                                 if (ShimmerState != SHIMMER_STATE_CONNECTED)
                                 {
@@ -2182,7 +2182,80 @@ namespace ShimmerAPI
                 return false;
             }
         }
+        public void InterpretInquiryResponseShimmer3R(List<byte> packet)
+        {
+            //check if this packet is sane, and not just random
+            if ((packet.Count >= 4))       // max number of channels currently allowable
+            {
+                ADCRawSamplingRateValue = (int)packet[0] + ((((int)packet[1]) << 8) & 0xFF00);
+                SamplingRate = (double)32768 / ADCRawSamplingRateValue;
+                ConfigSetupByte0 = (long)packet[2] + (((long)packet[3]) << 8) + (((long)packet[4]) << 16) + (((long)packet[5]) << 24);
+                AccelHRBit = (int)((ConfigSetupByte0 >> 0) & 0x01);
+                AccelLPBit = (int)((ConfigSetupByte0 >> 1) & 0x01);
+                AccelRange = (int)((ConfigSetupByte0 >> 2) & 0x03);
+                GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03);
+                MagGain = (int)((ConfigSetupByte0 >> 21) & 0x07);
+                AccelSamplingRate = (int)((ConfigSetupByte0 >> 4) & 0xF);
+                Mpu9150SamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
+                magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
+                PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
+                GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
+                InternalExpPower = (int)((ConfigSetupByte0 >> 24) & 0x01);
+                Mpu9150AccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03);
 
+                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                {
+                    if ((magSamplingRate == 4 && ADCRawSamplingRateValue < 3200)) //3200 us the raw ADC value and not in HZ
+                    {
+                        LowPowerMagEnabled = true;
+                    }
+
+                    if ((AccelSamplingRate == 2 && ADCRawSamplingRateValue < 3200))
+                    {
+                        LowPowerAccelEnabled = true;
+                    }
+
+                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    {
+                        LowPowerGyroEnabled = true;
+                    }
+                }
+
+                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                {
+                    if (magSamplingRate == 0) //3200 us the raw ADC value and not in HZ
+                    {
+                        LowPowerMagEnabled = true;
+                    }
+
+                    if ((AccelSamplingRate == 1))
+                    {
+                        LowPowerAccelEnabled = true;
+                    }
+                    /*
+                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    {
+                        LowPowerGyroEnabled = true;
+                    }
+                    */
+                }
+
+
+                NumberofChannels = (int)packet[6+3];
+                BufferSize = (int)packet[7+3];
+                ListofSensorChannels.Clear();
+
+                for (int i = 0; i < NumberofChannels; i++)
+                {
+                    ListofSensorChannels.Add(packet[8+3 + i]);
+                }
+                byte[] signalIdArray = ListofSensorChannels.ToArray();
+                InterpretDataPacketFormat(NumberofChannels, signalIdArray);
+                IsFilled = true;
+
+
+            }
+        }
         public void InterpretInquiryResponseShimmer3(List<byte> packet)
         {
             //check if this packet is sane, and not just random
