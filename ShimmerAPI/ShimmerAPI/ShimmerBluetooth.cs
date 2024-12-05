@@ -3263,7 +3263,7 @@ namespace ShimmerAPI
 
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalDataTypeArray[i + 1] = "i16"; //TBD; used WR Accel signal datatype as placeholder
+                        signalDataTypeArray[i + 1] = "i12*>";
                         packetSize = packetSize + 2;
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_X;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT);
@@ -3273,7 +3273,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalDataTypeArray[i + 1] = "i16"; //TBD; used WR Accel signal datatype as placeholder
+                        signalDataTypeArray[i + 1] = "i12*>";
                         packetSize = packetSize + 2;
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Y;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT);
@@ -3283,7 +3283,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalDataTypeArray[i + 1] = "i16"; //TBD; used WR Accel signal datatype as placeholder
+                        signalDataTypeArray[i + 1] = "i12*>";
                         packetSize = packetSize + 2;
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.HIGH_G_ACCELEROMETER_Z;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_ACCEL_ALT);
@@ -4452,6 +4452,14 @@ namespace ShimmerAPI
                 {
                     formattedData[i] = Calculatetwoscomplement((int)((int)(data[iData] & 0xFF) + ((int)(data[iData + 1] & 0xFF) << 8)), 16);
                     formattedData[i] = formattedData[i] >> 4; // shift right by 4 bits
+                    iData = iData + 2;
+                }
+                else if (dataType[i] == "i12*>")
+                {
+                    // MSB byte shifted left 4-bits or'd with upper 4-bits of LSB byte which are bit-shifted right by 4
+                    formattedData[i] = ((int)(data[iData] & 0xFF) << 4) | ((int)(data[iData + 1] & 0xFF) >> 4);
+                    // Two's complement on the resulting 12-bit number
+                    formattedData[i] = Calculatetwoscomplement((int) formattedData[i], 12);
                     iData = iData + 2;
                 }
                 else if (dataType[i] == "u16")

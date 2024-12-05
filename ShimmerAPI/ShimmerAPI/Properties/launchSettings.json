@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ShimmerAPI": {
+      "commandName": "Project",
+      "nativeDebugging": false
+    }
+  }
+}
