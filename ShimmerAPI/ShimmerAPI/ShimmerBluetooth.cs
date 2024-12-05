@@ -169,9 +169,6 @@ namespace ShimmerAPI
         public double[,] AlignmentMatrixAltAccel = new double[3, 3] { { 0 , 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };
         public double[,] SensitivityMatrixAltAccel = new double[3, 3] { { 16, 0, 0 }, { 0, 16, 0 }, { 0, 0, 16 } };
         public double[,] OffsetVectorAltAccel = new double[3, 1] { { 0 }, { 0 }, { 0 } };
-        public double[,] AlignmentMatrixAltMag = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
-        public double[,] SensitivityMatrixAltMag = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
-        public double[,] OffsetVectorAltMag = new double[3, 1] { { 0 }, { 0 }, { 0 } };
 
         //Default Values for Magnetometer Calibration
 
@@ -476,17 +473,16 @@ namespace ShimmerAPI
             GET_MPU9150_GYRO_RANGE_COMMAND = 0x4B,
             SET_MPU9150_SAMPLING_RATE_COMMAND = 0x4C,
             SET_MPU9150_GYRO_RANGE_COMMAND = 0x49,
-            SET_ALT_ACCEL_CALIBRATION_COMMAND = 0x1A, //TBD; used WR Accel command as placeholder
-            ALT_ACCEL_CALIBRATION_RESPONSE = 0x1B, //TBD; used WR Accel command as placeholder
-            GET_ALT_ACCEL_CALIBRATION_COMMAND = 0x1C, //TBD; used WR Accel command as placeholder
-            SET_ALT_ACCEL_SAMPLING_RATE_COMMAND = 0x40, //TBD; used WR Accel command as placeholder
-            ALT_ACCEL_SAMPLING_RATE_COMMAND = 0x41, //TBD; used WR Accel command as placeholder
-            GET_ALT_ACCEL_SAMPLING_RATE_COMMAND = 0x42, //TBD; used WR Accel command as placeholder
-            ALT_MAG_CALIBRATION_RESPONSE = 0x18, //TBD; currently used default mag command
-            GET_ALT_MAG_CALIBRATION_COMMAND = 0x19, //TBD; currently used default mag command
-            SET_ALT_MAG_SAMPLING_RATE_RESPONSE = 0x3A, //TBD; currently used default mag command
-            ALT_MAG_SAMPLING_RATE_RESPONSE = 0x3B, //TBD; currently used default mag command
-            GET_ALT_MAG_SAMPLING_RATE_COMMAND = 0x3C, //TBD; currently used default mag command
+            SET_ALT_ACCEL_CALIBRATION_COMMAND = 0xA9, 
+            ALT_ACCEL_CALIBRATION_RESPONSE = 0xAA, 
+            GET_ALT_ACCEL_CALIBRATION_COMMAND = 0xAB, 
+            SET_ALT_ACCEL_SAMPLING_RATE_COMMAND = 0xAC,
+            ALT_ACCEL_SAMPLING_RATE_RESPONSE = 0xAD,
+            GET_ALT_ACCEL_SAMPLING_RATE_COMMAND = 0xAE, 
+            ALT_MAG_CALIBRATION_RESPONSE = 0xB0, 
+            GET_ALT_MAG_CALIBRATION_COMMAND = 0xB1, 
+            ALT_MAG_SAMPLING_RATE_RESPONSE = 0xB3, 
+            GET_ALT_MAG_SAMPLING_RATE_COMMAND = 0xB4, 
             SET_BMP180_PRES_RESOLUTION_COMMAND = 0x52,
             BMP180_PRES_RESOLUTION_RESPONSE = 0x53,
             GET_BMP180_PRES_RESOLUTION_COMMAND = 0x54,
@@ -1586,6 +1582,24 @@ namespace ShimmerAPI
 
                                     }
                                     RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.WR_ACCEL_CALIBRATION_RESPONSE);
+
+                                    //Retrieve Alt Mag Cal Paramters if Shimmer 3
+                                    bufferbyte = new byte[21];
+                                    for (int p = 0; p < 21; p++)
+                                    {
+                                        bufferbyte[p] = (byte)ReadByte();
+
+                                    }
+                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
+
+                                    //Retrieve High G Accel Cal Paramters if Shimmer 3
+                                    bufferbyte = new byte[21];
+                                    for (int p = 0; p < 21; p++)
+                                    {
+                                        bufferbyte[p] = (byte)ReadByte();
+
+                                    }
+                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
                                 }
 
                                 break;
@@ -2526,14 +2540,15 @@ namespace ShimmerAPI
                 AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3R_LIS2DW12;
                 OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3R_LIS2DW12;
             }
-            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
                 AlignmentMatrixAltAccel = alignmentMatrix;
                 OffsetVectorAltAccel = offsetVector;
                 SensitivityMatrixAltAccel = sensitivityMatrix;
                 DefaultHighGAccelParams = false;
             }
-            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] == -1 || UtilCalibration.AllElementsAre(sensitivityMatrix, 0))
+                && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultHighGAccelParams = true;
                 SensitivityMatrixAltAccel = SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371;
@@ -2745,19 +2760,20 @@ namespace ShimmerAPI
                 }
                
             }
-            else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
-                AlignmentMatrixAltMag = alignmentMatrix;
-                OffsetVectorAltMag = offsetVector;
-                SensitivityMatrixAltMag = sensitivityMatrix;
+                AlignmentMatrixMag2 = alignmentMatrix;
+                OffsetVectorMag2 = offsetVector;
+                SensitivityMatrixMag2 = sensitivityMatrix;
                 DefaultWRMagParams = false;
             }
-            else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] == -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] == -1 || UtilCalibration.AllElementsAre(sensitivityMatrix, 0))
+                && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultWRMagParams = true;
-                AlignmentMatrixAltMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
-                OffsetVectorAltMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
-                SensitivityMatrixAltMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
+                AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
+                OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+                SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
             }
 
         }
@@ -3692,7 +3708,7 @@ namespace ShimmerAPI
                     int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y);
                     int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z);
                     double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
-                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag);
+                    datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag2, SensitivityMatrixMag2, OffsetVectorMag2);
                     string units;
                     if (DefaultWRMagParams)
                     {
