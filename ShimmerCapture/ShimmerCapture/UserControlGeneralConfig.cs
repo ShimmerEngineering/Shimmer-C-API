@@ -115,8 +115,14 @@ namespace ShimmerAPI
                     comboBoxGSRRange.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxGSRRange.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxGSRRange.DropDownStyle = ComboBoxStyle.DropDownList;
-
-                    comboBoxGyroRange.Items.AddRange(ShimmerBluetooth.LIST_OF_GYRO_RANGE_SHIMMER3);
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxGyroRange.Items.AddRange(ShimmerBluetooth.LIST_OF_GYRO_RANGE_SHIMMER3R);
+                    }
+                    else
+                    {
+                        comboBoxGyroRange.Items.AddRange(ShimmerBluetooth.LIST_OF_GYRO_RANGE_SHIMMER3);
+                    }
                     comboBoxGyroRange.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxGyroRange.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxGyroRange.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -477,6 +483,7 @@ namespace ShimmerAPI
                     comboBoxMagRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetMagRange() - 1;
                 }
                 comboBoxGyroRange.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetGyroRange();
+
                 comboBoxPressureRes.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetPressureResolution();
                 comboBoxBaudRate.SelectedIndex = PConfiguration.PControlForm.ShimmerDevice.GetBaudRate();
                 comboBoxExGResolution.SelectedIndex = 0;
