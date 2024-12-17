@@ -127,6 +127,7 @@ namespace ShimmerAPI
         protected int GyroRange;
         protected int PressureResolution;
         protected int MagGain;
+        protected int LNAccelRange;
         protected int AccelSamplingRate;
         protected int Mpu9150SamplingRate;
         protected long ConfigSetupByte0; // for Shimmer2
@@ -507,7 +508,12 @@ namespace ShimmerAPI
             ACK_PROCESSED = 0xFF
         };
 
-
+        public enum PacketTypeShimmer3RSDBT : byte
+        {
+            SET_ALT_ACCEL_RANGE_COMMAND = 0x4F,
+            ALT_ACCEL_RANGE_RESPONSE = 0x50,
+            GET_ALT_ACCEL_RANGE_COMMAND = 0x51
+        };
 
         public enum PacketTypeShimmer3SDBT : byte
         {
@@ -2204,7 +2210,7 @@ namespace ShimmerAPI
             {
                 ADCRawSamplingRateValue = (int)packet[0] + ((((int)packet[1]) << 8) & 0xFF00);
                 SamplingRate = (double)32768 / ADCRawSamplingRateValue;
-                ConfigSetupByte0 = (long)packet[2] + (((long)packet[3]) << 8) + (((long)packet[4]) << 16) + (((long)packet[5]) << 24);
+                ConfigSetupByte0 = (long)packet[2] + (((long)packet[3]) << 8) + (((long)packet[4]) << 16) + (((long)packet[5]) << 24) + (((long)packet[6]) << 32) + (((long)packet[7]) << 40) + (((long)packet[8]) << 48);
                 AccelHRBit = (int)((ConfigSetupByte0 >> 0) & 0x01);
                 AccelLPBit = (int)((ConfigSetupByte0 >> 1) & 0x01);
                 AccelRange = (int)((ConfigSetupByte0 >> 2) & 0x03);
@@ -2216,25 +2222,19 @@ namespace ShimmerAPI
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
                 GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
                 InternalExpPower = (int)((ConfigSetupByte0 >> 24) & 0x01);
-                Mpu9150AccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03);
+                Mpu9150AccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03); //8+8+8+6
+                
+                int MSB_Gyro_Range = (int)((ConfigSetupByte0 >> 34) & 0x01); //8+8+8+8+2
+                GyroRange = GyroRange + (MSB_Gyro_Range << 2);
 
-                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
-                {
-                    if ((magSamplingRate == 4 && ADCRawSamplingRateValue < 3200)) //3200 us the raw ADC value and not in HZ
-                    {
-                        LowPowerMagEnabled = true;
-                    }
+                int MSB_LP_MODE = (int)((ConfigSetupByte0 >> 33) & 0x01); //8+8+8+8+1
+                AccelLPBit = AccelLPBit + (MSB_LP_MODE<<1);
 
-                    if ((AccelSamplingRate == 2 && ADCRawSamplingRateValue < 3200))
-                    {
-                        LowPowerAccelEnabled = true;
-                    }
+                int MSB_MAG_RATE = (int)((ConfigSetupByte0 >> 43) & 0x07); //8+8+8+8+8+3
+                magSamplingRate = magSamplingRate + (MSB_MAG_RATE << 3);
 
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
-                    {
-                        LowPowerGyroEnabled = true;
-                    }
-                }
+                LNAccelRange = (int)((ConfigSetupByte0 >> 38) & 0x03); //8+8+8+8+6
+
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
@@ -6062,6 +6062,19 @@ namespace ShimmerAPI
             WriteBytes(new byte[2] { (byte)PacketTypeShimmer2.SET_ACCEL_RANGE_COMMAND, (byte)range }, 0, 2);
             System.Threading.Thread.Sleep(250);
             AccelRange = range;
+        }
+
+        public void WriteLNAccelRange(int range)
+        {
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                WriteBytes(new byte[2] { (byte)PacketTypeShimmer3RSDBT.SET_ALT_ACCEL_RANGE_COMMAND, (byte)range }, 0, 2);
+                System.Threading.Thread.Sleep(250);
+                LNAccelRange = range;
+            } else
+            {
+                throw new Exception("Not Supported for this Hardware Type");
+            }
         }
 
         public void WriteBlinkLED(int value)
