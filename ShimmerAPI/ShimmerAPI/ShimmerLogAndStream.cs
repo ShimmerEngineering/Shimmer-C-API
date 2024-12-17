@@ -666,6 +666,11 @@ namespace ShimmerAPI
             //worker.ReportProgress(15, status_text);
             ReadAccelRange();
 
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                ReadLNAccelRange();
+            }
+
             status_text = "Acquiring ADC Sampling Rate...";
             newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
             OnNewEvent(newEventArgs);
@@ -1954,6 +1959,9 @@ namespace ShimmerAPI
             {
                 switch (b)
                 {
+                    case (byte)PacketTypeShimmer3RSDBT.ALT_ACCEL_RANGE_RESPONSE:
+                        SetLNAccelRange(ReadByte());
+                        break;
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INFOMEM_RESPONSE:
                         {
                             int len = ReadByte();

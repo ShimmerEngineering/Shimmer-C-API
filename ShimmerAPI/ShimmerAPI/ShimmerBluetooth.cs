@@ -2445,19 +2445,19 @@ namespace ShimmerAPI
             {
                 DefaultAccelParams = true;
                 
-                if (AccelRange == 0)
+                if (LNAccelRange == 0)
                 {
                     SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_2G_SHIMMER3R_LSM6DSV;
                 }
-                else if (AccelRange == 1)
+                else if (LNAccelRange == 1)
                 {
                     SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_4G_SHIMMER3R_LSM6DSV;
                 }
-                else if (AccelRange == 2)
+                else if (LNAccelRange == 2)
                 {
                     SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_8G_SHIMMER3R_LSM6DSV;
                 }
-                else if (AccelRange == 3)
+                else if (LNAccelRange == 3)
                 {
                     SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_16G_SHIMMER3R_LSM6DSV;
                 }
@@ -5225,6 +5225,10 @@ namespace ShimmerAPI
         {
             AccelRange = range;
         }
+        protected void SetLNAccelRange(int range)
+        {
+            LNAccelRange = range;
+        }
 
         public int GetGyroRange()
         {
@@ -5682,6 +5686,15 @@ namespace ShimmerAPI
         public void ReadAccelRange()
         {
             WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_ACCEL_RANGE_COMMAND }, 0, 1);
+            System.Threading.Thread.Sleep(200);
+        }
+
+        /// <summary>
+        /// Read Accelerometer Range (Shimmer2R/Shimmer3 Wide Range Accel)
+        /// </summary>
+        protected void ReadLNAccelRange()
+        {
+            WriteBytes(new byte[1] { (byte)PacketTypeShimmer3RSDBT.GET_ALT_ACCEL_RANGE_COMMAND }, 0, 1);
             System.Threading.Thread.Sleep(200);
         }
 
