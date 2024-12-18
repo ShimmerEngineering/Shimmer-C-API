@@ -2233,7 +2233,7 @@ namespace ShimmerAPI
                 int MSB_MAG_RATE = (int)((ConfigSetupByte0 >> 43) & 0x07); //8+8+8+8+8+3
                 magSamplingRate = magSamplingRate + (MSB_MAG_RATE << 3);
 
-                LNAccelRange = (int)((ConfigSetupByte0 >> 38) & 0x03); //8+8+8+8+6
+                LNAccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03); //8+8+8+6
 
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
@@ -2797,6 +2797,12 @@ namespace ShimmerAPI
                     iData = iData + 1;
                 }
                 else if (dataType[i] == "u12")
+                {
+
+                    formattedData[i] = (int)((int)(data[iData + 1] & 0xFF) + ((int)(data[iData] & 0xFF) << 8));
+                    iData = iData + 2;
+                }
+                else if (dataType[i] == "u14")
                 {
 
                     formattedData[i] = (int)((int)(data[iData + 1] & 0xFF) + ((int)(data[iData] & 0xFF) << 8));
@@ -3735,7 +3741,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.V_SENSE_BATT);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1) * 1.988);
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    } else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1) * 1.988);
+                    }
+                
                     if (datatemp < 3400 && datatemp > 3000)
                     {
                         //System.Threading.Thread.Sleep(500);
@@ -3769,7 +3782,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3777,7 +3797,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3785,7 +3812,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3793,7 +3827,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3801,7 +3842,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3809,7 +3857,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3817,7 +3872,14 @@ namespace ShimmerAPI
                 {
                     int index = getSignalIndex(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14);
                     double datatemp = newPacket[index];
-                    datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp = CalibrateShimmer3RAdcChannel(datatemp);
+                    }
+                    else
+                    {
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1));
+                    }
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
                 }
@@ -3870,12 +3932,19 @@ namespace ShimmerAPI
                     int newGSRRange = -1; // initialized to -1 so it will only come into play if mGSRRange = 4  
                     double datatemp = newPacket[iGSR];
                     double gsrResistanceKOhms = -1;
+
+                    int bitMask = 4095;
+                    if (HardwareVersion == (int) ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        bitMask = 16383;
+                    }
+
                     //double p1 = 0, p2 = 0;
                     if (GSRRange == 4)
                     {
                         newGSRRange = (49152 & (int)datatemp) >> 14;
                     }
-                    datatemp = (double)((int)datatemp & 4095);
+                    datatemp = (double)((int)datatemp & bitMask);
                     if (GSRRange == 0 || newGSRRange == 0)
                     {
                         //Note that from FW 1.0 onwards the MSB of the GSR data contains the range
@@ -4079,8 +4148,16 @@ namespace ShimmerAPI
                     int iSGHigh = getSignalIndex(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH);
                     int iSGLow = getSignalIndex(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW);
                     double[] datatemp = new double[2] { newPacket[iSGHigh], newPacket[iSGLow] };
-                    datatemp[0] = CalibrateU12AdcValue(datatemp[0], OffsetSGHigh, VRef, GainSGHigh);
-                    datatemp[1] = CalibrateU12AdcValue(datatemp[1], OffsetSGLow, VRef, GainSGLow);
+                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        datatemp[0] = CalibrateShimmer3RAdcChannel(datatemp[0]);
+                        datatemp[1] = CalibrateShimmer3RAdcChannel(datatemp[1]);
+                    } else
+                    {
+                        datatemp[0] = CalibrateU12AdcValue(datatemp[0], OffsetSGHigh, VRef, GainSGHigh);
+                        datatemp[1] = CalibrateU12AdcValue(datatemp[1], OffsetSGLow, VRef, GainSGLow);
+                    }
+                        
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iSGHigh]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp[0]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iSGLow]);
@@ -7059,9 +7136,22 @@ namespace ShimmerAPI
             return calData;
         }
 
+        protected double CalibrateShimmer3RAdcChannel(double unCalData)
+        {
+            double offset = 0; double vRefP = 3; double gain = 1;
+            double calData = CalibrateU14AdcValue(unCalData, offset, vRefP, gain);
+            return calData;
+        }
+
         protected double CalibrateU12AdcValue(double uncalibratedData, double offset, double vRefP, double gain)
         {
             double calibratedData = (uncalibratedData - offset) * (((vRefP * 1000) / gain) / 4095);
+            return calibratedData;
+        }
+
+        protected double CalibrateU14AdcValue(double uncalibratedData, double offset, double vRefP, double gain)
+        {
+            double calibratedData = (uncalibratedData - offset) * (((vRefP * 1000) / gain) / 16383);
             return calibratedData;
         }
 
@@ -7147,7 +7237,14 @@ namespace ShimmerAPI
         protected double CalibrateGsrDataToResistanceFromAmplifierEq(double gsrUncalibratedData, int range)
         {
             double rFeedback = SHIMMER3_GSR_REF_RESISTORS_KOHMS[range];
-            double volts = CalibrateMspAdcChannel(gsrUncalibratedData) / 1000.0;
+            double volts = 0;
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                volts = CalibrateShimmer3RAdcChannel(gsrUncalibratedData) / 1000.0;
+            } else
+            {
+                volts = CalibrateMspAdcChannel(gsrUncalibratedData) / 1000.0;
+            }
             double rSource = rFeedback / ((volts / 0.5) - 1.0);
             return rSource;
         }
