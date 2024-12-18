@@ -63,6 +63,8 @@
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.labelBaudRate = new System.Windows.Forms.Label();
             this.comboBoxBaudRate = new System.Windows.Forms.ComboBox();
+            this.labelLNAccelRange = new System.Windows.Forms.Label();
+            this.comboBoxLNAccelRange = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxExgGain = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -529,6 +531,8 @@
             // 
             this.groupBoxSettings.Controls.Add(this.labelBaudRate);
             this.groupBoxSettings.Controls.Add(this.comboBoxBaudRate);
+            this.groupBoxSettings.Controls.Add(this.labelLNAccelRange);
+            this.groupBoxSettings.Controls.Add(comboBoxLNAccelRange);
             this.groupBoxSettings.Controls.Add(this.label3);
             this.groupBoxSettings.Controls.Add(this.comboBoxExgGain);
             this.groupBoxSettings.Controls.Add(this.label2);
@@ -582,6 +586,27 @@
             this.comboBoxBaudRate.Size = new System.Drawing.Size(160, 24);
             this.comboBoxBaudRate.TabIndex = 39;
             this.comboBoxBaudRate.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
+
+            // 
+            // labellnaccel
+            // 
+            this.labelLNAccelRange.AutoSize = true;
+            this.labelLNAccelRange.Location = new System.Drawing.Point(267, 93);
+            this.labelLNAccelRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelLNAccelRange.Name = "labelBaudRate";
+            this.labelLNAccelRange.Size = new System.Drawing.Size(75, 17);
+            this.labelLNAccelRange.TabIndex = 40;
+            this.labelLNAccelRange.Text = "LN Accel Range";
+            // 
+            // comboBoxlnaccel
+            // 
+            this.comboBoxLNAccelRange.FormattingEnabled = true;
+            this.comboBoxLNAccelRange.Location = new System.Drawing.Point(267, 113);
+            this.comboBoxLNAccelRange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxLNAccelRange.Name = "comboBoxBaudRate";
+            this.comboBoxLNAccelRange.Size = new System.Drawing.Size(160, 24);
+            this.comboBoxLNAccelRange.TabIndex = 39;
+            this.comboBoxLNAccelRange.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
             // 
             // label3
             // 
@@ -1061,6 +1086,8 @@
         private System.Windows.Forms.ComboBox comboBoxGyroRange;
         private System.Windows.Forms.ComboBox comboBoxGSRRange;
         private System.Windows.Forms.ComboBox comboBoxAccelRange;
+        private System.Windows.Forms.ComboBox comboBoxLNAccelRange;
+        private System.Windows.Forms.Label labelLNAccelRange;
         private System.Windows.Forms.ComboBox comboBoxMagRange;
         protected internal System.Windows.Forms.ComboBox comboBoxSamplingRate;
         private System.Windows.Forms.Button buttonToggleLED;

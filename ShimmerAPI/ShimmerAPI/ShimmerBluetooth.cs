@@ -5298,6 +5298,11 @@ namespace ShimmerAPI
             return AccelRange;
         }
 
+        public int GetLNAccelRange()
+        {
+            return LNAccelRange;
+        }
+
         protected void SetAccelRange(int range)
         {
             AccelRange = range;

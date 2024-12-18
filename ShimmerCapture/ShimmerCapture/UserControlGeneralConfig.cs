@@ -111,6 +111,22 @@ namespace ShimmerAPI
                     comboBoxAccelRange.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxAccelRange.DropDownStyle = ComboBoxStyle.DropDownList;
 
+                    comboBoxLNAccelRange.Items.AddRange(ShimmerBluetooth.LIST_OF_ACCEL_RANGE_SHIMMER3);
+                    comboBoxLNAccelRange.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    comboBoxLNAccelRange.AutoCompleteSource = AutoCompleteSource.ListItems;
+                    comboBoxLNAccelRange.DropDownStyle = ComboBoxStyle.DropDownList;
+
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxLNAccelRange.Enabled = true;
+                        comboBoxLNAccelRange.Visible = true;
+                    }
+                    else
+                    {
+                        comboBoxLNAccelRange.Enabled = false;
+                        comboBoxLNAccelRange.Visible = false;
+                    }
+
                     comboBoxGSRRange.Items.AddRange(ShimmerBluetooth.LIST_OF_GSR_RANGE);
                     comboBoxGSRRange.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxGSRRange.AutoCompleteSource = AutoCompleteSource.ListItems;
@@ -565,6 +581,7 @@ namespace ShimmerAPI
 
             //ComboBoxes
             int accelRange = PConfiguration.PControlForm.ShimmerDevice.GetAccelRange();
+            int lnAccelRange = PConfiguration.PControlForm.ShimmerDevice.GetLNAccelRange();
             if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
             {
                 comboBoxAccelRange.SelectedIndex = accelRange;
@@ -606,6 +623,23 @@ namespace ShimmerAPI
                     else if (accelRange == 3)
                     {
                         comboBoxAccelRange.SelectedIndex = 3;
+                    }
+
+                    if (lnAccelRange == 0)
+                    {
+                        comboBoxLNAccelRange.SelectedIndex = 0;
+                    }
+                    else if (lnAccelRange == 1)
+                    {
+                        comboBoxLNAccelRange.SelectedIndex = 1;
+                    }
+                    else if (lnAccelRange == 2)
+                    {
+                        comboBoxLNAccelRange.SelectedIndex = 2;
+                    }
+                    else if (lnAccelRange == 3)
+                    {
+                        comboBoxLNAccelRange.SelectedIndex = 3;
                     }
                 }
             }
@@ -798,10 +832,12 @@ namespace ShimmerAPI
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0)
                 {
                     checkBoxSensor1.Checked = true;
+                    comboBoxLNAccelRange.Enabled = true;
                 }
                 else
                 {
                     checkBoxSensor1.Checked = false;
+                    comboBoxLNAccelRange.Enabled = false;
                 }
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0)
                 {
@@ -1238,10 +1274,11 @@ namespace ShimmerAPI
             {
                 if (checkBoxSensor1.Checked)
                 {
-
+                    comboBoxLNAccelRange.Enabled = true;
                 }
                 else
                 {
+                    comboBoxLNAccelRange.Enabled = false;
                     if (!checkBoxSensor2.Checked)
                     {
                         checkBox3DOrientation.Checked = false;
@@ -1949,7 +1986,7 @@ namespace ShimmerAPI
                     checkBoxSensor2.Checked = true;
                     checkBoxSensor3.Checked = true;
                     checkBoxSensor4.Checked = true;
-
+                    comboBoxLNAccelRange.Enabled = true;
                     comboBoxAccelRange.Enabled = true;
                     comboBoxGyroRange.Enabled = true;
                     comboBoxMagRange.Enabled = true;
@@ -2292,6 +2329,24 @@ namespace ShimmerAPI
                     {
                         PConfiguration.PControlForm.ShimmerDevice.WriteAccelRange(3);
                     }
+
+                    if (comboBoxLNAccelRange.SelectedIndex == 0)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteLNAccelRange(0);
+                    }
+                    else if (comboBoxLNAccelRange.SelectedIndex == 1)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteLNAccelRange(1);
+                    }
+                    else if (comboBoxLNAccelRange.SelectedIndex == 2)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteLNAccelRange(2);
+                    }
+                    else if (comboBoxLNAccelRange.SelectedIndex == 3)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteLNAccelRange(3);
+                    }
+
                 }
 
             }
