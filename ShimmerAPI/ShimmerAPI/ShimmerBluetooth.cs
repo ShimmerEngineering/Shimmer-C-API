@@ -2205,6 +2205,7 @@ namespace ShimmerAPI
         }
         public void InterpretInquiryResponseShimmer3R(List<byte> packet)
         {
+            mEnableTimeStampAlignmentCheck = true;
             //check if this packet is sane, and not just random
             if ((packet.Count >= 4))       // max number of channels currently allowable
             {
