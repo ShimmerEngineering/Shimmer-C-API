@@ -316,6 +316,18 @@ namespace ShimmerAPI
 
         }
 
+        public enum SensorBitmapShimmer3R
+        {
+            SENSOR_EXT_A9 = 0x02,
+            SENSOR_EXT_A11 = 0x01,
+            SENSOR_EXT_A12 = 0x0800,
+            SENSOR_INT_A17 = 0x0400,
+            SENSOR_INT_A10 = 0x0200,
+            SENSOR_INT_A15 = 0x0100,
+            SENSOR_INT_A16 = 0x800000,
+            SENSOR_BMP380_PRESSURE = 0x40000
+        }
+
         public enum ChannelContentsShimmer3
         {
             XLNAccel = 0x00,
