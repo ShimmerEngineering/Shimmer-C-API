@@ -39,8 +39,8 @@
             this.checkBoxSensor9 = new System.Windows.Forms.CheckBox();
             this.groupBoxSensors = new System.Windows.Forms.GroupBox();
             this.checkBoxSensor23 = new System.Windows.Forms.CheckBox();
-            this.checkBoxSensor24 = new System.Windows.Forms.CheckBox();
-            this.checkBoxSensor25 = new System.Windows.Forms.CheckBox();
+            this.checkBoxSensorHGAccel = new System.Windows.Forms.CheckBox();
+            this.checkBoxSensorAltMag = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor22 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor21 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor20 = new System.Windows.Forms.CheckBox();
@@ -221,8 +221,8 @@
             // 
             // groupBoxSensors
             // 
-            this.groupBoxSensors.Controls.Add(this.checkBoxSensor25);
-            this.groupBoxSensors.Controls.Add(this.checkBoxSensor24);
+            this.groupBoxSensors.Controls.Add(this.checkBoxSensorAltMag);
+            this.groupBoxSensors.Controls.Add(this.checkBoxSensorHGAccel);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor23);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor22);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor21);
@@ -330,29 +330,29 @@
             // 
             // checkBoxSensor24
             // 
-            this.checkBoxSensor24.AutoSize = true;
-            this.checkBoxSensor24.Location = new System.Drawing.Point(267, 138 + 23 * 2);
-            this.checkBoxSensor24.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBoxSensor24.Name = "checkBoxSensor24";
-            this.checkBoxSensor24.Size = new System.Drawing.Size(106, 21);
-            this.checkBoxSensor24.TabIndex = 23;
-            this.checkBoxSensor24.Text = "checkBox24";
-            this.checkBoxSensor24.UseVisualStyleBackColor = true;
-            this.checkBoxSensor24.CheckedChanged += new System.EventHandler(this.checkBoxSensor24_CheckedChanged);
-            this.checkBoxSensor24.Click += new System.EventHandler(this.checkBoxSensor24_Click);
+            this.checkBoxSensorHGAccel.AutoSize = true;
+            this.checkBoxSensorHGAccel.Location = new System.Drawing.Point(267, 138 + 23 * 2);
+            this.checkBoxSensorHGAccel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSensorHGAccel.Name = "checkBoxSensor24";
+            this.checkBoxSensorHGAccel.Size = new System.Drawing.Size(106, 21);
+            this.checkBoxSensorHGAccel.TabIndex = 23;
+            this.checkBoxSensorHGAccel.Text = "checkBox24";
+            this.checkBoxSensorHGAccel.UseVisualStyleBackColor = true;
+            this.checkBoxSensorHGAccel.CheckedChanged += new System.EventHandler(this.checkBoxSensor24_CheckedChanged);
+            this.checkBoxSensorHGAccel.Click += new System.EventHandler(this.checkBoxSensor24_Click);
             // 
             // checkBoxSensor24
             // 
-            this.checkBoxSensor25.AutoSize = true;
-            this.checkBoxSensor25.Location = new System.Drawing.Point(267, 138+23*3);
-            this.checkBoxSensor25.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBoxSensor25.Name = "checkBoxSensor25";
-            this.checkBoxSensor25.Size = new System.Drawing.Size(106, 21);
-            this.checkBoxSensor25.TabIndex = 23;
-            this.checkBoxSensor25.Text = "checkBox25";
-            this.checkBoxSensor25.UseVisualStyleBackColor = true;
-            this.checkBoxSensor25.CheckedChanged += new System.EventHandler(this.checkBoxSensor25_CheckedChanged);
-            this.checkBoxSensor25.Click += new System.EventHandler(this.checkBoxSensor25_Click);
+            this.checkBoxSensorAltMag.AutoSize = true;
+            this.checkBoxSensorAltMag.Location = new System.Drawing.Point(267, 138+23*3);
+            this.checkBoxSensorAltMag.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSensorAltMag.Name = "checkBoxSensor25";
+            this.checkBoxSensorAltMag.Size = new System.Drawing.Size(106, 21);
+            this.checkBoxSensorAltMag.TabIndex = 23;
+            this.checkBoxSensorAltMag.Text = "checkBox25";
+            this.checkBoxSensorAltMag.UseVisualStyleBackColor = true;
+            this.checkBoxSensorAltMag.CheckedChanged += new System.EventHandler(this.checkBoxSensor25_CheckedChanged);
+            this.checkBoxSensorAltMag.Click += new System.EventHandler(this.checkBoxSensor25_Click);
             // 
             // checkBoxSensor17
             // 
@@ -1111,8 +1111,8 @@
         private System.Windows.Forms.CheckBox checkBoxSensor18;
         private System.Windows.Forms.CheckBox checkBoxSensor22;
         private System.Windows.Forms.CheckBox checkBoxSensor21;
-        private System.Windows.Forms.CheckBox checkBoxSensor24;
-        private System.Windows.Forms.CheckBox checkBoxSensor25;
+        private System.Windows.Forms.CheckBox checkBoxSensorHGAccel;
+        private System.Windows.Forms.CheckBox checkBoxSensorAltMag;
         protected internal System.Windows.Forms.ComboBox comboBoxBaudRate;
         private System.Windows.Forms.Label labelBaudRate;
         private System.Windows.Forms.Button buttonDetectExpansionBoard;

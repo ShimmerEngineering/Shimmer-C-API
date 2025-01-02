@@ -7,6 +7,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using static ShimmerAPI.ShimmerBluetooth;
 
 namespace ShimmerAPI
 {
@@ -86,16 +87,49 @@ namespace ShimmerAPI
                     checkBoxSensor16.Text = "EMG";
                     checkBoxSensor17.Text = "ExG Test Signal";
                     checkBoxSensor23.Text = "Respiration";
-                    checkBoxSensor24.Text = "High G Accel";
-                    checkBoxSensor25.Text = "Alt Mag";
+                    checkBoxSensorHGAccel.Text = "High G Accel";
+                    checkBoxSensorAltMag.Text = "Alt Mag";
 
                     checkBoxSensor19.Text = "Bridge Amplifier";
                     checkBoxSensor11.Visible = true;
                     checkBoxSensor12.Visible = true;
                     checkBoxSensor13.Visible = true;
-                    checkBoxSensor14.Visible = true;
-                    checkBoxSensor15.Visible = true;
-                    checkBoxSensor16.Visible = true;
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.EXPANSION_GSR_PLUS
+                        || PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED)
+                    {
+                        checkBoxSensor14.Visible = true;
+                    } else
+                    {
+                        checkBoxSensor14.Visible = false;
+                    }
+
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.EXPANSION_BRIDGE_AMPLIFIER_PLUS
+                        || PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.EXP_BRD_BR_AMP_UNIFIED)
+                    {
+                        checkBoxSensor19.Visible = true;
+                    }
+                    else
+                    {
+                        checkBoxSensor19.Visible = false;
+                    }
+
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.EXPANSION_EXG
+                        || PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED
+                        || PConfiguration.PControlForm.ShimmerDevice.GetExpansionBoardID() == (int)ExpansionBoardDetectShimmer3.SHIMMER_3_EXG_EXTENDED)
+                    {
+                        checkBoxSensor15.Visible = true;
+                        checkBoxSensor16.Visible = true;
+                        checkBoxSensor17.Visible = true;
+                        checkBoxSensor23.Visible = true;
+                    } else
+                    {
+                        checkBoxSensor15.Visible = false;
+                        checkBoxSensor16.Visible = false;
+                        checkBoxSensor17.Visible = false;
+                        checkBoxSensor23.Visible = false;
+                    }
+
+
                     checkBoxVoltageMon.Checked = false;
                     labelAccelRange.Text = "WR Accelerometer Range";
 
@@ -264,16 +298,16 @@ namespace ShimmerAPI
 
                     if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        checkBoxSensor24.Enabled = true;
-                        checkBoxSensor24.Visible = true;
-                        checkBoxSensor25.Enabled = true;
-                        checkBoxSensor25.Visible = true;
+                        checkBoxSensorHGAccel.Enabled = true;
+                        checkBoxSensorHGAccel.Visible = true;
+                        checkBoxSensorAltMag.Enabled = true;
+                        checkBoxSensorAltMag.Visible = true;
                     } else
                     {
-                        checkBoxSensor24.Enabled = false;
-                        checkBoxSensor24.Visible = false;
-                        checkBoxSensor25.Enabled = false;
-                        checkBoxSensor25.Visible = false;
+                        checkBoxSensorHGAccel.Enabled = false;
+                        checkBoxSensorHGAccel.Visible = false;
+                        checkBoxSensorAltMag.Enabled = false;
+                        checkBoxSensorAltMag.Visible = false;
                     }
 
                 }
@@ -1267,20 +1301,20 @@ namespace ShimmerAPI
 
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_ACCEL_ALT) > 0)
                 {
-                    checkBoxSensor24.Checked = true;
+                    checkBoxSensorHGAccel.Checked = true;
                 }
                 else
                 {
-                    checkBoxSensor24.Checked = false;
+                    checkBoxSensorHGAccel.Checked = false;
                 }
 
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0)
                 {
-                    checkBoxSensor25.Checked = true;
+                    checkBoxSensorAltMag.Checked = true;
                 }
                 else
                 {
-                    checkBoxSensor25.Checked = false;
+                    checkBoxSensorAltMag.Checked = false;
                 }
 
                 if (((enabledSensors & 0xFF00) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_BRIDGE_AMP) > 0)
@@ -2576,11 +2610,11 @@ namespace ShimmerAPI
                     PConfiguration.PControlForm.ShimmerDevice.WriteEXGConfigurations(PConfiguration.ExgReg1UI, PConfiguration.ExgReg2UI);
                 }
 
-                if (checkBoxSensor24.Checked)
+                if (checkBoxSensorHGAccel.Checked)
                 {
                     ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_ACCEL_ALT;
                 }
-                if (checkBoxSensor25.Checked)
+                if (checkBoxSensorAltMag.Checked)
                 {
                     ReturnEnabledSensors = ReturnEnabledSensors | (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG_ALT;
                 }
