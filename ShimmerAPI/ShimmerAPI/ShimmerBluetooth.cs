@@ -5598,6 +5598,11 @@ namespace ShimmerAPI
             return BaudRate;
         }
 
+        public int GetExpansionBoardID()
+        {
+            return ExpansionBoardId;
+        }
+
         public String GetExpansionBoard()
         {
             return ExpansionBoard;
