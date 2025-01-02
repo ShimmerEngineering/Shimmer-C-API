@@ -6016,7 +6016,8 @@ namespace ShimmerAPI
         /// </summary>
         public void ReadExpansionBoard()
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 && CompatibilityCode >= 4)
+            if ((HardwareVersion == (int)ShimmerVersion.SHIMMER3 && CompatibilityCode >= 4)
+                || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 WriteBytes(new byte[3] { (byte)PacketTypeShimmer3.GET_EXPANSION_BOARD_COMMAND, 3, 0 }, 0, 3);
                 System.Threading.Thread.Sleep(200);
