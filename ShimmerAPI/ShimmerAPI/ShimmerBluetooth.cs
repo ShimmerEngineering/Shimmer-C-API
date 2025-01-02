@@ -605,6 +605,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3R = { "+/- 4Ga", "+/- 8Ga", "+/- 12Ga", "+/- 16Ga" };
         public static readonly String[] LIST_OF_PRESSURE_RESOLUTION_SHIMMER3 = { "Low", "Standard", "High", "Very High" };
+        public static readonly String[] LIST_OF_PRESSURE_RESOLUTION_SHIMMER3R = { "Ultra Low", "Low", "Standard", "High", "Ultra High", "Highest" };
         public static readonly String[] LIST_OF_GSR_RANGE = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_EXG_GAINS_SHIMMER3 = new string[] { "1", "2", "3", "4", "6", "8", "12" };
 
@@ -2247,6 +2248,9 @@ namespace ShimmerAPI
 
                 int MSB_MAG_RATE = (int)((ConfigSetupByte0 >> 43) & 0x07); //8+8+8+8+8+3
                 magSamplingRate = magSamplingRate + (MSB_MAG_RATE << 3);
+
+                int MSB_PRESSURE_RES = (int)((ConfigSetupByte0 >> 32) & 0x01); //8+8+8+8
+                PressureResolution = PressureResolution + (MSB_PRESSURE_RES << 2);
 
                 LNAccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03); //8+8+8+6
 
@@ -6298,11 +6302,12 @@ namespace ShimmerAPI
 
         /// <summary>
         /// This is to set the pressure resolution of the BMP180 Pressure sensor on the Shimmer3. There are four different settings 0,1,2,3 with 0 being the lowest resolution and 3 the highest.
+        /// This is to set the pressure resolution of the BMP390 Pressure sensor on the Shimmer3R. There are four different settings 0,1,2,3,4,5 with 0 being the lowest resolution and 5 the highest.
         /// </summary>
-        /// <param name="setting">A value between 0 and 3, 3 being highest resolution and 0 lowest</param>
+        /// <param name="setting">A value between 0 and 3, 3 being highest resolution and 0 lowest for Shimmer3, and 0-5 for Shimmer3R</param>
         public void WritePressureResolution(int setting)
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_BMP180_PRES_RESOLUTION_COMMAND, (byte)setting }, 0, 2);
                 PressureResolution = setting;

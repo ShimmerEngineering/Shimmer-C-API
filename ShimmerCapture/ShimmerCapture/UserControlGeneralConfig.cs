@@ -156,8 +156,13 @@ namespace ShimmerAPI
                     comboBoxGyroRange.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxGyroRange.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxGyroRange.DropDownStyle = ComboBoxStyle.DropDownList;
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3) {
+                        comboBoxPressureRes.Items.AddRange(ShimmerBluetooth.LIST_OF_PRESSURE_RESOLUTION_SHIMMER3);
+                    } else if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxPressureRes.Items.AddRange(ShimmerBluetooth.LIST_OF_PRESSURE_RESOLUTION_SHIMMER3R);
+                    }
 
-                    comboBoxPressureRes.Items.AddRange(ShimmerBluetooth.LIST_OF_PRESSURE_RESOLUTION_SHIMMER3);
                     comboBoxPressureRes.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
                     comboBoxPressureRes.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxPressureRes.DropDownStyle = ComboBoxStyle.DropDownList;
