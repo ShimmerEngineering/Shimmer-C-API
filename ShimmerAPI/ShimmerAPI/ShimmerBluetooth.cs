@@ -673,9 +673,9 @@ namespace ShimmerAPI
         public static readonly double[,] ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH = new double[3, 3] { { 0, -1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
         public static readonly double[,] OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
 
-        public static readonly double[,] SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371 = new double[3, 3] { { 16, 0, 0 }, { 0, 16, 0 }, { 0, 0, 16 } };
+        public static readonly double[,] SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371 = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
         public static readonly double[,] ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371 = new double[3, 3] { { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };     //Default Values for Accelerometer Calibration
-        public static readonly double[,] OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371 = new double[3, 1] { { 0 }, { 0 }, { 0 } };                //Default Values for Accelerometer Calibration
+        public static readonly double[,] OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371 = new double[3, 1] { { 10 }, { 10 }, { 10 } };                //Default Values for Accelerometer Calibration
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3R_LIS2DW12 = new double[3, 3] { { 1671, 0, 0 }, { 0, 1671, 0 }, { 0, 0, 1671 } };
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3R_LIS2DW12 = new double[3, 3] { { 836, 0, 0 }, { 0, 836, 0 }, { 0, 0, 836 } };
         public static readonly double[,] SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3R_LIS2DW12 = new double[3, 3] { { 418, 0, 0 }, { 0, 418, 0 }, { 0, 0, 418 } };
@@ -6337,7 +6337,7 @@ namespace ShimmerAPI
 
         protected void WriteWRAccelSamplingRate(int rate)
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 AccelSamplingRate = rate;
                 mTempIntValue = rate;
@@ -6348,7 +6348,7 @@ namespace ShimmerAPI
 
         protected void WriteGyroSamplingRate(int rate)
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 Mpu9150SamplingRate = rate;
                 mTempIntValue = rate;
@@ -6619,44 +6619,97 @@ namespace ShimmerAPI
         public void SetLowPowerGyro(bool enable)
         {
             LowPowerGyroEnabled = enable;
-            if (!LowPowerGyroEnabled)
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
             {
-                if (SamplingRate <= 51.28)
+                if (!LowPowerGyroEnabled)
                 {
-                    WriteGyroSamplingRate(0x9B);
-                }
-                else if (SamplingRate <= 102.56)
-                {
-                    WriteGyroSamplingRate(0x4D);
-                }
-                else if (SamplingRate <= 129.03)
-                {
-                    WriteGyroSamplingRate(0x3D);
-                }
-                else if (SamplingRate <= 173.91)
-                {
-                    WriteGyroSamplingRate(0x2D);
-                }
-                else if (SamplingRate <= 205.13)
-                {
-                    WriteGyroSamplingRate(0x26);
-                }
-                else if (SamplingRate <= 258.06)
-                {
-                    WriteGyroSamplingRate(0x1E);
-                }
-                else if (SamplingRate <= 533.33)
-                {
-                    WriteGyroSamplingRate(0xE);
+                    if (SamplingRate <= 51.28)
+                    {
+                        WriteGyroSamplingRate(0x9B);
+                    }
+                    else if (SamplingRate <= 102.56)
+                    {
+                        WriteGyroSamplingRate(0x4D);
+                    }
+                    else if (SamplingRate <= 129.03)
+                    {
+                        WriteGyroSamplingRate(0x3D);
+                    }
+                    else if (SamplingRate <= 173.91)
+                    {
+                        WriteGyroSamplingRate(0x2D);
+                    }
+                    else if (SamplingRate <= 205.13)
+                    {
+                        WriteGyroSamplingRate(0x26);
+                    }
+                    else if (SamplingRate <= 258.06)
+                    {
+                        WriteGyroSamplingRate(0x1E);
+                    }
+                    else if (SamplingRate <= 533.33)
+                    {
+                        WriteGyroSamplingRate(0xE);
+                    }
+                    else
+                    {
+                        WriteGyroSamplingRate(6);
+                    }
                 }
                 else
                 {
-                    WriteGyroSamplingRate(6);
+                    WriteGyroSamplingRate(0xFF);
                 }
             }
-            else
+            else if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                WriteGyroSamplingRate(0xFF);
+                if (!LowPowerGyroEnabled)
+                {
+                    if (SamplingRate <= 7.5)
+                    {
+                        WriteGyroSamplingRate(0x02);
+                    }
+                    else if (SamplingRate <= 30)
+                    {
+                        WriteGyroSamplingRate(0x04);
+                    }
+                    else if (SamplingRate <= 60)
+                    {
+                        WriteGyroSamplingRate(0x05);
+                    }
+                    else if (SamplingRate <= 120)
+                    {
+                        WriteGyroSamplingRate(0x06);
+                    }
+                    else if (SamplingRate <= 240)
+                    {
+                        WriteGyroSamplingRate(0x07);
+                    }
+                    else if (SamplingRate <= 480)
+                    {
+                        WriteGyroSamplingRate(0x08);
+                    }
+                    else if (SamplingRate <= 960)
+                    {
+                        WriteGyroSamplingRate(0x09);
+                    }
+                    else if (SamplingRate <= 1920)
+                    {
+                        WriteGyroSamplingRate(0x0A);
+                    }
+                    else if (SamplingRate <= 3840)
+                    {
+                        WriteGyroSamplingRate(0x0B);
+                    }
+                    else if (SamplingRate <= 7680)
+                    {
+                        WriteGyroSamplingRate(0x0C);
+                    }
+                }
+                else
+                {
+                    WriteGyroSamplingRate(0x01);
+                }
             }
         }
 
