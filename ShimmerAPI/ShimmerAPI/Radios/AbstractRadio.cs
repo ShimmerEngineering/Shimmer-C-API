@@ -55,6 +55,5 @@ namespace ShimmerAPI.Radios
 
             BytesReceived?.Invoke(this, buffer);
         }
-
     }
 }

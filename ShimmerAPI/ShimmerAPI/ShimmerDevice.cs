@@ -27,7 +27,8 @@ namespace ShimmerAPI
             SHIMMER1 = 0,
             SHIMMER2 = 1,
             SHIMMER2R = 2,
-            SHIMMER3 = 3
+            SHIMMER3 = 3,
+            SHIMMER3R = 10
         }
         protected double CalibrateTimeStamp(double timeStamp)
         {
@@ -45,7 +46,7 @@ namespace ShimmerAPI
             {
                 clockConstant = 1024;
             }
-            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 clockConstant = 32768;
             }

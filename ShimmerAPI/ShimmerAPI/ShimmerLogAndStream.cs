@@ -666,6 +666,11 @@ namespace ShimmerAPI
             //worker.ReportProgress(15, status_text);
             ReadAccelRange();
 
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                ReadLNAccelRange();
+            }
+
             status_text = "Acquiring ADC Sampling Rate...";
             newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
             OnNewEvent(newEventArgs);
@@ -697,7 +702,16 @@ namespace ShimmerAPI
             status_text = "Acquiring Calibration settings...";
             //PControlForm.status_text = "Acquiring Calibration settings...";
             //worker.ReportProgress(40, status_text);
-            ReadCalibrationParameters("All");
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                //ReadCalibDump();
+                ReadCalibrationParameters("All");
+            }
+            else
+            {
+                //ReadCalibDump();
+                ReadCalibrationParameters("All");
+            }
 
             status_text = "Acquiring EXG1 configure settings...";
             newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
@@ -917,10 +931,46 @@ namespace ShimmerAPI
         [Obsolete("This method is unfinished and should not be used.")]
         public void ReadCalibDump()
         {
+
+            List<byte> calibDumpResponse = new List<byte>();
+            
+            byte[] byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00);
+
+            if (byteResult == null || byteResult.Length < 2)
+            {
+                Console.WriteLine("Failed to retrieve calibration dump.");
+                return;
+            }
+
+            int length = byteResult[0] + (byteResult[1] << 8) + 2;
+            Console.WriteLine($"Calibration Dump Length: {length}");
+
+            calibDumpResponse.AddRange(byteResult);
+
+            while (calibDumpResponse.Count < length)
+            {
+                byte[] address = BitConverter.GetBytes((short)(calibDumpResponse.Count & 0xFFFF));
+                Array.Reverse(address);
+                int count = length - calibDumpResponse.Count;
+                if (count >= 128)
+                {
+                    count = 128;
+                }
+
+                byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, (byte)count, address[0], address[1]);
+                if (byteResult != null)
+                {
+                    calibDumpResponse.AddRange(byteResult);
+                }
+            }
+
+            /*
             WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00 }, 0, 4);
 
             Thread.Sleep(500);
            
+
+            
             CalibDump = tempCalibDump;
             var length = ((int)(CalibDump[0]) + ((int)(CalibDump[1]) << 8)) + 2;
             System.Console.WriteLine("Calib Dump Length: " + length);
@@ -940,13 +990,19 @@ namespace ShimmerAPI
                 System.Console.WriteLine("Calib Dump Length: " + length + " " + tempCalibDump.Length + " " + CalibDump.Length);
             }
             System.Console.WriteLine("Calib Dump: " + ProgrammerUtilities.ByteArrayToHexString(CalibDump));
+            */
         }
 
-        protected void SendGetMemory(byte command, byte val0, byte val1, byte val2)
+        protected byte[] SendGetMemoryCommand(byte cmd, byte val0, byte val1, byte val2)
         {
-            WriteBytes(new byte[4] { command, val0, val1, val2 }, 0, 4);
-            Thread.Sleep(200);
-        } 
+
+            // Create the byte array
+            byte[] bytes = { cmd, val0, val1, val2 };
+            WriteBytes(bytes, 0, bytes.Length);
+            Thread.Sleep(500);
+
+            return tempCalibDump;
+        }
 
         protected void ReadInfoMem(byte val1 , byte val2)
         {
@@ -1121,8 +1177,8 @@ namespace ShimmerAPI
 
 
             file.WriteLine("accel=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_A_ACCEL) == 0 ? 0 : 1));//SensorBitmapShimmer3.SensorAAccel
-            file.WriteLine("gyro=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) == 0 ? 0 : 1));
-            file.WriteLine("mag=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) == 0 ? 0 : 1));
+            file.WriteLine("gyro=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_GYRO) == 0 ? 0 : 1));
+            file.WriteLine("mag=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_MAG) == 0 ? 0 : 1));
             file.WriteLine("exg1_24bit=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_EXG1_24BIT) == 0 ? 0 : 1));
             file.WriteLine("exg2_24bit=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_EXG2_24BIT) == 0 ? 0 : 1));
             file.WriteLine("gsr=" + ((GetEnabledSensors() & (int)SensorBitmapShimmer3.SENSOR_GSR) == 0 ? 0 : 1));
@@ -1282,12 +1338,12 @@ namespace ShimmerAPI
                     else if (line.Contains("gyro="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MPU9150_GYRO;
+                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GYRO;
                     }
                     else if (line.Contains("mag="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG;
+                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG;   
                     }
                     else if (line.Contains("exg1_24bit="))
                     {
@@ -1377,7 +1433,7 @@ namespace ShimmerAPI
                     else if (line.Contains("mag="))
                     {
                         if (line[equals] == '1')
-                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG;
+                            file_sensors[0] |= (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG;
                     }
                     else if (line.Contains("sample_rate="))
                         freq = Convert.ToDouble(line.Substring(equals, line.Length - equals));
@@ -1630,7 +1686,7 @@ namespace ShimmerAPI
                     buffer_channelContents.Add((byte)ChannelContents.InternalAdc1);
                     nbrAdcChans++;
                 }
-                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MPU9150_GYRO) != 0)
+                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_GYRO) != 0)
                 {
                     buffer_channelContents.Add((byte)ChannelContents.XGyro);
                     buffer_channelContents.Add((byte)ChannelContents.YGyro);
@@ -1644,7 +1700,7 @@ namespace ShimmerAPI
                     buffer_channelContents.Add((byte)ChannelContents.ZWRAccel);
                     nbrDigiChans += 3;
                 }
-                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_LSM303DLHC_MAG) != 0)
+                if ((byte)((byte)file_sensors[0] & (byte)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG) != 0)
                 {
                     buffer_channelContents.Add((byte)ChannelContents.XMag);
                     buffer_channelContents.Add((byte)ChannelContents.YMag);
@@ -1903,6 +1959,9 @@ namespace ShimmerAPI
             {
                 switch (b)
                 {
+                    case (byte)PacketTypeShimmer3RSDBT.ALT_ACCEL_RANGE_RESPONSE:
+                        SetLNAccelRange(ReadByte());
+                        break;
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INFOMEM_RESPONSE:
                         {
                             int len = ReadByte();

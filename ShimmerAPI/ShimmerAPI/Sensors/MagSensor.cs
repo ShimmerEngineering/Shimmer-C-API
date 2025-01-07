@@ -8,9 +8,9 @@ namespace ShimmerAPI.Sensors
     class MagSensor
     {
         public readonly int CALIBRATION_ID = 2;
-        public double[,] AlignmentMatrixAccel = new double[3, 3];
-        public double[,] SensitivityMatrixAccel = new double[3, 3];
-        public double[,] OffsetVectorAccel = new double[3, 1];
+        public double[,] AlignmentMatrixMag = new double[3, 3];
+        public double[,] SensitivityMatrixMag = new double[3, 3];
+        public double[,] OffsetVectorMag = new double[3, 1];
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
 
@@ -21,8 +21,8 @@ namespace ShimmerAPI.Sensors
                 var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
                 var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
                 var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
-                (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                System.Console.WriteLine("LN Accel calibration parameters");
+                (AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                System.Console.WriteLine("Mag calibration parameters");
             }
 
         }

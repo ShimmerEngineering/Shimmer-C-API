@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShimmerAPI.Sensors
 {
-    public class WRAccel
+    public class HighGAccel
     {
         public readonly int CALIBRATION_ID = 2;
         public double[,] AlignmentMatrixAccel = new double[3, 3];
@@ -22,7 +22,7 @@ namespace ShimmerAPI.Sensors
                 var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
                 var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
                 (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                System.Console.WriteLine("WR Accel calibration parameters");
+                System.Console.WriteLine("High-G Accel calibration parameters");
             }
 
         }

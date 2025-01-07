@@ -39,6 +39,8 @@
             this.checkBoxSensor9 = new System.Windows.Forms.CheckBox();
             this.groupBoxSensors = new System.Windows.Forms.GroupBox();
             this.checkBoxSensor23 = new System.Windows.Forms.CheckBox();
+            this.checkBoxSensorHGAccel = new System.Windows.Forms.CheckBox();
+            this.checkBoxSensorAltMag = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor22 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor21 = new System.Windows.Forms.CheckBox();
             this.checkBoxSensor20 = new System.Windows.Forms.CheckBox();
@@ -61,6 +63,8 @@
             this.groupBoxSettings = new System.Windows.Forms.GroupBox();
             this.labelBaudRate = new System.Windows.Forms.Label();
             this.comboBoxBaudRate = new System.Windows.Forms.ComboBox();
+            this.labelLNAccelRange = new System.Windows.Forms.Label();
+            this.comboBoxLNAccelRange = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxExgGain = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -217,6 +221,8 @@
             // 
             // groupBoxSensors
             // 
+            this.groupBoxSensors.Controls.Add(this.checkBoxSensorAltMag);
+            this.groupBoxSensors.Controls.Add(this.checkBoxSensorHGAccel);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor23);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor22);
             this.groupBoxSensors.Controls.Add(this.checkBoxSensor21);
@@ -321,6 +327,32 @@
             this.checkBoxSensor23.UseVisualStyleBackColor = true;
             this.checkBoxSensor23.CheckedChanged += new System.EventHandler(this.checkBoxSensor23_CheckedChanged);
             this.checkBoxSensor23.Click += new System.EventHandler(this.checkBoxSensor23_Click);
+            // 
+            // checkBoxSensor24
+            // 
+            this.checkBoxSensorHGAccel.AutoSize = true;
+            this.checkBoxSensorHGAccel.Location = new System.Drawing.Point(267, 138 + 23 * 2);
+            this.checkBoxSensorHGAccel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSensorHGAccel.Name = "checkBoxSensor24";
+            this.checkBoxSensorHGAccel.Size = new System.Drawing.Size(106, 21);
+            this.checkBoxSensorHGAccel.TabIndex = 23;
+            this.checkBoxSensorHGAccel.Text = "checkBox24";
+            this.checkBoxSensorHGAccel.UseVisualStyleBackColor = true;
+            this.checkBoxSensorHGAccel.CheckedChanged += new System.EventHandler(this.checkBoxSensor24_CheckedChanged);
+            this.checkBoxSensorHGAccel.Click += new System.EventHandler(this.checkBoxSensor24_Click);
+            // 
+            // checkBoxSensor24
+            // 
+            this.checkBoxSensorAltMag.AutoSize = true;
+            this.checkBoxSensorAltMag.Location = new System.Drawing.Point(267, 138+23*3);
+            this.checkBoxSensorAltMag.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSensorAltMag.Name = "checkBoxSensor25";
+            this.checkBoxSensorAltMag.Size = new System.Drawing.Size(106, 21);
+            this.checkBoxSensorAltMag.TabIndex = 23;
+            this.checkBoxSensorAltMag.Text = "checkBox25";
+            this.checkBoxSensorAltMag.UseVisualStyleBackColor = true;
+            this.checkBoxSensorAltMag.CheckedChanged += new System.EventHandler(this.checkBoxSensor25_CheckedChanged);
+            this.checkBoxSensorAltMag.Click += new System.EventHandler(this.checkBoxSensor25_Click);
             // 
             // checkBoxSensor17
             // 
@@ -499,6 +531,8 @@
             // 
             this.groupBoxSettings.Controls.Add(this.labelBaudRate);
             this.groupBoxSettings.Controls.Add(this.comboBoxBaudRate);
+            this.groupBoxSettings.Controls.Add(this.labelLNAccelRange);
+            this.groupBoxSettings.Controls.Add(comboBoxLNAccelRange);
             this.groupBoxSettings.Controls.Add(this.label3);
             this.groupBoxSettings.Controls.Add(this.comboBoxExgGain);
             this.groupBoxSettings.Controls.Add(this.label2);
@@ -552,6 +586,27 @@
             this.comboBoxBaudRate.Size = new System.Drawing.Size(160, 24);
             this.comboBoxBaudRate.TabIndex = 39;
             this.comboBoxBaudRate.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
+
+            // 
+            // labellnaccel
+            // 
+            this.labelLNAccelRange.AutoSize = true;
+            this.labelLNAccelRange.Location = new System.Drawing.Point(267, 93);
+            this.labelLNAccelRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelLNAccelRange.Name = "labelBaudRate";
+            this.labelLNAccelRange.Size = new System.Drawing.Size(75, 17);
+            this.labelLNAccelRange.TabIndex = 40;
+            this.labelLNAccelRange.Text = "LN Accel Range";
+            // 
+            // comboBoxlnaccel
+            // 
+            this.comboBoxLNAccelRange.FormattingEnabled = true;
+            this.comboBoxLNAccelRange.Location = new System.Drawing.Point(267, 113);
+            this.comboBoxLNAccelRange.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxLNAccelRange.Name = "comboBoxBaudRate";
+            this.comboBoxLNAccelRange.Size = new System.Drawing.Size(160, 24);
+            this.comboBoxLNAccelRange.TabIndex = 39;
+            this.comboBoxLNAccelRange.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
             // 
             // label3
             // 
@@ -1031,6 +1086,8 @@
         private System.Windows.Forms.ComboBox comboBoxGyroRange;
         private System.Windows.Forms.ComboBox comboBoxGSRRange;
         private System.Windows.Forms.ComboBox comboBoxAccelRange;
+        private System.Windows.Forms.ComboBox comboBoxLNAccelRange;
+        private System.Windows.Forms.Label labelLNAccelRange;
         private System.Windows.Forms.ComboBox comboBoxMagRange;
         protected internal System.Windows.Forms.ComboBox comboBoxSamplingRate;
         private System.Windows.Forms.Button buttonToggleLED;
@@ -1054,6 +1111,8 @@
         private System.Windows.Forms.CheckBox checkBoxSensor18;
         private System.Windows.Forms.CheckBox checkBoxSensor22;
         private System.Windows.Forms.CheckBox checkBoxSensor21;
+        private System.Windows.Forms.CheckBox checkBoxSensorHGAccel;
+        private System.Windows.Forms.CheckBox checkBoxSensorAltMag;
         protected internal System.Windows.Forms.ComboBox comboBoxBaudRate;
         private System.Windows.Forms.Label labelBaudRate;
         private System.Windows.Forms.Button buttonDetectExpansionBoard;
