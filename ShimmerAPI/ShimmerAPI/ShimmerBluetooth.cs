@@ -130,6 +130,8 @@ namespace ShimmerAPI
         protected int LNAccelRange;
         protected int AccelSamplingRate;
         protected int Mpu9150SamplingRate;
+        protected int AltAccelSamplingRate;
+        protected int AltMagSamplingRate;
         protected long ConfigSetupByte0; // for Shimmer2
         protected int GSRRange;
         protected int mTempIntValue;
@@ -526,7 +528,8 @@ namespace ShimmerAPI
             ALT_ACCEL_RANGE_RESPONSE = 0x50,
             GET_ALT_ACCEL_RANGE_COMMAND = 0x51,
             PRESSURE_CALIBRATION_COEFFICIENTS_RESPONSE = 0XA6,
-            GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND = 0XA7
+            GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND = 0XA7,
+            SET_ALT_MAG_SAMPLING_RATE_COMMAND = 0XB2
         };
 
         public enum PacketTypeShimmer3SDBT : byte
@@ -602,6 +605,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER2 = { "± 0.7Ga", "± 1.0Ga", "± 1.5Ga", "± 2.0Ga", "± 3.2Ga", "± 3.8Ga", "± 4.5Ga" };
         public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
+        public static readonly String[] LIST_OF_WRMAG_RATE_SHIMMER3R = { "10Hz", "20Hz", "50Hz", "100Hz" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3R = { "125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
@@ -2256,6 +2260,9 @@ namespace ShimmerAPI
 
                 LNAccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03); //8+8+8+6
 
+                AltAccelSamplingRate = (int)((ConfigSetupByte0 >> 38) & 0x03); //8+8+8+8+6
+
+                AltMagSamplingRate = (int)((ConfigSetupByte0 >> 36) & 0x03); //8+8+8+8+4
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
@@ -5417,6 +5424,11 @@ namespace ShimmerAPI
             return AccelRange;
         }
 
+        public int GetWRMagRate()
+        {
+            return AltMagSamplingRate;
+        }
+
         public int GetLNAccelRange()
         {
             return LNAccelRange;
@@ -6301,7 +6313,19 @@ namespace ShimmerAPI
                 throw new Exception("Not Supported for this Hardware Type");
             }
         }
-
+        public void WriteWRMagRate(int rate)
+        {
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                WriteBytes(new byte[2] { (byte)PacketTypeShimmer3RSDBT.SET_ALT_MAG_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
+                System.Threading.Thread.Sleep(250);
+                AltMagSamplingRate = rate;
+            }
+            else
+            {
+                throw new Exception("Not Supported for this Hardware Type");
+            }
+        }
         public void WriteBlinkLED(int value)
         {
             WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)value }, 0, 2);
