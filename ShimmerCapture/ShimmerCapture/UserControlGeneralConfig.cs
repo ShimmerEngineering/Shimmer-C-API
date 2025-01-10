@@ -164,15 +164,25 @@ namespace ShimmerAPI
                     comboBoxLNAccelRange.AutoCompleteSource = AutoCompleteSource.ListItems;
                     comboBoxLNAccelRange.DropDownStyle = ComboBoxStyle.DropDownList;
 
+                    comboBoxWRMagRate.Items.AddRange(ShimmerBluetooth.LIST_OF_WRMAG_RATE_SHIMMER3R);
+                    comboBoxWRMagRate.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+                    comboBoxWRMagRate.AutoCompleteSource = AutoCompleteSource.ListItems;
+                    comboBoxWRMagRate.DropDownStyle = ComboBoxStyle.DropDownList;
+                    
+
                     if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         comboBoxLNAccelRange.Enabled = true;
                         comboBoxLNAccelRange.Visible = true;
+                        comboBoxWRMagRate.Enabled = true;
+                        comboBoxWRMagRate.Visible = true;
                     }
                     else
                     {
                         comboBoxLNAccelRange.Enabled = false;
                         comboBoxLNAccelRange.Visible = false;
+                        comboBoxWRMagRate.Enabled = false;
+                        comboBoxWRMagRate.Visible = false;
                     }
 
                     comboBoxGSRRange.Items.AddRange(ShimmerBluetooth.LIST_OF_GSR_RANGE);
@@ -644,6 +654,7 @@ namespace ShimmerAPI
             //ComboBoxes
             int accelRange = PConfiguration.PControlForm.ShimmerDevice.GetAccelRange();
             int lnAccelRange = PConfiguration.PControlForm.ShimmerDevice.GetLNAccelRange();
+            int wrMagRate = PConfiguration.PControlForm.ShimmerDevice.GetWRMagRate();
             if (!PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors())
             {
                 comboBoxAccelRange.SelectedIndex = accelRange;
@@ -702,6 +713,23 @@ namespace ShimmerAPI
                     else if (lnAccelRange == 3)
                     {
                         comboBoxLNAccelRange.SelectedIndex = 3;
+                    }
+
+                    if (wrMagRate == 0)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 0;
+                    }
+                    else if (wrMagRate == 1)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 1;
+                    }
+                    else if (wrMagRate == 2)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 2;
+                    }
+                    else if (wrMagRate == 3)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 3;
                     }
                 }
             }
@@ -894,12 +922,17 @@ namespace ShimmerAPI
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0)
                 {
                     checkBoxSensor1.Checked = true;
-                    comboBoxLNAccelRange.Enabled = true;
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) { 
+                        comboBoxLNAccelRange.Enabled = true;
+                    }
                 }
                 else
                 {
                     checkBoxSensor1.Checked = false;
-                    comboBoxLNAccelRange.Enabled = false;
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxLNAccelRange.Enabled = false;
+                    }
                 }
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_D_ACCEL) > 0)
                 {
@@ -946,6 +979,19 @@ namespace ShimmerAPI
                     checkBoxSensor4.Checked = false;
                     checkBoxLowPowerMag.Enabled = false;
                     comboBoxMagRange.Enabled = false;
+                }
+                if (((enabledSensors & 0xFFFFFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0)
+                {
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxWRMagRate.Enabled = true;
+                    }
+                } else
+                {
+                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    {
+                        comboBoxWRMagRate.Enabled = false;
+                    }
                 }
                 if (((enabledSensors & 0xFFFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_VBATT) > 0)
                 {
@@ -2409,6 +2455,23 @@ namespace ShimmerAPI
                     else if (comboBoxLNAccelRange.SelectedIndex == 3)
                     {
                         PConfiguration.PControlForm.ShimmerDevice.WriteLNAccelRange(3);
+                    }
+
+                    if (comboBoxWRMagRate.SelectedIndex == 0)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0);
+                    }
+                    else if (comboBoxWRMagRate.SelectedIndex == 1)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(1);
+                    }
+                    else if (comboBoxWRMagRate.SelectedIndex == 2)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(2);
+                    }
+                    else if (comboBoxWRMagRate.SelectedIndex == 3)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(3);
                     }
 
                 }
