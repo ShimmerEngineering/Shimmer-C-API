@@ -2769,7 +2769,7 @@ namespace ShimmerAPI
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultMagParams = true;
-
+                /*
                 AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
                 OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
                 if (GetMagRange() == 0)
@@ -2788,7 +2788,10 @@ namespace ShimmerAPI
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                 }
-
+                */
+                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
+                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
@@ -2801,9 +2804,30 @@ namespace ShimmerAPI
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultWRMagParams = true;
+                /*
                 AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
                 OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
                 SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
+                */
+
+                AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
+                OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
+                if (GetMagRange() == 0)
+                {
+                    SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
+                }
+                else if (GetMagRange() == 1)
+                {
+                    SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
+                }
+                else if (GetMagRange() == 2)
+                {
+                    SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
+                }
+                else if (GetMagRange() == 3)
+                {
+                    SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
+                }
             }
 
         }
