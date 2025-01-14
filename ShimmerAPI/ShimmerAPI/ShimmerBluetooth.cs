@@ -118,7 +118,7 @@ namespace ShimmerAPI
         protected double FirmwareIdentifier;
         protected int FirmwareInternal;
         protected String FirmwareVersionFullName;
-        protected List<byte> ListofSensorChannels = new List<byte>();
+        public List<byte> ListofSensorChannels = new List<byte>();
         protected Boolean Orientation3DEnabled = false;
         protected Boolean EnableGyroOnTheFlyCalibration = false;
         protected int ListSizeGyroOnTheFly = 100;
@@ -7199,7 +7199,7 @@ namespace ShimmerAPI
             caldata[1] = T;///10; // TODO divided by 10 in BMP180, needed here?
             return caldata;
         }
-        protected double[] CalibratePressure390SensorData(double UP, double UT)
+        public double[] CalibratePressure390SensorData(double UP, double UT)
         {
             double uncompTemp = UT;
             double partialDataT1;
