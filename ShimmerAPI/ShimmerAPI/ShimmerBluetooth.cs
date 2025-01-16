@@ -529,7 +529,9 @@ namespace ShimmerAPI
             GET_ALT_ACCEL_RANGE_COMMAND = 0x51,
             PRESSURE_CALIBRATION_COEFFICIENTS_RESPONSE = 0XA6,
             GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND = 0XA7,
-            SET_ALT_MAG_SAMPLING_RATE_COMMAND = 0XB2
+            SET_ALT_MAG_SAMPLING_RATE_COMMAND = 0XB2,
+            GET_ALT_MAG_SAMPLING_RATE_RESPONSE = 0xB3,
+            GET_ALT_MAG_SAMPLING_RATE_COMMAND = 0xB4
         };
 
         public enum PacketTypeShimmer3SDBT : byte
@@ -5496,6 +5498,11 @@ namespace ShimmerAPI
             magSamplingRate = rate;
         }
 
+        protected void SetAltMagSamplingRate(int rate)
+        {
+            AltMagSamplingRate = rate;
+        }
+
         protected void SetAccelSamplingRate(int rate)
         {
             AccelSamplingRate = rate;
@@ -5965,6 +5972,18 @@ namespace ShimmerAPI
         {
             WriteBytes(new byte[1] { (byte)PacketTypeShimmer2.GET_MAG_SAMPLING_RATE_COMMAND }, 0, 1);
             System.Threading.Thread.Sleep(200);
+        }
+
+        public void ReadAltMagSamplingRate()
+        {
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+            {
+                WriteBytes(new byte[1] { (byte)PacketTypeShimmer3RSDBT.GET_ALT_MAG_SAMPLING_RATE_COMMAND }, 0, 1);
+                System.Threading.Thread.Sleep(200);
+            } else
+            {
+                throw new Exception("GET_ALT_MAG_SAMPLING_RATE_COMMAND Not Supported");
+            }
         }
 
         /// <summary>

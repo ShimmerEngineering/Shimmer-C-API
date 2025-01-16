@@ -1962,6 +1962,9 @@ namespace ShimmerAPI
                     case (byte)PacketTypeShimmer3RSDBT.ALT_ACCEL_RANGE_RESPONSE:
                         SetLNAccelRange(ReadByte());
                         break;
+                    case (byte)PacketTypeShimmer3RSDBT.GET_ALT_MAG_SAMPLING_RATE_RESPONSE:
+                        SetAltMagSamplingRate(ReadByte());
+                        break;
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.INFOMEM_RESPONSE:
                         {
                             int len = ReadByte();
