@@ -8,6 +8,7 @@ using System.IO;
 using System.ComponentModel;
 using System.Diagnostics;
 using ShimmerAPI.Utilities;
+using ShimmerAPI.Sensors;
 
 namespace ShimmerAPI
 {
@@ -242,6 +243,8 @@ namespace ShimmerAPI
         public string RadioVersion = "";
         private long configtime = 0;
         public byte[] storedConfig = new byte[118];
+
+        private List<byte> calibDumpResponse = new List<byte>();
 
         // btsd changes
         private bool dataReceived;
@@ -704,12 +707,12 @@ namespace ShimmerAPI
             //worker.ReportProgress(40, status_text);
             if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                //ReadCalibDump();
+                ReadCalibDump();
                 ReadCalibrationParameters("All");
             }
             else
             {
-                //ReadCalibDump();
+                ReadCalibDump();
                 ReadCalibrationParameters("All");
             }
 
@@ -854,6 +857,8 @@ namespace ShimmerAPI
         int InfoMemIndex = 0;
         byte[] InfoMem = new byte[128*3];
         byte[] CalibDump = new byte[128];
+        private Dictionary<int, string> mCalibBytesDescriptions;
+        private byte[] mCalibBytes;
 
         [Obsolete("This method is unfinished and should not be used.")]
         public void WriteShimmer3Infomem(byte[] infoMem)
@@ -931,8 +936,6 @@ namespace ShimmerAPI
         [Obsolete("This method is unfinished and should not be used.")]
         public void ReadCalibDump()
         {
-
-            List<byte> calibDumpResponse = new List<byte>();
             
             byte[] byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00);
 
@@ -964,6 +967,10 @@ namespace ShimmerAPI
                 }
             }
 
+            CalibByteDumpParse(calibDumpResponse.ToArray());
+
+            Console.WriteLine(calibDumpResponse);
+
             /*
             WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00 }, 0, 4);
 
@@ -991,6 +998,81 @@ namespace ShimmerAPI
             }
             System.Console.WriteLine("Calib Dump: " + ProgrammerUtilities.ByteArrayToHexString(CalibDump));
             */
+        }
+
+        public void CalibByteDumpParse(byte[] calibBytesAll)
+        {
+            mCalibBytesDescriptions = new Dictionary<int, string>();
+            mCalibBytes = calibBytesAll;
+
+            if (calibBytesAll.Length > 2)
+            {
+                mCalibBytesDescriptions[0] = "PacketLength_LSB";
+                mCalibBytesDescriptions[1] = "PacketLength_MSB";
+
+                var packetLength = calibBytesAll.Take(2).ToArray();
+                var svoBytes = calibBytesAll.Skip(2).Take(8).ToArray();
+                //var svo = new ShimmerVerObject(svoBytes);
+
+                //mCalibBytesDescriptions[2] = $"HwID_LSB ({svo.GetHardwareVersionParsed()})";
+                mCalibBytesDescriptions[3] = "HwID_MSB";
+                //mCalibBytesDescriptions[4] = $"FwID_LSB ({svo.mFirmwareIdentifierParsed})";
+                mCalibBytesDescriptions[5] = "FwID_MSB";
+                mCalibBytesDescriptions[6] = "FWVerMjr_LSB";
+                mCalibBytesDescriptions[7] = "FWVerMjr_MSB";
+                mCalibBytesDescriptions[8] = "FWVerMinor";
+                mCalibBytesDescriptions[9] = "FWVerInternal";
+
+                int currentOffset = 10;
+                var remainingBytes = calibBytesAll.Skip(10).ToArray();
+
+                while (remainingBytes.Length > 12)
+                {
+                    var sensorIdBytes = remainingBytes.Take(2).ToArray();
+                    int sensorId = ((sensorIdBytes[1] << 8) | sensorIdBytes[0]) & 0xFFFF;
+
+                    //var sensorDetails = GetSensorDetails(sensorId);
+                    //var sensorName = sensorDetails?.mSensorDetailsRef?.mGuiFriendlyLabel ?? "";
+
+                    mCalibBytesDescriptions[currentOffset] = $"SensorID_LSB ({sensorId})";
+                    mCalibBytesDescriptions[currentOffset + 1] = "SensorID_MSB";
+
+                    mCalibBytesDescriptions[currentOffset + 2] = "SensorRange";
+                    int rangeValue = remainingBytes[2] & 0xFF;
+
+                    mCalibBytesDescriptions[currentOffset + 3] = "CalibByteLength";
+                    int calibLength = remainingBytes[3] & 0xFF;
+
+                    mCalibBytesDescriptions[currentOffset + 4] = "CalibTimeTicks_LSB";
+                    mCalibBytesDescriptions[currentOffset + 11] = "CalibTimeTicks_MSB";
+
+                    var calibTimeBytesTicks = remainingBytes.Skip(4).Take(8).ToArray();
+
+                    int endIndex = 12 + calibLength;
+                    if (remainingBytes.Length >= endIndex)
+                    {
+                        mCalibBytesDescriptions[currentOffset + 12] = "Calib_Start";
+                        mCalibBytesDescriptions[currentOffset + endIndex - 1] = "Calib_End";
+
+                        var calibBytes = remainingBytes.Skip(12).Take(calibLength).ToArray();
+                        //CalibByteDumpParsePerSensor(sensorId, rangeValue, calibTimeBytesTicks, calibBytes, calibReadSource);
+                        LNAccel lnAccel = new LNAccel();
+                        lnAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(mCalibBytes);
+
+                        remainingBytes = remainingBytes.Skip(endIndex).ToArray();
+                        currentOffset += endIndex;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        public List<byte> GetCalibrationDump()
+        {
+            return calibDumpResponse;
         }
 
         protected byte[] SendGetMemoryCommand(byte cmd, byte val0, byte val1, byte val2)

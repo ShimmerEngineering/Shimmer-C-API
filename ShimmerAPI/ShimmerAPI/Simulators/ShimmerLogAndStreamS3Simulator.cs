@@ -211,7 +211,15 @@ namespace ShimmerAPI.Simulators
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x02);
-                byte[] bytes = UtilShimmer.HexStringToByteArray("800202FF01080001");
+                byte[] bytes;
+                if (GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                {
+                    bytes = UtilShimmer.HexStringToByteArray("800202FF01080000000001");
+                }
+                else
+                {
+                    bytes = UtilShimmer.HexStringToByteArray("800202FF01080001");
+                }
                 foreach (byte byteValue in bytes)
                 {
                     mBuffer.Add(byteValue);

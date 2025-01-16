@@ -1,6 +1,7 @@
 ﻿using ShimmerAPI.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ShimmerAPI.Sensors
@@ -13,19 +14,24 @@ namespace ShimmerAPI.Sensors
         public double[,] OffsetVectorAccel = new double[3, 1];
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
-
-            var packetType = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 2);
-            var sensorID = ((int)packetType[0]) + ((int)packetType[1] << 8);
-            if (sensorID == CALIBRATION_ID)
+            byte[] remainingBytes = sensorcalibrationdump.Skip(10).ToArray();
+            while (remainingBytes.Length > 12)
             {
-                var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
-                (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                System.Console.WriteLine("LN Accel calibration parameters");
+                byte[] packetType = remainingBytes.Take(2).ToArray();
+                //int sensorId = ((sensorIdBytes[1] << 8) | sensorIdBytes[0]) & 0xFFFF;
+
+                //var packetType = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 2);
+                //var sensorID = (((int)packetType[0]) + ((int)packetType[1] << 8));
+                var sensorID = ((packetType[1] << 8) | packetType[0]) & 0xFFFF;
+                if (sensorID == CALIBRATION_ID)
+                {
+                    var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
+                    var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
+                    var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
+                    (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                    System.Console.WriteLine("LN Accel calibration parameters");
+                }
             }
-
         }
-
     }
 }
