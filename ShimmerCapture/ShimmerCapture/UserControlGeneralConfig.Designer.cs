@@ -722,7 +722,7 @@
             this.labelMagRange.Name = "labelMagRange";
             this.labelMagRange.Size = new System.Drawing.Size(145, 17);
             this.labelMagRange.TabIndex = 4;
-            this.labelMagRange.Text = "Magnetometer Range";
+            this.labelMagRange.Text = "WR Magnetometer Range";
             // 
             // labelSamplingRate
             // 

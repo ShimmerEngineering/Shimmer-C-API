@@ -605,7 +605,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER2 = { "± 0.7Ga", "± 1.0Ga", "± 1.5Ga", "± 2.0Ga", "± 3.2Ga", "± 3.8Ga", "± 4.5Ga" };
         public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
-        public static readonly String[] LIST_OF_WRMAG_RATE_SHIMMER3R = { "10Hz", "20Hz", "50Hz", "100Hz" };
+        public static readonly String[] LIST_OF_WRMAG_RATE_SHIMMER3R = { "10Hz (Low Performance)", "1000Hz (Low Performance)", "10Hz (Medium Performance)", "560Hz (Medium Performance)", "10Hz (High Performance)", "300Hz (High Performance)", "10Hz (Ultra High Performance)", "155Hz (Ultra High Performance)" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3R = { "125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
@@ -6570,11 +6570,11 @@ namespace ShimmerAPI
                 {
                     if (SamplingRate >= 100)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(3);
                     }
                     else if (SamplingRate >= 50)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(2);
                     }
                     else if (SamplingRate >= 20)
                     {
@@ -6582,16 +6582,16 @@ namespace ShimmerAPI
                     }
                     else if (SamplingRate >= 10)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0);
                     }
                     else
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0);
                     }
                 }
                 else //Low power mag for shimmer3R enabled
                 {
-                    WriteMagSamplingRate(0x0);
+                    WriteMagSamplingRate(0);
                 }
             }
             else //Shimmer2r

@@ -715,21 +715,37 @@ namespace ShimmerAPI
                         comboBoxLNAccelRange.SelectedIndex = 3;
                     }
 
-                    if (wrMagRate == 0)
+                    if (wrMagRate == 0x08)
                     {
                         comboBoxWRMagRate.SelectedIndex = 0;
                     }
-                    else if (wrMagRate == 1)
+                    else if (wrMagRate == 0x01)
                     {
                         comboBoxWRMagRate.SelectedIndex = 1;
                     }
-                    else if (wrMagRate == 2)
+                    else if (wrMagRate == 0x18)
                     {
                         comboBoxWRMagRate.SelectedIndex = 2;
                     }
-                    else if (wrMagRate == 3)
+                    else if (wrMagRate == 0x11)
                     {
                         comboBoxWRMagRate.SelectedIndex = 3;
+                    }
+                    else if (wrMagRate == 0x28)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 4;
+                    }
+                    else if (wrMagRate == 0x21)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 5;
+                    }
+                    else if (wrMagRate == 0x38)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 6;
+                    }
+                    else if (wrMagRate == 0x31)
+                    {
+                        comboBoxWRMagRate.SelectedIndex = 7;
                     }
                 }
             }
@@ -2459,21 +2475,36 @@ namespace ShimmerAPI
 
                     if (comboBoxWRMagRate.SelectedIndex == 0)
                     {
-                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0);
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x08);
                     }
                     else if (comboBoxWRMagRate.SelectedIndex == 1)
                     {
-                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(1);
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x01);
                     }
                     else if (comboBoxWRMagRate.SelectedIndex == 2)
                     {
-                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(2);
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x18);
                     }
                     else if (comboBoxWRMagRate.SelectedIndex == 3)
                     {
-                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(3);
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x11);
                     }
-
+                    else if (comboBoxWRMagRate.SelectedIndex == 4)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x28);
+                    }
+                    else if (comboBoxWRMagRate.SelectedIndex == 5)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x21);
+                    }
+                    else if (comboBoxWRMagRate.SelectedIndex == 6)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x38);
+                    }
+                    else if (comboBoxWRMagRate.SelectedIndex == 7)
+                    {
+                        PConfiguration.PControlForm.ShimmerDevice.WriteWRMagRate(0x31);
+                    }
                 }
 
             }
