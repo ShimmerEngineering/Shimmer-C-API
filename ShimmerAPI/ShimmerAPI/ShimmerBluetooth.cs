@@ -763,8 +763,7 @@ namespace ShimmerAPI
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
-        //public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { -1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } };
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 6842, 0, 0 }, { 0, 6842, 0 }, { 0, 0, 6842 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 3421, 0, 0 }, { 0, 3421, 0 }, { 0, 0, 3421 } };
