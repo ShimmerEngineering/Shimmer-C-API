@@ -770,7 +770,7 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 2281, 0, 0 }, { 0, 2281, 0 }, { 0, 0, 2281 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1711, 0, 0 }, { 0, 1711, 0 }, { 0, 0, 1711 } };
 
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } };                //Default Values for Magnetometer Calibration
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };                //Default Values for Magnetometer Calibration
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
