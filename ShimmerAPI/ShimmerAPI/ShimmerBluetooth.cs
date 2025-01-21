@@ -129,7 +129,7 @@ namespace ShimmerAPI
         protected int MagGain;
         protected int LNAccelRange;
         protected int AccelSamplingRate;
-        protected int Mpu9150SamplingRate;
+        protected int GyroSamplingRate;
         protected int AltAccelSamplingRate;
         protected int AltMagSamplingRate;
         protected long ConfigSetupByte0; // for Shimmer2
@@ -2239,7 +2239,7 @@ namespace ShimmerAPI
                 GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03);
                 MagGain = (int)((ConfigSetupByte0 >> 21) & 0x07);
                 AccelSamplingRate = (int)((ConfigSetupByte0 >> 4) & 0xF);
-                Mpu9150SamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
+                GyroSamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
                 magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
                 GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
@@ -2275,12 +2275,12 @@ namespace ShimmerAPI
                     {
                         LowPowerAccelEnabled = true;
                     }
-                    /*
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    
+                    if (GyroSamplingRate == 0x01)
                     {
                         LowPowerGyroEnabled = true;
                     }
-                    */
+                    
                 }
 
 
@@ -2313,7 +2313,7 @@ namespace ShimmerAPI
                 GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03);
                 MagGain = (int)((ConfigSetupByte0 >> 21) & 0x07);
                 AccelSamplingRate = (int)((ConfigSetupByte0 >> 4) & 0xF);
-                Mpu9150SamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
+                GyroSamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
                 magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
                 GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
@@ -2332,31 +2332,11 @@ namespace ShimmerAPI
                         LowPowerAccelEnabled = true;
                     }
 
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    if ((GyroSamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
                     {
                         LowPowerGyroEnabled = true;
                     }
                 }
-
-                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
-                {
-                    if (magSamplingRate == 0) //3200 us the raw ADC value and not in HZ
-                    {
-                        LowPowerMagEnabled = true;
-                    }
-
-                    if ((AccelSamplingRate == 1))
-                    {
-                        LowPowerAccelEnabled = true;
-                    }
-                    /*
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
-                    {
-                        LowPowerGyroEnabled = true;
-                    }
-                    */
-                }
-
 
                 NumberofChannels = (int)packet[6];
                 BufferSize = (int)packet[7];
@@ -5414,9 +5394,9 @@ namespace ShimmerAPI
         {
             return Mpu9150AccelRange;
         }
-        public int GetMpu9150SamplingRate()
+        public int GetGyroSamplingRate()
         {
-            return Mpu9150SamplingRate;
+            return GyroSamplingRate;
         }
 
         public int GetAccelRange()
@@ -6376,7 +6356,7 @@ namespace ShimmerAPI
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
-                Mpu9150SamplingRate = rate;
+                GyroSamplingRate = rate;
                 mTempIntValue = rate;
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_MPU9150_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
                 System.Threading.Thread.Sleep(200);
