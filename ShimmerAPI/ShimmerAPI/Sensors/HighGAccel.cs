@@ -7,10 +7,17 @@ namespace ShimmerAPI.Sensors
 {
     public class HighGAccel
     {
+        protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
         public double[,] AlignmentMatrixAccel = new double[3, 3];
         public double[,] SensitivityMatrixAccel = new double[3, 3];
         public double[,] OffsetVectorAccel = new double[3, 1];
+
+        public HighGAccel(int hardwareVersion)
+        {
+            ShimmerHardwareVersion = hardwareVersion;
+        }
+
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
 

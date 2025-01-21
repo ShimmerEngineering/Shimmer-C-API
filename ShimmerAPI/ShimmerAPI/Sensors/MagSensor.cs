@@ -7,10 +7,17 @@ namespace ShimmerAPI.Sensors
 {
     public class MagSensor
     {
+        protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
         public double[,] AlignmentMatrixMag = new double[3, 3];
         public double[,] SensitivityMatrixMag = new double[3, 3];
         public double[,] OffsetVectorMag = new double[3, 1];
+
+        public MagSensor(int hardwareVersion)
+        {
+            ShimmerHardwareVersion = hardwareVersion;
+        }
+
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
 

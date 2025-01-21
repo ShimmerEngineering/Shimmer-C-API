@@ -259,12 +259,12 @@ namespace ShimmerAPI
 
         protected List<object> mMapOfSensorClasses = new List<object>();
 
-        protected LNAccel lnAccel = new LNAccel();
-        protected WRAccel wrAccel = new WRAccel();
-        protected HighGAccel highgAccel = new HighGAccel();
-        protected GyroSensor gyro = new GyroSensor();
-        protected MagSensor mag = new MagSensor();
-        protected WRMag wrMag = new WRMag();
+        protected LNAccel SensorLNAccel;
+        protected WRAccel SensorWRAccel;
+        protected HighGAccel SensorHighGAccel;
+        protected GyroSensor SensorGyro;
+        protected MagSensor SensorMag;
+        protected WRMag SensorWRMag;
 
         public enum BTCRCMode
         {
@@ -922,6 +922,19 @@ namespace ShimmerAPI
 
         protected int ConnectWaitDurationinmS = 500;
 
+        protected void InitializeSensors()
+        {
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+            {
+                SensorLNAccel = new LNAccel(HardwareVersion);
+                SensorWRAccel = new WRAccel(HardwareVersion);
+                SensorHighGAccel = new HighGAccel(HardwareVersion);
+                SensorGyro = new GyroSensor(HardwareVersion);
+                SensorMag = new MagSensor(HardwareVersion);
+                SensorWRMag = new WRMag(HardwareVersion);
+            }
+        }
+
         public void Connect()
         {
             if (!IsConnectionOpen())
@@ -999,6 +1012,7 @@ namespace ShimmerAPI
                             if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                             {
                                 //WriteBatteryFrequency(0);
+                                InitializeSensors();
                                 ReadExpansionBoard();
                                 InitializeShimmer3SDBT();
                             }

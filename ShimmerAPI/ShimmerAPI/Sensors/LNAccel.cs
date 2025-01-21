@@ -9,6 +9,7 @@ namespace ShimmerAPI.Sensors
 {
     public class LNAccel
     {
+        protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
         public readonly int SENSOR_ID = 37;
         public double[,] AlignmentMatrixAccel = new double[3, 3];
@@ -81,6 +82,11 @@ namespace ShimmerAPI.Sensors
                 }
             }
         };
+
+        public LNAccel(int hardwareVersion)
+        {
+            ShimmerHardwareVersion = hardwareVersion;
+        }
 
         public Dictionary<int, List<double[,]>> GetCalibDetails()
         {

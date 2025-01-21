@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ShimmerAPI;
 using ShimmerAPI.Sensors;
 using ShimmerAPI.Simulators;
 using System;
@@ -71,7 +72,7 @@ namespace ShimmerBluetoothTests
             }
 
             //mDevice.WriteAccelRange(0);
-            LNAccel lnAccel = new LNAccel();
+            LNAccel lnAccel = new LNAccel((int)ShimmerBluetooth.ShimmerVersion.SHIMMER3);
             lnAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibDump);
             //mDevice.WriteGyroRange(0);
             //GyroSensor gyro = new GyroSensor();

@@ -1038,7 +1038,7 @@ namespace ShimmerAPI
         {
 
             //lnAccel = new LNAccel();
-            mMapOfSensorClasses.Add(lnAccel); //need to implement default/ current calibration matrix
+            mMapOfSensorClasses.Add(SensorLNAccel); //need to implement default/ current calibration matrix
 
         }
 
@@ -1048,10 +1048,10 @@ namespace ShimmerAPI
 
             foreach (object sensorObj in mMapOfSensorClasses)
             {
-                Dictionary<int, List<double[,]>> returnVal = lnAccel.GetCalibDetails(); //LNACCEL as placeholder, will update with appropriate getcalib for each sensor classes
+                Dictionary<int, List<double[,]>> returnVal = SensorLNAccel.GetCalibDetails(); //LNACCEL as placeholder, will update with appropriate getcalib for each sensor classes
                 if(returnVal != null)
                 {
-                    mapOfSensorCalibration.Add(lnAccel.SENSOR_ID, returnVal);
+                    mapOfSensorCalibration.Add(SensorLNAccel.SENSOR_ID, returnVal);
                 }
 
             }
@@ -1265,23 +1265,23 @@ namespace ShimmerAPI
                         }
                         else if (sensorId == 30 || sensorId == 38)
                         {
-                            gyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
                         }
                         else if (sensorId == 31 || sensorId == 39)
                         {
-                            wrAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
                         }
                         else if (sensorId == 32 || sensorId == 42)
                         {
-                            mag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
                         }
                         else if (sensorId == 33 || sensorId == 40)
                         {
-                            highgAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorHighGAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
                         }
                         else if (sensorId == 34 || sensorId == 41)
                         {
-                            wrMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorWRMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
                         }
 
 
