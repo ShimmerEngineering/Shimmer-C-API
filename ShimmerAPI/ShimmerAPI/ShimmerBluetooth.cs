@@ -75,6 +75,7 @@ using System.ComponentModel;
 using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 using ShimmerAPI.Utilities;
 using static ShimmerAPI.ShimmerBluetooth;
+using ShimmerAPI.Sensors;
 
 namespace ShimmerAPI
 {
@@ -255,6 +256,15 @@ namespace ShimmerAPI
 
         protected long ShimmerRealWorldClock = 0;
         protected List<byte> UnalignedBytesReceived = new List<Byte>();
+
+        protected List<object> mMapOfSensorClasses = new List<object>();
+
+        protected LNAccel lnAccel = new LNAccel();
+        protected WRAccel wrAccel = new WRAccel();
+        protected HighGAccel highgAccel = new HighGAccel();
+        protected GyroSensor gyro = new GyroSensor();
+        protected MagSensor mag = new MagSensor();
+        protected WRMag wrMag = new WRMag();
 
         public enum BTCRCMode
         {

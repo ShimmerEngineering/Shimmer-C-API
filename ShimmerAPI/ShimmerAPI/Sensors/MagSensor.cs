@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ShimmerAPI.Sensors
 {
-    class MagSensor
+    public class MagSensor
     {
         public readonly int CALIBRATION_ID = 2;
         public double[,] AlignmentMatrixMag = new double[3, 3];

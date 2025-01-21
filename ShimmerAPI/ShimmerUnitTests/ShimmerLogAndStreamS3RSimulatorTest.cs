@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ShimmerAPI;
 using ShimmerAPI.Sensors;
 using ShimmerAPI.Simulators;
 using ShimmerAPI.Utilities;
@@ -26,14 +27,14 @@ namespace ShimmerBluetoothTests
         public void Test001_testConnectandDisconnect()
         {
             //Comment out test as it is not completed
-            
+
             if (mDevice != null)
             {
                 try
                 {
                     mDevice.StartConnectThread();
                     Thread.Sleep(30000);
-                    
+
                     if (!mDevice.IsConnected())
                     {
                         Assert.Fail();
@@ -59,24 +60,43 @@ namespace ShimmerBluetoothTests
             {
                 Assert.Fail("mDevice is null");
             }
-            
+
         }
-        public void ProcessCalibrationData()
+
+
+        [TestMethod]
+        public void Test003_ConnectandTestCalibParamRead()
         {
-            byte[] calibDump = mDevice.GetCalibrationDump().ToArray();
-
-            if (calibDump == null || calibDump.Length < 2)
+            if (mDevice != null)
             {
-                throw new ArgumentException("Invalid calibDump: must contain at least 2 bytes.");
+                try
+                {
+                    mDevice.StartConnectThread();
+                    Thread.Sleep(30000);
+
+                    if (!mDevice.IsConnected())
+                    {
+                        Assert.Fail();
+                    }
+
+                    byte[] deviceCalBytes = mDevice.CalibByteDumpGenerate();
+                    System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes)); //need to check this, calibration not updating the byte
+                    mDevice.CalibByteDumpParse(deviceCalBytes);
+                    mDevice.WriteAccelRange(2);
+                    mDevice.WriteSensors((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL);
+
+                    System.Console.WriteLine("done ...");
+
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail($"Test aborted due to exception: {ex.Message}");
+                }
             }
-
-            //mDevice.WriteAccelRange(0);
-            LNAccel lnAccel = new LNAccel();
-            lnAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibDump);
-            //mDevice.WriteGyroRange(0);
-            //GyroSensor gyro = new GyroSensor();
-            //gyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibDumpResponse.ToArray());
+            else
+            {
+                Assert.Fail("mDevice is null");
+            }
         }
-
     }
 }
