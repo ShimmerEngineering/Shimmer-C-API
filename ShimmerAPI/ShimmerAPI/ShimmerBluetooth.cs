@@ -1617,7 +1617,7 @@ namespace ShimmerAPI
                                         bufferbyte[p] = (byte)ReadByte();
 
                                     }
-                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
+                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
 
                                     //Retrieve High G Accel Cal Paramters if Shimmer 3
                                     bufferbyte = new byte[21];
@@ -1626,7 +1626,8 @@ namespace ShimmerAPI
                                         bufferbyte[p] = (byte)ReadByte();
 
                                     }
-                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
+                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
+
                                 }
 
                                 break;
@@ -2551,6 +2552,7 @@ namespace ShimmerAPI
                 OffsetVectorAltAccel = offsetVector;
                 SensitivityMatrixAltAccel = sensitivityMatrix;
                 DefaultHighGAccelParams = false;
+                
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] == -1 || UtilCalibration.AllElementsAre(sensitivityMatrix, 0))
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
