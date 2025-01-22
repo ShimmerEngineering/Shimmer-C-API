@@ -211,9 +211,9 @@ namespace ShimmerAPI
             }
         }
 
-        public double[][] mOffsetVector = null;
-        public double[][] mSensitivityMatrix = null;
-        public double[][] mAlignmentMatrix = null;
+        private double[,] mAlignmentMatrix;
+        private double[,] mSensitivityMatrix;
+        private double[,] mVectorOffset;
 
         // btsd changes
         private int trialConfig;
@@ -734,13 +734,11 @@ namespace ShimmerAPI
             //worker.ReportProgress(40, status_text);
             if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                CreateMapOfSensorClasses();
                 ReadCalibDump();
                 ReadCalibrationParameters("All");
             }
             else
             {
-                CreateMapOfSensorClasses();
                 ReadCalibDump();
                 ReadCalibrationParameters("All");
             }
@@ -1034,24 +1032,16 @@ namespace ShimmerAPI
             */
         }
 
-        private void CreateMapOfSensorClasses()
-        {
-
-            //lnAccel = new LNAccel();
-            mMapOfSensorClasses.Add(SensorLNAccel); //need to implement default/ current calibration matrix
-
-        }
-
         public Dictionary<int, Dictionary<int, List<double[,]>>> GetMapOfSensorCalibrationAll()
         {
             Dictionary<int, Dictionary<int, List<double[,]>>> mapOfSensorCalibration = new Dictionary<int, Dictionary<int, List<double[,]>>>();
 
-            foreach (object sensorObj in mMapOfSensorClasses)
+            foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
             {
-                Dictionary<int, List<double[,]>> returnVal = SensorLNAccel.GetCalibDetails(); //LNACCEL as placeholder, will update with appropriate getcalib for each sensor classes
+                Dictionary<int, List<double[,]>> returnVal = sensorClass.GetCalibDetails();
                 if(returnVal != null)
                 {
-                    mapOfSensorCalibration.Add(SensorLNAccel.SENSOR_ID, returnVal);
+                    mapOfSensorCalibration.Add(sensorClass.SENSOR_ID, returnVal);
                 }
 
             }
@@ -1103,6 +1093,7 @@ namespace ShimmerAPI
             int rangeValue = (int)calibEntry.Key;
             rangeBytes[0] = (byte)(rangeValue & 0xFF);
 
+            (mAlignmentMatrix, mSensitivityMatrix, mVectorOffset) = (calibEntry.Value[0], calibEntry.Value[1], calibEntry.Value[2]);
             byte[] timestamp = UtilShimmer.ConvertMilliSecondsToShimmerRtcDataBytesLSB(0); //usually used getCalibTimeMs()
             byte[] bufferCalibParam = GenerateCalParamByteArray();
             byte[] calibLength = new byte[] { (byte)bufferCalibParam.Length };
@@ -1113,26 +1104,10 @@ namespace ShimmerAPI
 
             return returnArray;
         }
+
         public byte[] GenerateCalParamByteArray()
         {
-            //will continue adding this after setting up current/ default calibration
-            if (IsCurrentValuesSet())
-            {
-                return GenerateCalParamByteArray(LNAccel.offsetVectorMap[0], LNAccel.sensitivityMatrixMap[0], LNAccel.alignmentMatrixMap[0]);
-            }
-            else
-            {
-                return GenerateCalParamByteArray(LNAccel.offsetVectorMap[0], LNAccel.sensitivityMatrixMap[0], LNAccel.alignmentMatrixMap[0]);
-            }  
-        }
-
-        public bool IsCurrentValuesSet()
-        {
-            if (mAlignmentMatrix != null && mSensitivityMatrix != null && mOffsetVector != null)
-            {
-                return true;
-            }
-            return false;
+            return GenerateCalParamByteArray(mVectorOffset, mSensitivityMatrix, mAlignmentMatrix);
         }
 
         public byte[] GenerateCalParamByteArray(double[,] offsetVector, double[,] sensitivityMatrix, double[,] alignmentMatrix)
@@ -1258,30 +1233,116 @@ namespace ShimmerAPI
 
                         var calibBytes = remainingBytes.Skip(12).Take(calibLength).ToArray();
 
-                        if (sensorId == 37)
+                        //need to update this to parse correct sensor id, sensor range for correct sensitivity
+                        if (sensorId == SensorLNAccel.SENSOR_ID)
                         {
-                            RetrieveKinematicCalibrationParametersFromPacket(remainingBytes, (byte)PacketTypeShimmer2.ACCEL_CALIBRATION_RESPONSE);
-                            //lnAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorLNAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+
+                            if (LNAccelRange == 0)
+                            {
+                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_2G_SHIMMER3R_LSM6DSV;
+                            }
+                            else if (LNAccelRange == 1)
+                            {
+                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_4G_SHIMMER3R_LSM6DSV;
+                            }
+                            else if (LNAccelRange == 2)
+                            {
+                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_8G_SHIMMER3R_LSM6DSV;
+                            }
+                            else if (LNAccelRange == 3)
+                            {
+                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_16G_SHIMMER3R_LSM6DSV;
+                            }
+
+                            AlignmentMatrixAccel = SensorLNAccel.AlignmentMatrixAccel;
+                            OffsetVectorAccel = SensorLNAccel.OffsetVectorAccel;
                         }
-                        else if (sensorId == 30 || sensorId == 38)
+                        else if (sensorId == SensorGyro.SENSOR_ID)
                         {
                             SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+
+                            if (GyroRange == 0)
+                            {
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3;
+                            }
+                            else if (GyroRange == 1)
+                            {
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3;
+                            }
+                            else if (GyroRange == 2)
+                            {
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3;
+                            }
+                            else if (GyroRange == 3)
+                            {
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3;
+                            }
+
+                            AlignmentMatrixGyro = SensorGyro.AlignmentMatrixGyro;
+                            OffsetVectorGyro = SensorGyro.OffsetVectorGyro;
                         }
-                        else if (sensorId == 31 || sensorId == 39)
+                        else if (sensorId == SensorWRAccel.SENSOR_ID)
                         {
                             SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+
+                            if (AccelRange == 0)
+                            {
+                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3R_LIS2DW12;
+                            }
+                            else if (AccelRange == 1)
+                            {
+                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3R_LIS2DW12;
+                            }
+                            else if (AccelRange == 2)
+                            {
+                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3R_LIS2DW12;
+                            }
+                            else if (AccelRange == 3)
+                            {
+                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3R_LIS2DW12;
+                            }
+                            AlignmentMatrixAccel2 = SensorWRAccel.AlignmentMatrixAccel2;
+                            OffsetVectorAccel2 = SensorWRAccel.OffsetVectorAccel2;
                         }
-                        else if (sensorId == 32 || sensorId == 42)
+                        else if (sensorId == SensorMag.SENSOR_ID)
                         {
                             SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+
+                            if (GetMagRange() == 0)
+                            {
+                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
+                            }
+                            else if (GetMagRange() == 1)
+                            {
+                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
+                            }
+                            else if (GetMagRange() == 2)
+                            {
+                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
+                            }
+                            else if (GetMagRange() == 3)
+                            {
+                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
+                            }
+                            AlignmentMatrixMag = SensorMag.AlignmentMatrixMag;
+                            OffsetVectorMag = SensorMag.OffsetVectorMag;
                         }
-                        else if (sensorId == 33 || sensorId == 40)
+                        else if (sensorId == SensorHighGAccel.SENSOR_ID)
                         {
                             SensorHighGAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+
+                            SensitivityMatrixAltAccel = SensorHighGAccel.SensitivityMatrixAltAccel;
+                            AlignmentMatrixAltAccel = SensorHighGAccel.AlignmentMatrixAltAccel;
+                            OffsetVectorAltAccel = SensorHighGAccel.OffsetVectorAltAccel;
                         }
-                        else if (sensorId == 34 || sensorId == 41)
+                        else if (sensorId == SensorWRMag.SENSOR_ID)
                         {
                             SensorWRMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+
+                            AlignmentMatrixMag2 = SensorWRMag.AlignmentMatrixMag2;
+                            OffsetVectorMag2 = SensorWRMag.OffsetVectorMag2;
+                            SensitivityMatrixMag2 = SensorWRMag.SensitivityMatrixMag2;
                         }
 
 

@@ -708,7 +708,7 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 57, 0, 0 }, { 0, 57, 0 }, { 0, 0, 57 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 29, 0, 0 }, { 0, 29, 0 }, { 0, 0, 29 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 14, 0, 0 }, { 0, 14, 0 }, { 0, 0, 14 } };      //Default Values for Gyroscope Calibration
-        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
         public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
         // Shimmer3r LN Accel
@@ -927,11 +927,28 @@ namespace ShimmerAPI
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
                 SensorLNAccel = new LNAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorLNAccel);
                 SensorWRAccel = new WRAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRAccel);
                 SensorHighGAccel = new HighGAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorHighGAccel);
                 SensorGyro = new GyroSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorGyro);
                 SensorMag = new MagSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorMag);
                 SensorWRMag = new WRMag(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRMag);
+            }
+            else
+            {
+                SensorLNAccel = new LNAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorLNAccel);
+                SensorWRAccel = new WRAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRAccel);
+                SensorGyro = new GyroSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorGyro);
+                SensorMag = new MagSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorMag);
             }
         }
 
@@ -2678,7 +2695,7 @@ namespace ShimmerAPI
                 }
                 else if (GyroRange == 5)
                 {
-                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV;
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV;
                 }
                 AlignmentMatrixGyro = ALIGNMENT_MATRIX_GYRO_SHIMMER3R_LSM6DSV;
                 OffsetVectorGyro = OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV;
@@ -2789,19 +2806,19 @@ namespace ShimmerAPI
 
                 AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
                 OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
-                if (GetMagRange() == 1)
+                if (GetMagRange() == 0)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 2)
+                else if (GetMagRange() == 1)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 3)
+                else if (GetMagRange() == 2)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 4)
+                else if (GetMagRange() == 3)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                 }

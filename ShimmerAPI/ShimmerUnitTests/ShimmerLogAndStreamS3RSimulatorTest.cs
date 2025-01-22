@@ -80,10 +80,15 @@ namespace ShimmerBluetoothTests
                     }
 
                     byte[] deviceCalBytes = mDevice.CalibByteDumpGenerate();
-                    System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes)); //need to check this, calibration not updating the byte
+                    System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes));
                     mDevice.CalibByteDumpParse(deviceCalBytes);
-                    mDevice.WriteAccelRange(2);
-                    mDevice.WriteSensors((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL);
+
+                    System.Console.WriteLine("done ...");
+
+                    mDevice.WriteLNAccelRange(3);
+                    deviceCalBytes = mDevice.CalibByteDumpGenerate();
+                    System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes));
+                    mDevice.CalibByteDumpParse(deviceCalBytes);
 
                     System.Console.WriteLine("done ...");
 

@@ -2,20 +2,101 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using static ShimmerAPI.ShimmerBluetooth;
 
 namespace ShimmerAPI.Sensors
 {
-    public class MagSensor
+    public class MagSensor : AbstractSensor
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixMag = new double[3, 3];
         public double[,] SensitivityMatrixMag = new double[3, 3];
         public double[,] OffsetVectorMag = new double[3, 1];
+        public Dictionary<int, List<double[,]>> calibDetailsMag;
 
         public MagSensor(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
+            if (ShimmerHardwareVersion == 10)
+            {
+                SENSOR_ID = 42;
+
+                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
+                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
+                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
+            }
+            else
+            {
+                SENSOR_ID = 32;
+
+                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH;
+                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH;
+                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH;
+            }
+        }
+
+        public Dictionary<int, List<double[,]>> GetCalibDetails()
+        {
+            if (ShimmerHardwareVersion == 10)
+            {
+                calibDetailsMag = new Dictionary<int, List<double[,]>>()
+                {
+                    {
+                        0,
+                        new List<double[,]>
+                        {
+                            ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL,
+                            SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL,
+                            OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL
+                        }
+                    },
+                {
+                        1,
+                        new List<double[,]>
+                        {
+                            ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL,
+                            SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL,
+                            OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL
+                        }
+                    },
+                {
+                        2,
+                        new List<double[,]>
+                        {
+                            ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL,
+                            SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL,
+                            OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL
+                        }
+                    },
+                {
+                        3,
+                        new List<double[,]>
+                        {
+                            ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL,
+                            SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL,
+                            OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL
+                        }
+                    },
+                };
+            }
+            else
+            {
+                calibDetailsMag = new Dictionary<int, List<double[,]>>()
+                {
+                    {
+                        0,
+                        new List<double[,]>
+                        {
+                            ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH,
+                            SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH,
+                            OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH
+                        }
+                    }
+                };
+            }
+            return calibDetailsMag;
         }
 
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
