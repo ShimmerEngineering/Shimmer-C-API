@@ -763,15 +763,14 @@ namespace ShimmerAPI
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
-        //public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { -1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } };
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 6842, 0, 0 }, { 0, 6842, 0 }, { 0, 0, 6842 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 3421, 0, 0 }, { 0, 3421, 0 }, { 0, 0, 3421 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 2281, 0, 0 }, { 0, 2281, 0 }, { 0, 0, 2281 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1711, 0, 0 }, { 0, 1711, 0 }, { 0, 0, 1711 } };
 
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }; 				//Default Values for Magnetometer Calibration
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };                //Default Values for Magnetometer Calibration
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
@@ -2266,7 +2265,7 @@ namespace ShimmerAPI
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    if (magSamplingRate == 0) //3200 us the raw ADC value and not in HZ
+                    if (magSamplingRate == 0x08) 
                     {
                         LowPowerMagEnabled = true;
                     }
@@ -2280,10 +2279,9 @@ namespace ShimmerAPI
                     {
                         LowPowerGyroEnabled = true;
                     }
-                    
+
                 }
-
-
+				
                 NumberofChannels = (int)packet[6 + 3];
                 BufferSize = (int)packet[7 + 3];
                 ListofSensorChannels.Clear();
@@ -2654,7 +2652,7 @@ namespace ShimmerAPI
                 OffsetVectorMag = offsetVector;
                 SensitivityMatrixMag = sensitivityMatrix;
             }
-            else if (packetType == (byte)PacketTypeShimmer3.MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+            else if (packetType == (byte)PacketTypeShimmer3.MAG_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
                 DefaultMagParams = false;
                 AlignmentMatrixMag = alignmentMatrix;
@@ -2752,19 +2750,19 @@ namespace ShimmerAPI
 
                 AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
                 OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
-                if (GetMagRange() == 1)
+                if (GetMagRange() == 0)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 2)
+                else if (GetMagRange() == 1)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 3)
+                else if (GetMagRange() == 2)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 4)
+                else if (GetMagRange() == 3)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                 }
@@ -3801,7 +3799,8 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        datatemp = CalibrateShimmer3RAdcChannel(datatemp) * 1.988;
+                        //datatemp = CalibrateShimmer3RAdcChannel(datatemp) * 1.988;
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1) * 1.988);
                     }
                     else
                     {
@@ -6525,30 +6524,42 @@ namespace ShimmerAPI
             {
                 if (!LowPowerMagEnabled)
                 {
-                    if (SamplingRate >= 100)
+                    if (SamplingRate > 560)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x01); //Low Power Mode (1000Hz)
                     }
-                    else if (SamplingRate >= 50)
+                    else if (SamplingRate > 300)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x11); //Medium (560Hz)
                     }
-                    else if (SamplingRate >= 20)
+                    else if (SamplingRate > 155)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x21); //High (300Hz)
                     }
-                    else if (SamplingRate >= 10)
+                    else if (SamplingRate > 100) 
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x31); //Ultra High (155Hz)
+                    }
+                    else if (SamplingRate > 50) 
+                    {
+                        WriteMagSamplingRate(0x31); //Ultra High (155Hz)
+                    }
+                    else if (SamplingRate > 20)
+                    {
+                        WriteMagSamplingRate(0x3E); //Ultra High (80Hz)
+                    }
+                    else if (SamplingRate > 10)
+                    {
+                        WriteMagSamplingRate(0x3A); //Ultra High (20Hz)
                     }
                     else
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x38); //Ultra High (10Hz)
                     }
                 }
                 else //Low power mag for shimmer3R enabled
                 {
-                    WriteMagSamplingRate(0x0);
+                    WriteMagSamplingRate(0x08);
                 }
             }
             else //Shimmer2r
