@@ -1264,19 +1264,27 @@ namespace ShimmerAPI
 
                             if (GyroRange == 0)
                             {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3;
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_125DPS_SHIMMER3R_LSM6DSV;
                             }
                             else if (GyroRange == 1)
                             {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3;
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3R_LSM6DSV;
                             }
                             else if (GyroRange == 2)
                             {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3;
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV;
                             }
                             else if (GyroRange == 3)
                             {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3;
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV;
+                            }
+                            else if (GyroRange == 4)
+                            {
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV;
+                            }
+                            else if (GyroRange == 5)
+                            {
+                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV;
                             }
 
                             AlignmentMatrixGyro = SensorGyro.AlignmentMatrixGyro;

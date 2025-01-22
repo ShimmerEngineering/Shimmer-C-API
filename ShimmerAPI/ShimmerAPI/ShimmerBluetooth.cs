@@ -928,12 +928,12 @@ namespace ShimmerAPI
             {
                 SensorLNAccel = new LNAccel(HardwareVersion);
                 mMapOfSensorClasses.Add(SensorLNAccel);
-                SensorWRAccel = new WRAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorWRAccel);
-                SensorHighGAccel = new HighGAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorHighGAccel);
                 SensorGyro = new GyroSensor(HardwareVersion);
                 mMapOfSensorClasses.Add(SensorGyro);
+                SensorHighGAccel = new HighGAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorHighGAccel);
+                SensorWRAccel = new WRAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRAccel);
                 SensorMag = new MagSensor(HardwareVersion);
                 mMapOfSensorClasses.Add(SensorMag);
                 SensorWRMag = new WRMag(HardwareVersion);
