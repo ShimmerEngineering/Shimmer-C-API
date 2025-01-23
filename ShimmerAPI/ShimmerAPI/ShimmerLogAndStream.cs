@@ -1236,7 +1236,7 @@ namespace ShimmerAPI
                         //need to update this to parse correct sensor id, sensor range for correct sensitivity
                         if (sensorId == SensorLNAccel.SENSOR_ID)
                         {
-                            SensorLNAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorLNAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
                             if (LNAccelRange == 0)
                             {
@@ -1260,7 +1260,7 @@ namespace ShimmerAPI
                         }
                         else if (sensorId == SensorGyro.SENSOR_ID)
                         {
-                            SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
                             if (GyroRange == 0)
                             {
@@ -1292,7 +1292,7 @@ namespace ShimmerAPI
                         }
                         else if (sensorId == SensorWRAccel.SENSOR_ID)
                         {
-                            SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
                             if (AccelRange == 0)
                             {
@@ -1315,7 +1315,7 @@ namespace ShimmerAPI
                         }
                         else if (sensorId == SensorMag.SENSOR_ID)
                         {
-                            SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
                             if (GetMagRange() == 0)
                             {
@@ -1338,7 +1338,7 @@ namespace ShimmerAPI
                         }
                         else if (sensorId == SensorHighGAccel.SENSOR_ID)
                         {
-                            SensorHighGAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorHighGAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
                             SensitivityMatrixAltAccel = SensorHighGAccel.SensitivityMatrixAltAccel;
                             AlignmentMatrixAltAccel = SensorHighGAccel.AlignmentMatrixAltAccel;
@@ -1346,7 +1346,7 @@ namespace ShimmerAPI
                         }
                         else if (sensorId == SensorWRMag.SENSOR_ID)
                         {
-                            SensorWRMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(remainingBytes);
+                            SensorWRMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
                             AlignmentMatrixMag2 = SensorWRMag.AlignmentMatrixMag2;
                             OffsetVectorMag2 = SensorWRMag.OffsetVectorMag2;
