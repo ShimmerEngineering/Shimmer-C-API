@@ -65,5 +65,43 @@ namespace ShimmerAPI.Utilities
                 return null;
             }
         }
+
+        public static byte[] ConvertMilliSecondsToShimmerRtcDataBytesLSB(long milliseconds)
+        {
+            byte[] rtcTimeArray = ConvertMilliSecondsToShimmerRtcDataBytesMSB(milliseconds);
+            Array.Reverse(rtcTimeArray);
+            return rtcTimeArray;
+        }
+
+        public static byte[] ConvertMilliSecondsToShimmerRtcDataBytesMSB(long milliseconds)
+        {
+            long milisecondTicks = (long)(milliseconds * 32.768);
+            byte[] rtcTimeArray = BitConverter.GetBytes(milisecondTicks);
+
+            Array.Reverse(rtcTimeArray);
+
+            return rtcTimeArray;
+        }
+
+        public static double[,] DeepCopyDoubleMatrix(double[,] input)
+        {
+            if (input == null)
+                return null;
+
+            int rows = input.GetLength(0);
+            int cols = input.GetLength(1);
+
+            double[,] result = new double[rows, cols];
+
+            for (int r = 0; r < rows; r++)
+            {
+                for (int c = 0; c < cols; c++)
+                {
+                    result[r, c] = input[r, c];
+                }
+            }
+            return result;
+        }
+
     }
 }

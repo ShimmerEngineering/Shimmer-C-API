@@ -75,6 +75,7 @@ using System.ComponentModel;
 using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 using ShimmerAPI.Utilities;
 using static ShimmerAPI.ShimmerBluetooth;
+using ShimmerAPI.Sensors;
 
 namespace ShimmerAPI
 {
@@ -255,6 +256,15 @@ namespace ShimmerAPI
 
         protected long ShimmerRealWorldClock = 0;
         protected List<byte> UnalignedBytesReceived = new List<Byte>();
+
+        protected List<object> mMapOfSensorClasses = new List<object>();
+
+        protected LNAccel SensorLNAccel;
+        protected WRAccel SensorWRAccel;
+        protected HighGAccel SensorHighGAccel;
+        protected GyroSensor SensorGyro;
+        protected MagSensor SensorMag;
+        protected WRMag SensorWRMag;
 
         public enum BTCRCMode
         {
@@ -698,7 +708,7 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 57, 0, 0 }, { 0, 57, 0 }, { 0, 0, 57 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 29, 0, 0 }, { 0, 29, 0 }, { 0, 0, 29 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 14, 0, 0 }, { 0, 14, 0 }, { 0, 0, 14 } };      //Default Values for Gyroscope Calibration
-        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
         public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
         // Shimmer3r LN Accel
@@ -912,6 +922,36 @@ namespace ShimmerAPI
 
         protected int ConnectWaitDurationinmS = 500;
 
+        protected void InitializeSensors()
+        {
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+            {
+                SensorLNAccel = new LNAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorLNAccel);
+                SensorGyro = new GyroSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorGyro);
+                SensorHighGAccel = new HighGAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorHighGAccel);
+                SensorWRAccel = new WRAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRAccel);
+                SensorMag = new MagSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorMag);
+                SensorWRMag = new WRMag(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRMag);
+            }
+            else
+            {
+                SensorLNAccel = new LNAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorLNAccel);
+                SensorWRAccel = new WRAccel(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorWRAccel);
+                SensorGyro = new GyroSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorGyro);
+                SensorMag = new MagSensor(HardwareVersion);
+                mMapOfSensorClasses.Add(SensorMag);
+            }
+        }
+
         public void Connect()
         {
             if (!IsConnectionOpen())
@@ -989,6 +1029,7 @@ namespace ShimmerAPI
                             if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                             {
                                 //WriteBatteryFrequency(0);
+                                InitializeSensors();
                                 ReadExpansionBoard();
                                 InitializeShimmer3SDBT();
                             }
@@ -2654,7 +2695,7 @@ namespace ShimmerAPI
                 }
                 else if (GyroRange == 5)
                 {
-                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV;
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV;
                 }
                 AlignmentMatrixGyro = ALIGNMENT_MATRIX_GYRO_SHIMMER3R_LSM6DSV;
                 OffsetVectorGyro = OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV;
@@ -2765,19 +2806,19 @@ namespace ShimmerAPI
 
                 AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
                 OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
-                if (GetMagRange() == 1)
+                if (GetMagRange() == 0)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 2)
+                else if (GetMagRange() == 1)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 3)
+                else if (GetMagRange() == 2)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
                 }
-                else if (GetMagRange() == 4)
+                else if (GetMagRange() == 3)
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                 }

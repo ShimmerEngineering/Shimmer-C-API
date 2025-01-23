@@ -1,10 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShimmerAPI;
+using ShimmerAPI.Sensors;
 using ShimmerAPI.Simulators;
 using ShimmerAPI.Utilities;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -131,28 +133,41 @@ namespace ShimmerBluetoothTests
         [TestMethod]
         public void Test003_ConnectandTestCalibParamRead()
         {
-            //need to work on calib dump 
-            //if (mDevice != null)
-            //{
-            //    try
-            //    {
-            //        mDevice.StartConnectThread();
-            //        Thread.Sleep(30000);
-            //        if (!mDevice.IsConnected())
-            //        {
-            //            Assert.Fail();
-            //        }
+            if (mDevice != null)
+            {
+                try
+                {
+                    mDevice.StartConnectThread();
+                    Thread.Sleep(30000);
 
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        Assert.Fail($"Test aborted due to exception: {ex.Message}");
-            //    }
-            //}
-            //else
-            //{
-            //    Assert.Fail("mDevice is null");
-            //}
+                    if (!mDevice.IsConnected())
+                    {
+                        Assert.Fail();
+                    }
+
+                    byte[] deviceCalBytes = mDevice.CalibByteDumpGenerate();
+                    System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes));
+                    mDevice.CalibByteDumpParse(deviceCalBytes);
+
+                    System.Console.WriteLine("done ...");
+
+                    mDevice.WriteLNAccelRange(3);
+                    deviceCalBytes = mDevice.CalibByteDumpGenerate();
+                    System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes));
+                    mDevice.CalibByteDumpParse(deviceCalBytes);
+
+                    System.Console.WriteLine("done ...");
+                  
+                }
+                catch (Exception ex)
+                {
+                    Assert.Fail($"Test aborted due to exception: {ex.Message}");
+                }
+            }
+            else
+            {
+                Assert.Fail("mDevice is null");
+            }
         }
 
         [TestMethod]
@@ -165,6 +180,7 @@ namespace ShimmerBluetoothTests
                     mDevice.StartConnectThread();
                     mDevice.SetIsNewBMPSupported(true);
                     Thread.Sleep(30000);
+
                     if (!mDevice.IsConnected())
                     {
                         Assert.Fail();
@@ -172,7 +188,6 @@ namespace ShimmerBluetoothTests
 
                     //mDevice.ReadCalibrationParameters("All");
                     //mDevice.RetrieveKinematicCalibrationParametersFromPacket();
-
                     mDevice.WriteAccelRange(0);
                     mDevice.WriteSensors((int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL);
                     double[,] lnAccelOffset = mDevice.OffsetVectorAccel;
@@ -214,6 +229,7 @@ namespace ShimmerBluetoothTests
                     mDevice.WriteGyroRange(2);
                     double[,] gyroSensitivity2 = mDevice.SensitivityMatrixGyro;
                     Assert.IsTrue(gyroSensitivity2.Cast<double>().SequenceEqual(new double[,] { { 2.73, 0, 0 }, { 0, 2.73, 0 }, { 0, 0, 2.73 } }.Cast<double>()));
+
                 }
                 catch (Exception ex)
                 {
@@ -225,6 +241,7 @@ namespace ShimmerBluetoothTests
                 Assert.Fail("mDevice is null");
             }
         }
+      
         [TestMethod]
         public void Test005_ConnectandTestDefaultWRAccelCalibParam()
         {
@@ -252,6 +269,7 @@ namespace ShimmerBluetoothTests
             //    Assert.Fail("mDevice is null");
             //}
         }
+      
         [TestMethod]
         public void Test006_ConnectandTestDefaultMagCalibParam()
         {
@@ -279,6 +297,7 @@ namespace ShimmerBluetoothTests
             //    Assert.Fail("mDevice is null");
             //}
         }
+      
         [TestMethod]
         public void Test007_ConnectandTestDefaultHighGAccelCalibParam()
         {
@@ -306,6 +325,7 @@ namespace ShimmerBluetoothTests
             //    Assert.Fail("mDevice is null");
             //}
         }
+      
         [TestMethod]
         public void Test008_ConnectandTestDefaultWRMagCalibParam()
         {

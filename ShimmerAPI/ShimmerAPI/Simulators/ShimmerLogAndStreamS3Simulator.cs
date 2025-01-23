@@ -240,7 +240,6 @@ namespace ShimmerAPI.Simulators
                 {
                     bytes = UtilShimmer.HexStringToByteArray("800202FF01080001");
                 }
-
                 foreach (byte byteValue in bytes)
                 {
                     mBuffer.Add(byteValue);

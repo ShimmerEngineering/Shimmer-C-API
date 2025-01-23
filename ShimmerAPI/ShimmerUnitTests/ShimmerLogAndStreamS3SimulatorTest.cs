@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShimmerAPI;
+using ShimmerAPI.Sensors;
 using ShimmerAPI.Simulators;
 using System;
 using System.Collections.Concurrent;
@@ -50,7 +51,7 @@ namespace ShimmerBluetoothTests
                         Assert.Fail();
                     }
 
-                    //if (!mDevice.isGetBmp390CalibrationCoefficientsCommand)
+                     //if (!mDevice.isGetBmp390CalibrationCoefficientsCommand)
                     //{
                     //    Assert.Fail();
                     //}
@@ -131,6 +132,23 @@ namespace ShimmerBluetoothTests
             {
                 Assert.Fail("mDevice is null");
             }
+        }
+
+        public void ProcessCalibrationData()
+        {
+            byte[] calibDump = mDevice.GetCalibrationDump().ToArray();
+
+            if (calibDump == null || calibDump.Length < 2)
+            {
+                throw new ArgumentException("Invalid calibDump: must contain at least 2 bytes.");
+            }
+
+            //mDevice.WriteAccelRange(0);
+            LNAccel lnAccel = new LNAccel((int)ShimmerBluetooth.ShimmerVersion.SHIMMER3);
+            lnAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibDump);
+            //mDevice.WriteGyroRange(0);
+            //GyroSensor gyro = new GyroSensor();
+            //gyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibDumpResponse.ToArray());
         }
 
     }
