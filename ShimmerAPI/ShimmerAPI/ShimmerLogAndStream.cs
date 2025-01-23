@@ -1310,6 +1310,7 @@ namespace ShimmerAPI
                             {
                                 SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3R_LIS2DW12;
                             }
+
                             AlignmentMatrixAccel2 = SensorWRAccel.AlignmentMatrixAccel2;
                             OffsetVectorAccel2 = SensorWRAccel.OffsetVectorAccel2;
                         }
@@ -1333,6 +1334,7 @@ namespace ShimmerAPI
                             {
                                 SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                             }
+
                             AlignmentMatrixMag = SensorMag.AlignmentMatrixMag;
                             OffsetVectorMag = SensorMag.OffsetVectorMag;
                         }

@@ -10,6 +10,7 @@ namespace ShimmerAPI.Sensors
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public readonly int SHIMMER_LIS3MDL_MAG = 41;
         public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixMag2 = new double[3, 3];
         public double[,] SensitivityMatrixMag2 = new double[3, 3];
@@ -19,9 +20,9 @@ namespace ShimmerAPI.Sensors
         public WRMag(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                SENSOR_ID = 41;
+                SENSOR_ID = SHIMMER_LIS3MDL_MAG;
                 SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
                 AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
                 OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
@@ -30,7 +31,7 @@ namespace ShimmerAPI.Sensors
 
         public Dictionary<int, List<double[,]>> GetCalibDetails()
         {
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 calibDetailsMag = new Dictionary<int, List<double[,]>>()
                 {

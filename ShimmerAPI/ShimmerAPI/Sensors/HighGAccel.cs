@@ -10,6 +10,7 @@ namespace ShimmerAPI.Sensors
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public readonly int SHIMMER_ADXL371_ACCEL_HIGHG = 40;
         public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixAltAccel = new double[3, 3];
         public double[,] SensitivityMatrixAltAccel = new double[3, 3];
@@ -19,9 +20,9 @@ namespace ShimmerAPI.Sensors
         public HighGAccel(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                SENSOR_ID = 40;
+                SENSOR_ID = SHIMMER_ADXL371_ACCEL_HIGHG;
 
                 SensitivityMatrixAltAccel = SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371;
                 AlignmentMatrixAltAccel = ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371;
@@ -31,7 +32,7 @@ namespace ShimmerAPI.Sensors
 
         public Dictionary<int, List<double[,]>> GetCalibDetails()
         {
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 calibDetailsAltAccel = new Dictionary<int, List<double[,]>>()
                 {

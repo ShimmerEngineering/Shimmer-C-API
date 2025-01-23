@@ -10,6 +10,8 @@ namespace ShimmerAPI.Sensors
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public readonly int SHIMMER_MPU9X50_GYRO = 30;
+        public readonly int SHIMMER_LSM6DSV_GYRO = 38;
         public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixGyro = new double[3, 3];
         public double[,] SensitivityMatrixGyro = new double[3, 3];
@@ -19,17 +21,17 @@ namespace ShimmerAPI.Sensors
         public GyroSensor(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                SENSOR_ID = 38;
-
+                SENSOR_ID = SHIMMER_LSM6DSV_GYRO;
+                      
                 SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_125DPS_SHIMMER3R_LSM6DSV;
                 AlignmentMatrixGyro = ALIGNMENT_MATRIX_GYRO_SHIMMER3R_LSM6DSV;
                 OffsetVectorGyro = OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV;
             }
             else
             {
-                SENSOR_ID = 30;
+                SENSOR_ID = SHIMMER_MPU9X50_GYRO;
 
                 SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3;
                 AlignmentMatrixGyro = ALIGNMENT_MATRIX_GYRO_SHIMMER3;
@@ -39,7 +41,7 @@ namespace ShimmerAPI.Sensors
 
         public Dictionary<int, List<double[,]>> GetCalibDetails()
         {
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 calibDetailsGyro = new Dictionary<int, List<double[,]>>()
                 {

@@ -10,6 +10,8 @@ namespace ShimmerAPI.Sensors
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public readonly int SHIMMER_LSM303_ACCEL = 31;
+        public readonly int SHIMMER_LIS2DW12_ACCEL_WR = 39;
         public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixAccel2 = new double[3, 3];
         public double[,] SensitivityMatrixAccel2 = new double[3, 3];
@@ -19,9 +21,9 @@ namespace ShimmerAPI.Sensors
         public WRAccel(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                SENSOR_ID = 39;
+                SENSOR_ID = SHIMMER_LIS2DW12_ACCEL_WR;
 
                 SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3R_LIS2DW12;
                 AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3R_LIS2DW12;
@@ -29,7 +31,7 @@ namespace ShimmerAPI.Sensors
             }
             else
             {
-                SENSOR_ID = 31;
+                SENSOR_ID = SHIMMER_LSM303_ACCEL;
 
                 SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3_LSM303AH;
                 AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH;
@@ -39,7 +41,7 @@ namespace ShimmerAPI.Sensors
 
         public Dictionary<int, List<double[,]>> GetCalibDetails()
         {
-            if (ShimmerHardwareVersion == 10)
+            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 calibDetailsAccel2 = new Dictionary<int, List<double[,]>>()
                 {
