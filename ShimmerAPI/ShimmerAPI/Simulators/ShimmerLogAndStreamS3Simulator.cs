@@ -188,19 +188,7 @@ namespace ShimmerAPI.Simulators
                     mBuffer.Add((byte)0x9B);
                 }
             }
-            else if (buffer[0] == (byte)InstructionsGet.GetBmp390CalibrationCoefficientsCommand)
-            {
-                isGetBmp390CalibrationCoefficientsCommand = true;
-                mBuffer.Add((byte)0xff);
-                mBuffer.Add((byte)0x9f);
-                byte[] bytes = UtilShimmer.HexStringToByteArray("7A6A0D6632007F9016D7D00BBC1B2AFFF9FF8C3CF8C67017");
-                foreach (byte byteValue in bytes)
-                {
-                    mBuffer.Add(byteValue);
-                }
-                mBuffer.Add((byte)0xDF);
-            }
-            else if (buffer[0] == (byte)InstructionsGet.Bmp390CalibrationCoefficientsResponse)
+            else if (buffer[0] == (byte)PacketTypeShimmer3RSDBT.GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND)
             {
                 isGetPressureCalibrationCoefficientsCommand = true;
                 mBuffer.Add((byte)0xff);

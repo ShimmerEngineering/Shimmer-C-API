@@ -169,8 +169,8 @@ namespace ShimmerAPI
         public double[,] SensitivityMatrixAccel2 = new double[3, 3] { { 38, 0, 0 }, { 0, 38, 0 }, { 0, 0, 38 } };
         public double[,] OffsetVectorAccel2 = new double[3, 1] { { 2048 }, { 2048 }, { 2048 } };
         public double[,] AlignmentMatrixAltAccel = new double[3, 3] { { 0, 1, 0 }, { 1, 0, 0 }, { 0, 0, -1 } };
-        public double[,] SensitivityMatrixAltAccel = new double[3, 3] { { 16, 0, 0 }, { 0, 16, 0 }, { 0, 0, 16 } };
-        public double[,] OffsetVectorAltAccel = new double[3, 1] { { 0 }, { 0 }, { 0 } };
+        public double[,] SensitivityMatrixAltAccel = new double[3, 3] { { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 } };
+        public double[,] OffsetVectorAltAccel = new double[3, 1] { { 10 }, { 10 }, { 10 } };
 
         //Default Values for Magnetometer Calibration
 

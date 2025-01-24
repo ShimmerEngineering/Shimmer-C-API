@@ -215,6 +215,8 @@ namespace ShimmerAPI
         private double[,] mSensitivityMatrix;
         private double[,] mVectorOffset;
 
+        public Dictionary<int, Dictionary<int, List<double[,]>>> mapOfSensorCalibration = new Dictionary<int, Dictionary<int, List<double[,]>>>();
+
         // btsd changes
         private int trialConfig;
         private int interval;
@@ -1032,9 +1034,38 @@ namespace ShimmerAPI
             */
         }
 
+        public object GetSensorDetails(int sensorId)
+        {
+            if(mMapOfSensorClasses != null)
+            {
+                foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
+                {
+                    if(sensorClass.SENSOR_ID == sensorId)
+                    {
+                        return sensorClass;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public object GetSensorCalibDetails(int sensorId)
+        {
+            if (mMapOfSensorClasses != null)
+            {
+                foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
+                {
+                    if (sensorClass.SENSOR_ID == sensorId)
+                    {
+                        return sensorClass;
+                    }
+                }
+            }
+            return null;
+        }
+
         public Dictionary<int, Dictionary<int, List<double[,]>>> GetMapOfSensorCalibrationAll()
         {
-            Dictionary<int, Dictionary<int, List<double[,]>>> mapOfSensorCalibration = new Dictionary<int, Dictionary<int, List<double[,]>>>();
 
             foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
             {
