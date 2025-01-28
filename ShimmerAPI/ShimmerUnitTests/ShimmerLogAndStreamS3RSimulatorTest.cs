@@ -337,7 +337,7 @@ namespace ShimmerBluetoothTests
                     double[,] magOffset = mDevice.OffsetVectorMag;
                     Assert.IsTrue(magOffset.Cast<double>().SequenceEqual(new double[,] { { 0 }, { 0 }, { 0 } }.Cast<double>()));
                     double[,] magAlignment = mDevice.AlignmentMatrixMag;
-                    Assert.IsTrue(magAlignment.Cast<double>().SequenceEqual(new double[,] { { -1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } }.Cast<double>()));
+                    Assert.IsTrue(magAlignment.Cast<double>().SequenceEqual(new double[,] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }.Cast<double>()));
 
                     mDevice.WriteMagRange(0);
                     mDevice.CalibByteDumpParse(deviceCalBytes);
@@ -407,7 +407,7 @@ namespace ShimmerBluetoothTests
                 Assert.Fail("mDevice is null");
             }
         }
-      
+
         [TestMethod]
         public void Test008_ConnectandTestDefaultWRMagCalibParam()
         {
