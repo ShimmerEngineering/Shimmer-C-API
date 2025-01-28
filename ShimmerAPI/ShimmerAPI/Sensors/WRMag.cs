@@ -10,6 +10,7 @@ namespace ShimmerAPI.Sensors
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public readonly int ALT_MAG = 34;
         public readonly int SHIMMER_LIS3MDL_MAG = 41;
         public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixMag2 = new double[3, 3];
@@ -26,6 +27,10 @@ namespace ShimmerAPI.Sensors
                 SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
                 AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
                 OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+            }
+            else
+            {
+                SENSOR_ID = ALT_MAG;
             }
         }
 

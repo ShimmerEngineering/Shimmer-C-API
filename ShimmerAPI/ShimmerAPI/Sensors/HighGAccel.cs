@@ -10,6 +10,7 @@ namespace ShimmerAPI.Sensors
     {
         protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
+        public readonly int ALT_ACCEL = 33;
         public readonly int SHIMMER_ADXL371_ACCEL_HIGHG = 40;
         public int SENSOR_ID { get; private set; }
         public double[,] AlignmentMatrixAltAccel = new double[3, 3];
@@ -27,6 +28,10 @@ namespace ShimmerAPI.Sensors
                 SensitivityMatrixAltAccel = SENSITIVITY_MATRIX_HIGH_G_ACCEL_200G_SHIMMER3R_ADXL371;
                 AlignmentMatrixAltAccel = ALIGNMENT_MATRIX_HIGH_G_ACCEL_SHIMMER3R_ADXL371;
                 OffsetVectorAltAccel = OFFSET_VECTOR_ACCEL_HIGH_G_SHIMMER3R_ADXL371;
+            }
+            else
+            {
+                SENSOR_ID = ALT_ACCEL;
             }
         }
 

@@ -927,32 +927,18 @@ namespace ShimmerAPI
 
         protected void InitializeSensors()
         {
-            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
-            {
-                SensorLNAccel = new LNAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorLNAccel);
-                SensorGyro = new GyroSensor(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorGyro);
-                SensorHighGAccel = new HighGAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorHighGAccel);
-                SensorWRAccel = new WRAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorWRAccel);
-                SensorMag = new MagSensor(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorMag);
-                SensorWRMag = new WRMag(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorWRMag);
-            }
-            else
-            {
-                SensorLNAccel = new LNAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorLNAccel);
-                SensorWRAccel = new WRAccel(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorWRAccel);
-                SensorGyro = new GyroSensor(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorGyro);
-                SensorMag = new MagSensor(HardwareVersion);
-                mMapOfSensorClasses.Add(SensorMag);
-            }
+            SensorLNAccel = new LNAccel(HardwareVersion);
+            mMapOfSensorClasses.Add(SensorLNAccel);
+            SensorGyro = new GyroSensor(HardwareVersion);
+            mMapOfSensorClasses.Add(SensorGyro);
+            SensorHighGAccel = new HighGAccel(HardwareVersion);
+            mMapOfSensorClasses.Add(SensorHighGAccel);
+            SensorWRAccel = new WRAccel(HardwareVersion);
+            mMapOfSensorClasses.Add(SensorWRAccel);
+            SensorMag = new MagSensor(HardwareVersion);
+            mMapOfSensorClasses.Add(SensorMag);
+            SensorWRMag = new WRMag(HardwareVersion);
+            mMapOfSensorClasses.Add(SensorWRMag);
         }
 
         public void Connect()
@@ -1008,6 +994,7 @@ namespace ShimmerAPI
                             if (GetFirmwareIdentifier() == FW_IDENTIFIER_LOGANDSTREAM)
                             {
                                 //WriteBatteryFrequency(0);
+                                InitializeSensors();
                                 ReadExpansionBoard();
                                 InitializeShimmer3SDBT();
                             }
