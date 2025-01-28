@@ -890,7 +890,7 @@ namespace ShimmerAPI
             file.WriteLine("gs_range=" + GetGSRRange());
             file.WriteLine("exp_power=" + (GetExpPower() ? 1 : 0));
             file.WriteLine("gyro_range=" + GetGyroRange());
-            file.WriteLine("gyro_samplingrate=" + GetMpu9150SamplingRate());
+            file.WriteLine("gyro_samplingrate=" + GetGyroSamplingRate());
             file.WriteLine("acc_range=" + GetAccelRange());
             file.WriteLine("acc_lpm=" + GetAccelLPBit());
             file.WriteLine("acc_hrm=" + GetAccelHRBit());

@@ -65,6 +65,8 @@
             this.comboBoxBaudRate = new System.Windows.Forms.ComboBox();
             this.labelLNAccelRange = new System.Windows.Forms.Label();
             this.comboBoxLNAccelRange = new System.Windows.Forms.ComboBox();
+            this.labelWRMagRate = new System.Windows.Forms.Label();
+            this.comboBoxWRMagRate = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.comboBoxExgGain = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -532,7 +534,9 @@
             this.groupBoxSettings.Controls.Add(this.labelBaudRate);
             this.groupBoxSettings.Controls.Add(this.comboBoxBaudRate);
             this.groupBoxSettings.Controls.Add(this.labelLNAccelRange);
-            this.groupBoxSettings.Controls.Add(comboBoxLNAccelRange);
+            this.groupBoxSettings.Controls.Add(this.comboBoxLNAccelRange);
+            this.groupBoxSettings.Controls.Add(this.labelWRMagRate);
+            this.groupBoxSettings.Controls.Add(this.comboBoxWRMagRate);
             this.groupBoxSettings.Controls.Add(this.label3);
             this.groupBoxSettings.Controls.Add(this.comboBoxExgGain);
             this.groupBoxSettings.Controls.Add(this.label2);
@@ -588,6 +592,27 @@
             this.comboBoxBaudRate.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
 
             // 
+            // labelwrmagrate
+            // 
+            this.labelWRMagRate.AutoSize = true;
+            this.labelWRMagRate.Location = new System.Drawing.Point(267, 43);
+            this.labelWRMagRate.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelWRMagRate.Name = "labelWRMagRate";
+            this.labelWRMagRate.Size = new System.Drawing.Size(75, 17);
+            this.labelWRMagRate.TabIndex = 41;
+            this.labelWRMagRate.Text = "WR Mag Rate";
+            // 
+            // comboBoxwrmagrate
+            // 
+            this.comboBoxWRMagRate.FormattingEnabled = true;
+            this.comboBoxWRMagRate.Location = new System.Drawing.Point(267, 63);
+            this.comboBoxWRMagRate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxWRMagRate.Name = "comboBoxWRMagRate";
+            this.comboBoxWRMagRate.Size = new System.Drawing.Size(160, 24);
+            this.comboBoxWRMagRate.TabIndex = 42;
+            //this.comboBoxWRMagRate.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
+
+            // 
             // labellnaccel
             // 
             this.labelLNAccelRange.AutoSize = true;
@@ -606,7 +631,7 @@
             this.comboBoxLNAccelRange.Name = "comboBoxBaudRate";
             this.comboBoxLNAccelRange.Size = new System.Drawing.Size(160, 24);
             this.comboBoxLNAccelRange.TabIndex = 39;
-            this.comboBoxLNAccelRange.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
+            //this.comboBoxLNAccelRange.SelectionChangeCommitted += new System.EventHandler(this.comboBoxBaudRate_SelectionChangeCommitted);
             // 
             // label3
             // 
@@ -1088,6 +1113,8 @@
         private System.Windows.Forms.ComboBox comboBoxAccelRange;
         private System.Windows.Forms.ComboBox comboBoxLNAccelRange;
         private System.Windows.Forms.Label labelLNAccelRange;
+        private System.Windows.Forms.ComboBox comboBoxWRMagRate;
+        private System.Windows.Forms.Label labelWRMagRate;
         private System.Windows.Forms.ComboBox comboBoxMagRange;
         protected internal System.Windows.Forms.ComboBox comboBoxSamplingRate;
         private System.Windows.Forms.Button buttonToggleLED;
