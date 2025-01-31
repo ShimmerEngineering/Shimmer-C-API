@@ -88,7 +88,7 @@ namespace ShimmerAPI
                     checkBoxSensor17.Text = "ExG Test Signal";
                     checkBoxSensor23.Text = "Respiration";
                     checkBoxSensorHGAccel.Text = "High G Accel";
-                    checkBoxSensorAltMag.Text = "Alt Mag";
+                    checkBoxSensorAltMag.Text = "WR Mag";
 
                     checkBoxSensor19.Text = "Bridge Amplifier";
                     checkBoxSensor11.Visible = true;
@@ -1993,9 +1993,16 @@ namespace ShimmerAPI
             }
         }
 
-        private void checkBoxSensor25_Click(object sender, EventArgs e)
+        private void checkBoxAltMag_Click(object sender, EventArgs e)
         {
-
+            //altmag enable sr 
+            if (checkBoxSensorAltMag.Checked)
+            {
+                comboBoxWRMagRate.Enabled = true;
+            } else
+            {
+                comboBoxWRMagRate.Enabled = false;
+            }
         }
 
         private void checkBoxSensor24_Click(object sender, EventArgs e)

@@ -354,7 +354,7 @@
             this.checkBoxSensorAltMag.Text = "checkBox25";
             this.checkBoxSensorAltMag.UseVisualStyleBackColor = true;
             this.checkBoxSensorAltMag.CheckedChanged += new System.EventHandler(this.checkBoxSensor25_CheckedChanged);
-            this.checkBoxSensorAltMag.Click += new System.EventHandler(this.checkBoxSensor25_Click);
+            this.checkBoxSensorAltMag.Click += new System.EventHandler(this.checkBoxAltMag_Click);
             // 
             // checkBoxSensor17
             // 
