@@ -888,11 +888,6 @@ namespace ShimmerAPI
         byte[] CalibDump = new byte[128];
         private Dictionary<int, string> mCalibBytesDescriptions;
         private byte[] mCalibBytes;
-        private int mHardwareVersion;
-        private int mFirmwareIdentifier;
-        private int mFirmwareVersionMajor;
-        private int mFirmwareVersionMinor;
-        private int mFirmwareVersionInternal;
 
         [Obsolete("This method is unfinished and should not be used.")]
         public void WriteShimmer3Infomem(byte[] infoMem)
@@ -1188,22 +1183,22 @@ namespace ShimmerAPI
         }
 
 
-        public byte[] GenerateVersionByteArrayNew()
+        protected byte[] GenerateVersionByteArrayNew()
         {
             byte[] byteArray = new byte[8];
 
             int index = 0;
-            byteArray[index++] = (byte)(mHardwareVersion & 0xFF);
-            byteArray[index++] = (byte)((mHardwareVersion >> 8) & 0xFF);
+            byteArray[index++] = (byte)(HardwareVersion & 0xFF);
+            byteArray[index++] = (byte)((HardwareVersion >> 8) & 0xFF);
 
-            byteArray[index++] = (byte)(mFirmwareIdentifier & 0xFF);
-            byteArray[index++] = (byte)((mFirmwareIdentifier >> 8) & 0xFF);
+            byteArray[index++] = (byte)((int)FirmwareIdentifier & 0xFF);
+            byteArray[index++] = (byte)(((int)FirmwareIdentifier >> 8) & 0xFF);
 
-            byteArray[index++] = (byte)(mFirmwareVersionMajor & 0xFF);
-            byteArray[index++] = (byte)((mFirmwareVersionMajor >> 8) & 0xFF);
+            byteArray[index++] = (byte)(FirmwareMajor & 0xFF);
+            byteArray[index++] = (byte)((FirmwareMajor >> 8) & 0xFF);
 
-            byteArray[index++] = (byte)(mFirmwareVersionMinor & 0xFF);
-            byteArray[index++] = (byte)(mFirmwareVersionInternal & 0xFF);
+            byteArray[index++] = (byte)(FirmwareMinor & 0xFF);
+            byteArray[index++] = (byte)(FirmwareMinor & 0xFF);
 
             return byteArray;
         }
@@ -1220,11 +1215,13 @@ namespace ShimmerAPI
 
                 var packetLength = calibBytesAll.Take(2).ToArray();
                 var svoBytes = calibBytesAll.Skip(2).Take(8).ToArray();
-                parseVersionByteArray(svoBytes);
 
-                mCalibBytesDescriptions[2] = $"HwID_LSB (" + mHardwareVersion + ")";
+                //no need this functionality for the time being, as the info parsed should only be relevent to this method and not to any class variables
+                var(hwVersion, fwIden, fwMajor, fwMinor, fwInternal) = parseVersionByteArray(svoBytes);
+
+                mCalibBytesDescriptions[2] = $"HwID_LSB (" + hwVersion + ")";
                 mCalibBytesDescriptions[3] = "HwID_MSB";
-                mCalibBytesDescriptions[4] = $"FwID_LSB (" + mFirmwareIdentifier + ")";
+                mCalibBytesDescriptions[4] = $"FwID_LSB (" + fwIden + ")";
                 mCalibBytesDescriptions[5] = "FwID_MSB";
                 mCalibBytesDescriptions[6] = "FWVerMjr_LSB";
                 mCalibBytesDescriptions[7] = "FWVerMjr_MSB";
@@ -1398,28 +1395,40 @@ namespace ShimmerAPI
             }
         }
 
-        public void parseVersionByteArray(byte[] byteArray)
+        
+        public (int,int,int,int,int) parseVersionByteArray(byte[] byteArray)
         {
+            int hardwareVersion;
+            int firmwareIdentifier;
+            int firmwareMajor;
+            int firmwareMinor;
+            int firmwareInternal;
+
             if ((byteArray.Length == 7) || (byteArray.Length == 8))
             {
 
                 int index = 0;
                 if (byteArray.Length == 7)
                 {
-                    mHardwareVersion = byteArray[index++] & 0xFF;
+                    hardwareVersion = byteArray[index++] & 0xFF;
                 }
-                else if (byteArray.Length == 8)
+                else // == 8
                 {
-                    mHardwareVersion = (byteArray[index++] | (byteArray[index++] << 8)) & 0xFFFF;
+                    hardwareVersion = (byteArray[index++] | (byteArray[index++] << 8)) & 0xFFFF;
                 }
 
-                mFirmwareIdentifier = ((byteArray[index++]) | (byteArray[index++] << 8)) & 0xFFFF;
-                mFirmwareVersionMajor = ((byteArray[index++]) | (byteArray[index++] << 8)) & 0xFFFF;
-                mFirmwareVersionMinor = byteArray[index++] & 0xFF;
-                mFirmwareVersionInternal = byteArray[index++] & 0xFF;
-
+                firmwareIdentifier = ((byteArray[index++]) | (byteArray[index++] << 8)) & 0xFFFF;
+                firmwareMajor = ((byteArray[index++]) | (byteArray[index++] << 8)) & 0xFFFF;
+                firmwareMinor = byteArray[index++] & 0xFF;
+                firmwareInternal = byteArray[index++] & 0xFF;
+                return (hardwareVersion, firmwareIdentifier, firmwareMajor, firmwareMinor, firmwareInternal);
+            }
+            else
+            {
+                throw new Exception("Not enough bytes");
             }
         }
+        
 
         public List<byte> GetCalibrationDump()
         {
