@@ -6634,7 +6634,7 @@ namespace ShimmerAPI
 
 
         /// <summary>
-        /// This sets the Gyroscope on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the Gyroscope is reduced to 31.25Hz
+        /// This sets the Gyroscope on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the Gyroscope is reduced to 31.25Hz. Note for the 3R both the Gyro and LN Accel is set to low power mode. For the 3R low power mode results in a sampling rate of 1.875Hz
         /// </summary>
         /// <param name="enable">Set to true to enable</param>
         public void SetLowPowerGyro(bool enable)

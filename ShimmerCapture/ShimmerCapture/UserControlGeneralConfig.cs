@@ -447,6 +447,16 @@ namespace ShimmerAPI
                 checkBoxGyroOnTheFly.Enabled = true;
                 checkBoxLowPowerAccel.Enabled = true;
                 checkBoxLowPowerGyro.Enabled = true;
+                if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                {
+                    checkBoxLowPowerGyro.Text = "Enable Gyro LP Mode";
+                } else if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                {
+                    checkBoxLowPowerGyro.Text = "Enable LN Accel and Gyro LP Mode";
+                }
+
+                
+
                 //if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
                 if (PConfiguration.PControlForm.ShimmerDevice.GetFirmwareIdentifier() == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM
                         //|| PConfiguration.PControlForm.ShimmerDevice.GetFirmwareVersion() > 0.1 || PConfiguration.PControlForm.ShimmerDevice.GetFirmwareInternal() >= 5) // gsr only supported from BTStream 0.1.5 onwards. 
