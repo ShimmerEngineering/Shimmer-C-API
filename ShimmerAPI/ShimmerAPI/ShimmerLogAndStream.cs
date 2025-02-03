@@ -684,7 +684,7 @@ namespace ShimmerAPI
         }
 
         // btsd changes
-        private void readInfoMem()
+        protected virtual void readInfoMem()
         {
             //string status_text = "";
             //PChangeStatusLabel("Inquiring Shimmer Info"); // need to be in a UI thread for update
@@ -736,12 +736,12 @@ namespace ShimmerAPI
             //worker.ReportProgress(40, status_text);
             if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                ReadCalibDump();
+                //ReadCalibDump();
                 ReadCalibrationParameters("All");
             }
             else
             {
-                ReadCalibDump();
+                //ReadCalibDump();
                 ReadCalibrationParameters("All");
             }
 
@@ -1536,7 +1536,7 @@ namespace ShimmerAPI
 
 
         // btsd changes
-        private void waitTilTimeOut()
+        protected void waitTilTimeOut()
         {
             int timeout = 150;
             while (timeout > 0)
