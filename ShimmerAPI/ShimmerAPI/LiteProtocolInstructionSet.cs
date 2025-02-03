@@ -374,7 +374,7 @@ namespace com.shimmerresearch.radioprotocol {
         [pbr::OriginalName("GET_VBATT_COMMAND")] GetVbattCommand = 149,
         [pbr::OriginalName("GET_CALIB_DUMP_COMMAND")] GetCalibDumpCommand = 154,
         [pbr::OriginalName("GET_I2C_BATT_STATUS_COMMAND_VALUE")] GetI2CBattStatusCommandValue = 158,
-        [pbr::OriginalName("GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND")] GetBmp280CalibrationCoefficientsCommand = 159,  
+        [pbr::OriginalName("GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND")] GetBmp280CalibrationCoefficientsCommand = 159,
       }
 
       public enum InstructionsResponse {
