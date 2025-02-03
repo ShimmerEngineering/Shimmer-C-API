@@ -4775,7 +4775,9 @@ namespace ShimmerAPI
         protected bool SensorConflictCheck(int enabledSensors)
         {
             bool pass = true;
-            if (HardwareVersion != (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER2
+                || HardwareVersion == (int)ShimmerVersion.SHIMMER2R
+                || HardwareVersion == (int)ShimmerVersion.SHIMMER1)
             {
                 if (((enabledSensors & 0xFF) & (int)SensorBitmapShimmer2.SENSOR_GYRO) > 0)
                 {
