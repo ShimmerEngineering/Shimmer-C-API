@@ -9,42 +9,29 @@ namespace ShimmerAPI.Sensors
 {
     public class LNAccel : AbstractSensor
     {
-        protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
         public readonly int SHIMMER_ANALOG_ACCEL = 2;
         public readonly int SHIMMER_LSM6DSV_ACCEL_LN = 37;
         public int SENSOR_ID { get; private set; }
+        public int ShimmerHardwareVersion { get; private set; }
+        public Dictionary<int, List<double[,]>> CalibDetails { get; private set; }
+
         public double[,] AlignmentMatrixAccel = new double[3, 3];
         public double[,] SensitivityMatrixAccel = new double[3, 3];
         public double[,] OffsetVectorAccel = new double[3, 1];
-        public Dictionary<int, List<double[,]>> calibDetailsAccelLN;
 
         public LNAccel(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
-            {
-                SENSOR_ID = SHIMMER_LSM6DSV_ACCEL_LN;
-
-                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_2G_SHIMMER3R_LSM6DSV;
-                AlignmentMatrixAccel = ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3R_LSM6DSV;
-                OffsetVectorAccel = OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3R_LSM6DSV;
-            }
-            else
-            {
-                SENSOR_ID = SHIMMER_ANALOG_ACCEL;
-
-                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KXTC9_2050;
-                AlignmentMatrixAccel = ALIGNMENT_MATRIX_LOW_NOISE_ACCEL_SHIMMER3_KXTC9_2050;
-                OffsetVectorAccel = OFFSET_VECTOR_ACCEL_LOW_NOISE_SHIMMER3_KXTC9_2050;
-            }
+            CreateDefaultCalibParams();
         }
 
-        public Dictionary<int, List<double[,]>> GetCalibDetails()
+        private void CreateDefaultCalibParams()
         {
             if(ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
-            { 
-                calibDetailsAccelLN = new Dictionary<int, List<double[,]>>()
+            {
+                SENSOR_ID = SHIMMER_LSM6DSV_ACCEL_LN;
+                CalibDetails = new Dictionary<int, List<double[,]>>()
                 {
                     {
                         0,
@@ -86,7 +73,8 @@ namespace ShimmerAPI.Sensors
             }
             else
             {
-                calibDetailsAccelLN = new Dictionary<int, List<double[,]>>()
+                SENSOR_ID = SHIMMER_ANALOG_ACCEL;
+                CalibDetails = new Dictionary<int, List<double[,]>>()
                 {
                     {
                         0,
@@ -100,26 +88,18 @@ namespace ShimmerAPI.Sensors
                 };
             }
 
-            return calibDetailsAccelLN;
+            if (CalibDetails.TryGetValue(0, out var defaultCalib))
+            {
+                AlignmentMatrixAccel = defaultCalib[0];
+                SensitivityMatrixAccel = defaultCalib[1];
+                OffsetVectorAccel = defaultCalib[2];
+            }
         }
 
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
-            var packetType = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 2);
-            var sensorID = ((int)packetType[0]) + ((int)packetType[1] << 8);
-
-            if (sensorID == SENSOR_ID)
-            {
-                var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
-                (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                Console.WriteLine("LN Accel calibration parameters retrieved successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Invalid calibration ID.");
-            }
+            (AlignmentMatrixAccel, SensitivityMatrixAccel, OffsetVectorAccel) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+            Console.WriteLine("LN Accel calibration parameters retrieved successfully.");
         }
     }
 }

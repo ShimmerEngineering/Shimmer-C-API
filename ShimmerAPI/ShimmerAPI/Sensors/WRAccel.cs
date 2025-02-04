@@ -8,42 +8,28 @@ namespace ShimmerAPI.Sensors
 {
     public class WRAccel : AbstractSensor
     {
-        protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
         public readonly int SHIMMER_LSM303_ACCEL = 31;
         public readonly int SHIMMER_LIS2DW12_ACCEL_WR = 39;
+        public int ShimmerHardwareVersion { get; private set; }
         public int SENSOR_ID { get; private set; }
+        public Dictionary<int, List<double[,]>> CalibDetails { get; private set; }
         public double[,] AlignmentMatrixAccel2 = new double[3, 3];
         public double[,] SensitivityMatrixAccel2 = new double[3, 3];
         public double[,] OffsetVectorAccel2 = new double[3, 1];
-        public Dictionary<int, List<double[,]>> calibDetailsAccel2;
 
         public WRAccel(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
-            {
-                SENSOR_ID = SHIMMER_LIS2DW12_ACCEL_WR;
-
-                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3R_LIS2DW12;
-                AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3R_LIS2DW12;
-                OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3R_LIS2DW12;
-            }
-            else
-            {
-                SENSOR_ID = SHIMMER_LSM303_ACCEL;
-
-                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3_LSM303AH;
-                AlignmentMatrixAccel2 = ALIGNMENT_MATRIX_WIDE_RANGE_ACCEL_SHIMMER3_LSM303AH;
-                OffsetVectorAccel2 = OFFSET_VECTOR_ACCEL_WIDE_RANGE_SHIMMER3_LSM303AH;
-            }
+            CreateDefaultCalibParams();
         }
 
-        public Dictionary<int, List<double[,]>> GetCalibDetails()
+        public void CreateDefaultCalibParams()
         {
             if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                calibDetailsAccel2 = new Dictionary<int, List<double[,]>>()
+                SENSOR_ID = SHIMMER_LIS2DW12_ACCEL_WR;
+                CalibDetails = new Dictionary<int, List<double[,]>>()
                 {
                     {
                         0,
@@ -85,7 +71,8 @@ namespace ShimmerAPI.Sensors
             }
             else
             {
-                calibDetailsAccel2 = new Dictionary<int, List<double[,]>>()
+                SENSOR_ID = SHIMMER_LSM303_ACCEL;
+                CalibDetails = new Dictionary<int, List<double[,]>>()
                 {
                     {
                         0,
@@ -125,23 +112,19 @@ namespace ShimmerAPI.Sensors
                     }
                 };
             }
-            return calibDetailsAccel2;
+
+            if (CalibDetails.TryGetValue(0, out var defaultCalib))
+            {
+                AlignmentMatrixAccel2 = defaultCalib[0];
+                SensitivityMatrixAccel2 = defaultCalib[1];
+                OffsetVectorAccel2 = defaultCalib[2];
+            }
         }
 
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
-
-            var packetType = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 2);
-            var sensorID = ((int)packetType[0]) + ((int)packetType[1] << 8);
-            if (sensorID == SENSOR_ID)
-            {
-                var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
-                (AlignmentMatrixAccel2, SensitivityMatrixAccel2, OffsetVectorAccel2) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                System.Console.WriteLine("WR Accel calibration parameters");
-            }
-
+            (AlignmentMatrixAccel2, SensitivityMatrixAccel2, OffsetVectorAccel2) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+            System.Console.WriteLine("WR Accel calibration parameters");
         }
     }
 }

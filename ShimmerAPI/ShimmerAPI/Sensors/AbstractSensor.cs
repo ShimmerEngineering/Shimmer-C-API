@@ -7,7 +7,8 @@ namespace ShimmerAPI.Sensors
     public interface AbstractSensor
     {
         int SENSOR_ID { get; }
-        Dictionary<int, List<double[,]>> GetCalibDetails();
+        int ShimmerHardwareVersion { get; }
+        Dictionary<int, List<double[,]>> CalibDetails { get; }
 
     }
 }

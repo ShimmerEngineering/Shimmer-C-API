@@ -189,7 +189,7 @@ namespace ShimmerBluetoothTests
                     double[,] lnAccelOffset = mDevice.OffsetVectorAccel;
                     Assert.IsTrue(lnAccelOffset.Cast<double>().SequenceEqual(new double[,] { { 0 }, { 0 }, { 0 } }.Cast<double>()));
 
-                    double[,] lnAccelAlignment = mDevice.AlignmentMatrixAccel;
+                    double[,] lnAccelAlignment = mDevice.AlignmentMatrixAccel; //it become -0.1
                     Assert.IsTrue(lnAccelAlignment.Cast<double>().SequenceEqual(new double[,] { { -1, 0, 0 }, { 0, 1, 0 }, { 0, 0, -1 } }.Cast<double>()));
 
                     double[,] lnAccelSensitivity0 = mDevice.SensitivityMatrixAccel;

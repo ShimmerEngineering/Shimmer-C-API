@@ -192,25 +192,6 @@ namespace ShimmerAPI
             GsrRaw = 0x1C
         }
 
-        public enum CalibrationScaleFactor
-        {
-            NONE = 1,
-            TEN = 10,
-            ONE_HUNDRED = 100
-        }
-
-        public class Calibration
-        {
-            // TODO: offset scale factor currently not used
-            public static CalibrationScaleFactor mOffsetScaleFactor { get; set; } = CalibrationScaleFactor.NONE;
-            public static CalibrationScaleFactor mSensitivityScaleFactor { get; set; } = CalibrationScaleFactor.NONE;
-            public static CalibrationScaleFactor mAlignmentScaleFactor { get; set; } = CalibrationScaleFactor.ONE_HUNDRED;
-            public static double GetScaleFactor(CalibrationScaleFactor factor)
-            {
-                return 1.0; // (double)factor
-            }
-        }
-
         private double[,] mAlignmentMatrix;
         private double[,] mSensitivityMatrix;
         private double[,] mVectorOffset;
@@ -1064,7 +1045,7 @@ namespace ShimmerAPI
 
             foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
             {
-                Dictionary<int, List<double[,]>> returnVal = sensorClass.GetCalibDetails();
+                Dictionary<int, List<double[,]>> returnVal = sensorClass.CalibDetails;
                 if(returnVal != null)
                 {
                     mapOfSensorCalibration.Add(sensorClass.SENSOR_ID, returnVal);
@@ -1142,16 +1123,16 @@ namespace ShimmerAPI
             double[,] sensitivityMatrixToUse = UtilShimmer.DeepCopyDoubleMatrix(sensitivityMatrix);
             for (int i = 0; i <= 2; i++)
             {
-                sensitivityMatrixToUse[i,i] = Math.Round(sensitivityMatrixToUse[i,i] * Calibration.GetScaleFactor(Calibration.mSensitivityScaleFactor));
+                sensitivityMatrixToUse[i,i] = Math.Round(sensitivityMatrixToUse[i,i] * 1);
             }
 
             // Scale the alignment by 100
             double[,] alignmentMatrixToUse = UtilShimmer.DeepCopyDoubleMatrix(alignmentMatrix);
             for (int i = 0; i <= 2; i++)
             {
-                alignmentMatrixToUse[i,0] = Math.Round(alignmentMatrixToUse[i,0] * Calibration.GetScaleFactor(Calibration.mAlignmentScaleFactor));
-                alignmentMatrixToUse[i,1] = Math.Round(alignmentMatrixToUse[i,1] * Calibration.GetScaleFactor(Calibration.mAlignmentScaleFactor));
-                alignmentMatrixToUse[i,2] = Math.Round(alignmentMatrixToUse[i,2] * Calibration.GetScaleFactor(Calibration.mAlignmentScaleFactor));
+                alignmentMatrixToUse[i,0] = Math.Round(alignmentMatrixToUse[i,0] * 100);
+                alignmentMatrixToUse[i,1] = Math.Round(alignmentMatrixToUse[i,1] * 100);
+                alignmentMatrixToUse[i,2] = Math.Round(alignmentMatrixToUse[i,2] * 100);
             }
 
             // Generate the calibration bytes
@@ -1261,108 +1242,35 @@ namespace ShimmerAPI
 
                         var calibBytes = remainingBytes.Skip(12).Take(calibLength).ToArray();
 
-                        //need to update this to parse correct sensor id, sensor range for correct sensitivity
-                        if (sensorId == SensorLNAccel.SENSOR_ID)
+                        if (sensorId == SensorLNAccel.SENSOR_ID && rangeValue == LNAccelRange)
                         {
                             SensorLNAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
-                            if (LNAccelRange == 0)
-                            {
-                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_2G_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (LNAccelRange == 1)
-                            {
-                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_4G_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (LNAccelRange == 2)
-                            {
-                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_8G_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (LNAccelRange == 3)
-                            {
-                                SensitivityMatrixAccel = SENSITIVITY_MATRIX_LOW_NOISE_ACCEL_16G_SHIMMER3R_LSM6DSV;
-                            }
-
+                            SensitivityMatrixAccel = SensorLNAccel.SensitivityMatrixAccel;
                             AlignmentMatrixAccel = SensorLNAccel.AlignmentMatrixAccel;
                             OffsetVectorAccel = SensorLNAccel.OffsetVectorAccel;
                         }
-                        else if (sensorId == SensorGyro.SENSOR_ID)
+                        else if (sensorId == SensorGyro.SENSOR_ID && rangeValue == GyroRange)
                         {
                             SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
-                            if (GyroRange == 0)
-                            {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_125DPS_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (GyroRange == 1)
-                            {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_250DPS_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (GyroRange == 2)
-                            {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (GyroRange == 3)
-                            {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (GyroRange == 4)
-                            {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV;
-                            }
-                            else if (GyroRange == 5)
-                            {
-                                SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV;
-                            }
-
+                            SensitivityMatrixGyro = SensorGyro.SensitivityMatrixGyro;
                             AlignmentMatrixGyro = SensorGyro.AlignmentMatrixGyro;
                             OffsetVectorGyro = SensorGyro.OffsetVectorGyro;
                         }
-                        else if (sensorId == SensorWRAccel.SENSOR_ID)
+                        else if (sensorId == SensorWRAccel.SENSOR_ID && rangeValue == AccelRange)
                         {
                             SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
-                            if (AccelRange == 0)
-                            {
-                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_2G_SHIMMER3R_LIS2DW12;
-                            }
-                            else if (AccelRange == 1)
-                            {
-                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_4G_SHIMMER3R_LIS2DW12;
-                            }
-                            else if (AccelRange == 2)
-                            {
-                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_8G_SHIMMER3R_LIS2DW12;
-                            }
-                            else if (AccelRange == 3)
-                            {
-                                SensitivityMatrixAccel2 = SENSITIVITY_MATRIX_WIDE_RANGE_ACCEL_16G_SHIMMER3R_LIS2DW12;
-                            }
-
+                            SensitivityMatrixAccel2 = SensorWRAccel.SensitivityMatrixAccel2;
                             AlignmentMatrixAccel2 = SensorWRAccel.AlignmentMatrixAccel2;
                             OffsetVectorAccel2 = SensorWRAccel.OffsetVectorAccel2;
                         }
-                        else if (sensorId == SensorMag.SENSOR_ID)
+                        else if (sensorId == SensorMag.SENSOR_ID && rangeValue == MagGain)
                         {
                             SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
 
-                            if (GetMagRange() == 0)
-                            {
-                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
-                            }
-                            else if (GetMagRange() == 1)
-                            {
-                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
-                            }
-                            else if (GetMagRange() == 2)
-                            {
-                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
-                            }
-                            else if (GetMagRange() == 3)
-                            {
-                                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
-                            }
-
+                            SensitivityMatrixMag = SensorMag.SensitivityMatrixMag;
                             AlignmentMatrixMag = SensorMag.AlignmentMatrixMag;
                             OffsetVectorMag = SensorMag.OffsetVectorMag;
                         }

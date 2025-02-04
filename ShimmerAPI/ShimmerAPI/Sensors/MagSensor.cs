@@ -8,42 +8,28 @@ namespace ShimmerAPI.Sensors
 {
     public class MagSensor : AbstractSensor
     {
-        protected int ShimmerHardwareVersion = -1;
         public readonly int CALIBRATION_ID = 2;
         public readonly int SHIMMER_LSM303_MAG = 32;
         public readonly int SHIMMER_LIS2MDL_MAG = 42;
         public int SENSOR_ID { get; private set; }
+        public int ShimmerHardwareVersion { get; private set; }
+        public Dictionary<int, List<double[,]>> CalibDetails { get; private set; }
         public double[,] AlignmentMatrixMag = new double[3, 3];
         public double[,] SensitivityMatrixMag = new double[3, 3];
         public double[,] OffsetVectorMag = new double[3, 1];
-        public Dictionary<int, List<double[,]>> calibDetailsMag;
 
         public MagSensor(int hardwareVersion)
         {
             ShimmerHardwareVersion = hardwareVersion;
-            if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
-            {
-                SENSOR_ID = SHIMMER_LIS2MDL_MAG;
-
-                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
-                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
-                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
-            }
-            else
-            {
-                SENSOR_ID = SHIMMER_LSM303_MAG;
-
-                SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH;
-                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3_LSM303AH;
-                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH;
-            }
+            CreateDefaultCalibParams();
         }
 
-        public Dictionary<int, List<double[,]>> GetCalibDetails()
+        public void CreateDefaultCalibParams()
         {
             if (ShimmerHardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
-                calibDetailsMag = new Dictionary<int, List<double[,]>>()
+                SENSOR_ID = SHIMMER_LIS2MDL_MAG;
+                CalibDetails = new Dictionary<int, List<double[,]>>()
                 {
                     {
                         0,
@@ -85,7 +71,8 @@ namespace ShimmerAPI.Sensors
             }
             else
             {
-                calibDetailsMag = new Dictionary<int, List<double[,]>>()
+                SENSOR_ID = SHIMMER_LSM303_MAG;
+                CalibDetails = new Dictionary<int, List<double[,]>>()
                 {
                     {
                         0,
@@ -98,23 +85,20 @@ namespace ShimmerAPI.Sensors
                     }
                 };
             }
-            return calibDetailsMag;
+
+            if (CalibDetails.TryGetValue(0, out var defaultCalib))
+            {
+                AlignmentMatrixMag = defaultCalib[0];
+                SensitivityMatrixMag = defaultCalib[1];
+                OffsetVectorMag = defaultCalib[2];
+            }
+
         }
 
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
         {
-
-            var packetType = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 2);
-            var sensorID = ((int)packetType[0]) + ((int)packetType[1] << 8);
-            if (sensorID == CALIBRATION_ID)
-            {
-                var rangebytes = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var lengthsensorcal = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 1);
-                var ts = ProgrammerUtilities.CopyAndRemoveBytes(ref sensorcalibrationdump, 8);
-                (AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
-                System.Console.WriteLine("Mag calibration parameters");
-            }
-
+            (AlignmentMatrixMag, SensitivityMatrixMag, OffsetVectorMag) = UtilCalibration.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+            System.Console.WriteLine("Mag calibration parameters");
         }
     }
 }
