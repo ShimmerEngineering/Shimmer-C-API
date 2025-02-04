@@ -15,6 +15,9 @@ namespace ShimmerAPI.Simulators
         public bool isConnectionOpen = false;
         protected BlockingCollection<byte> mBuffer = new BlockingCollection<byte>(1000); // Fixed size 1000
 
+        public bool isGetBmp390CalibrationCoefficientsCommand = false;
+        public bool isGetPressureCalibrationCoefficientsCommand = false;
+        public bool mIsNewBMPSupported;
 
         public ShimmerLogAndStreamS3Simulator(string devID, string bComPort)
     : base(devID)
@@ -43,6 +46,10 @@ namespace ShimmerAPI.Simulators
             : base(devID, samplingRate, AccelRange, GyroRange, gsrRange, setEnabledSensors)
         {
             ComPort = bComPort;
+        }
+        public void SetIsNewBMPSupported(bool isNewBMPSupported)
+        {
+            mIsNewBMPSupported = isNewBMPSupported;
         }
 
         public override string GetShimmerAddress()
@@ -181,11 +188,12 @@ namespace ShimmerAPI.Simulators
                     mBuffer.Add((byte)0x9B);
                 }
             }
-            else if (buffer[0] == (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand)
+            else if (buffer[0] == (byte)PacketTypeShimmer3RSDBT.GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND)
             {
+                isGetPressureCalibrationCoefficientsCommand = true;
                 mBuffer.Add((byte)0xff);
-                mBuffer.Add((byte)0x9f);
-                byte[] bytes = UtilShimmer.HexStringToByteArray("7A6A0D6632007F9016D7D00BBC1B2AFFF9FF8C3CF8C67017");
+                mBuffer.Add((byte)0xa6);
+                byte[] bytes = UtilShimmer.HexStringToByteArray("19011D6BBA643200859289D6D00BC918CBFFF9FF7B1A1FEE4DFC");
                 foreach (byte byteValue in bytes)
                 {
                     mBuffer.Add(byteValue);
@@ -211,7 +219,15 @@ namespace ShimmerAPI.Simulators
             {
                 mBuffer.Add((byte)0xff);
                 mBuffer.Add((byte)0x02);
-                byte[] bytes = UtilShimmer.HexStringToByteArray("800202FF01080001");
+                byte[] bytes;
+                if (GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                {
+                    bytes = UtilShimmer.HexStringToByteArray("800202FF01080000000001");
+                }
+                else
+                {
+                    bytes = UtilShimmer.HexStringToByteArray("800202FF01080001");
+                }
                 foreach (byte byteValue in bytes)
                 {
                     mBuffer.Add(byteValue);
@@ -272,6 +288,146 @@ namespace ShimmerAPI.Simulators
                 Console.WriteLine("Unresolved: " + UtilShimmer.BytesToHexString(buffer));
             }
 
+        }
+
+        protected override void readInfoMem()
+        {
+            //string status_text = "";
+            //PChangeStatusLabel("Inquiring Shimmer Info"); // need to be in a UI thread for update
+            SetDataReceived(false);
+
+            // btsd changes 2
+            string status_text = "Acquiring Accelerometer Range...";
+            CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring Accelerometer Range...";
+            //worker.ReportProgress(15, status_text);
+            ReadAccelRange();
+
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                ReadLNAccelRange();
+            }
+
+            status_text = "Acquiring ADC Sampling Rate...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring ADC Sampling Rate...";
+            //worker.ReportProgress(20, status_text);
+            ReadSamplingRate();
+
+            status_text = "Acquiring Magnetometer Range...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring Magnetometer Range...";
+            //worker.ReportProgress(25, status_text);
+            ReadMagRange();
+
+            status_text = "Acquiring Gyro Range...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring Gyro Range...";
+            //worker.ReportProgress(30, status_text);
+            ReadGyroRange();
+
+            status_text = "Acquiring Accel Sampling Rate...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring Accel Sampling Rate...";
+            //worker.ReportProgress(35, status_text);
+            ReadAccelSamplingRate();
+
+            status_text = "Acquiring Calibration settings...";
+            //PControlForm.status_text = "Acquiring Calibration settings...";
+            //worker.ReportProgress(40, status_text);
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                ReadCalibDump();
+                //ReadCalibrationParameters("All");
+            }
+            else
+            {
+                ReadCalibDump();
+                //ReadCalibrationParameters("All");
+            }
+
+            status_text = "Acquiring EXG1 configure settings...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring EXG1 configure settings...";
+            //worker.ReportProgress(45, status_text);
+            ReadEXGConfigurations(1);
+
+            status_text = "Acquiring EXG2 configure settings...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring EXG2 configure settings...";
+            //worker.ReportProgress(50, status_text);
+            ReadEXGConfigurations(2);
+
+            //There is an inquiry below so no need for this
+            status_text = "Acquiring Internal Exp Power setting...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            ReadInternalExpPower();
+
+            status_text = "Acquiring trial configure settings...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring trial configure settings...";
+            //worker.ReportProgress(55, status_text);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_TRIAL_CONFIG_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            status_text = "Acquiring center name...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring center name...";
+            //worker.ReportProgress(60, status_text);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CENTER_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            status_text = "Acquiring shimmer name...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring shimmer name...";
+            //worker.ReportProgress(65, status_text);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_SHIMMERNAME_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            status_text = "Acquiring experiment ID...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring experiment ID...";
+            //worker.ReportProgress(70, status_text);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_EXPID_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            status_text = "Acquiring Multi Shimmer settings...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring Multi Shimmer settings...";
+            //worker.ReportProgress(75, status_text);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_MYID_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_NSHIMMER_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            status_text = "Acquiring configure time...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring configure time...";
+            //worker.ReportProgress(80, status_text);
+            WriteBytes(new byte[1] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CONFIGTIME_COMMAND }, 0, 1);
+            waitTilTimeOut();
+
+            status_text = "Acquiring general settings...";
+            newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)status_text);
+            OnNewEvent(newEventArgs);
+            //PControlForm.status_text = "Acquiring general settings...";
+            //worker.ReportProgress(85, status_text);
+            Inquiry();
         }
 
     }
