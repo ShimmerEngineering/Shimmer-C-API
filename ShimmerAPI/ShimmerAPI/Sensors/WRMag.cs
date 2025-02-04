@@ -47,12 +47,16 @@ namespace ShimmerAPI.Sensors
                 SENSOR_ID = ALT_MAG;
             }
 
-            if (CalibDetails.TryGetValue(0, out var defaultCalib))
+            if(CalibDetails != null)
             {
-                AlignmentMatrixMag2 = defaultCalib[0];
-                SensitivityMatrixMag2 = defaultCalib[1];
-                OffsetVectorMag2 = defaultCalib[2];
+                if (CalibDetails.TryGetValue(0, out var defaultCalib))
+                {
+                    AlignmentMatrixMag2 = defaultCalib[0];
+                    SensitivityMatrixMag2 = defaultCalib[1];
+                    OffsetVectorMag2 = defaultCalib[2];
+                }
             }
+
         }
 
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)

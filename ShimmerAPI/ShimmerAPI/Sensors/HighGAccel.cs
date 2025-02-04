@@ -47,12 +47,16 @@ namespace ShimmerAPI.Sensors
                 SENSOR_ID = ALT_ACCEL;
             }
 
-            if (CalibDetails.TryGetValue(0, out var defaultCalib))
+            if(CalibDetails != null)
             {
-                AlignmentMatrixAltAccel = defaultCalib[0];
-                SensitivityMatrixAltAccel = defaultCalib[1];
-                OffsetVectorAltAccel = defaultCalib[2];
+                if (CalibDetails.TryGetValue(0, out var defaultCalib))
+                {
+                    AlignmentMatrixAltAccel = defaultCalib[0];
+                    SensitivityMatrixAltAccel = defaultCalib[1];
+                    OffsetVectorAltAccel = defaultCalib[2];
+                }
             }
+
         }
 
         public void RetrieveKinematicCalibrationParametersFromCalibrationDump(byte[] sensorcalibrationdump)
