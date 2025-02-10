@@ -98,20 +98,12 @@ namespace ShimmerBluetoothTests
                         Assert.Fail();
                     }
 
-                    //if (!mDevice.isGetBmp390CalibrationCoefficientsCommand)
-                    //{
-                    //    Assert.Fail();
-                    //}
+                    mDevice.ReadPressureCalibrationCoefficients();
+                    if (!mDevice.isGetPressureCalibrationCoefficientsCommand)
+                    {
+                        Assert.Fail();
+                    }
 
-                    //if (mDevice.GetEnabledSensors() != (0x00 | (int)SensorBitmapShimmer3R.SENSOR_BMP380_PRESSURE))
-                    //{
-                    //    Assert.Fail();
-                    //}
-
-                    //foreach (byte b in mDevice.ListofSensorChannels)
-                    //{
-                    //    Console.WriteLine(b + " ; ");
-                    //}
 
                 }
                 catch (Exception ex)

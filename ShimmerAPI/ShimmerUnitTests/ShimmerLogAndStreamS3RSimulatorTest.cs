@@ -53,11 +53,6 @@ namespace ShimmerBluetoothTests
                         Assert.Fail();
                     }
 
-                    if (!mDevice.isGetPressureCalibrationCoefficientsCommand)
-                    {
-                        Assert.Fail();
-                    }
-
                 }
                 catch (Exception ex)
                 {
