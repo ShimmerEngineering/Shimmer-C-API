@@ -102,6 +102,47 @@ namespace ShimmerAPI.Utilities
             }
             return result;
         }
+        public static string GetDebugString(int mRangeValue, List<double[,]> sensorClass) 
+        {
+            string debugString = $"RangeValue: {mRangeValue}\n";
+            debugString += GenerateDebugStringPerProperty("Default Offset Vector", sensorClass[2]);
+            debugString += GenerateDebugStringPerProperty("Default Sensitivity", sensorClass[1]);
+            debugString += GenerateDebugStringPerProperty("Default Alignment", sensorClass[0]);
+
+            return debugString;
+        }
+
+        public static String GenerateDebugStringPerProperty(String property, double[,] calMatrix)
+        {
+            String debugString = property + " =\n";
+            if (calMatrix == null)
+            {
+                debugString += "NULL\n";
+            }
+            else
+            {
+                debugString += UtilShimmer.DoubleArrayToString(calMatrix);
+            }
+            return debugString;
+        }
+
+        public static string DoubleArrayToString(double[,] doubleArray)
+        {
+            StringBuilder returnString = new StringBuilder();
+            int rows = doubleArray.GetLength(0);
+            int cols = doubleArray.GetLength(1);
+
+            for (int x = 0; x < rows; x++)
+            {
+                for (int y = 0; y < cols; y++)
+                {
+                    returnString.Append(doubleArray[x, y]).Append("\t");
+                }
+                returnString.AppendLine();
+            }
+
+            return returnString.ToString();
+        }
 
     }
 }

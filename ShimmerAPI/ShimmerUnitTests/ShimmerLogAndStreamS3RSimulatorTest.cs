@@ -140,18 +140,27 @@ namespace ShimmerBluetoothTests
                     System.Console.WriteLine("deviceCalBytes : " + UtilShimmer.BytesToHexString(deviceCalBytes));
                     mDevice.CalibByteDumpParse(deviceCalBytes);
 
-                    foreach (int sensorId in mDevice.mapOfSensorCalibration.Keys)
+                    Object returnValue = mDevice.mapOfSensorCalibration;
+
+                    Assert.IsNotNull(returnValue);
+
+                    Dictionary<int, Dictionary<int, List<double[,]>>> mapOfKinematicSensorCalibrationAll = returnValue as Dictionary<int, Dictionary<int, List<double[,]>>>;
+
+                    foreach (int sensorId in mapOfKinematicSensorCalibrationAll.Keys)
                     {
-                        object sensorDetails = mDevice.GetSensorDetails(sensorId);
+                        Dictionary<int, List<double[,]>> route1CalParamMapPerSensor = mapOfKinematicSensorCalibrationAll[sensorId];
+
+                        Object sensorDetails = mDevice.GetSensorDetails(sensorId);
                         Assert.IsNotNull(sensorDetails);
 
-                        foreach (var returnValues in mDevice.mapOfSensorCalibration)
+                        Console.WriteLine("sensorId : " + sensorId);
+
+                        Dictionary<int, List<double[,]>> mapOfKinematicCalibPerRange = mapOfKinematicSensorCalibrationAll[sensorId];
+                        foreach (var calibDetails in mapOfKinematicCalibPerRange)
                         {
-                            if (returnValues.Key == sensorId && returnValues.Value != null)
-                            {
-                                Assert.IsNotNull(returnValues.Value);
-                            }
+                            Console.WriteLine(UtilShimmer.GetDebugString(calibDetails.Key, calibDetails.Value));
                         }
+                        Console.WriteLine("\n");
 
                     }
 

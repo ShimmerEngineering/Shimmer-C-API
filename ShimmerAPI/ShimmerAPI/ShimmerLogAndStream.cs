@@ -2336,7 +2336,10 @@ namespace ShimmerAPI
                                 buffer.Add((byte)ReadByte());
                             }
                             tempCalibDump = buffer.ToArray();
+                            Debug.WriteLine("CALIB_DUMP Received:\t" + UtilShimmer.BytesToHexString(tempCalibDump));
                             tempCalibDump = ProgrammerUtilities.RemoveLastBytes(tempCalibDump, (int)BluetoothCRCMode);
+                            Debug.WriteLine("CALIB_DUMP concat:\t" + UtilShimmer.BytesToHexString(tempCalibDump));
+
                             break;
                         }
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.TRIAL_CONFIG_RESPONSE:
