@@ -9,7 +9,7 @@ namespace ShimmerAPI
     [Obsolete("This class is unfinished and should not be used.")]
     public abstract class Shimmer4LogAndStream : ShimmerLogAndStream
     {
-        LNAccel LowNoiseAccel = new LNAccel();
+        LNAccel LowNoiseAccel = new LNAccel((int)ShimmerBluetooth.ShimmerVersion.SHIMMER4SDK);
         public Shimmer4LogAndStream(String devID) : base(devID)
         {
 

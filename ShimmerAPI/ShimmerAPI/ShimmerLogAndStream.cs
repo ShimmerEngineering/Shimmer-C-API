@@ -8,6 +8,10 @@ using System.IO;
 using System.ComponentModel;
 using System.Diagnostics;
 using ShimmerAPI.Utilities;
+using ShimmerAPI.Sensors;
+using NUnit.Framework.Internal;
+using System.Collections;
+using static ShimmerAPI.ShimmerLogAndStream;
 
 namespace ShimmerAPI
 {
@@ -187,6 +191,13 @@ namespace ShimmerAPI
             STRAIN_LOW = 0x28,
             GsrRaw = 0x1C
         }
+
+        private double[,] mAlignmentMatrix;
+        private double[,] mSensitivityMatrix;
+        private double[,] mVectorOffset;
+
+        public Dictionary<int, Dictionary<int, List<double[,]>>> mapOfSensorCalibration = new Dictionary<int, Dictionary<int, List<double[,]>>>();
+
         // btsd changes
         private int trialConfig;
         private int interval;
@@ -242,6 +253,8 @@ namespace ShimmerAPI
         public string RadioVersion = "";
         private long configtime = 0;
         public byte[] storedConfig = new byte[118];
+
+        private List<byte> calibDumpResponse = new List<byte>();
 
         // btsd changes
         private bool dataReceived;
@@ -652,7 +665,7 @@ namespace ShimmerAPI
         }
 
         // btsd changes
-        private void readInfoMem()
+        protected virtual void readInfoMem()
         {
             //string status_text = "";
             //PChangeStatusLabel("Inquiring Shimmer Info"); // need to be in a UI thread for update
@@ -854,6 +867,8 @@ namespace ShimmerAPI
         int InfoMemIndex = 0;
         byte[] InfoMem = new byte[128*3];
         byte[] CalibDump = new byte[128];
+        private Dictionary<int, string> mCalibBytesDescriptions;
+        private byte[] mCalibBytes;
 
         [Obsolete("This method is unfinished and should not be used.")]
         public void WriteShimmer3Infomem(byte[] infoMem)
@@ -931,8 +946,6 @@ namespace ShimmerAPI
         [Obsolete("This method is unfinished and should not be used.")]
         public void ReadCalibDump()
         {
-
-            List<byte> calibDumpResponse = new List<byte>();
             
             byte[] byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00);
 
@@ -964,6 +977,10 @@ namespace ShimmerAPI
                 }
             }
 
+            CalibByteDumpParse(calibDumpResponse.ToArray());
+
+            Console.WriteLine(calibDumpResponse);
+
             /*
             WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00 }, 0, 4);
 
@@ -991,6 +1008,339 @@ namespace ShimmerAPI
             }
             System.Console.WriteLine("Calib Dump: " + ProgrammerUtilities.ByteArrayToHexString(CalibDump));
             */
+        }
+
+        public object GetSensorDetails(int sensorId)
+        {
+            if(mMapOfSensorClasses != null)
+            {
+                foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
+                {
+                    if(sensorClass.SENSOR_ID == sensorId)
+                    {
+                        return sensorClass;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public object GetSensorCalibDetails(int sensorId)
+        {
+            if (mMapOfSensorClasses != null)
+            {
+                foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
+                {
+                    if (sensorClass.SENSOR_ID == sensorId)
+                    {
+                        return sensorClass;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public Dictionary<int, Dictionary<int, List<double[,]>>> GetMapOfSensorCalibrationAll()
+        {
+
+            foreach (AbstractSensor sensorClass in mMapOfSensorClasses)
+            {
+                Dictionary<int, List<double[,]>> returnVal = sensorClass.CalibDetails;
+                if(returnVal != null)
+                {
+                    mapOfSensorCalibration.Add(sensorClass.SENSOR_ID, returnVal);
+                }
+
+            }
+
+            return mapOfSensorCalibration;
+        }
+
+        public byte[] CalibByteDumpGenerate()
+        {
+            byte[] calibBytesAll = new byte[] { };
+            Dictionary<int, Dictionary<int, List<double[,]>>> mapOfAllCalib = GetMapOfSensorCalibrationAll();
+
+            foreach (var sensorEntry in mapOfAllCalib)
+            {
+                int sensorId = sensorEntry.Key;
+                var calibMapPerSensor = sensorEntry.Value;
+
+                foreach (var calibEntry in calibMapPerSensor)
+                {
+                    byte[] calibBytesPerSensor = GenerateCalibDump(calibEntry);
+
+                    if (calibBytesPerSensor != null)
+                    {
+                        byte[] calibSensorKeyBytes = new byte[2];
+                        calibSensorKeyBytes[0] = (byte)((sensorId >> 0) & 0xFF);
+                        calibSensorKeyBytes[1] = (byte)((sensorId >> 8) & 0xFF);
+
+                        calibBytesPerSensor = calibSensorKeyBytes.Concat(calibBytesPerSensor).ToArray();
+                        calibBytesAll = calibBytesAll.Concat(calibBytesPerSensor).ToArray();
+                    }
+                }
+            }
+
+            byte[] svoBytes = GenerateVersionByteArrayNew();
+            byte[] concatBytes = svoBytes.Concat(calibBytesAll).ToArray();
+
+            byte[] packetLength = new byte[2];
+            packetLength[0] = (byte)(concatBytes.Length & 0xFF);
+            packetLength[1] = (byte)((concatBytes.Length >> 8) & 0xFF);
+
+            concatBytes = packetLength.Concat(concatBytes).ToArray();
+
+            return concatBytes;
+        }
+
+        public byte[] GenerateCalibDump(KeyValuePair<int, List<double[,]>> calibEntry)
+        {
+            byte[] rangeBytes = new byte[1];
+            int rangeValue = (int)calibEntry.Key;
+            rangeBytes[0] = (byte)(rangeValue & 0xFF);
+
+            (mAlignmentMatrix, mSensitivityMatrix, mVectorOffset) = (calibEntry.Value[0], calibEntry.Value[1], calibEntry.Value[2]);
+            byte[] timestamp = UtilShimmer.ConvertMilliSecondsToShimmerRtcDataBytesLSB(0); //usually used getCalibTimeMs()
+            byte[] bufferCalibParam = GenerateCalParamByteArray();
+            byte[] calibLength = new byte[] { (byte)bufferCalibParam.Length };
+
+            byte[] returnArray = rangeBytes.Concat(calibLength).ToArray();
+            returnArray = returnArray.Concat(timestamp).ToArray();
+            returnArray = returnArray.Concat(bufferCalibParam).ToArray();
+
+            return returnArray;
+        }
+
+        public byte[] GenerateCalParamByteArray()
+        {
+            return GenerateCalParamByteArray(mVectorOffset, mSensitivityMatrix, mAlignmentMatrix);
+        }
+
+        public byte[] GenerateCalParamByteArray(double[,] offsetVector, double[,] sensitivityMatrix, double[,] alignmentMatrix)
+        {
+            // Scale the sensitivity if needed
+            double[,] sensitivityMatrixToUse = UtilShimmer.DeepCopyDoubleMatrix(sensitivityMatrix);
+            for (int i = 0; i <= 2; i++)
+            {
+                sensitivityMatrixToUse[i,i] = Math.Round(sensitivityMatrixToUse[i,i] * 1);
+            }
+
+            // Scale the alignment by 100
+            double[,] alignmentMatrixToUse = UtilShimmer.DeepCopyDoubleMatrix(alignmentMatrix);
+            for (int i = 0; i <= 2; i++)
+            {
+                alignmentMatrixToUse[i,0] = Math.Round(alignmentMatrixToUse[i,0] * 100);
+                alignmentMatrixToUse[i,1] = Math.Round(alignmentMatrixToUse[i,1] * 100);
+                alignmentMatrixToUse[i,2] = Math.Round(alignmentMatrixToUse[i,2] * 100);
+            }
+
+            // Generate the calibration bytes
+            byte[] bufferCalibParam = new byte[21];
+
+            // offsetVector -> buffer offset = 0
+            for (int i = 0; i < 3; i++)
+            {
+                bufferCalibParam[0 + (i * 2)] = (byte)((((int)offsetVector[i,0]) >> 8) & 0xFF);
+                bufferCalibParam[0 + (i * 2) + 1] = (byte)((((int)offsetVector[i,0]) >> 0) & 0xFF);
+            }
+
+            // sensitivityMatrix -> buffer offset = 6
+            for (int i = 0; i < 3; i++)
+            {
+                bufferCalibParam[6 + (i * 2)] = (byte)((((int)sensitivityMatrixToUse[i,i]) >> 8) & 0xFF);
+                bufferCalibParam[6 + (i * 2) + 1] = (byte)((((int)sensitivityMatrixToUse[i,i]) >> 0) & 0xFF);
+            }
+
+            // alignmentMatrix -> buffer offset = 12
+            for (int i = 0; i < 3; i++)
+            {
+                bufferCalibParam[12 + (i * 3)] = (byte)(((int)(alignmentMatrixToUse[i,0])) & 0xFF);
+                bufferCalibParam[12 + (i * 3) + 1] = (byte)(((int)(alignmentMatrixToUse[i,1])) & 0xFF);
+                bufferCalibParam[12 + (i * 3) + 2] = (byte)(((int)(alignmentMatrixToUse[i,2])) & 0xFF);
+            }
+
+            return bufferCalibParam;
+        }
+
+
+        protected byte[] GenerateVersionByteArrayNew()
+        {
+            byte[] byteArray = new byte[8];
+
+            int index = 0;
+            byteArray[index++] = (byte)(HardwareVersion & 0xFF);
+            byteArray[index++] = (byte)((HardwareVersion >> 8) & 0xFF);
+
+            byteArray[index++] = (byte)((int)FirmwareIdentifier & 0xFF);
+            byteArray[index++] = (byte)(((int)FirmwareIdentifier >> 8) & 0xFF);
+
+            byteArray[index++] = (byte)(FirmwareMajor & 0xFF);
+            byteArray[index++] = (byte)((FirmwareMajor >> 8) & 0xFF);
+
+            byteArray[index++] = (byte)(FirmwareMinor & 0xFF);
+            byteArray[index++] = (byte)(FirmwareMinor & 0xFF);
+
+            return byteArray;
+        }
+
+        public void CalibByteDumpParse(byte[] calibBytesAll)
+        {
+            mCalibBytesDescriptions = new Dictionary<int, string>();
+            mCalibBytes = calibBytesAll;
+
+            if (calibBytesAll.Length > 2)
+            {
+                mCalibBytesDescriptions[0] = "PacketLength_LSB";
+                mCalibBytesDescriptions[1] = "PacketLength_MSB";
+
+                var packetLength = calibBytesAll.Take(2).ToArray();
+                var svoBytes = calibBytesAll.Skip(2).Take(8).ToArray();
+
+                //no need this functionality for the time being, as the info parsed should only be relevent to this method and not to any class variables
+                var(hwVersion, fwIden, fwMajor, fwMinor, fwInternal) = parseVersionByteArray(svoBytes);
+
+                mCalibBytesDescriptions[2] = $"HwID_LSB (" + hwVersion + ")";
+                mCalibBytesDescriptions[3] = "HwID_MSB";
+                mCalibBytesDescriptions[4] = $"FwID_LSB (" + fwIden + ")";
+                mCalibBytesDescriptions[5] = "FwID_MSB";
+                mCalibBytesDescriptions[6] = "FWVerMjr_LSB";
+                mCalibBytesDescriptions[7] = "FWVerMjr_MSB";
+                mCalibBytesDescriptions[8] = "FWVerMinor";
+                mCalibBytesDescriptions[9] = "FWVerInternal";
+
+                int currentOffset = 10;
+                var remainingBytes = calibBytesAll.Skip(10).ToArray();
+
+                while (remainingBytes.Length > 12)
+                {
+                    var sensorIdBytes = remainingBytes.Take(2).ToArray();
+                    int sensorId = ((sensorIdBytes[1] << 8) | sensorIdBytes[0]) & 0xFFFF;
+
+                    //var sensorDetails = GetSensorDetails(sensorId);
+                    //var sensorName = sensorDetails?.mSensorDetailsRef?.mGuiFriendlyLabel ?? "";
+
+                    mCalibBytesDescriptions[currentOffset] = $"SensorID_LSB ({sensorId})";
+                    mCalibBytesDescriptions[currentOffset + 1] = "SensorID_MSB";
+
+                    mCalibBytesDescriptions[currentOffset + 2] = "SensorRange";
+                    int rangeValue = remainingBytes[2] & 0xFF;
+
+                    mCalibBytesDescriptions[currentOffset + 3] = "CalibByteLength";
+                    int calibLength = remainingBytes[3] & 0xFF;
+
+                    mCalibBytesDescriptions[currentOffset + 4] = "CalibTimeTicks_LSB";
+                    mCalibBytesDescriptions[currentOffset + 11] = "CalibTimeTicks_MSB";
+
+                    var calibTimeBytesTicks = remainingBytes.Skip(4).Take(8).ToArray();
+
+                    int endIndex = 12 + calibLength;
+                    if (remainingBytes.Length >= endIndex)
+                    {
+                        mCalibBytesDescriptions[currentOffset + 12] = "Calib_Start";
+                        mCalibBytesDescriptions[currentOffset + endIndex - 1] = "Calib_End";
+
+                        var calibBytes = remainingBytes.Skip(12).Take(calibLength).ToArray();
+
+                        if (sensorId == SensorLNAccel.SENSOR_ID && rangeValue == LNAccelRange)
+                        {
+                            SensorLNAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
+
+                            SensitivityMatrixAccel = SensorLNAccel.SensitivityMatrixAccel;
+                            AlignmentMatrixAccel = SensorLNAccel.AlignmentMatrixAccel;
+                            OffsetVectorAccel = SensorLNAccel.OffsetVectorAccel;
+                        }
+                        else if (sensorId == SensorGyro.SENSOR_ID && rangeValue == GyroRange)
+                        {
+                            SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
+
+                            SensitivityMatrixGyro = SensorGyro.SensitivityMatrixGyro;
+                            AlignmentMatrixGyro = SensorGyro.AlignmentMatrixGyro;
+                            OffsetVectorGyro = SensorGyro.OffsetVectorGyro;
+                        }
+                        else if (sensorId == SensorWRAccel.SENSOR_ID && rangeValue == AccelRange)
+                        {
+                            SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
+
+                            SensitivityMatrixAccel2 = SensorWRAccel.SensitivityMatrixAccel2;
+                            AlignmentMatrixAccel2 = SensorWRAccel.AlignmentMatrixAccel2;
+                            OffsetVectorAccel2 = SensorWRAccel.OffsetVectorAccel2;
+                        }
+                        else if (sensorId == SensorMag.SENSOR_ID && rangeValue == MagGain)
+                        {
+                            SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
+
+                            SensitivityMatrixMag = SensorMag.SensitivityMatrixMag;
+                            AlignmentMatrixMag = SensorMag.AlignmentMatrixMag;
+                            OffsetVectorMag = SensorMag.OffsetVectorMag;
+                        }
+                        else if (sensorId == SensorHighGAccel.SENSOR_ID)
+                        {
+                            SensorHighGAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
+
+                            SensitivityMatrixAltAccel = SensorHighGAccel.SensitivityMatrixAltAccel;
+                            AlignmentMatrixAltAccel = SensorHighGAccel.AlignmentMatrixAltAccel;
+                            OffsetVectorAltAccel = SensorHighGAccel.OffsetVectorAltAccel;
+                        }
+                        else if (sensorId == SensorWRMag.SENSOR_ID)
+                        {
+                            SensorWRMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(calibBytes);
+
+                            AlignmentMatrixMag2 = SensorWRMag.AlignmentMatrixMag2;
+                            OffsetVectorMag2 = SensorWRMag.OffsetVectorMag2;
+                            SensitivityMatrixMag2 = SensorWRMag.SensitivityMatrixMag2;
+                        }
+
+
+                        remainingBytes = remainingBytes.Skip(endIndex).ToArray();
+                        currentOffset += endIndex;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        
+        public (int,int,int,int,int) parseVersionByteArray(byte[] byteArray)
+        {
+            int hardwareVersion;
+            int firmwareIdentifier;
+            int firmwareMajor;
+            int firmwareMinor;
+            int firmwareInternal;
+
+            if ((byteArray.Length == 7) || (byteArray.Length == 8))
+            {
+
+                int index = 0;
+                if (byteArray.Length == 7)
+                {
+                    hardwareVersion = byteArray[index++] & 0xFF;
+                }
+                else // == 8
+                {
+                    hardwareVersion = (byteArray[index++] | (byteArray[index++] << 8)) & 0xFFFF;
+                }
+
+                firmwareIdentifier = ((byteArray[index++]) | (byteArray[index++] << 8)) & 0xFFFF;
+                firmwareMajor = ((byteArray[index++]) | (byteArray[index++] << 8)) & 0xFFFF;
+                firmwareMinor = byteArray[index++] & 0xFF;
+                firmwareInternal = byteArray[index++] & 0xFF;
+                return (hardwareVersion, firmwareIdentifier, firmwareMajor, firmwareMinor, firmwareInternal);
+            }
+            else
+            {
+                throw new Exception("Not enough bytes");
+            }
+        }
+        
+
+        public List<byte> GetCalibrationDump()
+        {
+            return calibDumpResponse;
         }
 
         protected byte[] SendGetMemoryCommand(byte cmd, byte val0, byte val1, byte val2)
@@ -1103,7 +1453,7 @@ namespace ShimmerAPI
 
 
         // btsd changes
-        private void waitTilTimeOut()
+        protected void waitTilTimeOut()
         {
             int timeout = 150;
             while (timeout > 0)
@@ -1986,7 +2336,10 @@ namespace ShimmerAPI
                                 buffer.Add((byte)ReadByte());
                             }
                             tempCalibDump = buffer.ToArray();
+                            Debug.WriteLine("CALIB_DUMP Received:\t" + UtilShimmer.BytesToHexString(tempCalibDump));
                             tempCalibDump = ProgrammerUtilities.RemoveLastBytes(tempCalibDump, (int)BluetoothCRCMode);
+                            Debug.WriteLine("CALIB_DUMP concat:\t" + UtilShimmer.BytesToHexString(tempCalibDump));
+
                             break;
                         }
                     case (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.TRIAL_CONFIG_RESPONSE:
