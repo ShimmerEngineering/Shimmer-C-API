@@ -4027,7 +4027,7 @@ namespace ShimmerAPI
                         bmpX80caldata = CalibratePressure180SensorData(UP, datatemp[1]);
                     }
 
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, UP);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iUP]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloPascal, bmpX80caldata[0] / 1000);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iUT]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Celcius, bmpX80caldata[1]);
