@@ -503,6 +503,8 @@ namespace ShimmerAPI
             GET_BMP180_PRES_RESOLUTION_COMMAND = 0x54,
             BMP180_CALIBRATION_COEFFICIENTS_RESPONSE = 0x58,
             GET_BMP180_CALIBRATION_COEFFICIENTS_COMMAND = 0x59,
+            BMP280_CALIBRATION_COEFFICIENTS_RESPONSE = 0x9F,
+            GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND = 0xA0,
             SET_INTERNAL_EXP_POWER_ENABLE_COMMAND = 0x5E,
             INTERNAL_EXP_POWER_ENABLE_RESPONSE = 0x5F,
             GET_INTERNAL_EXP_POWER_ENABLE_COMMAND = 0x60,
@@ -1639,7 +1641,7 @@ namespace ShimmerAPI
                                 }
                                 CalculateBMP180PressureCalibrationCoefficientsResponse(bufferbyte);
                                 break;
-                            case (byte)InstructionsResponse.Bmp280CalibrationCoefficientsResponse:
+                            case (byte)PacketTypeShimmer3.BMP280_CALIBRATION_COEFFICIENTS_RESPONSE:
                                 bufferbyte = new byte[24];
                                 for (int p = 0; p < 24; p++)
                                 {
@@ -6068,7 +6070,7 @@ namespace ShimmerAPI
                 }
                 else if (isShimmer3withUpdatedSensors())
                 {
-                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND }, 0, 1);
                     System.Threading.Thread.Sleep(800);
                 }
                 else
