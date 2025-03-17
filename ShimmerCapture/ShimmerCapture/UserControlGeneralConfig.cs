@@ -72,13 +72,13 @@ namespace ShimmerAPI
                     }
                     if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        checkBoxSensor6.Text = "Ext A9";
-                        checkBoxSensor7.Text = "Ext A11";
-                        checkBoxSensor8.Text = "Ext A12";
-                        checkBoxSensor9.Text = "Int A17";
-                        checkBoxSensor10.Text = "Int A10";
-                        checkBoxSensor11.Text = "Int A15";
-                        checkBoxSensor12.Text = "Int A16";
+                        checkBoxSensor6.Text = "Ext A0";
+                        checkBoxSensor7.Text = "Ext A1";
+                        checkBoxSensor8.Text = "Ext A2";
+                        checkBoxSensor9.Text = "Int A3";
+                        checkBoxSensor10.Text = "Int A0";
+                        checkBoxSensor11.Text = "Int A1";
+                        checkBoxSensor12.Text = "Int A2";
                     }
 
                     checkBoxSensor13.Text = "Pressure && Temperature";
@@ -221,10 +221,10 @@ namespace ShimmerAPI
                         ListofPPGADCChannels[3] = "Internal ADC A14";
                     } else
                     {
-                        ListofPPGADCChannels[0] = "Internal ADC A17";
-                        ListofPPGADCChannels[1] = "Internal ADC A10";
-                        ListofPPGADCChannels[2] = "Internal ADC A15";
-                        ListofPPGADCChannels[3] = "Internal ADC A16";
+                        ListofPPGADCChannels[0] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A3;
+                        ListofPPGADCChannels[1] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A0;
+                        ListofPPGADCChannels[2] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A1;
+                        ListofPPGADCChannels[3] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A2;
                     }
                     comboBoxPPGAdcChannel.Items.Clear();
                     comboBoxPPGAdcChannel.Items.AddRange(ListofPPGADCChannels);
@@ -1099,7 +1099,7 @@ namespace ShimmerAPI
                 if (((enabledSensors & 0xFFFFFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A12) > 0)
                 {
                     if (PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12)
-                        || PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A10))
+                        || PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A0))
                     {
                         comboBoxPPGAdcChannel.SelectedIndex = 1;
                     }
@@ -1109,7 +1109,7 @@ namespace ShimmerAPI
                 if (((enabledSensors & 0xFFFFFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_INT_A13) > 0)
                 {
                     if (PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13)
-                         || PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A15))
+                         || PConfiguration.PControlForm.PPGSignalName.Equals(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A1))
                     {
                         comboBoxPPGAdcChannel.SelectedIndex = 2;
                     }
