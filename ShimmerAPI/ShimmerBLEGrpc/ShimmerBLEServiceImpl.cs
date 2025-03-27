@@ -19,13 +19,15 @@ namespace ShimmerBLEGrpc
         readonly string Verisense = "Verisense";
         readonly string Shimmer = "Shimmer";
         bool Debug = false;
-        ConcurrentDictionary<string, BluetoothDevice> BluetoohDeviceMap = new ConcurrentDictionary<string, BluetoothDevice>();
-        ConcurrentDictionary<string, GattService> ServiceMap = new ConcurrentDictionary<string, GattService>();
-        ConcurrentDictionary<string, GattCharacteristic> UartTXMap = new ConcurrentDictionary<string, GattCharacteristic>();
-        ConcurrentDictionary<string, GattCharacteristic> UartRXMap = new ConcurrentDictionary<string, GattCharacteristic>();
-        ConcurrentDictionary<string, ConcurrentQueue<byte[]>> QueueMap = new ConcurrentDictionary<string, ConcurrentQueue<byte[]>>();
-        ConcurrentDictionary<string, bool> StreamThreadMap = new ConcurrentDictionary<string, bool>();
-        ConcurrentDictionary<string, IServerStreamWriter<StateStatus>> ConnectStreamMap = new ConcurrentDictionary<string, IServerStreamWriter<StateStatus>>();
+        //ConcurrentDictionary<string, BluetoothDevice> BluetoohDeviceMap = new ConcurrentDictionary<string, BluetoothDevice>();
+        Dictionary<string, BluetoothDevice> BluetoohDeviceMap = new Dictionary<string, BluetoothDevice>();
+
+        Dictionary<string, GattService> ServiceMap = new Dictionary<string, GattService>();
+        Dictionary<string, GattCharacteristic> UartTXMap = new Dictionary<string, GattCharacteristic>();
+        Dictionary<string, GattCharacteristic> UartRXMap = new Dictionary<string, GattCharacteristic>();
+        Dictionary<string, ConcurrentQueue<byte[]>> QueueMap = new Dictionary<string, ConcurrentQueue<byte[]>>();
+        Dictionary<string, bool> StreamThreadMap = new Dictionary<string, bool>();
+        Dictionary<string, IServerStreamWriter<StateStatus>> ConnectStreamMap = new Dictionary<string, IServerStreamWriter<StateStatus>>();
         private readonly ILogger<ShimmerBLEServiceImpl> _logger;
         public ShimmerBLEServiceImpl()
         {
@@ -63,9 +65,9 @@ namespace ShimmerBLEGrpc
             BluetoothDevice bluetoothDevice = await BluetoothDevice.FromIdAsync(request.Name);
             if (BluetoohDeviceMap.ContainsKey(macAddress))
             {
-                BluetoohDeviceMap.TryRemove(macAddress, out var s);
+                BluetoohDeviceMap.Remove(macAddress);
             }
-            BluetoohDeviceMap.TryAdd(request.Name, bluetoothDevice);
+            BluetoohDeviceMap.Add(request.Name, bluetoothDevice);
             await bluetoothDevice.Gatt.ConnectAsync();
             Console.WriteLine("current mtu value " + bluetoothDevice.Gatt.Mtu);
             if (bluetoothDevice.Gatt.Mtu == 23)
@@ -131,19 +133,19 @@ namespace ShimmerBLEGrpc
             }
             if (ServiceMap.ContainsKey(macAddress))
             {
-                ServiceMap.TryRemove(macAddress, out var s);
+                ServiceMap.Remove(macAddress);
             }
             if (UartTXMap.ContainsKey(macAddress))
             {
-                UartTXMap.TryRemove(macAddress, out var s);
+                UartTXMap.Remove(macAddress);
             }
             if (UartRXMap.ContainsKey(macAddress))
             {
-                UartRXMap.TryRemove(macAddress, out var s);
+                UartRXMap.Remove(macAddress);
             }
-            ServiceMap.TryAdd(macAddress, ServiceTXRX);
-            UartTXMap.TryAdd(macAddress, UartTX);
-            UartRXMap.TryAdd(macAddress, UartRX);
+            ServiceMap.Add(macAddress, ServiceTXRX);
+            UartTXMap.Add(macAddress, UartTX);
+            UartRXMap.Add(macAddress, UartRX);
             if (QueueMap.ContainsKey(macAddress))
             {
                 QueueMap[macAddress] = new ConcurrentQueue<byte[]>();
@@ -156,7 +158,7 @@ namespace ShimmerBLEGrpc
                 State = BluetoothState.Connected
             };
             bluetoothDevice.GattServerDisconnected += BluetoothDevice_GattServerDisconnected;
-            ConnectStreamMap.TryAdd(macAddress, stateStatusStream);
+            ConnectStreamMap.Add(macAddress, stateStatusStream);
             await stateStatusStream.WriteAsync(data);
             while (BluetoohDeviceMap.ContainsKey(macAddress))
             {
@@ -174,12 +176,12 @@ namespace ShimmerBLEGrpc
                 State = BluetoothState.Disconnected
             };
             ConnectStreamMap[bluetoothDevice.Id.ToUpper()].WriteAsync(data);
-            ConnectStreamMap.TryRemove(bluetoothDevice.Id.ToUpper(), out var y);
+            ConnectStreamMap.Remove(bluetoothDevice.Id.ToUpper());
             UartRXMap[bluetoothDevice.Id.ToUpper()].CharacteristicValueChanged -= Gc_ValueChanged;
             bluetoothDevice.GattServerDisconnected -= BluetoothDevice_GattServerDisconnected;
             BluetoohDeviceMap[bluetoothDevice.Id.ToUpper()].Gatt.Disconnect();
-            BluetoohDeviceMap.TryRemove(bluetoothDevice.Id.ToUpper(), out var s);
-            QueueMap.TryRemove(bluetoothDevice.Id.ToUpper(), out var t);
+            BluetoohDeviceMap.Remove(bluetoothDevice.Id.ToUpper());
+            QueueMap.Remove(bluetoothDevice.Id.ToUpper());
 
 
         }
@@ -199,7 +201,7 @@ namespace ShimmerBLEGrpc
             {
                 ConcurrentQueue<byte[]> cq = new ConcurrentQueue<byte[]>();
                 cq.Enqueue(args.Value);
-                QueueMap.TryAdd(gc.Service.Device.Id.ToUpper(), cq);
+                QueueMap.Add(gc.Service.Device.Id.ToUpper(), cq);
             }
             
         }
@@ -208,8 +210,8 @@ namespace ShimmerBLEGrpc
         {
             UartRXMap[request.Name.ToUpper()].CharacteristicValueChanged -= Gc_ValueChanged;
             BluetoohDeviceMap[request.Name.ToUpper()].Gatt.Disconnect();
-            BluetoohDeviceMap.TryRemove(request.Name.ToUpper(), out var s);
-            QueueMap.TryRemove(request.Name.ToUpper(), out var t);
+            BluetoohDeviceMap.Remove(request.Name.ToUpper());
+            QueueMap.Remove(request.Name.ToUpper());
             return new Reply
             {
                 Message = "Disconnect " + request.Name
@@ -220,7 +222,7 @@ namespace ShimmerBLEGrpc
                 State = BluetoothState.Disconnected
             };
             await ConnectStreamMap[request.Name.ToUpper()].WriteAsync(data);
-            ConnectStreamMap.TryRemove(request.Name.ToUpper(), out var y);
+            ConnectStreamMap.Remove(request.Name.ToUpper());
         }
 
         Dictionary<string, long> hashMap = new Dictionary<string, long>();

@@ -5,15 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace ShimmerBLEGrpc
 {
-    class Program
-    {
+    class Program {
+
+        static ManualResetEvent _quitEvent = new ManualResetEvent(false);
+
         static void Main(string[] args)
         {
 
-            int Port = 50052; // Port on which the server will listen
+            //int Port = 50052; // Port on which the server will listen
+            int Port = 50000;
             if (args.Length>0)
             {
                 Port = int.Parse(args[0]);
@@ -26,6 +30,13 @@ namespace ShimmerBLEGrpc
             server.Start();
             Console.WriteLine($"Server listening at port {Port}. Press any key to terminate");
             Console.Read();
+
+            Console.CancelKeyPress += (sender, eArgs) => {
+                _quitEvent.Set();
+                eArgs.Cancel = true;
+            };
+
+            _quitEvent.WaitOne();
         }
     }
 }
