@@ -1612,24 +1612,26 @@ namespace ShimmerAPI
                                     }
                                     RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.WR_ACCEL_CALIBRATION_RESPONSE);
 
-                                    //Retrieve Alt Mag Cal Paramters if Shimmer 3
-                                    bufferbyte = new byte[21];
-                                    for (int p = 0; p < 21; p++)
+                                    if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                                     {
-                                        bufferbyte[p] = (byte)ReadByte();
+                                        //Retrieve Alt Mag Cal Paramters if Shimmer 3
+                                        bufferbyte = new byte[21];
+                                        for (int p = 0; p < 21; p++)
+                                        {
+                                            bufferbyte[p] = (byte)ReadByte();
 
+                                        }
+                                        RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
+
+                                        //Retrieve High G Accel Cal Paramters if Shimmer 3
+                                        bufferbyte = new byte[21];
+                                        for (int p = 0; p < 21; p++)
+                                        {
+                                            bufferbyte[p] = (byte)ReadByte();
+
+                                        }
+                                        RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
                                     }
-                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
-
-                                    //Retrieve High G Accel Cal Paramters if Shimmer 3
-                                    bufferbyte = new byte[21];
-                                    for (int p = 0; p < 21; p++)
-                                    {
-                                        bufferbyte[p] = (byte)ReadByte();
-
-                                    }
-                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
-
                                 }
 
                                 break;
