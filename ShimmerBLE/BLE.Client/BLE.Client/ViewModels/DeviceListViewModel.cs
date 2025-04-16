@@ -2798,18 +2798,20 @@ namespace BLE.Client.ViewModels
         }
         protected async void ReadStatus()
         {
-            VerisenseBLEDevice.ExecuteRequest(RequestType.ReadStatus);
+            var result = await VerisenseBLEDevice.ExecuteRequest(RequestType.ReadStatus);
+            Debug.WriteLine(BitConverter.ToString(((StatusPayload)result).GetPayloadWithHeader()).Replace("-", ",0x"));
         }
 
         protected async void ReadProdConf()
         {
-            VerisenseBLEDevice.ExecuteRequest(RequestType.ReadProductionConfig);
+            var result = await VerisenseBLEDevice.ExecuteRequest(RequestType.ReadProductionConfig);
+            Debug.WriteLine(BitConverter.ToString(((ProdConfigPayload)result).GetPayloadWithHeader()).Replace("-", ",0x"));
         }
 
         protected async void ReadOpConf()
         {
             var result = await VerisenseBLEDevice.ExecuteRequest(RequestType.ReadOperationalConfig);
-            Debug.WriteLine(BitConverter.ToString(((OpConfigPayload)result).ConfigurationBytes).Replace("-", ",0x"));
+            Debug.WriteLine(BitConverter.ToString(((OpConfigPayload)result).GetPayloadWithHeader()).Replace("-", ",0x"));
         }
 
         protected Boolean TryingToReconnect= false;
