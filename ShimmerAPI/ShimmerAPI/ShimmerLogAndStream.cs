@@ -192,10 +192,6 @@ namespace ShimmerAPI
             GsrRaw = 0x1C
         }
 
-        private double[,] mAlignmentMatrix;
-        private double[,] mSensitivityMatrix;
-        private double[,] mVectorOffset;
-
         public Dictionary<int, Dictionary<int, List<double[,]>>> mapOfSensorCalibration = new Dictionary<int, Dictionary<int, List<double[,]>>>();
 
         // btsd changes
@@ -1055,114 +1051,6 @@ namespace ShimmerAPI
 
             return mapOfSensorCalibration;
         }
-
-        public byte[] CalibByteDumpGenerate()
-        {
-            byte[] calibBytesAll = new byte[] { };
-            Dictionary<int, Dictionary<int, List<double[,]>>> mapOfAllCalib = GetMapOfSensorCalibrationAll();
-
-            foreach (var sensorEntry in mapOfAllCalib)
-            {
-                int sensorId = sensorEntry.Key;
-                var calibMapPerSensor = sensorEntry.Value;
-
-                foreach (var calibEntry in calibMapPerSensor)
-                {
-                    byte[] calibBytesPerSensor = GenerateCalibDump(calibEntry);
-
-                    if (calibBytesPerSensor != null)
-                    {
-                        byte[] calibSensorKeyBytes = new byte[2];
-                        calibSensorKeyBytes[0] = (byte)((sensorId >> 0) & 0xFF);
-                        calibSensorKeyBytes[1] = (byte)((sensorId >> 8) & 0xFF);
-
-                        calibBytesPerSensor = calibSensorKeyBytes.Concat(calibBytesPerSensor).ToArray();
-                        calibBytesAll = calibBytesAll.Concat(calibBytesPerSensor).ToArray();
-                    }
-                }
-            }
-
-            byte[] svoBytes = GenerateVersionByteArrayNew();
-            byte[] concatBytes = svoBytes.Concat(calibBytesAll).ToArray();
-
-            byte[] packetLength = new byte[2];
-            packetLength[0] = (byte)(concatBytes.Length & 0xFF);
-            packetLength[1] = (byte)((concatBytes.Length >> 8) & 0xFF);
-
-            concatBytes = packetLength.Concat(concatBytes).ToArray();
-
-            return concatBytes;
-        }
-
-        public byte[] GenerateCalibDump(KeyValuePair<int, List<double[,]>> calibEntry)
-        {
-            byte[] rangeBytes = new byte[1];
-            int rangeValue = (int)calibEntry.Key;
-            rangeBytes[0] = (byte)(rangeValue & 0xFF);
-
-            (mAlignmentMatrix, mSensitivityMatrix, mVectorOffset) = (calibEntry.Value[0], calibEntry.Value[1], calibEntry.Value[2]);
-            byte[] timestamp = UtilShimmer.ConvertMilliSecondsToShimmerRtcDataBytesLSB(0); //usually used getCalibTimeMs()
-            byte[] bufferCalibParam = GenerateCalParamByteArray();
-            byte[] calibLength = new byte[] { (byte)bufferCalibParam.Length };
-
-            byte[] returnArray = rangeBytes.Concat(calibLength).ToArray();
-            returnArray = returnArray.Concat(timestamp).ToArray();
-            returnArray = returnArray.Concat(bufferCalibParam).ToArray();
-
-            return returnArray;
-        }
-
-        public byte[] GenerateCalParamByteArray()
-        {
-            return GenerateCalParamByteArray(mVectorOffset, mSensitivityMatrix, mAlignmentMatrix);
-        }
-
-        public byte[] GenerateCalParamByteArray(double[,] offsetVector, double[,] sensitivityMatrix, double[,] alignmentMatrix)
-        {
-            // Scale the sensitivity if needed
-            double[,] sensitivityMatrixToUse = UtilShimmer.DeepCopyDoubleMatrix(sensitivityMatrix);
-            for (int i = 0; i <= 2; i++)
-            {
-                sensitivityMatrixToUse[i,i] = Math.Round(sensitivityMatrixToUse[i,i] * 1);
-            }
-
-            // Scale the alignment by 100
-            double[,] alignmentMatrixToUse = UtilShimmer.DeepCopyDoubleMatrix(alignmentMatrix);
-            for (int i = 0; i <= 2; i++)
-            {
-                alignmentMatrixToUse[i,0] = Math.Round(alignmentMatrixToUse[i,0] * 100);
-                alignmentMatrixToUse[i,1] = Math.Round(alignmentMatrixToUse[i,1] * 100);
-                alignmentMatrixToUse[i,2] = Math.Round(alignmentMatrixToUse[i,2] * 100);
-            }
-
-            // Generate the calibration bytes
-            byte[] bufferCalibParam = new byte[21];
-
-            // offsetVector -> buffer offset = 0
-            for (int i = 0; i < 3; i++)
-            {
-                bufferCalibParam[0 + (i * 2)] = (byte)((((int)offsetVector[i,0]) >> 8) & 0xFF);
-                bufferCalibParam[0 + (i * 2) + 1] = (byte)((((int)offsetVector[i,0]) >> 0) & 0xFF);
-            }
-
-            // sensitivityMatrix -> buffer offset = 6
-            for (int i = 0; i < 3; i++)
-            {
-                bufferCalibParam[6 + (i * 2)] = (byte)((((int)sensitivityMatrixToUse[i,i]) >> 8) & 0xFF);
-                bufferCalibParam[6 + (i * 2) + 1] = (byte)((((int)sensitivityMatrixToUse[i,i]) >> 0) & 0xFF);
-            }
-
-            // alignmentMatrix -> buffer offset = 12
-            for (int i = 0; i < 3; i++)
-            {
-                bufferCalibParam[12 + (i * 3)] = (byte)(((int)(alignmentMatrixToUse[i,0])) & 0xFF);
-                bufferCalibParam[12 + (i * 3) + 1] = (byte)(((int)(alignmentMatrixToUse[i,1])) & 0xFF);
-                bufferCalibParam[12 + (i * 3) + 2] = (byte)(((int)(alignmentMatrixToUse[i,2])) & 0xFF);
-            }
-
-            return bufferCalibParam;
-        }
-
 
         protected byte[] GenerateVersionByteArrayNew()
         {
