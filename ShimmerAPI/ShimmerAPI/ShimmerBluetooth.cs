@@ -130,7 +130,9 @@ namespace ShimmerAPI
         protected int MagGain;
         protected int LNAccelRange;
         protected int AccelSamplingRate;
-        protected int Mpu9150SamplingRate;
+        protected int GyroSamplingRate;
+        protected int AltAccelSamplingRate;
+        protected int AltMagSamplingRate;
         protected long ConfigSetupByte0; // for Shimmer2
         protected int GSRRange;
         protected int mTempIntValue;
@@ -328,13 +330,13 @@ namespace ShimmerAPI
 
         public enum SensorBitmapShimmer3R
         {
-            SENSOR_EXT_A9 = 0x02,
-            SENSOR_EXT_A11 = 0x01,
-            SENSOR_EXT_A12 = 0x0800,
-            SENSOR_INT_A17 = 0x0400,
-            SENSOR_INT_A10 = 0x0200,
-            SENSOR_INT_A15 = 0x0100,
-            SENSOR_INT_A16 = 0x800000,
+            SENSOR_EXT_A0 = 0x02,
+            SENSOR_EXT_A1 = 0x01,
+            SENSOR_EXT_A2 = 0x0800,
+            SENSOR_INT_A3 = 0x0400,
+            SENSOR_INT_A0 = 0x0200,
+            SENSOR_INT_A1 = 0x0100,
+            SENSOR_INT_A2 = 0x800000,
             SENSOR_BMP380_PRESSURE = 0x40000
         }
 
@@ -511,6 +513,8 @@ namespace ShimmerAPI
             GET_BMP180_PRES_RESOLUTION_COMMAND = 0x54,
             BMP180_CALIBRATION_COEFFICIENTS_RESPONSE = 0x58,
             GET_BMP180_CALIBRATION_COEFFICIENTS_COMMAND = 0x59,
+            BMP280_CALIBRATION_COEFFICIENTS_RESPONSE = 0x9F,
+            GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND = 0xA0,
             SET_INTERNAL_EXP_POWER_ENABLE_COMMAND = 0x5E,
             INTERNAL_EXP_POWER_ENABLE_RESPONSE = 0x5F,
             GET_INTERNAL_EXP_POWER_ENABLE_COMMAND = 0x60,
@@ -536,7 +540,8 @@ namespace ShimmerAPI
             ALT_ACCEL_RANGE_RESPONSE = 0x50,
             GET_ALT_ACCEL_RANGE_COMMAND = 0x51,
             PRESSURE_CALIBRATION_COEFFICIENTS_RESPONSE = 0XA6,
-            GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND = 0XA7
+            GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND = 0XA7,
+            SET_ALT_MAG_SAMPLING_RATE_COMMAND = 0XB2
         };
 
         public enum PacketTypeShimmer3SDBT : byte
@@ -612,6 +617,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER2 = { "± 0.7Ga", "± 1.0Ga", "± 1.5Ga", "± 2.0Ga", "± 3.2Ga", "± 3.8Ga", "± 4.5Ga" };
         public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
+        public static readonly String[] LIST_OF_WRMAG_RATE_SHIMMER3R = { "10Hz", "20Hz", "50Hz", "100Hz" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3R = { "125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
@@ -769,15 +775,14 @@ namespace ShimmerAPI
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3_LSM303AH = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3_LSM303AH = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
-        //public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { -1, 0, 0 }, { 0, 0, -1 }, { 0, -1, 0 } };
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 6842, 0, 0 }, { 0, 6842, 0 }, { 0, 0, 6842 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 3421, 0, 0 }, { 0, 3421, 0 }, { 0, 0, 3421 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 2281, 0, 0 }, { 0, 2281, 0 }, { 0, 0, 2281 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL = new double[3, 3] { { 1711, 0, 0 }, { 0, 1711, 0 }, { 0, 0, 1711 } };
 
-        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } }; 				//Default Values for Magnetometer Calibration
+        public static readonly double[,] ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 } };                //Default Values for Magnetometer Calibration
         public static readonly double[,] OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL = new double[3, 1] { { 0 }, { 0 }, { 0 } };
         public static readonly double[,] SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL = new double[3, 3] { { 667, 0, 0 }, { 0, 667, 0 }, { 0, 0, 667 } };
 
@@ -1655,7 +1660,7 @@ namespace ShimmerAPI
                                         bufferbyte[p] = (byte)ReadByte();
 
                                     }
-                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
+                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
 
                                     //Retrieve High G Accel Cal Paramters if Shimmer 3
                                     bufferbyte = new byte[21];
@@ -1664,7 +1669,8 @@ namespace ShimmerAPI
                                         bufferbyte[p] = (byte)ReadByte();
 
                                     }
-                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
+                                    RetrieveKinematicCalibrationParametersFromPacket(bufferbyte, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
+
                                 }
 
                                 break;
@@ -1676,7 +1682,7 @@ namespace ShimmerAPI
                                 }
                                 CalculateBMP180PressureCalibrationCoefficientsResponse(bufferbyte);
                                 break;
-                            case (byte)InstructionsResponse.Bmp280CalibrationCoefficientsResponse:
+                            case (byte)PacketTypeShimmer3.BMP280_CALIBRATION_COEFFICIENTS_RESPONSE:
                                 bufferbyte = new byte[24];
                                 for (int p = 0; p < 24; p++)
                                 {
@@ -2276,7 +2282,7 @@ namespace ShimmerAPI
                 GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03);
                 MagGain = (int)((ConfigSetupByte0 >> 21) & 0x07);
                 AccelSamplingRate = (int)((ConfigSetupByte0 >> 4) & 0xF);
-                Mpu9150SamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
+                GyroSamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
                 magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
                 GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
@@ -2297,10 +2303,13 @@ namespace ShimmerAPI
 
                 LNAccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03); //8+8+8+6
 
+                AltAccelSamplingRate = (int)((ConfigSetupByte0 >> 38) & 0x03); //8+8+8+8+6
+
+                AltMagSamplingRate = (int)((ConfigSetupByte0 >> 36) & 0x03); //8+8+8+8+4
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    if (magSamplingRate == 0) //3200 us the raw ADC value and not in HZ
+                    if (magSamplingRate == 0x08) 
                     {
                         LowPowerMagEnabled = true;
                     }
@@ -2309,15 +2318,14 @@ namespace ShimmerAPI
                     {
                         LowPowerAccelEnabled = true;
                     }
-                    /*
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    
+                    if (GyroSamplingRate == 0x01)
                     {
                         LowPowerGyroEnabled = true;
                     }
-                    */
+
                 }
-
-
+				
                 NumberofChannels = (int)packet[6 + 3];
                 BufferSize = (int)packet[7 + 3];
                 ListofSensorChannels.Clear();
@@ -2347,7 +2355,7 @@ namespace ShimmerAPI
                 GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03);
                 MagGain = (int)((ConfigSetupByte0 >> 21) & 0x07);
                 AccelSamplingRate = (int)((ConfigSetupByte0 >> 4) & 0xF);
-                Mpu9150SamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
+                GyroSamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
                 magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
                 GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
@@ -2366,31 +2374,11 @@ namespace ShimmerAPI
                         LowPowerAccelEnabled = true;
                     }
 
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
+                    if ((GyroSamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
                     {
                         LowPowerGyroEnabled = true;
                     }
                 }
-
-                if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
-                {
-                    if (magSamplingRate == 0) //3200 us the raw ADC value and not in HZ
-                    {
-                        LowPowerMagEnabled = true;
-                    }
-
-                    if ((AccelSamplingRate == 1))
-                    {
-                        LowPowerAccelEnabled = true;
-                    }
-                    /*
-                    if ((Mpu9150SamplingRate == 0xFF && ADCRawSamplingRateValue < 3200))
-                    {
-                        LowPowerGyroEnabled = true;
-                    }
-                    */
-                }
-
 
                 NumberofChannels = (int)packet[6];
                 BufferSize = (int)packet[7];
@@ -2610,6 +2598,7 @@ namespace ShimmerAPI
                 OffsetVectorAltAccel = offsetVector;
                 SensitivityMatrixAltAccel = sensitivityMatrix;
                 DefaultHighGAccelParams = false;
+                
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] == -1 || UtilCalibration.AllElementsAre(sensitivityMatrix, 0))
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
@@ -2708,7 +2697,7 @@ namespace ShimmerAPI
                 OffsetVectorMag = offsetVector;
                 SensitivityMatrixMag = sensitivityMatrix;
             }
-            else if (packetType == (byte)PacketTypeShimmer3.MAG_CALIBRATION_RESPONSE && sensitivityMatrix[0, 0] != -1 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+            else if (packetType == (byte)PacketTypeShimmer3.MAG_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
                 DefaultMagParams = false;
                 AlignmentMatrixMag = alignmentMatrix;
@@ -3218,10 +3207,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A9;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A0;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_EXT_A9);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_EXT_A0);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3242,10 +3231,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A11;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A1;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_EXT_A11);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_EXT_A1);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3266,10 +3255,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A12;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A2;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_EXT_A12);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_EXT_A2);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3290,10 +3279,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A17;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A3;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A17);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A3);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3315,10 +3304,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A10;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A0;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A10);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A0);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3339,10 +3328,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A15;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A1;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A15);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A1);
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER2R)
                     {
@@ -3371,10 +3360,10 @@ namespace ShimmerAPI
                     }
                     else if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A16;
+                        signalNameArray[i + 1] = Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A2;
                         signalDataTypeArray[i + 1] = "u12";
                         packetSize = packetSize + 2;
-                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A16);
+                        enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3R.SENSOR_INT_A2);
                     }
                 }
                 else if ((byte)signalid[i] == (byte)0x14)
@@ -3855,7 +3844,8 @@ namespace ShimmerAPI
                     double datatemp = newPacket[index];
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        datatemp = CalibrateShimmer3RAdcChannel(datatemp) * 1.988;
+                        //datatemp = CalibrateShimmer3RAdcChannel(datatemp) * 1.988;
+                        datatemp = (CalibrateU12AdcValue(datatemp, 0, 3, 1) * 1.988);
                     }
                     else
                     {
@@ -3896,11 +3886,11 @@ namespace ShimmerAPI
 
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A9);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A0);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A9, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A9, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A0, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A0, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -3918,11 +3908,11 @@ namespace ShimmerAPI
                    
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A11);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A1);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A11, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A11, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A1, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -3939,11 +3929,11 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A12);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A2);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A12, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.EXTERNAL_ADC_A12, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A2, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A2, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -3961,11 +3951,11 @@ namespace ShimmerAPI
                    
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A17);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A3);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A17, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A17, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A3, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A3, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -3982,11 +3972,11 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A10);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A0);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A10, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A10, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A0, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A0, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -4003,11 +3993,11 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A15);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A1);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A15, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A15, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A1, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A1, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -4025,11 +4015,11 @@ namespace ShimmerAPI
                    
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
-                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A16);
+                        int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A2);
                         double datatemp = newPacket[index];
                         datatemp = CalibrateShimmer3RAdcChannel(datatemp);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A16, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
-                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.INTERNAL_ADC_A16, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A2, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[index]);
+                        objectCluster.Add(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A2, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliVolts, datatemp);
 
                     }
                     else
@@ -4080,7 +4070,7 @@ namespace ShimmerAPI
                         bmpX80caldata = CalibratePressure180SensorData(UP, datatemp[1]);
                     }
 
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, UP);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iUP]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.PRESSURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.KiloPascal, bmpX80caldata[0] / 1000);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iUT]);
                     objectCluster.Add(Shimmer3Configuration.SignalNames.TEMPERATURE, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.Celcius, bmpX80caldata[1]);
@@ -4828,7 +4818,9 @@ namespace ShimmerAPI
         protected bool SensorConflictCheck(int enabledSensors)
         {
             bool pass = true;
-            if (HardwareVersion != (int)ShimmerVersion.SHIMMER3)
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER2
+                || HardwareVersion == (int)ShimmerVersion.SHIMMER2R
+                || HardwareVersion == (int)ShimmerVersion.SHIMMER1)
             {
                 if (((enabledSensors & 0xFF) & (int)SensorBitmapShimmer2.SENSOR_GYRO) > 0)
                 {
@@ -5448,14 +5440,19 @@ namespace ShimmerAPI
         {
             return Mpu9150AccelRange;
         }
-        public int GetMpu9150SamplingRate()
+        public int GetGyroSamplingRate()
         {
-            return Mpu9150SamplingRate;
+            return GyroSamplingRate;
         }
 
         public int GetAccelRange()
         {
             return AccelRange;
+        }
+
+        public int GetWRMagRate()
+        {
+            return AltMagSamplingRate;
         }
 
         public int GetLNAccelRange()
@@ -6114,7 +6111,7 @@ namespace ShimmerAPI
                 }
                 else if (isShimmer3withUpdatedSensors())
                 {
-                    WriteBytes(new byte[1] { (byte)InstructionsGet.GetBmp280CalibrationCoefficientsCommand }, 0, 1);
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3.GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND }, 0, 1);
                     System.Threading.Thread.Sleep(800);
                 }
                 else
@@ -6342,7 +6339,19 @@ namespace ShimmerAPI
                 throw new Exception("Not Supported for this Hardware Type");
             }
         }
-
+        public void WriteWRMagRate(int rate)
+        {
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                WriteBytes(new byte[2] { (byte)PacketTypeShimmer3RSDBT.SET_ALT_MAG_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
+                System.Threading.Thread.Sleep(250);
+                AltMagSamplingRate = rate;
+            }
+            else
+            {
+                throw new Exception("Not Supported for this Hardware Type");
+            }
+        }
         public void WriteBlinkLED(int value)
         {
             WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)value }, 0, 2);
@@ -6393,7 +6402,7 @@ namespace ShimmerAPI
         {
             if (HardwareVersion == (int)ShimmerVersion.SHIMMER3 || HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
             {
-                Mpu9150SamplingRate = rate;
+                GyroSamplingRate = rate;
                 mTempIntValue = rate;
                 WriteBytes(new byte[2] { (byte)PacketTypeShimmer3.SET_MPU9150_SAMPLING_RATE_COMMAND, (byte)rate }, 0, 2);
                 System.Threading.Thread.Sleep(200);
@@ -6562,30 +6571,42 @@ namespace ShimmerAPI
             {
                 if (!LowPowerMagEnabled)
                 {
-                    if (SamplingRate >= 100)
+                    if (SamplingRate > 560)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x01); //Low Power Mode (1000Hz)
                     }
-                    else if (SamplingRate >= 50)
+                    else if (SamplingRate > 300)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x11); //Medium (560Hz)
                     }
-                    else if (SamplingRate >= 20)
+                    else if (SamplingRate > 155)
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x21); //High (300Hz)
                     }
-                    else if (SamplingRate >= 10)
+                    else if (SamplingRate > 100) 
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x31); //Ultra High (155Hz)
+                    }
+                    else if (SamplingRate > 50) 
+                    {
+                        WriteMagSamplingRate(0x31); //Ultra High (155Hz)
+                    }
+                    else if (SamplingRate > 20)
+                    {
+                        WriteMagSamplingRate(0x3E); //Ultra High (80Hz)
+                    }
+                    else if (SamplingRate > 10)
+                    {
+                        WriteMagSamplingRate(0x3A); //Ultra High (20Hz)
                     }
                     else
                     {
-                        WriteMagSamplingRate(1);
+                        WriteMagSamplingRate(0x38); //Ultra High (10Hz)
                     }
                 }
                 else //Low power mag for shimmer3R enabled
                 {
-                    WriteMagSamplingRate(0x0);
+                    WriteMagSamplingRate(0x08);
                 }
             }
             else //Shimmer2r
@@ -6656,7 +6677,7 @@ namespace ShimmerAPI
 
 
         /// <summary>
-        /// This sets the Gyroscope on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the Gyroscope is reduced to 31.25Hz
+        /// This sets the Gyroscope on the Shimmer3 to low power mode, where in low power mode the internal sampling rate of the Gyroscope is reduced to 31.25Hz. Note for the 3R both the Gyro and LN Accel is set to low power mode. For the 3R low power mode results in a sampling rate of 1.875Hz
         /// </summary>
         /// <param name="enable">Set to true to enable</param>
         public void SetLowPowerGyro(bool enable)
@@ -7874,13 +7895,24 @@ namespace ShimmerAPI
         public class SignalNames
         {
             //3R
-            public static readonly String EXTERNAL_ADC_A9 = "External ADC A9";
+            /*public static readonly String EXTERNAL_ADC_A9 = "External ADC A9";
             public static readonly String EXTERNAL_ADC_A11 = "External ADC A11";
             public static readonly String EXTERNAL_ADC_A12 = "External ADC A12";
             public static readonly String INTERNAL_ADC_A17 = "Internal ADC A17";
             public static readonly String INTERNAL_ADC_A10 = "Internal ADC A10";
             public static readonly String INTERNAL_ADC_A15 = "Internal ADC A15";
             public static readonly String INTERNAL_ADC_A16 = "Internal ADC A16";
+            */
+            public static readonly String GEN_EXT_ADC_A0 = "External ADC A0";
+            public static readonly String GEN_EXT_ADC_A1 = "External ADC A1";
+            public static readonly String GEN_EXT_ADC_A2 = "External ADC A2";
+
+            public static readonly String GEN_INT_ADC_A0 = "Internal ADC A0";
+            public static readonly String GEN_INT_ADC_A1 = "Internal ADC A1";
+            public static readonly String GEN_INT_ADC_A2 = "Internal ADC A2";
+            public static readonly String GEN_INT_ADC_A3 = "Internal ADC A3";
+            public static readonly String GEN_INT_ADC_A4 = "Internal ADC A4";
+
             //3R end
         }
     }
