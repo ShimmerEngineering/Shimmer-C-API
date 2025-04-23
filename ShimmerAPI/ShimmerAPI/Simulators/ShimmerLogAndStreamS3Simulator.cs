@@ -188,7 +188,7 @@ namespace ShimmerAPI.Simulators
                     mBuffer.Add((byte)0x9B);
                 }
             }
-            else if (buffer[0] == (byte)PacketTypeShimmer3RSDBT.GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND)
+            else if (buffer[0] == (byte)PacketTypeShimmer3.GET_BMP280_CALIBRATION_COEFFICIENTS_COMMAND)
             {
                 isGetPressureCalibrationCoefficientsCommand = true;
                 mBuffer.Add((byte)0xff);
