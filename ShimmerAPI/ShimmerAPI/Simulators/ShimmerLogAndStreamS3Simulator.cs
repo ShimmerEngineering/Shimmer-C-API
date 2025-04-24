@@ -200,6 +200,7 @@ namespace ShimmerAPI.Simulators
                 }
                 mBuffer.Add((byte)0xDF);
             }
+            /*
             else if (buffer[0] == (byte)InstructionsGet.Bmp390CalibrationCoefficientsResponse)
             {
                 isGetPressureCalibrationCoefficientsCommand = true;
@@ -212,6 +213,7 @@ namespace ShimmerAPI.Simulators
                 }
                 mBuffer.Add((byte)0xDF);
             }
+            */
             else if (buffer[0] == (byte)PacketTypeShimmer2.GET_BLINK_LED)
             {
                 mBuffer.Add((byte)0xff);
