@@ -704,7 +704,7 @@ namespace ShimmerAPI
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_500DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 57, 0, 0 }, { 0, 57, 0 }, { 0, 0, 57 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_1000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 29, 0, 0 }, { 0, 29, 0 }, { 0, 0, 29 } }; 		//Default Values for Gyroscope Calibration
         public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_2000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 14, 0, 0 }, { 0, 14, 0 }, { 0, 0, 14 } };      //Default Values for Gyroscope Calibration
-        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
+        public static readonly double[,] SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV = new double[3, 3] { { 7, 0, 0 }, { 0, 7, 0 }, { 0, 0, 7 } };      //Default Values for Gyroscope Calibration
         public static readonly double[,] OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV = new double[3, 1] { { 0 }, { 0 }, { 0 } };						//Default Values for Gyroscope Calibration
 
         // Shimmer3r LN Accel
@@ -2643,7 +2643,7 @@ namespace ShimmerAPI
                 }
                 else if (GyroRange == 5)
                 {
-                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_40000DPS_SHIMMER3R_LSM6DSV;
+                    SensitivityMatrixGyro = SENSITIVITIY_MATRIX_GYRO_4000DPS_SHIMMER3R_LSM6DSV;
                 }
                 AlignmentMatrixGyro = ALIGNMENT_MATRIX_GYRO_SHIMMER3R_LSM6DSV;
                 OffsetVectorGyro = OFFSET_VECTOR_GYRO_SHIMMER3R_LSM6DSV;

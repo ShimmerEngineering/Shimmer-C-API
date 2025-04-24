@@ -28,7 +28,8 @@ namespace ShimmerAPI
             SHIMMER2 = 1,
             SHIMMER2R = 2,
             SHIMMER3 = 3,
-            SHIMMER3R = 10
+            SHIMMER3R = 10,
+            SHIMMER4SDK = 58
         }
         protected double CalibrateTimeStamp(double timeStamp)
         {
