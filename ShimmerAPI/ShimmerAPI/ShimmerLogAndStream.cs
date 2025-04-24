@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -956,41 +955,30 @@ namespace ShimmerAPI
                 {
                     count = 128;
                 }
-
-                byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, (byte)count, address[0], address[1]);
+                byteResult = SendGetMemoryCommand((byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, (byte)count, address[1], address[0]);
                 if (byteResult != null)
                 {
                     calibDumpResponse.AddRange(byteResult);
                 }
             }
-
-            /*
-            WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, 0x80, 0x00, 0x00 }, 0, 4);
-
-            Thread.Sleep(500);
-           
-
-            
-            CalibDump = tempCalibDump;
-            var length = ((int)(CalibDump[0]) + ((int)(CalibDump[1]) << 8)) + 2;
-            System.Console.WriteLine("Calib Dump Length: " + length);
-            while (CalibDump.Length != length)
+            // Build the hex string
+            StringBuilder sb = new StringBuilder();
+            sb.Append("[");
+            for (int i = 0; i < calibDumpResponse.Count; i++)
             {
-                byte[] address = BitConverter.GetBytes(CalibDump.Length);
-                var count = length - CalibDump.Length;
-                if (count >= 128)
-                {
-                    count = 128;
-                }
-                WriteBytes(new byte[4] { (byte)ShimmerBluetooth.PacketTypeShimmer3SDBT.GET_CALIB_DUMP_COMMAND, (byte)count, address[0], address[1] }, 0, 4);
-                Thread.Sleep(500);
-                //byteresult = await sendGetMemoryCommand(cmd: PacketTypeShimmer.getCalibDumpCommand, val0: UInt8(count), val1: address[0], val2: address[1])
-                //calibdumpresponse.append(contentsOf: byteresult!)
-                CalibDump = ProgrammerUtilities.AppendByteArrays(CalibDump, tempCalibDump);
-                System.Console.WriteLine("Calib Dump Length: " + length + " " + tempCalibDump.Length + " " + CalibDump.Length);
+                sb.AppendFormat("0x{0:X2}", calibDumpResponse[i]);
+                if (i < calibDumpResponse.Count - 1)
+                    sb.Append(" ");
             }
-            System.Console.WriteLine("Calib Dump: " + ProgrammerUtilities.ByteArrayToHexString(CalibDump));
-            */
+            sb.Append("]");
+
+            // Print result
+            Console.WriteLine(sb.ToString());
+            CalibByteDumpParse(calibDumpResponse.ToArray());
+        }
+
+        protected void CalibByteDumpParse(byte[] calibBytesAll)
+        {
         }
 
         protected byte[] SendGetMemoryCommand(byte cmd, byte val0, byte val1, byte val2)
