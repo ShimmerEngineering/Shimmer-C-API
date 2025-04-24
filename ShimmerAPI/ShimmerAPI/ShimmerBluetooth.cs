@@ -75,6 +75,7 @@ using System.ComponentModel;
 using static com.shimmerresearch.radioprotocol.LiteProtocolInstructionSet.Types;
 using ShimmerAPI.Utilities;
 using static ShimmerAPI.ShimmerBluetooth;
+using ShimmerAPI.Sensors;
 
 namespace ShimmerAPI
 {
@@ -257,6 +258,13 @@ namespace ShimmerAPI
 
         protected long ShimmerRealWorldClock = 0;
         protected List<byte> UnalignedBytesReceived = new List<Byte>();
+
+        protected LNAccel SensorLNAccel;
+        protected WRAccel SensorWRAccel;
+        protected HighGAccel SensorHighGAccel;
+        protected GyroSensor SensorGyro;
+        protected MagSensor SensorMag;
+        protected WRMag SensorWRMag;
 
         public enum BTCRCMode
         {
@@ -886,6 +894,16 @@ namespace ShimmerAPI
             SetupDevice = true;
         }
 
+        protected void InitializeSensors()
+        {
+            SensorLNAccel = new LNAccel(HardwareVersion);
+            SensorGyro = new GyroSensor(HardwareVersion);
+            SensorHighGAccel = new HighGAccel(HardwareVersion);
+            SensorWRAccel = new WRAccel(HardwareVersion);
+            SensorMag = new MagSensor(HardwareVersion);
+            SensorWRMag = new WRMag(HardwareVersion);
+        }
+
         public void StartConnectThread()
         {
 
@@ -960,7 +978,7 @@ namespace ShimmerAPI
                         System.Threading.Thread.Sleep(400);
 
                         ReadBlinkLED();
-
+                        InitializeSensors();
                         if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2R || HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER2)
                         {
                             InitializeShimmer2();
