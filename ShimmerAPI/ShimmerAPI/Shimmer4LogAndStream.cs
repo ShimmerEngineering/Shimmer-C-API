@@ -9,7 +9,10 @@ namespace ShimmerAPI
     [Obsolete("This class is unfinished and should not be used.")]
     public abstract class Shimmer4LogAndStream : ShimmerLogAndStream
     {
-        LNAccel LowNoiseAccel = new LNAccel();
+        LNAccel LowNoiseAccel = new LNAccel((int)ShimmerBluetooth.ShimmerVersion.SHIMMER4SDK);
+        GyroSensor Gyro = new GyroSensor((int)ShimmerBluetooth.ShimmerVersion.SHIMMER4SDK);
+        WRAccel WideRangeAccel = new WRAccel((int)ShimmerBluetooth.ShimmerVersion.SHIMMER4SDK);
+        MagSensor Mag = new MagSensor((int)ShimmerBluetooth.ShimmerVersion.SHIMMER4SDK);
         public Shimmer4LogAndStream(String devID) : base(devID)
         {
 
@@ -27,6 +30,9 @@ namespace ShimmerAPI
                 var sensorcalibrationdump = ProgrammerUtilities.CopyAndRemoveBytes(ref calibrationBytes, sensorcalibrationdumplength);
                 System.Console.WriteLine("Sensor Calibration: " + ProgrammerUtilities.ByteArrayToHexString(sensorcalibrationdump));
                 LowNoiseAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                Gyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                WideRangeAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                Mag.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
 
             }
             //var infoBytes = System.Array.Copy();
