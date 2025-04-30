@@ -21,7 +21,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
         {
             //"00000000-0000-0000-0000-e1ec063f5c80",
             //"00000000-0000-0000-0000-daa56d898b02",
-               "00000000-0000-0000-0000-daa619f04ad7",
+               "00000000-0000-0000-0000-ec2ee3ebb799",
                 //"00000000-0000-0000-0000-fbe2054c2e04"
         };
         static void Main(string[] args)
@@ -31,7 +31,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static void Run()
         {
-            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync");
+            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config");
             do
             {
                 while (!Console.KeyAvailable)
@@ -52,6 +52,12 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                             break;
                         case ConsoleKey.B:
                             StartSyncingDevices();
+                            break;
+                        case ConsoleKey.R:
+                            foreach (VerisenseBLEDevice device in devices.Values)
+                            {
+                                ReadOpConfig(device);
+                            }
                             break;
                         default:
                             break;
@@ -103,6 +109,19 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             }
         }
 
+        static async void ReadOpConfig(VerisenseBLEDevice device)
+        {
+            var opConfig = await device.ExecuteRequest(RequestType.ReadOperationalConfig);
+            if (opConfig != null)
+            {
+                Console.WriteLine("Operational Config: " + opConfig.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Failed to read operational config");
+            }
+        }
+
         static async void ConfigureDevices(VerisenseBLEDevice device)
         {
             var clone = new VerisenseBLEDevice(device);
@@ -120,7 +139,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             await device.WriteAndReadOperationalConfiguration(opconfigbytes);
 
             Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
-            Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync");
+            Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config\"");
             Console.WriteLine("---------------------------------------------------------------");
         }
         static async void StartSyncingDevices()
