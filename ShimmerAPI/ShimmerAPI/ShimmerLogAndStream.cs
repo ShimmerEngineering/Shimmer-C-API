@@ -979,6 +979,25 @@ namespace ShimmerAPI
 
         protected void CalibByteDumpParse(byte[] calibBytesAll)
         {
+            var length = (int)calibBytesAll[0] + ((int)calibBytesAll[1] << 8);
+            var calibrationBytes = new byte[length + 2];
+            Array.Copy(calibBytesAll, 0, calibrationBytes, 0, calibrationBytes.Length);
+            var infoBytes = ProgrammerUtilities.CopyAndRemoveBytes(ref calibrationBytes, 10);
+            while (calibrationBytes.Length > 10)
+            {
+                var calibrationlength = (int)(calibrationBytes[3]);
+                var sensorcalibrationdumplength = calibrationlength + 12; //4 + 8TS
+                var sensorcalibrationdump = ProgrammerUtilities.CopyAndRemoveBytes(ref calibrationBytes, sensorcalibrationdumplength);
+                System.Console.WriteLine("Sensor Calibration: " + ProgrammerUtilities.ByteArrayToHexString(sensorcalibrationdump));
+                SensorLNAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                SensorGyro.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                SensorWRAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                SensorMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                SensorHighGAccel.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+                SensorWRMag.RetrieveKinematicCalibrationParametersFromCalibrationDump(sensorcalibrationdump);
+
+            }
+            //var infoBytes = System.Array.Copy();
         }
 
         protected byte[] SendGetMemoryCommand(byte cmd, byte val0, byte val1, byte val2)
