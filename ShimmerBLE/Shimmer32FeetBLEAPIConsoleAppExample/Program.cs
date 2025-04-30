@@ -112,9 +112,10 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
         static async void ReadOpConfig(VerisenseBLEDevice device)
         {
             var opConfig = await device.ExecuteRequest(RequestType.ReadOperationalConfig);
+            
             if (opConfig != null)
             {
-                Console.WriteLine("Operational Config: " + opConfig.ToString());
+                Console.WriteLine("Operational Config: " + BitConverter.ToString(((OpConfigPayload)opConfig).GetPayloadWithHeader()).Replace("-", ",0x"));
             }
             else
             {
