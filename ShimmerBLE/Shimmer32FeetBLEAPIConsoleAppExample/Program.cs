@@ -31,7 +31,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static void Run()
         {
-            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config");
+            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
             do
             {
                 while (!Console.KeyAvailable)
@@ -54,10 +54,10 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                             StartSyncingDevices();
                             break;
                         case ConsoleKey.R:
-                            foreach (VerisenseBLEDevice device in devices.Values)
-                            {
-                                ReadOpConfig(device);
-                            }
+                            ReadOpConfig();
+                            break;
+                        case ConsoleKey.A:
+                            ConfigureDevices();
                             break;
                         default:
                             break;
@@ -85,7 +85,6 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                         Console.WriteLine("Firmware Version: " + device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL);
                         devices.Add(uuid, device);
                         Console.WriteLine("\nBT state: " + device.GetVerisenseBLEState() + "\nUUID: " + device.Asm_uuid + "\nBattery: " + device.GetStatus().BatteryPercent + "%");
-                        ConfigureDevices(device);
                     }
                     else
                     {
@@ -109,40 +108,54 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             }
         }
 
-        static async void ReadOpConfig(VerisenseBLEDevice device)
+        static async void ReadOpConfig()
         {
-            var opConfig = await device.ExecuteRequest(RequestType.ReadOperationalConfig);
-            
-            if (opConfig != null)
+            foreach (string uuid in uuids)
             {
-                Console.WriteLine("Operational Config: " + BitConverter.ToString(((OpConfigPayload)opConfig).GetPayloadWithHeader()).Replace("-", ",0x"));
-            }
-            else
-            {
-                Console.WriteLine("Failed to read operational config");
+                if (devices.ContainsKey(uuid))
+                {
+                    var device = devices[uuid];
+                    var opConfig = await device.ExecuteRequest(RequestType.ReadOperationalConfig);
+
+                    if (opConfig != null)
+                    {
+                        Console.WriteLine("Operational Config: " + BitConverter.ToString(((OpConfigPayload)opConfig).GetPayloadWithHeader()).Replace("-", ",0x"));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to read operational config");
+                    }
+                }
             }
         }
 
-        static async void ConfigureDevices(VerisenseBLEDevice device)
+        static async void ConfigureDevices()
         {
-            var clone = new VerisenseBLEDevice(device);
+            foreach (string uuid in uuids)
+            {
+                if (devices.ContainsKey(uuid))
+                {
+                    var clone = new VerisenseBLEDevice(device);
 
-            SensorLIS2DW12 sensor = (SensorLIS2DW12)clone.GetSensor(SensorLIS2DW12.SensorName);
-            sensor.SetAccelEnabled(true);
-            sensor.SetSamplingRate(SensorLIS2DW12.LowPerformanceAccelSamplingRate.Freq_25Hz);
+                    SensorLIS2DW12 sensor = (SensorLIS2DW12)clone.GetSensor(SensorLIS2DW12.SensorName);
+                    sensor.SetAccelEnabled(true);
+                    sensor.SetSamplingRate(SensorLIS2DW12.LowPerformanceAccelSamplingRate.Freq_25Hz);
 
-            bool accelDetection = sensor.IsAccelEnabled();
-            string accelRate = sensor.GetSamplingRate().GetDisplayName();
-            string accelMode = sensor.GetMode().GetDisplayName();
-            string accelLPMode = sensor.GetLowPowerMode().GetDisplayName();
+                    bool accelDetection = sensor.IsAccelEnabled();
+                    string accelRate = sensor.GetSamplingRate().GetDisplayName();
+                    string accelMode = sensor.GetMode().GetDisplayName();
+                    string accelLPMode = sensor.GetLowPowerMode().GetDisplayName();
 
-            var opconfigbytes = clone.GenerateConfigurationBytes();
-            await device.WriteAndReadOperationalConfiguration(opconfigbytes);
+                    var opconfigbytes = clone.GenerateConfigurationBytes();
+                    await device.WriteAndReadOperationalConfiguration(opconfigbytes);
 
-            Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
-            Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config\"");
-            Console.WriteLine("---------------------------------------------------------------");
+                    Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
+                    Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                    Console.WriteLine("---------------------------------------------------------------");
+                }
+            }
         }
+
         static async void StartSyncingDevices()
         {
             foreach (VerisenseBLEDevice device in devices.Values)
@@ -193,7 +206,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             {
                 var result = await device.ExecuteRequest(RequestType.StopStreaming);
                 Console.WriteLine("\nUUID: " + device.Asm_uuid + " stop streaming request \nResult: " + result + "\n");
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth");
+                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
             }
 
         }
