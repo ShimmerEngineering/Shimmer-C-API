@@ -93,7 +93,7 @@ namespace ShimmerAPI
         private int NumberOfTracesCountGraph1 = 0;
         private int NumberOfTracesCountGraph2 = 0;
         private int NumberOfTracesCountGraph3 = 0;
-        private static int maxNumberOfTracesToPlot = 30;
+        private static int maxNumberOfTracesToPlot = 60;
         public CheckBox[] CheckBoxArrayGroup1;
         public CheckBox[] CheckBoxArrayGroup2;
         public CheckBox[] CheckBoxArrayGroup3;
@@ -149,12 +149,19 @@ namespace ShimmerAPI
         public String ECGSignalName = Shimmer3Configuration.SignalNames.ECG_LL_RA; //This is used to identify which signal to feed into the ECG to HR algorithm
         private int ExGLeadOffCounter = 0;
         private int ExGLeadOffCounterSize = 0;
-
-        private Color[] TraceColours = new Color[30]{Color.Blue, Color.Red, Color.Green, Color.Black, Color.Orange, Color.Gray,
-        Color.Purple, Color.Brown, Color.Yellow, Color.Aqua, Color.Pink, Color.DarkBlue, Color.DarkRed, Color.DarkOrange, 
-        Color.LightBlue, Color.Navy, Color.Cyan, Color.LightGreen, Color.Maroon, Color.Teal, Color.DarkGray, Color.Indigo,
-        Color.Khaki, Color.LightGray, Color.OrangeRed, Color.Turquoise, Color.YellowGreen, Color.DarkCyan, Color.Magenta, 
-        Color.MediumBlue};
+        private Color[] TraceColours = new Color[60]
+        {   // 30 Colours
+            Color.Black, Color.DarkRed, Color.DarkGreen, Color.DarkBlue, Color.DarkOrange, Color.DarkMagenta,
+            Color.Maroon, Color.ForestGreen, Color.MidnightBlue, Color.Indigo, Color.Teal, Color.Olive, Color.MediumBlue,
+            Color.SaddleBrown, Color.Firebrick, Color.SeaGreen, Color.RoyalBlue, Color.Chocolate, Color.SlateBlue,
+            Color.Crimson, Color.MediumVioletRed, Color.DarkCyan, Color.SteelBlue, Color.Brown, Color.Peru,
+            Color.DarkSlateBlue, Color.DarkSlateGray, Color.DarkOliveGreen, Color.CadetBlue, Color.MediumSeaGreen,
+            // Additional 30 Colours
+            Color.Red, Color.Green, Color.Blue, Color.Orange, Color.Magenta, Color.MediumSlateBlue, Color.DarkTurquoise,
+            Color.Tomato, Color.MediumOrchid, Color.MediumTurquoise, Color.CornflowerBlue, Color.Purple,
+            Color.RosyBrown, Color.DarkKhaki, Color.MediumAquamarine, Color.LightSeaGreen, Color.LightSlateGray,
+            Color.Goldenrod, Color.IndianRed, Color.DimGray, Color.MediumSpringGreen, Color.Sienna, Color.DeepSkyBlue,
+            Color.LawnGreen, Color.HotPink, Color.DarkGoldenrod, Color.Chartreuse, Color.Navy, Color.DeepPink, Color.MediumTurquoise };
         int count = 0;
 
         public static bool usingLinux
