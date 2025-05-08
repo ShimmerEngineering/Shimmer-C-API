@@ -215,11 +215,16 @@ namespace ShimmerAPI
                 //ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl3.Size.Height);
             }
 
-            CheckBoxArrayGroup1 = new CheckBox[30] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
+            CheckBoxArrayGroup1 = new CheckBox[60] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
             checkBox7, checkBox8, checkBox9, checkBox10, checkBox11, checkBox12, checkBox13, checkBox14, 
             checkBox15, checkBox16, checkBox17, checkBox18, checkBox19, checkBox20, checkBox21, 
             checkBox22, checkBox23, checkBox24, checkBox25, checkBox26, checkBox27, checkBox28, 
-            checkBox29, checkBox30};
+            checkBox29, checkBox30,
+            checkBox91, checkBox92, checkBox93, checkBox94, checkBox95, checkBox96,
+            checkBox97, checkBox98, checkBox99, checkBox100, checkBox101, checkBox102, checkBox103, checkBox104,
+            checkBox105, checkBox106, checkBox107, checkBox108, checkBox109, checkBox110, checkBox111,
+            checkBox112, checkBox113, checkBox114, checkBox115, checkBox116, checkBox117, checkBox118,
+            checkBox119, checkBox120};
             foreach (var checkBox in CheckBoxArrayGroup1)
             {
                 checkBox.CheckedChanged += new EventHandler(CheckBoxArrayGroup1_CheckedChanged);
@@ -2904,6 +2909,186 @@ namespace ShimmerAPI
         private void button3_Click(object sender, EventArgs e)
         {
             ShimmerDevice.StopStreamingandLog();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox8_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox9_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox12_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox13_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox14_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox15_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox16_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox17_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox18_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox19_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox20_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox21_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox22_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox23_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox24_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox25_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox26_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox27_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox28_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox29_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox30_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox120_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox119_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox117_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox118_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox116_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 
