@@ -1247,6 +1247,18 @@ namespace ShimmerAPI
             }
         }
 
+        private void ClearGraphData(ZedGraph.ZedGraphControl graphControl, List<RollingPointPairList> dataList)
+        {
+            if (graphControl.GraphPane.CurveList == null || dataList == null)
+                return;
+
+            foreach (var list in dataList)
+            {
+                list.Clear(); 
+            }
+            graphControl.Invalidate(); // Refresh 
+        }
+
         private void buttonConnect_Click(object sender, EventArgs e)
         {
             RemoveAllTextBox();
@@ -2930,6 +2942,15 @@ namespace ShimmerAPI
         private void button3_Click(object sender, EventArgs e)
         {
             ShimmerDevice.StopStreamingandLog();
+        }
+
+        private void buttonClearGraphs_Click_1(object sender, EventArgs e)
+        {
+            ClearGraphData(ZedGraphControl1, DataListGraph1);
+            if (IsGraph2Visible)
+                ClearGraphData(ZedGraphControl2, DataListGraph2);
+            if (IsGraph3Visible)
+                ClearGraphData(ZedGraphControl3, DataListGraph3);
         }
     }
 

@@ -263,6 +263,8 @@
             this.checkBox123 = new System.Windows.Forms.CheckBox();
             this.checkBox122 = new System.Windows.Forms.CheckBox();
             this.checkBox121 = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonClearGraphs = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -3141,12 +3143,35 @@
             this.checkBox121.UseVisualStyleBackColor = true;
             this.checkBox121.Visible = false;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(444, 146);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(86, 16);
+            this.label3.TabIndex = 158;
+            this.label3.Text = "Clear Graphs";
+            // 
+            // buttonClearGraphs
+            // 
+            this.buttonClearGraphs.Location = new System.Drawing.Point(551, 140);
+            this.buttonClearGraphs.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonClearGraphs.Name = "buttonClearGraphs";
+            this.buttonClearGraphs.Size = new System.Drawing.Size(44, 28);
+            this.buttonClearGraphs.TabIndex = 159;
+            this.buttonClearGraphs.Text = "x";
+            this.buttonClearGraphs.UseVisualStyleBackColor = true;
+            this.buttonClearGraphs.Click += new System.EventHandler(this.buttonClearGraphs_Click_1);
+            // 
             // Control
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new System.Drawing.Size(2597, 1414);
+            this.Controls.Add(this.buttonClearGraphs);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
@@ -3442,6 +3467,8 @@
         private System.Windows.Forms.CheckBox checkBox168;
         private System.Windows.Forms.CheckBox checkBox167;
         private System.Windows.Forms.CheckBox checkBox166;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonClearGraphs;
     }
 }
 
