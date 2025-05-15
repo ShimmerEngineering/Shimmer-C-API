@@ -2,7 +2,8 @@
 
 The Shimmer C# API is used to control and stream data from both a Verisense Device and a Shimmer3 Bluetooth Device running LogAndStream firmware. 
 ## Shimmer 3R
-Shimmer3R is currently supported from [release v1.3](https://github.com/ShimmerEngineering/Shimmer-C-API/releases/tag/v1.3) onwards. Currently only ShimmerCapture example has been tested with the Shimmer3R. Should you have any inquiries about the examples please contact us.
+Shimmer3R is currently supported from [release v1.3](https://github.com/ShimmerEngineering/Shimmer-C-API/releases/tag/v1.3) onwards. Currently only ShimmerCapture example has been tested with the Shimmer3R. Integration Notes can be found [here](https://github.com/ShimmerEngineering/Shimmer-C-API/wiki/Shimmer3R-Integration-Notes).
+Should you have any further inquiries please contact us.
 
 ## Verisense
 As a starting point please refer to the [readme](https://github.com/ShimmerEngineering/Shimmer-C-API/blob/master/ShimmerBLE) and [wiki](https://github.com/ShimmerEngineering/Shimmer-C-API/wiki/Verisense-General)
