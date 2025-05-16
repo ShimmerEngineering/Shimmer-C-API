@@ -133,6 +133,7 @@ namespace ShimmerAPI
         protected int GyroSamplingRate;
         protected int AltAccelSamplingRate;
         protected int AltMagSamplingRate;
+        protected int AltMagRange;
         protected long ConfigSetupByte0; // for Shimmer2
         protected int GSRRange;
         protected int mTempIntValue;
@@ -615,7 +616,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER2 = { "± 0.7Ga", "± 1.0Ga", "± 1.5Ga", "± 2.0Ga", "± 3.2Ga", "± 3.8Ga", "± 4.5Ga" };
         public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
-        public static readonly String[] LIST_OF_WRMAG_RATE_SHIMMER3R = { "10Hz", "20Hz", "50Hz", "100Hz" };
+        public static readonly String[] LIST_OF_ALT_MAG_RATE_SHIMMER3R = { "0.625Hz","10Hz", "20Hz", "80Hz", "155Hz", "300Hz", "560Hz", "1000Hz" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3R = { "125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps" };
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER3 = { "+/- 1.3Ga", "+/- 1.9Ga", "+/- 2.5Ga", "+/- 4.0Ga", "+/- 4.7Ga", "+/- 5.6Ga", "+/- 8.1Ga" };
@@ -2256,13 +2257,14 @@ namespace ShimmerAPI
                 AccelHRBit = (int)((ConfigSetupByte0 >> 0) & 0x01);
                 AccelLPBit = (int)((ConfigSetupByte0 >> 1) & 0x01);
                 AccelRange = (int)((ConfigSetupByte0 >> 2) & 0x03);
-                GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03);
-                MagGain = (int)((ConfigSetupByte0 >> 21) & 0x07);
+                GyroRange = (int)((ConfigSetupByte0 >> 16) & 0x03); //gyro range lsb 8+8
+
+                AltMagRange = (int)((ConfigSetupByte0 >> 21) & 0x07);
                 AccelSamplingRate = (int)((ConfigSetupByte0 >> 4) & 0xF);
                 GyroSamplingRate = (int)((ConfigSetupByte0 >> 8) & 0xFF);
                 magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x07);
                 PressureResolution = (int)((ConfigSetupByte0 >> 28) & 0x03);
-                GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07);
+                GSRRange = (int)((ConfigSetupByte0 >> 25) & 0x07); 
                 InternalExpPower = (int)((ConfigSetupByte0 >> 24) & 0x01);
                 Mpu9150AccelRange = (int)((ConfigSetupByte0 >> 30) & 0x03); //8+8+8+6
 
@@ -2272,8 +2274,7 @@ namespace ShimmerAPI
                 int MSB_LP_MODE = (int)((ConfigSetupByte0 >> 33) & 0x01); //8+8+8+8+1
                 AccelLPBit = AccelLPBit + (MSB_LP_MODE << 1);
 
-                int MSB_MAG_RATE = (int)((ConfigSetupByte0 >> 43) & 0x07); //8+8+8+8+8+3
-                magSamplingRate = magSamplingRate + (MSB_MAG_RATE << 3);
+                magSamplingRate = (int)((ConfigSetupByte0 >> 18) & 0x03);//8+8+2
 
                 int MSB_PRESSURE_RES = (int)((ConfigSetupByte0 >> 32) & 0x01); //8+8+8+8
                 PressureResolution = PressureResolution + (MSB_PRESSURE_RES << 2);
@@ -2282,11 +2283,11 @@ namespace ShimmerAPI
 
                 AltAccelSamplingRate = (int)((ConfigSetupByte0 >> 38) & 0x03); //8+8+8+8+6
 
-                AltMagSamplingRate = (int)((ConfigSetupByte0 >> 36) & 0x03); //8+8+8+8+4
+                AltMagSamplingRate = (int)((ConfigSetupByte0 >> 40) & 0x3F); //8+8+8+8+8
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    if (magSamplingRate == 0x08) 
+                    if (magSamplingRate == 0x08)
                     {
                         LowPowerMagEnabled = true;
                     }
@@ -2295,14 +2296,14 @@ namespace ShimmerAPI
                     {
                         LowPowerAccelEnabled = true;
                     }
-                    
+
                     if (GyroSamplingRate == 0x01)
                     {
                         LowPowerGyroEnabled = true;
                     }
 
                 }
-				
+
                 NumberofChannels = (int)packet[6 + 3];
                 BufferSize = (int)packet[7 + 3];
                 ListofSensorChannels.Clear();
@@ -2575,7 +2576,7 @@ namespace ShimmerAPI
                 OffsetVectorAltAccel = offsetVector;
                 SensitivityMatrixAltAccel = sensitivityMatrix;
                 DefaultHighGAccelParams = false;
-                
+
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] == -1 || UtilCalibration.AllElementsAre(sensitivityMatrix, 0))
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
@@ -2769,7 +2770,7 @@ namespace ShimmerAPI
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultMagParams = true;
-
+                /*
                 AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
                 OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
                 if (GetMagRange() == 0)
@@ -2788,7 +2789,10 @@ namespace ShimmerAPI
                 {
                     SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
                 }
-
+                */
+                AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
+                OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
+                SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
             }
             else if (packetType == (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE && (sensitivityMatrix[0, 0] != -1 && !UtilCalibration.AllElementsAre(sensitivityMatrix, 0)))
             {
@@ -2801,9 +2805,29 @@ namespace ShimmerAPI
                 && HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 DefaultWRMagParams = true;
+                /*
                 AlignmentMatrixMag2 = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS2MDL;
                 OffsetVectorMag2 = OFFSET_VECTOR_MAG_SHIMMER3R_LIS2MDL;
                 SensitivityMatrixMag2 = SENSITIVITY_MATRIX_MAG_50GA_SHIMMER3R_LIS2MDL;
+                */
+                AlignmentMatrixMag = ALIGNMENT_MATRIX_MAG_SHIMMER3R_LIS3MDL;
+                OffsetVectorMag = OFFSET_VECTOR_MAG_SHIMMER3R_LIS3MDL;
+                if (GetAltMagRange() == 0)
+                {
+                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_4GA_SHIMMER3R_LIS3MDL;
+                }
+                else if (GetAltMagRange() == 1)
+                {
+                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_8GA_SHIMMER3R_LIS3MDL;
+                }
+                else if (GetAltMagRange() == 2)
+                {
+                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_12GA_SHIMMER3R_LIS3MDL;
+                }
+                else if (GetAltMagRange() == 3)
+                {
+                    SensitivityMatrixMag = SENSITIVITY_MATRIX_MAG_16GA_SHIMMER3R_LIS3MDL;
+                }
             }
 
         }
@@ -3378,7 +3402,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X;
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_X;
                         signalDataTypeArray[i + 1] = "i16"; //TBD; used Signal Datatype from Mag as placeholder
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
@@ -3388,7 +3412,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y;
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Y;
                         signalDataTypeArray[i + 1] = "i16"; //TBD; used Signal Datatype from Mag as placeholder
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
@@ -3398,7 +3422,7 @@ namespace ShimmerAPI
                 {
                     if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
                     {
-                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z;
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Z;
                         signalDataTypeArray[i + 1] = "i16"; //TBD; used Signal Datatype from Mag as placeholder
                         packetSize = packetSize + 2;
                         enabledSensors = (enabledSensors | (int)SensorBitmapShimmer3.SENSOR_MAG_ALT);
@@ -3789,9 +3813,9 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0))
                 {
-                    int iMagX = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X);
-                    int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y);
-                    int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z);
+                    int iMagX = getSignalIndex(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_X);
+                    int iMagY = getSignalIndex(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Y);
+                    int iMagZ = getSignalIndex(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Z);
                     double[] datatemp = new double[3] { newPacket[iMagX], newPacket[iMagY], newPacket[iMagZ] };
                     datatemp = UtilCalibration.CalibrateInertialSensorData(datatemp, AlignmentMatrixMag2, SensitivityMatrixMag2, OffsetVectorMag2);
                     string units;
@@ -3803,12 +3827,12 @@ namespace ShimmerAPI
                     {
                         units = ShimmerConfiguration.SignalUnits.Local;
                     }
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagX]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[0]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagY]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagZ]);
-                    objectCluster.Add(Shimmer3Configuration.SignalNames.WIDE_RANGE_MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagX]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_X, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[0]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagY]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Y, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[1]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.RAW, ShimmerConfiguration.SignalUnits.NoUnits, newPacket[iMagZ]);
+                    objectCluster.Add(Shimmer3Configuration.SignalNames.ALT_MAGNETOMETER_Z, ShimmerConfiguration.SignalFormats.CAL, units, datatemp[2]);
 
                     magnetometer[0] = datatemp[0];
                     magnetometer[1] = datatemp[1];
@@ -3882,7 +3906,7 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_EXT_A6) > 0))
                 {
-                   
+
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_EXT_ADC_A1);
@@ -3925,7 +3949,7 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A1) > 0))
                 {
-                   
+
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A3);
@@ -3989,7 +4013,7 @@ namespace ShimmerAPI
                 }
                 if (((EnabledSensors & (int)SensorBitmapShimmer3.SENSOR_INT_A14) > 0))
                 {
-                   
+
                     if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         int index = getSignalIndex(Shimmer3RConfiguration.SignalNames.GEN_INT_ADC_A2);
@@ -5427,9 +5451,14 @@ namespace ShimmerAPI
             return AccelRange;
         }
 
-        public int GetWRMagRate()
+        public int GeAltMagRate()
         {
             return AltMagSamplingRate;
+        }
+
+        public int GetAltMagRange()
+        {
+            return AltMagRange;
         }
 
         public int GetLNAccelRange()
@@ -6083,7 +6112,7 @@ namespace ShimmerAPI
             {
                 if (FirmwareIdentifier == FW_IDENTIFIER_LOGANDSTREAM && CompatibilityCode > 8)
                 {
-                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3RSDBT.GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND}, 0, 1);
+                    WriteBytes(new byte[1] { (byte)PacketTypeShimmer3RSDBT.GET_PRESSURE_CALIBRATION_COEFFICIENTS_COMMAND }, 0, 1);
                     System.Threading.Thread.Sleep(800);
                 }
                 else if (isShimmer3withUpdatedSensors())
@@ -6241,7 +6270,7 @@ namespace ShimmerAPI
         /// <summary>
         /// Write Mag Range For Shimmer2R and Shimmer3. Shimmer2R: 0,1,2,3,4,5,6 = 0.7,1.0,1.5,2.0,3.2,3.8,4.5 . 
         /// Shimmer3: 1,2,3,4,5,6,7 = 1.3, 1.9, 2.5, 4.0, 4.7, 5.6, 8.1
-        /// Not supported for updated Shimmer3s which are using LSM303AHTR
+        /// Not supported for updated Shimmer3s which are using LSM303AHTR and Shimmer3Rs using LIS2MDL
         /// To determine if your Shimmer 3 device is using updated sensors please see isShimmer3withUpdatedSensors
         /// </summary>
         /// <param name="range">0-6 for Shimmer2R and 1-7 for Shimmer3</param>
@@ -6264,6 +6293,7 @@ namespace ShimmerAPI
                 }
             }
         }
+
 
         /// <summary>
         /// This is used to set the gyro range on the Shimmer3. Options are 0,1,2,3. Where 0 = 250 Degree/s, 1 = 500 Degree/s, 2 = 1000 Degree/s, 3 = 2000 Degree/s
@@ -6316,7 +6346,7 @@ namespace ShimmerAPI
                 throw new Exception("Not Supported for this Hardware Type");
             }
         }
-        public void WriteWRMagRate(int rate)
+        public void WriteAltMagRate(int rate)
         {
             if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
@@ -6329,6 +6359,21 @@ namespace ShimmerAPI
                 throw new Exception("Not Supported for this Hardware Type");
             }
         }
+
+        public void WriteAltMagRange(int range)
+        {
+            if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            {
+                WriteBytes(new byte[2] { (byte)PacketTypeShimmer2.SET_MAG_GAIN_COMMAND, (byte)range }, 0, 2);
+                System.Threading.Thread.Sleep(250);
+                AltMagRange = range;
+            }
+            else
+            {
+                throw new Exception("Not Supported for this Hardware Type");
+            }
+        }
+
         public void WriteBlinkLED(int value)
         {
             WriteBytes(new byte[2] { (byte)ShimmerBluetooth.PacketTypeShimmer2.SET_BLINK_LED, (byte)value }, 0, 2);
@@ -6548,42 +6593,26 @@ namespace ShimmerAPI
             {
                 if (!LowPowerMagEnabled)
                 {
-                    if (SamplingRate > 560)
+                    if (SamplingRate > 50)
                     {
-                        WriteMagSamplingRate(0x01); //Low Power Mode (1000Hz)
-                    }
-                    else if (SamplingRate > 300)
-                    {
-                        WriteMagSamplingRate(0x11); //Medium (560Hz)
-                    }
-                    else if (SamplingRate > 155)
-                    {
-                        WriteMagSamplingRate(0x21); //High (300Hz)
-                    }
-                    else if (SamplingRate > 100) 
-                    {
-                        WriteMagSamplingRate(0x31); //Ultra High (155Hz)
-                    }
-                    else if (SamplingRate > 50) 
-                    {
-                        WriteMagSamplingRate(0x31); //Ultra High (155Hz)
+                        WriteMagSamplingRate(0x03); //(100Hz)
                     }
                     else if (SamplingRate > 20)
                     {
-                        WriteMagSamplingRate(0x3E); //Ultra High (80Hz)
+                        WriteMagSamplingRate(0x02); //(50Hz)
                     }
                     else if (SamplingRate > 10)
                     {
-                        WriteMagSamplingRate(0x3A); //Ultra High (20Hz)
+                        WriteMagSamplingRate(0x01); //(20Hz)
                     }
                     else
                     {
-                        WriteMagSamplingRate(0x38); //Ultra High (10Hz)
+                        WriteMagSamplingRate(0x00); //(10Hz)
                     }
                 }
-                else //Low power mag for shimmer3R enabled
+                else //Low power mag for shimmer3R enabled 
                 {
-                    WriteMagSamplingRate(0x08);
+                    WriteMagSamplingRate(0x00);
                 }
             }
             else //Shimmer2r
@@ -7819,9 +7848,9 @@ namespace ShimmerAPI
             public static readonly String MAGNETOMETER_X = "Magnetometer X";
             public static readonly String MAGNETOMETER_Y = "Magnetometer Y";
             public static readonly String MAGNETOMETER_Z = "Magnetometer Z";
-            public static readonly String WIDE_RANGE_MAGNETOMETER_X = "Wide Range Magnetometer X";
-            public static readonly String WIDE_RANGE_MAGNETOMETER_Y = "Wide Range Magnetometer Y";
-            public static readonly String WIDE_RANGE_MAGNETOMETER_Z = "Wide Range Magnetometer Z";
+            public static readonly String ALT_MAGNETOMETER_X = "Alt Magnetometer X";
+            public static readonly String ALT_MAGNETOMETER_Y = "Alt Magnetometer Y";
+            public static readonly String ALT_MAGNETOMETER_Z = "Alt Magnetometer Z";
             public static readonly String GYROSCOPE_X = "Gyroscope X";
             public static readonly String GYROSCOPE_Y = "Gyroscope Y";
             public static readonly String GYROSCOPE_Z = "Gyroscope Z";
