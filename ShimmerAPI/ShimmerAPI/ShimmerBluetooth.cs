@@ -616,6 +616,7 @@ namespace ShimmerAPI
         public static readonly String[] LIST_OF_MAG_RANGE_SHIMMER2 = { "± 0.7Ga", "± 1.0Ga", "± 1.5Ga", "± 2.0Ga", "± 3.2Ga", "± 3.8Ga", "± 4.5Ga" };
         public static readonly String[] LIST_OF_GSR_RANGE_SHIMMER2 = { "8kOhm to 63kOhm", "63kOhm to 220kOhm", "220kOhm to 680kOhm", "680kOhm to 4.7MOhm", "Auto Range" };
         public static readonly String[] LIST_OF_ACCEL_RANGE_SHIMMER3 = { "+/- 2g", "+/- 4g", "+/- 8g", "+/- 16g" };
+        /// <summary>0.625Hz, 1000Hz - Low-power mode only | 560Hz - Medium-performance mode only | 300Hz - High-performance mode only | 155Hz - Ultrahigh-performance mode only | Others - all 4 modes</summary>
         public static readonly String[] LIST_OF_ALT_MAG_RATE_SHIMMER3R = { "0.625Hz","10Hz", "20Hz", "80Hz", "155Hz", "300Hz", "560Hz", "1000Hz" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3 = { "250dps", "500dps", "1000dps", "2000dps" };
         public static readonly String[] LIST_OF_GYRO_RANGE_SHIMMER3R = { "125dps", "250dps", "500dps", "1000dps", "2000dps", "4000dps" };
