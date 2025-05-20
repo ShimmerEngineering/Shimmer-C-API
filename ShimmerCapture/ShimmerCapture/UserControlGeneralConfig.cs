@@ -821,8 +821,9 @@ namespace ShimmerAPI
         private void checkEnabledSensors()
         {
             int enabledSensors = PConfiguration.PControlForm.ShimmerDevice.GetEnabledSensors();
-            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3
-                && PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            int shimmerVersion = PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion();
+            if (shimmerVersion != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3
+                && shimmerVersion != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer2.SENSOR_ACCEL) > 0)
                 {
@@ -953,14 +954,14 @@ namespace ShimmerAPI
                 if ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_A_ACCEL) > 0)
                 {
                     checkBoxSensor1.Checked = true;
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) { 
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) { 
                         comboBoxLNAccelRange.Enabled = true;
                     }
                 }
                 else
                 {
                     checkBoxSensor1.Checked = false;
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         comboBoxLNAccelRange.Enabled = false;
                     }
@@ -988,7 +989,7 @@ namespace ShimmerAPI
                 if (((enabledSensors & 0xFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG) > 0)
                 {
                     checkBoxSensor4.Checked = true;
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 && PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors()) //new mag sensor (updated Shimmer 3) has no variable mag range
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 && PConfiguration.PControlForm.ShimmerDevice.isShimmer3withUpdatedSensors()) //new mag sensor (updated Shimmer 3) has no variable mag range
                     {
                         checkBoxLowPowerMag.Enabled = false;
                         checkBoxLowPowerMag.Visible = false;
@@ -1001,7 +1002,10 @@ namespace ShimmerAPI
                         checkBoxLowPowerMag.Visible = true;
                         checkBoxLowPowerMag.Enabled = true;
                         comboBoxMagRange.Visible = true;
-                        comboBoxMagRange.Enabled = true;
+                        if (shimmerVersion != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                        {   //On Shimmer3R this is the alt mag range, so only enable if the alt mag checkbox is selected (below)
+                            comboBoxMagRange.Enabled = true;
+                        }
                         labelMagRange.Visible = true;
                     }
                 }
@@ -1013,15 +1017,17 @@ namespace ShimmerAPI
                 }
                 if (((enabledSensors & 0xFFFFFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_MAG_ALT) > 0)
                 {
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         comboBoxAltMagRate.Enabled = true;
+                        comboBoxMagRange.Enabled = true; //This is the alt mag range on Shimmer3R
                     }
                 } else
                 {
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         comboBoxAltMagRate.Enabled = false;
+                        comboBoxMagRange.Enabled = false; //This is the alt mag range on Shimmer3R
                     }
                 }
                 if (((enabledSensors & 0xFFFF) & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_VBATT) > 0)
@@ -1518,16 +1524,23 @@ namespace ShimmerAPI
 
         private void checkBoxSensor4_Click(object sender, EventArgs e)
         {
-            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            int shimmerVersion = PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion();
+            if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 if (checkBoxSensor4.Checked)
                 {
-                    comboBoxMagRange.Enabled = true;
+                    if(shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    {   //On Shimmer3R, this is the alt mag range, so do not enable if main mag is checked
+                        comboBoxMagRange.Enabled = true;
+                    }
                     checkBoxLowPowerMag.Enabled = true;
                 }
                 else
                 {
-                    comboBoxMagRange.Enabled = false;
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    {   //On Shimmer3R, this is the alt mag range, so do not disable if main mag is unchecked
+                        comboBoxMagRange.Enabled = false;
+                    }
                     checkBoxLowPowerMag.Enabled = false;
                     checkBox3DOrientation.Checked = false;
                 }
@@ -2030,9 +2043,11 @@ namespace ShimmerAPI
             if (checkBoxSensorAltMag.Checked)
             {
                 comboBoxAltMagRate.Enabled = true;
+                comboBoxMagRange.Enabled = true;
             } else
             {
                 comboBoxAltMagRate.Enabled = false;
+                comboBoxMagRange.Enabled = false;
             }
         }
 
@@ -2126,7 +2141,8 @@ namespace ShimmerAPI
 
         private void checkBox3DOrientation_Click(object sender, EventArgs e)
         {
-            if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+            int shimmerVersion = PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion();
+            if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
             {
                 if (checkBox3DOrientation.Checked)
                 {
@@ -2137,7 +2153,10 @@ namespace ShimmerAPI
                     comboBoxLNAccelRange.Enabled = true;
                     comboBoxAccelRange.Enabled = true;
                     comboBoxGyroRange.Enabled = true;
-                    comboBoxMagRange.Enabled = true;
+                    if (shimmerVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    {   //On Shimmer3R, this is the alt mag range, so don't enable it
+                        comboBoxMagRange.Enabled = true;
+                    }
                     checkBoxLowPowerMag.Enabled = true;
 
                     MessageBox.Show("If both Wide Range and Low Noise Accelerometer are enabled, Wide Range will be used by the Orientation Algorithm");
