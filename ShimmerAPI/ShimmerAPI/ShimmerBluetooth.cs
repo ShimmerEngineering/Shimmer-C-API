@@ -2330,7 +2330,7 @@ namespace ShimmerAPI
 
                 if (HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                 {
-                    if (magSamplingRate == 0x08)
+                    if (magSamplingRate == 0x00)
                     {
                         LowPowerMagEnabled = true;
                     }
