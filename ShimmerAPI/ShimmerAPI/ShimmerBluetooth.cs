@@ -2246,6 +2246,48 @@ namespace ShimmerAPI
                 return false;
             }
         }
+
+        public Boolean isShimmer3RwithHighGAccelSupport()
+        {
+            if ((HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) && (
+                (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.SHIMMER3)
+                || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE && ExpansionBoardRev == 4 && ExpansionBoardRevSpecial == 0)
+                || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_BR_AMP_UNIFIED && ExpansionBoardRev == 4 && ExpansionBoardRevSpecial == 0)
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev == 6 && ExpansionBoardRevSpecial == 0) 
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev == 7 && ExpansionBoardRevSpecial == 0) 
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev == 8 && ExpansionBoardRevSpecial == 0) 
+                || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED && ExpansionBoardRev == 7 && ExpansionBoardRevSpecial == 0) //SR47-7-0, SR47-8-0
+                || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED && ExpansionBoardRev == 8 && ExpansionBoardRevSpecial == 0)))
+
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+        public Boolean isShimmer3RwithAltMagSupport()
+        {
+            if ((HardwareVersion == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) && (
+                 (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.SHIMMER3 && ExpansionBoardRev == 11 && ExpansionBoardRevSpecial == 0)
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXPANSION_PROTO3_DELUXE && ExpansionBoardRev == 4 && ExpansionBoardRevSpecial == 0)
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_BR_AMP_UNIFIED && ExpansionBoardRev == 4 && ExpansionBoardRevSpecial == 0)
+                  || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev == 6 && ExpansionBoardRevSpecial == 0)
+                  || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev == 7 && ExpansionBoardRevSpecial == 0)
+                  || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_GSR_UNIFIED && ExpansionBoardRev == 8 && ExpansionBoardRevSpecial == 0)
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED && ExpansionBoardRev == 7 && ExpansionBoardRevSpecial == 0) //SR47-7-0, SR47-8-0
+                 || (ExpansionBoardId == (int)ExpansionBoardDetectShimmer3.EXP_BRD_EXG_UNIFIED && ExpansionBoardRev == 8 && ExpansionBoardRevSpecial == 0)))
+
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
         public void InterpretInquiryResponseShimmer3R(List<byte> packet)
         {
             mEnableTimeStampAlignmentCheck = true;

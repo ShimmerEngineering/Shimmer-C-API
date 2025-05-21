@@ -306,20 +306,28 @@ namespace ShimmerAPI
                         checkBoxSensor19.Enabled = false;
                     }
 
-                    if (PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
+                    if (PConfiguration.PControlForm.ShimmerDevice.isShimmer3RwithHighGAccelSupport())
                     {
+                        
                         checkBoxSensorHGAccel.Enabled = true;
                         checkBoxSensorHGAccel.Visible = true;
-                        checkBoxSensorAltMag.Enabled = true;
-                        checkBoxSensorAltMag.Visible = true;
+                        
                     } else
                     {
                         checkBoxSensorHGAccel.Enabled = false;
                         checkBoxSensorHGAccel.Visible = false;
+                        
+                    }
+                    if (PConfiguration.PControlForm.ShimmerDevice.isShimmer3RwithAltMagSupport())
+                    {                        
+                        checkBoxSensorAltMag.Enabled = true;
+                        checkBoxSensorAltMag.Visible = true;
+                    }
+                    else
+                    {                        
                         checkBoxSensorAltMag.Enabled = false;
                         checkBoxSensorAltMag.Visible = false;
                     }
-
                 }
                 else
                 {
