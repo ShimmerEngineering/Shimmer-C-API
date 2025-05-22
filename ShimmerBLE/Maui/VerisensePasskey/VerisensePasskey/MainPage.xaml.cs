@@ -31,8 +31,29 @@ namespace VerisensePasskey
             DevicesList.ItemsSource = _deviceList;
 
             _adapter.DeviceDiscovered += OnDeviceDiscovered;
-        }
 
+            if (useAdvance)
+            {
+                passkeySettings.IsVisible = false;
+                passkeySettingsLabel.IsVisible = false;
+            }
+            else
+            {
+                deviceAdvertisingNamePrefix.IsEnabled = false;
+                passkeyId.IsEnabled = false;
+                passkey.IsEnabled = false;
+            }
+
+            passkeySettings.ItemsSource = new List<string>
+            {
+                "no passkey",
+                "default passkey",
+                "clinical trial passkey",
+                "custom"
+            };
+
+        }
+       
         private void OnCounterClicked(object sender, EventArgs e)
         {
             count++;
@@ -75,8 +96,9 @@ namespace VerisensePasskey
                 await device.Disconnect();
                 DeviceStateLabel.Text = "Status: Disconnected";
         }
+
         Boolean useAdvance = false;
-        public async void WritePasskeyConfigurationButton()
+        private async void writePasskeyConfigurationButton_Clicked(object sender, EventArgs e)
         {
             if (!useAdvance)
             {
@@ -178,6 +200,39 @@ namespace VerisensePasskey
 
             // Do something with the selected value
             Console.WriteLine("Selected Passkey Mode: " + selectedPasskeyMode);
+
+
+            writePasskeyConfigurationButton.IsEnabled = true;
+            switch (passkeySettings.SelectedIndex)
+            {
+                // no passkey
+                case 0:
+                    deviceAdvertisingNamePrefix.Text = prodConfig != null ? prodConfig.AdvertisingNamePrefix : "Verisense";
+                    passkeyId.Text = "00";
+                    passkey.Text = "";
+                    break;
+                // default passkey
+                case 1:
+                    deviceAdvertisingNamePrefix.Text = prodConfig != null ? prodConfig.AdvertisingNamePrefix : "Verisense";
+                    passkeyId.Text = "01";
+                    passkey.Text = "123456";
+                    break;
+                // clinical trial passkey
+                case 2:
+                    deviceAdvertisingNamePrefix.Text = prodConfig != null ? prodConfig.AdvertisingNamePrefix : "Verisense";
+                    passkeyId.Text = "";
+                    passkey.Text = "";
+                    break;
+                // custom
+                case 3:
+                    writePasskeyConfigurationButton.IsEnabled = false;
+                    deviceAdvertisingNamePrefix.Text = "";
+                    passkeyId.Text = "";
+                    passkey.Text = "";
+                    break;
+                default: break;
+            }
+
         }
         private void ShimmerDevice_BLEEvent(object sender, ShimmerBLEEventData e)
         {
