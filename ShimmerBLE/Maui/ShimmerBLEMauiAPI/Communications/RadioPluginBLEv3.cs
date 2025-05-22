@@ -9,9 +9,12 @@ using System.Threading;
 
 namespace ShimmerBLEMauiAPI.Communications
 {
-    internal class RadioPluginBLE : IVerisenseByteCommunication
+    internal class RadioPluginBLEv3 : IVerisenseByteCommunication
     {
-        public static bool ShowRXB = true;
+   
+
+    private IBluetoothLE bluetoothLE = CrossBluetoothLE.Current; // ✅ Should now work
+    public static bool ShowRXB = true;
 
         public Guid Asm_uuid { get; set; }
 
@@ -28,7 +31,7 @@ namespace ShimmerBLEMauiAPI.Communications
 
         private readonly IBluetoothLE _bluetoothLE;
 
-        public RadioPluginBLE()
+        public RadioPluginBLEv3()
         {
             _bluetoothLE = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;

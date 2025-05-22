@@ -30,16 +30,19 @@
             </StackLayout>
             <StackLayout Orientation="Horizontal">
                 <Label Text="Passkey Settings : " x:Name="passkeySettingsLabel" FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
-                <Picker x:Name="passkeySettings" WidthRequest="230" SelectedIndexChanged="PasskeySettings_SelectedIndexChanged">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>no passkey</x:String>
-                            <x:String>default passkey</x:String>
-                            <x:String>clinical trial passkey</x:String>
-                            <x:String>custom</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
-                </Picker>
+                <Picker x:Name="connectionModePicker"
+        Title="Select Connection Mode"
+        WidthRequest="230"
+        SelectedIndexChanged="ConnectionModePicker_SelectedIndexChanged">
+    <Picker.ItemsSource>
+        <x:Array Type="{x:Type x:String}">
+            <x:String>Auto</x:String>
+            <x:String>Manual</x:String>
+            <x:String>Prompt on Scan</x:String>
+            <x:String>Debug Mode</x:String>
+        </x:Array>
+    </Picker.ItemsSource>
+</Picker>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                 <Button Clicked="scanDevicesButton_Clicked" x:Name="scanDevicesButton" HeightRequest="60" Text="Scan Device">

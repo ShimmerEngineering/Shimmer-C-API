@@ -28,4 +28,8 @@
 		<PackageReference Include="Plugin.BLE" Version="3.1.0" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\..\ShimmerBLEMauiAPI\ShimmerBLEMauiAPI.csproj" />
+	</ItemGroup>
+
 </Project>
