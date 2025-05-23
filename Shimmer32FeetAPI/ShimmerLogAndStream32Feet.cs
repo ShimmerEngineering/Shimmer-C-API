@@ -94,6 +94,7 @@ namespace ShimmerAPI
             SetState(SHIMMER_STATE_CONNECTING);
             btClient.Connect(btEndpoint);
             peerStream = btClient.GetStream();
+            peerStream.ReadTimeout = this.ReadTimeout;
         }
 
         public override void SetShimmerAddress(string address)
