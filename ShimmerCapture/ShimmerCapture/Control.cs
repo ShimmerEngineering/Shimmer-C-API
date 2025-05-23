@@ -93,7 +93,7 @@ namespace ShimmerAPI
         private int NumberOfTracesCountGraph1 = 0;
         private int NumberOfTracesCountGraph2 = 0;
         private int NumberOfTracesCountGraph3 = 0;
-        private static int maxNumberOfTracesToPlot = 30;
+        private static int maxNumberOfTracesToPlot = 60;
         public CheckBox[] CheckBoxArrayGroup1;
         public CheckBox[] CheckBoxArrayGroup2;
         public CheckBox[] CheckBoxArrayGroup3;
@@ -149,12 +149,19 @@ namespace ShimmerAPI
         public String ECGSignalName = Shimmer3Configuration.SignalNames.ECG_LL_RA; //This is used to identify which signal to feed into the ECG to HR algorithm
         private int ExGLeadOffCounter = 0;
         private int ExGLeadOffCounterSize = 0;
-
-        private Color[] TraceColours = new Color[30]{Color.Blue, Color.Red, Color.Green, Color.Black, Color.Orange, Color.Gray,
-        Color.Purple, Color.Brown, Color.Yellow, Color.Aqua, Color.Pink, Color.DarkBlue, Color.DarkRed, Color.DarkOrange, 
-        Color.LightBlue, Color.Navy, Color.Cyan, Color.LightGreen, Color.Maroon, Color.Teal, Color.DarkGray, Color.Indigo,
-        Color.Khaki, Color.LightGray, Color.OrangeRed, Color.Turquoise, Color.YellowGreen, Color.DarkCyan, Color.Magenta, 
-        Color.MediumBlue};
+        private Color[] TraceColours = new Color[60]
+        {   // 30 Colours
+            Color.Black, Color.DarkRed, Color.DarkGreen, Color.DarkBlue, Color.DarkOrange, Color.DarkMagenta,
+            Color.Maroon, Color.ForestGreen, Color.MidnightBlue, Color.Indigo, Color.Teal, Color.Olive, Color.MediumBlue,
+            Color.SaddleBrown, Color.Firebrick, Color.SeaGreen, Color.RoyalBlue, Color.Chocolate, Color.SlateBlue,
+            Color.Crimson, Color.MediumVioletRed, Color.DarkCyan, Color.SteelBlue, Color.Brown, Color.Peru,
+            Color.DarkSlateBlue, Color.DarkSlateGray, Color.DarkOliveGreen, Color.CadetBlue, Color.MediumSeaGreen,
+            // Additional 30 Colours
+            Color.Red, Color.Green, Color.Blue, Color.Orange, Color.Magenta, Color.MediumSlateBlue, Color.DarkTurquoise,
+            Color.Tomato, Color.MediumOrchid, Color.MediumTurquoise, Color.CornflowerBlue, Color.Purple,
+            Color.RosyBrown, Color.DarkKhaki, Color.MediumAquamarine, Color.LightSeaGreen, Color.LightSlateGray,
+            Color.Goldenrod, Color.IndianRed, Color.DimGray, Color.MediumSpringGreen, Color.Sienna, Color.DeepSkyBlue,
+            Color.LawnGreen, Color.HotPink, Color.DarkGoldenrod, Color.Chartreuse, Color.Navy, Color.DeepPink, Color.MediumTurquoise };
         int count = 0;
 
         public static bool usingLinux
@@ -215,31 +222,46 @@ namespace ShimmerAPI
                 //ZedGraphControl3.Size = new System.Drawing.Size(this.Size.Width - 1000, ZedGraphControl3.Size.Height);
             }
 
-            CheckBoxArrayGroup1 = new CheckBox[30] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
+            CheckBoxArrayGroup1 = new CheckBox[60] { checkBox1, checkBox2, checkBox3, checkBox4, checkBox5, checkBox6, 
             checkBox7, checkBox8, checkBox9, checkBox10, checkBox11, checkBox12, checkBox13, checkBox14, 
             checkBox15, checkBox16, checkBox17, checkBox18, checkBox19, checkBox20, checkBox21, 
             checkBox22, checkBox23, checkBox24, checkBox25, checkBox26, checkBox27, checkBox28, 
-            checkBox29, checkBox30};
+            checkBox29, checkBox30,
+            checkBox31, checkBox32, checkBox33, checkBox34, checkBox35, checkBox36,
+            checkBox37, checkBox38, checkBox39, checkBox40, checkBox41, checkBox42, checkBox43, checkBox44,
+            checkBox45, checkBox46, checkBox47, checkBox48, checkBox49, checkBox50, checkBox51,
+            checkBox52, checkBox53, checkBox54, checkBox55, checkBox56, checkBox57, checkBox58,
+            checkBox59, checkBox60 };
             foreach (var checkBox in CheckBoxArrayGroup1)
             {
                 checkBox.CheckedChanged += new EventHandler(CheckBoxArrayGroup1_CheckedChanged);
             }
 
-            CheckBoxArrayGroup2 = new CheckBox[30] { checkBox31, checkBox32, checkBox33, checkBox34, checkBox35, checkBox36, 
-            checkBox37, checkBox38, checkBox39, checkBox40, checkBox41, checkBox42, checkBox43, checkBox44, 
-            checkBox45, checkBox46, checkBox47, checkBox48, checkBox49, checkBox50, checkBox51, 
-            checkBox52, checkBox53, checkBox54, checkBox55, checkBox56, checkBox57, checkBox58, 
-            checkBox59, checkBox60};
+            CheckBoxArrayGroup2 = new CheckBox[60] { checkBox61, checkBox62, checkBox63, checkBox64, checkBox65, checkBox66,
+            checkBox67, checkBox68, checkBox69, checkBox70, checkBox71, checkBox72, checkBox73, checkBox74,
+            checkBox75, checkBox76, checkBox77, checkBox78, checkBox79, checkBox80, checkBox81,
+            checkBox82, checkBox83, checkBox84, checkBox85, checkBox86, checkBox87, checkBox88,
+            checkBox89, checkBox90,
+            checkBox91, checkBox92, checkBox93, checkBox94, checkBox95, checkBox96,
+            checkBox97, checkBox98, checkBox99, checkBox100, checkBox101, checkBox102, checkBox103, checkBox104,
+            checkBox105, checkBox106, checkBox107, checkBox108, checkBox109, checkBox110, checkBox111,
+            checkBox112, checkBox113, checkBox114, checkBox115, checkBox116, checkBox117, checkBox118,
+            checkBox119, checkBox120 };
             foreach (var checkBox in CheckBoxArrayGroup2)
             {
                 checkBox.CheckedChanged += new EventHandler(CheckBoxArrayGroup2_CheckedChanged);
             }
 
-            CheckBoxArrayGroup3 = new CheckBox[30] { checkBox61, checkBox62, checkBox63, checkBox64, checkBox65, checkBox66, 
-            checkBox67, checkBox68, checkBox69, checkBox70, checkBox71, checkBox72, checkBox73, checkBox74, 
-            checkBox75, checkBox76, checkBox77, checkBox78, checkBox79, checkBox80, checkBox81, 
-            checkBox82, checkBox83, checkBox84, checkBox85, checkBox86, checkBox87, checkBox88, 
-            checkBox89, checkBox90};
+            CheckBoxArrayGroup3 = new CheckBox[60] { checkBox121, checkBox122, checkBox123, checkBox124, checkBox125, checkBox126,
+            checkBox127, checkBox128, checkBox129, checkBox130, checkBox131, checkBox132, checkBox133, checkBox134,
+            checkBox135, checkBox136, checkBox137, checkBox138, checkBox139, checkBox140, checkBox141,
+            checkBox142, checkBox143, checkBox144, checkBox145, checkBox146, checkBox147, checkBox148,
+            checkBox149, checkBox150,
+            checkBox151, checkBox152, checkBox153, checkBox154, checkBox155, checkBox156,
+            checkBox157, checkBox158, checkBox159, checkBox160, checkBox161, checkBox162, checkBox163, checkBox164,
+            checkBox165, checkBox166, checkBox167, checkBox168, checkBox169, checkBox170, checkBox171,
+            checkBox172, checkBox173, checkBox174, checkBox175, checkBox176, checkBox177, checkBox178,
+            checkBox179, checkBox180 };
             foreach (var checkBox in CheckBoxArrayGroup3)
             {
                 checkBox.CheckedChanged += new EventHandler(CheckBoxArrayGroup3_CheckedChanged);
@@ -1167,7 +1189,9 @@ namespace ShimmerAPI
         {
             if (IsGraph2Visible && (!IsGraph3Visible))
             {
+                int spacing = 10;
                 IsGraph3Visible = true;
+                ZedGraphControl3.Location = new Point(ZedGraphControl1.Location.X, ZedGraphControl2.Bottom + spacing);
                 ZedGraphControl3.Visible = true;
                 SetupCheckboxesGroup3(ShimmerDevice.GetDeviceName(), StreamingSignalNamesRaw.ToArray(), StreamingSignalNamesCal.ToArray());
 
@@ -1182,7 +1206,9 @@ namespace ShimmerAPI
             }
             else if (!IsGraph2Visible)
             {
+                int spacing = 10;
                 IsGraph2Visible = true;
+                ZedGraphControl2.Location = new Point(ZedGraphControl1.Location.X, ZedGraphControl1.Bottom + spacing);
                 ZedGraphControl2.Visible = true;
                 SetupCheckboxesGroup2(ShimmerDevice.GetDeviceName(), StreamingSignalNamesRaw.ToArray(), StreamingSignalNamesCal.ToArray());
 
@@ -1219,6 +1245,18 @@ namespace ShimmerAPI
                     cb.Checked = false;
                 }
             }
+        }
+
+        private void ClearGraphData(ZedGraph.ZedGraphControl graphControl, List<RollingPointPairList> dataList)
+        {
+            if (graphControl.GraphPane.CurveList == null || dataList == null)
+                return;
+
+            foreach (var list in dataList)
+            {
+                list.Clear(); 
+            }
+            graphControl.Invalidate(); // Refresh 
         }
 
         private void buttonConnect_Click(object sender, EventArgs e)
@@ -2904,6 +2942,15 @@ namespace ShimmerAPI
         private void button3_Click(object sender, EventArgs e)
         {
             ShimmerDevice.StopStreamingandLog();
+        }
+
+        private void buttonClearGraphs_Click_1(object sender, EventArgs e)
+        {
+            ClearGraphData(ZedGraphControl1, DataListGraph1);
+            if (IsGraph2Visible)
+                ClearGraphData(ZedGraphControl2, DataListGraph2);
+            if (IsGraph3Visible)
+                ClearGraphData(ZedGraphControl3, DataListGraph3);
         }
     }
 
