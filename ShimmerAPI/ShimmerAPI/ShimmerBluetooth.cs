@@ -4854,6 +4854,7 @@ namespace ShimmerAPI
                     System.Threading.Thread.Sleep(500);
                 }
                 ReadCalibrationParameters("All");
+                System.Threading.Thread.Sleep(1000);
             }
         }
 
