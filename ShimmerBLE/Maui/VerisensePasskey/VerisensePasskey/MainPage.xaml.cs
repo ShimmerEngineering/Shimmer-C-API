@@ -21,6 +21,8 @@ namespace VerisensePasskey
         private ProdConfigPayload prodConfig;
         String uuid;
         VerisensePluginBLEDevice device;
+
+        Boolean useAdvance = false;
         public MainPage()
         {
             InitializeComponent();
@@ -52,18 +54,6 @@ namespace VerisensePasskey
                 "custom"
             };
 
-        }
-       
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
         }
 
         private async void OnScanClicked(object sender, EventArgs e)
@@ -97,7 +87,6 @@ namespace VerisensePasskey
                 DeviceStateLabel.Text = "Status: Disconnected";
         }
 
-        Boolean useAdvance = false;
         private async void writePasskeyConfigurationButton_Clicked(object sender, EventArgs e)
         {
             if (!useAdvance)
@@ -244,7 +233,12 @@ namespace VerisensePasskey
                 });
                 if (device.GetVerisenseBLEState() == ShimmerDeviceBluetoothState.Connected)
                 {
-                    
+                    if (!device.MeetsMinimumFWRequirement(1, 2, 99)) // check if meets minimum requirement of 1.2.99
+                    {
+                        _ = device.Disconnect();
+                        DeviceStateLabel.Text = "Status: Disconnected";
+                        DisplayAlert("Error!", "Firmware below 1.02.99 is not supported\nYour device will now be disconnect", "OK");
+                    }
                 }
             }
         }
