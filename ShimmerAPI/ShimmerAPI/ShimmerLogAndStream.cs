@@ -212,8 +212,8 @@ namespace ShimmerAPI
         public enum UsbState
         {
             Unknown = 0,
-            Docked = 1,
-            Undocked = 2
+            Plugged = 1,
+            Unplugged = 2
         }
 
         protected UsbState currentUsbState = UsbState.Unknown;
@@ -1809,12 +1809,12 @@ namespace ShimmerAPI
                                 int statusbyte2 = ReadByte();
                                 if ((statusbyte2 & 0x01) == 1)
                                 {
-                                    currentUsbState = UsbState.Docked;
+                                    currentUsbState = UsbState.Plugged;
                                 }
                                 else if ((statusbyte2 & 0x01) == 0)
                                 {
 
-                                    currentUsbState = UsbState.Undocked;
+                                    currentUsbState = UsbState.Unplugged;
                                 }
                             }
                             System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing + ",USB:" + currentUsbState.ToString());
@@ -2112,12 +2112,12 @@ namespace ShimmerAPI
                                 int statusbyte2 = ReadByte();
                                 if ((statusbyte2 & 0x01) == 1)
                                 {
-                                    currentUsbState = UsbState.Docked;
+                                    currentUsbState = UsbState.Plugged;
                                 }
                                 else if ((statusbyte2 & 0x01) == 0)
                                 {
 
-                                    currentUsbState = UsbState.Undocked;
+                                    currentUsbState = UsbState.Unplugged;
                                 }
                             }
                             System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing + ",USB:" + currentUsbState.ToString());
