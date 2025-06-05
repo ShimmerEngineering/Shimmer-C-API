@@ -208,6 +208,16 @@ namespace ShimmerAPI
         private byte[] tempCalibDump;
 
         public bool isLogging = false;
+
+        public enum UsbState
+        {
+            Unknown = 0,
+            Docked = 1,
+            Undocked = 2
+        }
+
+        protected UsbState currentUsbState = UsbState.Unknown;
+
         // btsd changes 2
         public const string AppNameCapture = "ShimmerCapture";
 
@@ -1794,9 +1804,20 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing);
+                            if (IsTwoByteStatusResponseSupported())
+                            {
+                                int statusbyte2 = ReadByte();
+                                if ((statusbyte2 & 0x01) == 1)
+                                {
+                                    currentUsbState = UsbState.Docked;
+                                }
+                                else if ((statusbyte2 & 0x01) == 0)
+                                {
 
-                            //AS is this ok?
+                                    currentUsbState = UsbState.Undocked;
+                                }
+                            }
+                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing + ",USB:" + currentUsbState.ToString());
                             isLogging = logging;
                             if (streaming)
                             {
@@ -2085,18 +2106,32 @@ namespace ShimmerAPI
                             bool selfcmd = ((bufferint >> 2) & 0x01) == 1;
                             bool logging = ((bufferint >> 3) & 0x01) == 1;
                             bool streaming = ((bufferint >> 4) & 0x01) == 1;
-                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked+ ",Sensing:" + sensing);
-                            if (CurrentDockStatus != docked)
+                            
+                            if (IsTwoByteStatusResponseSupported())
                             {
-                                CurrentDockStatus = docked;
-                                if (docked && isLogging)
+                                int statusbyte2 = ReadByte();
+                                if ((statusbyte2 & 0x01) == 1)
+                                {
+                                    currentUsbState = UsbState.Docked;
+                                }
+                                else if ((statusbyte2 & 0x01) == 0)
                                 {
 
-                                    String message = "Shimmer docking detected.\nStop writing to SD card.";
-                                    CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
-                                    OnNewEvent(newEventArgs);
+                                    currentUsbState = UsbState.Undocked;
                                 }
                             }
+                            System.Console.WriteLine("CMD Response; " + "Docked:" + docked + ",Sensing:" + sensing + ",USB:" + currentUsbState.ToString());
+                            if (CurrentDockStatus != docked)
+                                {
+                                    CurrentDockStatus = docked;
+                                    if (docked && isLogging)
+                                    {
+
+                                        String message = "Shimmer docking detected.\nStop writing to SD card.";
+                                        CustomEventArgs newEventArgs = new CustomEventArgs((int)ShimmerIdentifier.MSG_IDENTIFIER_NOTIFICATION_MESSAGE, (object)message, (int)ShimmerSDBTMinorIdentifier.MSG_WARNING);
+                                        OnNewEvent(newEventArgs);
+                                    }
+                                }
                             if (CurrentSensingStatus != sensing)
                             {
                                 CurrentSensingStatus = sensing;

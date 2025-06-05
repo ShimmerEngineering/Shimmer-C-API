@@ -5802,6 +5802,21 @@ namespace ShimmerAPI
             return false;
         }
 
+        public bool IsTwoByteStatusResponseSupported()
+        {
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+            {
+                if (FirmwareIdentifier == ShimmerBluetooth.FW_IDENTIFIER_LOGANDSTREAM)   //LogAndStream
+                {
+                    if (compareVersions(1, 0, 24))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         protected void SetCompatibilityCode()
         {
             CompatibilityCode = 0;
