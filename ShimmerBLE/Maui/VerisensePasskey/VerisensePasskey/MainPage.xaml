@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VerisensePasskey.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Advertising Name Prefix : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry Text="Verisense" FontSize="Small" x:Name="deviceAdvertisingNamePrefix" WidthRequest="230" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Passkey ID : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry Text="01" FontSize="Small" x:Name="passkeyId" WidthRequest="230" VerticalTextAlignment="Center"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Label Text="Passkey : " FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+                <Entry Text="123456" FontSize="Small" WidthRequest="230" x:Name="passkey" VerticalTextAlignment="Center"/>
+            </StackLayout>
+
+            <Label x:Name="DeviceStateLabel"
+           Text="Status: Idle"
+           FontAttributes="Bold"
+           TextColor="White"
+           FontSize="16" />
+            <Label Text="Passkey Settings : " x:Name="passkeySettingsLabel" FontSize="Small" WidthRequest="230" VerticalTextAlignment="Center"/>
+
+            <Picker x:Name="passkeySettings"
+        Title="Select Passkey Mode"
+        WidthRequest="230"
+        SelectedIndexChanged="PasskeySettings_SelectedIndexChanged">
+                
+            </Picker>
+            <Button
+                x:Name="ScanBtn"
+                Text="Scan" 
+                Clicked="OnScanClicked"
+                HorizontalOptions="Fill" />
+            <Button
+                x:Name="ConnectBtn"
+                Text="Connect" 
+                Clicked="OnConnectClicked"
+                HorizontalOptions="Fill" />
+            <Button
+    x:Name="writePasskeyConfigurationButton"
+    Text="Write Passkey"
+    Clicked="writePasskeyConfigurationButton_Clicked"
+    HorizontalOptions="Center"
+    WidthRequest="200"
+    Margin="10" />
+            <Button
+    x:Name="DisconnectBtn"
+    Text="Disconnect" 
+       Clicked="onDisconnectClicked"
+    HorizontalOptions="Fill" />
+            <ListView x:Name="DevicesList"
+          ItemSelected="DevicesList_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Name}" Detail="{Binding Id}" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <Label x:Name="UuidLabel" Text="Selected UUID will appear here" FontAttributes="Bold" Padding="10"/>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

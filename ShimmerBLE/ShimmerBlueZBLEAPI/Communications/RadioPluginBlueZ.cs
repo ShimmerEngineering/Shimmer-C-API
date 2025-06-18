@@ -12,7 +12,7 @@ namespace shimmer.Communications
 {
     public class RadioPluginBlueZ : IVerisenseByteCommunication
     {
-        public static bool ShowRXB = true;
+        public static bool ShowRXB = false;
         public Guid Asm_uuid { get; set; }
 
         public event EventHandler<ByteLevelCommunicationEvent> CommunicationEvent;
