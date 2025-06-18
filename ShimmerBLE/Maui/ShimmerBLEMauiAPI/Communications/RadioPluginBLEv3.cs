@@ -14,7 +14,7 @@ namespace ShimmerBLEMauiAPI.Communications
    
 
     private IBluetoothLE bluetoothLE = CrossBluetoothLE.Current; // ✅ Should now work
-    public static bool ShowRXB = true;
+    public static bool ShowRXB = false;
 
         public Guid Asm_uuid { get; set; }
 
