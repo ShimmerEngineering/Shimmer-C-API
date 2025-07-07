@@ -15,6 +15,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 {
     class Program
     {
+        static string MSG = "\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status";
         static VerisenseBLEDeviceWindows device;
         static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
         static List<string> uuids = new List<string>()
@@ -32,7 +33,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static void Run()
         {
-            Console.WriteLine("Press 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+            Console.WriteLine(MSG);
             do
             {
                 while (!Console.KeyAvailable)
@@ -41,6 +42,9 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                     {
                         case ConsoleKey.S:
                             ConnectDevices();
+                            break;
+                        case ConsoleKey.T:
+                            ReadStatus();
                             break;
                         case ConsoleKey.D:
                             StartStreamingDevices();
@@ -91,7 +95,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                     {
                         Console.WriteLine("Failed to connect device! UUID: " + uuid);
                     }
-                    Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                    Console.WriteLine(MSG);
                 }
                 else if (devices.ContainsKey(uuid))
                 {
@@ -106,6 +110,28 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                         Console.WriteLine("Unable to connect device as it is already connected");
                     }
 
+                }
+            }
+        }
+
+        static async void ReadStatus()
+        {
+            foreach (string uuid in uuids)
+            {
+                if (devices.ContainsKey(uuid))
+                {
+                    var device = devices[uuid];
+                    var status = await device.ExecuteRequest(RequestType.ReadStatus2);
+
+                    if (status != null)
+                    {
+                        Console.WriteLine("Battery Level: " + ((StatusPayload)status).BatteryLevel + "; Battery Percent: " + ((StatusPayload)status).BatteryPercent + "; USB Powered: " + ((StatusPayload)status).UsbPowered + "; Batt Charger Status: " + ((StatusPayload)status).BattChargerStatus.ToString());
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to read status");
+                    }
+                    Console.WriteLine("");
                 }
             }
         }
@@ -127,7 +153,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                     {
                         Console.WriteLine("Failed to read operational config");
                     }
-                    Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                    Console.WriteLine(MSG);
                 }
             }
         }
@@ -153,7 +179,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                     await device.WriteAndReadOperationalConfiguration(opconfigbytes);
 
                     Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
-                    Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                    Console.WriteLine(MSG);
                     Console.WriteLine("---------------------------------------------------------------");
                 }
             }
@@ -178,7 +204,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             {
                 var streamResult = await device.ExecuteRequest(RequestType.StartStreaming);
                 Console.WriteLine("Stream Status: " + streamResult);
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                Console.WriteLine(MSG);
                 if (device != null)
                 {
                     device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
@@ -209,7 +235,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             {
                 var result = await device.ExecuteRequest(RequestType.StopStreaming);
                 Console.WriteLine("\nUUID: " + device.Asm_uuid + " stop streaming request \nResult: " + result + "\n");
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                Console.WriteLine(MSG);
             }
 
         }
@@ -227,7 +253,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                 }
 
                 Console.WriteLine("\nUUID: " + device.Asm_uuid + " attempt disconnect \nResult: " + result + "\nNew BLE Status: " + device.GetVerisenseBLEState());
-                Console.WriteLine("\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel");
+                Console.WriteLine(MSG);
             }
 
             //Remove disconnected devices from the Dictionary

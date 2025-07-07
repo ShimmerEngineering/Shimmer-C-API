@@ -87,6 +87,7 @@ namespace ShimmerBLEAPI.Devices
         #region Read Request props
 
         protected byte[] ReadStatusRequest = new byte[] { 0x11, 0x00, 0x00 };
+        protected byte[] ReadStatusRequest2 = new byte[] { 0x1C, 0x00, 0x00 };
         protected byte[] ReadDataRequest = new byte[] { 0x12, 0x00, 0x00 };
         protected byte[] StreamDataRequest = new byte[] { 0x2A, 0x01, 0x00, 0x01 };
         protected byte[] StopStreamRequest = new byte[] { 0x2A, 0x01, 0x00, 0x02 };
@@ -99,6 +100,7 @@ namespace ShimmerBLEAPI.Devices
         protected byte[] EraseSensorData = new byte[] { 0x29, 0x01, 0x00, 0x0A };
         protected byte[] ReadEventLog = new byte[] { 0x29, 0x01, 0x00, 0x10 };
         protected byte[] ResetSensor = new byte[] { 0x29, 0x01, 0x00, 0x13 };
+
 
         #endregion
 
@@ -433,6 +435,29 @@ namespace ShimmerBLEAPI.Devices
                         }
 
                         break;
+                    case 0x3C:
+                        var statusData2 = new StatusPayload();
+                        var statusResult2 = statusData2.ProcessPayload(ResponseBuffer, SyncMode);
+                        if (statusResult2)
+                        {
+                            Status = statusData2;
+
+                            if (ShimmerBLEEvent != null)
+                            {
+                                ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponse, ObjMsg = RequestType.ReadStatus2 });
+                            }
+                            RequestTCS.TrySetResult(true);
+                        }
+                        else
+                        {
+                            if (ShimmerBLEEvent != null)
+                            {
+                                ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.RequestResponseFail, ObjMsg = RequestType.ReadStatus2 });
+                            }
+                            RequestTCS.TrySetResult(false);
+                        }
+
+                        break;
                     case 0x33:
                         var prodData = new ProdConfigPayload();
                         var prodResult = prodData.ProcessPayload(ResponseBuffer);
@@ -704,6 +729,9 @@ namespace ShimmerBLEAPI.Devices
                 case RequestType.ReadStatus:
                     request = ReadStatusRequest;
                     break;
+                case RequestType.ReadStatus2:
+                    request = ReadStatusRequest2;
+                    break;
                 case RequestType.ReadProductionConfig:
                     request = ReadProdConfigRequest;
                     break;
@@ -821,6 +849,8 @@ namespace ShimmerBLEAPI.Devices
             switch (requestType)
             {
                 case RequestType.ReadStatus:
+                    return Status;
+                case RequestType.ReadStatus2:
                     return Status;
                 case RequestType.ReadProductionConfig:
                     return ProdConfig;
