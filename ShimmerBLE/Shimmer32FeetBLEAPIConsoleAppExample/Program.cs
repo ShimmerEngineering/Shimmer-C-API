@@ -125,7 +125,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
                     if (status != null)
                     {
-                        Console.WriteLine("Battery Level: " + ((StatusPayload)status).BatteryLevel + "; Battery Percent: " + ((StatusPayload)status).BatteryPercent + "; USB Powered: " + ((StatusPayload)status).UsbPowered);
+                        Console.WriteLine("Battery Level: " + ((StatusPayload)status).BatteryLevel + "; Battery Percent: " + ((StatusPayload)status).BatteryPercent + "; USB Powered: " + ((StatusPayload)status).UsbPowered + "; Batt Charger Status: " + ((StatusPayload)status).BattChargerStatus.ToString());
                     }
                     else
                     {
