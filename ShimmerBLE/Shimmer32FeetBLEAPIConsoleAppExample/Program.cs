@@ -18,7 +18,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 {
     class Program
     {
-        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth/ComPort \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB \nPress 'X' to delete data";
+        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth/ComPort \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB  \nPress 'I' to disable USB \nPress 'X' to delete data";
         static VerisenseBLEDeviceWindows device;
         static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
         static List<string> uuids = new List<string>()
@@ -32,11 +32,11 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static List<string> comPorts = new List<string>()
         {
-            //"00000000-0000-0000-0000-e1ec063f5c80",
-            //"00000000-0000-0000-0000-daa56d898b02",
-             //  "COM41",
-                //"00000000-0000-0000-0000-fbe2054c2e04",
-                //"00000000-0000-0000-0000-c00419859ad5"
+            "COM41",
+            //"COM40",
+            //"COM42",
+            //"COM43",
+            //"COM44""
         };
         static void Main(string[] args)
         {
@@ -78,6 +78,9 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                             break;
                         case ConsoleKey.U:
                             ConfigureDevicesEnableUSB();
+                            break;
+                        case ConsoleKey.I:
+                            ConfigureDevicesDisableUSB();
                             break;
                         case ConsoleKey.X:
                             DeleteDataDevices();
@@ -132,6 +135,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
                     }
                 }
+                return;
             }
 
 
@@ -240,16 +244,27 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static async void ConfigureDevicesEnableUSB()
         {
-            foreach (string uuid in uuids)
+            foreach (VerisenseBLEDevice device in devices.Values)
             {
-                if (devices.ContainsKey(uuid))
-                {
-                    var clone = new VerisenseBLEDevice(device);
-                    clone.setUSBEnabled(true);
-                    var opconfigbytes = clone.GenerateConfigurationBytes();
-                    await device.WriteAndReadOperationalConfiguration(opconfigbytes);
-                    Console.WriteLine("-------------------------ENABLE USB--------------------------------------");
-                }
+                var clone = new VerisenseBLEDevice(device);
+                clone.setUSBEnabled(true);
+                var opconfigbytes = clone.GenerateConfigurationBytes();
+                await device.WriteAndReadOperationalConfiguration(opconfigbytes);
+                Console.WriteLine("-------------------------ENABLE USB--------------------------------------");
+                
+            }
+        }
+
+        static async void ConfigureDevicesDisableUSB()
+        {
+            foreach (VerisenseBLEDevice device in devices.Values)
+            {
+                var clone = new VerisenseBLEDevice(device);
+                clone.setUSBEnabled(false);
+                var opconfigbytes = clone.GenerateConfigurationBytes();
+                await device.WriteAndReadOperationalConfiguration(opconfigbytes);
+                Console.WriteLine("-------------------------Disable USB--------------------------------------");
+                
             }
         }
 
