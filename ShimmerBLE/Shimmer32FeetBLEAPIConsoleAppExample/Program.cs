@@ -1,4 +1,5 @@
-﻿using shimmer.Communications;
+﻿using Acr.Collections;
+using shimmer.Communications;
 using shimmer.Models;
 using shimmer.Sensors;
 using ShimmerAPI;
@@ -9,13 +10,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using static shimmer.Models.ShimmerBLEEventData;
+using static ShimmerBLEAPI.Devices.VerisenseDevice;
 
 namespace Shimmer32FeetBLEAPIConsoleAppExample
 {
     class Program
     {
-        static string MSG = "\nPress 'S' to connect with Bluetooth \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status";
+        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB \nPress 'X' to delete data";
         static VerisenseBLEDeviceWindows device;
         static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
         static List<string> uuids = new List<string>()
@@ -23,6 +26,15 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             //"00000000-0000-0000-0000-e1ec063f5c80",
             //"00000000-0000-0000-0000-daa56d898b02",
                "00000000-0000-0000-0000-ec2ee3ebb799",
+                //"00000000-0000-0000-0000-fbe2054c2e04",
+                //"00000000-0000-0000-0000-c00419859ad5"
+        };
+
+        static List<string> comPorts = new List<string>()
+        {
+            //"00000000-0000-0000-0000-e1ec063f5c80",
+            //"00000000-0000-0000-0000-daa56d898b02",
+             //  "COM41",
                 //"00000000-0000-0000-0000-fbe2054c2e04",
                 //"00000000-0000-0000-0000-c00419859ad5"
         };
@@ -64,6 +76,12 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                         case ConsoleKey.A:
                             ConfigureDevices();
                             break;
+                        case ConsoleKey.U:
+                            ConfigureDevicesEnableUSB();
+                            break;
+                        case ConsoleKey.X:
+                            DeleteDataDevices();
+                            break;
                         default:
                             break;
                     }
@@ -73,6 +91,50 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static async void ConnectDevices()
         {
+            if (uuids.IsEmpty())
+            {
+                foreach (string comPort in comPorts)
+                {
+
+                    if (!devices.ContainsKey(comPort))
+                    {
+                        device = new VerisenseBLEDeviceWindows("00000000-0000-0000-0000-000000000000", "", comPort, CommunicationType.SerialPort);
+                        //device = new VerisenseBLEDeviceWindows(uuid, "","com3", VerisenseDevice.CommunicationType.SerialPort);
+                        device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
+                        bool result = await device.Connect(true);
+                        if (result)
+                        {
+                            Console.WriteLine("---------------------------------------------------------------");
+                            Console.WriteLine("Successfully connected to the device! Comport: " + comPort);
+                            Console.WriteLine("Device Version: " + device.GetProductionConfig().REV_HW_MAJOR + "." + device.GetProductionConfig().REV_HW_MINOR);
+                            Console.WriteLine("Firmware Version: " + device.GetProductionConfig().REV_FW_MAJOR + "." + device.GetProductionConfig().REV_FW_MINOR + "." + device.GetProductionConfig().REV_FW_INTERNAL);
+                            devices.Add(comPort, device);
+                            Console.WriteLine("\nBT state: " + device.GetVerisenseBLEState() + "\nUUID: " + device.Asm_uuid + "\nBattery: " + device.GetStatus().BatteryPercent + "%");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to connect device! Comport: " + comPort);
+                        }
+                        Console.WriteLine(MSG);
+                    }
+                    else if (devices.ContainsKey(comPort))
+                    {
+                        var device = devices[comPort];
+                        if (device.GetVerisenseBLEState().Equals(ShimmerDeviceBluetoothState.Disconnected))
+                        {
+                            var result = await device.Connect(true);
+                            Console.WriteLine(result);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Unable to connect device as it is already connected");
+                        }
+
+                    }
+                }
+            }
+
+
             foreach (string uuid in uuids)
             {
 
@@ -116,71 +178,77 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static async void ReadStatus()
         {
-            foreach (string uuid in uuids)
+            foreach (VerisenseBLEDevice device in devices.Values)
             {
-                if (devices.ContainsKey(uuid))
-                {
-                    var device = devices[uuid];
-                    var status = await device.ExecuteRequest(RequestType.ReadStatus2);
+                var status = await device.ExecuteRequest(RequestType.ReadStatus2);
 
-                    if (status != null)
-                    {
-                        Console.WriteLine("Battery Level: " + ((StatusPayload)status).BatteryLevel + "; Battery Percent: " + ((StatusPayload)status).BatteryPercent + "; USB Powered: " + ((StatusPayload)status).UsbPowered + "; Batt Charger Status: " + ((StatusPayload)status).BattChargerStatus.ToString());
-                    }
-                    else
-                    {
-                        Console.WriteLine("Failed to read status");
-                    }
-                    Console.WriteLine("");
+                if (status != null)
+                {
+                    Console.WriteLine("Battery Level: " + ((StatusPayload)status).BatteryLevel + "; Battery Percent: " + ((StatusPayload)status).BatteryPercent + "; USB Powered: " + ((StatusPayload)status).UsbPowered + "; Batt Charger Status: " + ((StatusPayload)status).BattChargerStatus.ToString());
                 }
+                else
+                {
+                    Console.WriteLine("Failed to read status");
+                }
+                Console.WriteLine("");
+                
             }
         }
 
         static async void ReadOpConfig()
         {
-            foreach (string uuid in uuids)
+            foreach (VerisenseBLEDevice device in devices.Values)
             {
-                if (devices.ContainsKey(uuid))
-                {
-                    var device = devices[uuid];
-                    var opConfig = await device.ExecuteRequest(RequestType.ReadOperationalConfig);
+                var opConfig = await device.ExecuteRequest(RequestType.ReadOperationalConfig);
 
-                    if (opConfig != null)
-                    {
-                        Console.WriteLine("Operational Config: " + BitConverter.ToString(((OpConfigPayload)opConfig).GetPayloadWithHeader()).Replace("-", ",0x"));
-                    }
-                    else
-                    {
-                        Console.WriteLine("Failed to read operational config");
-                    }
-                    Console.WriteLine(MSG);
+                if (opConfig != null)
+                {
+                    Console.WriteLine("Operational Config: " + BitConverter.ToString(((OpConfigPayload)opConfig).GetPayloadWithHeader()).Replace("-", ",0x"));
                 }
+                else
+                {
+                    Console.WriteLine("Failed to read operational config");
+                }
+                Console.WriteLine(MSG);
+                
             }
         }
 
         static async void ConfigureDevices()
+        {
+            foreach (VerisenseBLEDevice device in devices.Values)
+            {
+                var clone = new VerisenseBLEDevice(device);
+                SensorLIS2DW12 sensor = (SensorLIS2DW12)clone.GetSensor(SensorLIS2DW12.SensorName);
+                sensor.SetAccelEnabled(true);
+                sensor.SetSamplingRate(SensorLIS2DW12.LowPerformanceAccelSamplingRate.Freq_25Hz);
+
+                bool accelDetection = sensor.IsAccelEnabled();
+                string accelRate = sensor.GetSamplingRate().GetDisplayName();
+                string accelMode = sensor.GetMode().GetDisplayName();
+                string accelLPMode = sensor.GetLowPowerMode().GetDisplayName();
+
+                var opconfigbytes = clone.GenerateConfigurationBytes();
+                await device.WriteAndReadOperationalConfiguration(opconfigbytes);
+
+                Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
+                Console.WriteLine(MSG);
+                Console.WriteLine("---------------------------------------------------------------");
+                
+            }
+        }
+
+        static async void ConfigureDevicesEnableUSB()
         {
             foreach (string uuid in uuids)
             {
                 if (devices.ContainsKey(uuid))
                 {
                     var clone = new VerisenseBLEDevice(device);
-
-                    SensorLIS2DW12 sensor = (SensorLIS2DW12)clone.GetSensor(SensorLIS2DW12.SensorName);
-                    sensor.SetAccelEnabled(true);
-                    sensor.SetSamplingRate(SensorLIS2DW12.LowPerformanceAccelSamplingRate.Freq_25Hz);
-
-                    bool accelDetection = sensor.IsAccelEnabled();
-                    string accelRate = sensor.GetSamplingRate().GetDisplayName();
-                    string accelMode = sensor.GetMode().GetDisplayName();
-                    string accelLPMode = sensor.GetLowPowerMode().GetDisplayName();
-
+                    clone.setUSBEnabled(true);
                     var opconfigbytes = clone.GenerateConfigurationBytes();
                     await device.WriteAndReadOperationalConfiguration(opconfigbytes);
-
-                    Console.WriteLine("\n--|ACCEL|--" + "\nIsAccelEnabled: " + accelDetection + "\nAccelRate: " + accelRate + "\nAccelMode: " + accelMode + "\nAccelLowPowerMode: " + accelLPMode);
-                    Console.WriteLine(MSG);
-                    Console.WriteLine("---------------------------------------------------------------");
+                    Console.WriteLine("-------------------------ENABLE USB--------------------------------------");
                 }
             }
         }
@@ -204,6 +272,21 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             {
                 var streamResult = await device.ExecuteRequest(RequestType.StartStreaming);
                 Console.WriteLine("Stream Status: " + streamResult);
+                Console.WriteLine(MSG);
+                if (device != null)
+                {
+                    device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
+                }
+                device.ShimmerBLEEvent += ShimmerDevice_BLEEvent;
+            }
+        }
+
+        static async void DeleteDataDevices()
+        {
+            foreach (VerisenseBLEDevice device in devices.Values)
+            {
+                var streamResult = await device.ExecuteRequest(RequestType.EraseData);
+                Console.WriteLine("Erase Data Status: " + streamResult.ToString());
                 Console.WriteLine(MSG);
                 if (device != null)
                 {
@@ -242,13 +325,20 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static async void DisconnectDevices()
         {
-            List<string> listOfDisconnectedUuids = new List<string>();
+            List<string> listOfDisconnectedDevices = new List<string>();
             foreach (VerisenseBLEDevice device in devices.Values)
             {
                 var result = await device.Disconnect();
                 if (result)
                 {
-                    listOfDisconnectedUuids.Add(device.Asm_uuid.ToString());
+                    if (device.CommType.Equals(CommunicationType.BLE))
+                    {
+                        listOfDisconnectedDevices.Add(device.Asm_uuid.ToString());
+                    }
+                    else
+                    {
+                        listOfDisconnectedDevices.Add(device.ComPort);
+                    }
                     device.ShimmerBLEEvent -= ShimmerDevice_BLEEvent;
                 }
 
@@ -257,9 +347,9 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
             }
 
             //Remove disconnected devices from the Dictionary
-            foreach (var uuid in listOfDisconnectedUuids)
+            foreach (var comhandle in listOfDisconnectedDevices)
             {
-                devices.Remove(uuid);
+                devices.Remove(comhandle);
             }
         }
     }
