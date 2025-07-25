@@ -18,7 +18,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 {
     class Program
     {
-        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB \nPress 'X' to delete data";
+        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth/ComPort \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB \nPress 'X' to delete data";
         static VerisenseBLEDeviceWindows device;
         static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
         static List<string> uuids = new List<string>()
