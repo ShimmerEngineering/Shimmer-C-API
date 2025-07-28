@@ -18,7 +18,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 {
     class Program
     {
-        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth/ComPort \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB  \nPress 'I' to disable USB \nPress 'X' to delete data";
+        static string MSG = "\nPress 'S' to connect with Bluetooth/ComPort \nPress 'D' to start streaming \nPress 'C' to stop the streaming \nPress 'V' to disconnect with Bluetooth/ComPort \nPress 'B' to Sync \nPress 'R' to read Op Config \nPress 'A' to enable LN Accel \nPress 'T' to Read Status \nPress 'U' to enable USB  \nPress 'I' to disable USB \nPress 'X' to delete data \nPress 'L' to list Shimmer Hardware";
         static VerisenseBLEDeviceWindows device;
         static Dictionary<string, VerisenseBLEDevice> devices = new Dictionary<string, VerisenseBLEDevice>();
         static List<string> uuids = new List<string>()
@@ -45,6 +45,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static void Run()
         {
+            
             Console.WriteLine(MSG);
             do
             {
@@ -52,6 +53,15 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                 {
                     switch (Console.ReadKey(true).Key)
                     {
+                        case ConsoleKey.L:
+                            ShimmerDevices.PortFilterOption portFilterOption;
+                            portFilterOption = ShimmerDevices.PortFilterOption.All;
+                            string[] ShimmerComPorts = ShimmerDevices.GetComPorts(portFilterOption);
+                            foreach (string comport in ShimmerComPorts)
+                            {
+                                Console.WriteLine("Found Shimmer Comport: " + comport);
+                            }
+                            break;
                         case ConsoleKey.S:
                             ConnectDevices();
                             break;
