@@ -21,4 +21,4 @@ ShimmerDevices.PortFilterOption portFilterOption;
 portFilterOption = ShimmerDevices.PortFilterOption.All;
 string[] ShimmerComPorts = ShimmerDevices.GetComPorts(portFilterOption);
 ```
-
+4) There is functionality included to automatically list the Verisense device (Com Port) when it is USB connected, should USB be enabled.
