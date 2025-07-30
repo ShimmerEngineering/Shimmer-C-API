@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -45,7 +46,22 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
 
         static void Run()
         {
-            
+            Task.Run(() =>
+            {
+                var watcher = new ManagementEventWatcher(
+                    "SELECT * FROM __InstanceCreationEvent WITHIN 2 " +
+                    "WHERE TargetInstance ISA 'Win32_PnPEntity'"
+                );
+
+                watcher.EventArrived += (sender, e) =>
+                {
+                    ListDevices();
+                };
+
+                watcher.Start();
+            });
+
+
             Console.WriteLine(MSG);
             do
             {
@@ -54,13 +70,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                     switch (Console.ReadKey(true).Key)
                     {
                         case ConsoleKey.L:
-                            ShimmerDevices.PortFilterOption portFilterOption;
-                            portFilterOption = ShimmerDevices.PortFilterOption.All;
-                            string[] ShimmerComPorts = ShimmerDevices.GetComPorts(portFilterOption);
-                            foreach (string comport in ShimmerComPorts)
-                            {
-                                Console.WriteLine("Found Shimmer Comport: " + comport);
-                            }
+                            ListDevices();
                             break;
                         case ConsoleKey.S:
                             ConnectDevices();
@@ -100,6 +110,22 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                     }
                 }
             } while (Console.ReadKey(true).Key != ConsoleKey.Escape);
+        }
+
+        static async void ListDevices()
+        {
+            Console.WriteLine();
+            ShimmerDevices.PortFilterOption portFilterOption;
+            portFilterOption = ShimmerDevices.PortFilterOption.All;
+            string[] ShimmerComPorts = ShimmerDevices.GetComPorts(portFilterOption);
+            foreach (string comport in ShimmerComPorts)
+            {
+                if (comport.ToLower().Contains("verisense"))
+                {
+                    Console.WriteLine("Found Shimmer Comport: " + comport);
+                }
+            }
+            Console.WriteLine(MSG);
         }
 
         static async void ConnectDevices()
@@ -263,6 +289,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                 Console.WriteLine("-------------------------ENABLE USB--------------------------------------");
                 
             }
+            Console.WriteLine(MSG);
         }
 
         static async void ConfigureDevicesDisableUSB()
@@ -276,6 +303,7 @@ namespace Shimmer32FeetBLEAPIConsoleAppExample
                 Console.WriteLine("-------------------------Disable USB--------------------------------------");
                 
             }
+            Console.WriteLine(MSG);
         }
 
         static async void StartSyncingDevices()
