@@ -1,8 +1,10 @@
 ﻿using com.shimmerresearch.grpc;
+using Google.Protobuf.Compiler;
 using Grpc.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,7 +14,10 @@ namespace ShimmerBLEGrpc
     {
         static void Main(string[] args)
         {
-
+            var version = Assembly.GetExecutingAssembly()
+                              .GetName()
+                              .Version;
+            Console.WriteLine($"Shimmer GRPC Server App Version: {version}");
             int Port = 50052; // Port on which the server will listen
             if (args.Length>0)
             {
