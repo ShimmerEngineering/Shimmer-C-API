@@ -18,6 +18,7 @@ namespace ShimmerBLEGrpc
     {
         readonly string Verisense = "Verisense";
         readonly string Shimmer = "Shimmer";
+        readonly string Shimmer3R = "Shimmer3R";
         bool Debug = false;
         ConcurrentDictionary<string, BluetoothDevice> BluetoohDeviceMap = new ConcurrentDictionary<string, BluetoothDevice>();
         ConcurrentDictionary<string, GattService> ServiceMap = new ConcurrentDictionary<string, GattService>();
@@ -81,7 +82,14 @@ namespace ShimmerBLEGrpc
             BluetoothUuid TxID;
             BluetoothUuid RxID;
             BluetoothUuid ServiceID;
-            if (bluetoothDevice.Name.Contains(Shimmer))
+            
+            if (bluetoothDevice.Name.Contains(Shimmer3R))
+            {
+                TxID = BluetoothUuid.FromGuid(new Guid("65333333-A115-11E2-9E9A-0800200CA102"));
+                RxID = BluetoothUuid.FromGuid(new Guid("65333333-A115-11E2-9E9A-0800200CA101"));
+                ServiceID = BluetoothUuid.FromGuid(new Guid("65333333-A115-11E2-9E9A-0800200CA100"));
+            }
+            else if (bluetoothDevice.Name.Contains(Shimmer))
             {
                 TxID = BluetoothUuid.FromGuid(new Guid("49535343-8841-43f4-a8d4-ecbe34729bb3"));
                 RxID = BluetoothUuid.FromGuid(new Guid("49535343-1e4d-4bd9-ba61-23c647249616"));
