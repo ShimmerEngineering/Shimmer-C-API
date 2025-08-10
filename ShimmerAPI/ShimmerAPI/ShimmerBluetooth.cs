@@ -7460,7 +7460,7 @@ namespace ShimmerAPI
         protected double CalibrateShimmer3RAdcChannel(double unCalData)
         {
             double offset = 0; double vRefP = 3; double gain = 1;
-            double calData = CalibrateU14AdcValue(unCalData, offset, vRefP, gain);
+            double calData = CalibrateU12AdcValue(unCalData, offset, vRefP, gain);
             return calData;
         }
 
