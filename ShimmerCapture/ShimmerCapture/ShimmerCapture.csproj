@@ -92,6 +92,10 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExceptionReporter.WinForms">
       <HintPath>libs\ExceptionReporter.WinForms.dll</HintPath>
