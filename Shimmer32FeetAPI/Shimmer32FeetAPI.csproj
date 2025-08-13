@@ -40,7 +40,6 @@
     <Description>Bluetooth/BLE helpers for Shimmer using 32feet.NET and InTheHand.BluetoothLE.</Description>
     <RepositoryUrl>https://github.com/ShimmerEngineering/Shimmer-C-API</RepositoryUrl>
     <PackageProjectUrl>https://github.com/ShimmerEngineering/Shimmer-C-API</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>bluetooth;ble;shimmer;32feet</PackageTags>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
