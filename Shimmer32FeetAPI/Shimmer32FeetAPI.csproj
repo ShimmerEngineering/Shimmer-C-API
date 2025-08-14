@@ -33,6 +33,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Shimmer32FeetAPI</PackageId>
+    <Version>1.3.8</Version>
+    <Authors>Shimmer Sensing</Authors>
+    <Description>Bluetooth/BLE helpers for Shimmer using 32feet.NET and InTheHand.BluetoothLE.</Description>
+    <RepositoryUrl>https://github.com/ShimmerEngineering/Shimmer-C-API</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/ShimmerEngineering/Shimmer-C-API</PackageProjectUrl>
+    <PackageTags>bluetooth;ble;shimmer;32feet</PackageTags>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <IncludeProjectReferences>true</IncludeProjectReferences>
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE.md" Pack="true" PackagePath="\" Link="LICENSE.md" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,6 +86,9 @@
     </PackageReference>
     <PackageReference Include="InTheHand.BluetoothLE">
       <Version>4.0.34</Version>
+    </PackageReference>
+    <PackageReference Include="NuGet.Build.Tasks.Pack" Version="6.11.1">
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup />
