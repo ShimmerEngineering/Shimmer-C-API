@@ -355,6 +355,17 @@ namespace ShimmerBLEAPI.Devices
                     DataRequestTimer.Dispose(); //there is no point having the timer, if the connection is disconnected
                 }
                 StateChange(ShimmerDeviceBluetoothState.Disconnected);
+            } 
+            else if (comEvent.Event == ByteLevelCommunicationEvent.CommEvent.NewSteps)
+            {
+                byte[] bytes = comEvent.Bytes;
+
+                int strideLength = int.Parse(bytes[4].ToString(), System.Globalization.NumberStyles.HexNumber);
+                int totalDistance = int.Parse(bytes[6].ToString(), System.Globalization.NumberStyles.HexNumber);
+                int stepsCount = totalDistance / strideLength;
+
+                if (ShimmerBLEEvent != null)
+                    ShimmerBLEEvent.Invoke(null, new ShimmerBLEEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = VerisenseBLEEvent.NewStepsData, ObjMsg = stepsCount });
             }
         }
 
@@ -1408,6 +1419,7 @@ namespace ShimmerBLEAPI.Devices
             {
                 DataBuffer.Finish = DateTime.Now;
                 DataBuffer.Transfer = DataBuffer.CurrentLength / (DataBuffer.Finish - DataBuffer.Start).TotalSeconds;
+                Console.WriteLine("Current Length Complete Payload = " + DataBuffer.CurrentLength);
                 string syncProgress = string.Format("{0:.##} KB/s", DataBuffer.Transfer / 1024.0) + "(" + ShimmerBLEAPI.Resources.AppResources.PayloadIndex + ": " + PayloadIndex + ")";
                 AdvanceSyncLog(LogObject, "Payload transfer rate", syncProgress, ASMName);
                 //InvokeSyncEvent(Asm_uuid.ToString(), new SyncEventData { ASMID = Asm_uuid.ToString(), CurrentEvent = SyncEvent.DataSync, SyncProgress = syncProgress });
