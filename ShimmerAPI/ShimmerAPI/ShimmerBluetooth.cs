@@ -154,7 +154,8 @@ namespace ShimmerAPI
         String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
         String[] SignalDataTypeArray = new String[MAX_NUMBER_OF_SIGNALS];
         protected int PacketSize = 2; // Time stamp
-        protected int EnabledSensors;
+        protected long EnabledSensors;
+        protected long DerivedSensors;
         protected ObjectCluster KeepObjectCluster = null; // this is to keep the packet for one byte, just incase there is a dropped packet
         public double[,] AlignmentMatrixAccel = new double[3, 3] { { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, 1 } };
         public double[,] SensitivityMatrixAccel = new double[3, 3] { { 38, 0, 0 }, { 0, 38, 0 }, { 0, 0, 38 } };
@@ -5495,7 +5496,7 @@ namespace ShimmerAPI
             return SamplingRate;
         }
 
-        public int GetEnabledSensors()
+        public long GetEnabledSensors()
         {
             return EnabledSensors;
         }
