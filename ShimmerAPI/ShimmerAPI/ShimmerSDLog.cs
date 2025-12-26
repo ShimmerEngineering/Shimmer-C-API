@@ -1,7 +1,10 @@
-﻿using System;
+﻿using NUnit.Framework;
+using ShimmerAPI.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ShimmerAPI
@@ -12,7 +15,7 @@ namespace ShimmerAPI
     {
         private string _absoluteFilePath;
         private string _sdFileNumber;
-        private long _fileSize;
+        private long FileSize;
         private string _fileName;
         private BufferedStream _bin; // like Java BufferedInputStream
         private long mTrackBytesRead = 0;//256; // the header will always be read
@@ -20,8 +23,9 @@ namespace ShimmerAPI
         private long mTrialId = 0;
         private long mTrialNumberOfShimmers = 0;
         private Boolean mBluetoothDisabled = false;
-        private long mNChannels = 0;
         private string MacAddress = "";
+        private long mSampleCount = 0;
+        public Boolean EndOfFile = false;
         public ShimmerSDLog(string filePath)
         {
             _absoluteFilePath = filePath;
@@ -51,11 +55,11 @@ namespace ShimmerAPI
             if (!fileInfo.Exists)
                 throw new FileNotFoundException($"{_absoluteFilePath} does not exist", _absoluteFilePath);
 
-            _fileSize = fileInfo.Length;
+            FileSize = fileInfo.Length;
             _fileName = fileInfo.Name;
 
             // FileSize = 178 = SDLog v0.5.0
-            if (_fileSize < 178)
+            if (FileSize < 178)
                 return false;
 
             // Equivalent to: FileInputStream + BufferedInputStream
@@ -155,7 +159,7 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
 
         SamplingRate = (32768 / rawSamplingRate);
 
-        
+        ParseEnabledDerivedSensorsForMaps(byteArrayInfo);
         if (HardwareVersion == (int) ShimmerVersion.SHIMMER3R)
         {
             SetAccelSamplingRate((byteArrayInfo[8] >> 4) & 0x0F);
@@ -226,9 +230,9 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
             Buffer.BlockCopy(byteArrayInfo, 66, Exg2RegArray, 0, 10);
 
             // get channel id
-            mNChannels = byteArrayInfo[314];
-            signalIdArray = new byte[mNChannels];
-            Array.Copy(byteArrayInfo, 315, signalIdArray, 0, mNChannels);
+            NumberofChannels = byteArrayInfo[314];
+            signalIdArray = new byte[NumberofChannels];
+            Array.Copy(byteArrayInfo, 315, signalIdArray, 0, NumberofChannels);
         }
         else
         {
@@ -324,40 +328,28 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
         int indexTempPres = 160;
         int indexAltAccel = 256;
         int indexAltMag = 285;
-        /*
-        if (isLegacySdLog())
-        {
-            indexWRaccelparam = 56;
-            indexLNaccelparam = 131;
-            indexGyroparam = 77;
-            indexMagparam = 98;
-            indexTempPres = 152;
-        }
-        else if (isSupportedNewImuSensors())
-        {
-            // TODO if needed
-        }
-
+        
+        
         // Digital Accel Calibration Configuration
         byte[] mDigiAccelCalRawParams = new byte[21];
         Buffer.BlockCopy(byteArrayInfo, indexWRaccelparam, mDigiAccelCalRawParams, 0, 21);
-        parseCalibParamFromPacketAccelLsm(mDigiAccelCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
-
+        RetrieveKinematicCalibrationParametersFromPacket(mDigiAccelCalRawParams, (byte)PacketTypeShimmer3.WR_ACCEL_CALIBRATION_RESPONSE);
+        
         // Gyroscope Calibration Configuration
         byte[] mGyroCalRawParams = new byte[21];
         Buffer.BlockCopy(byteArrayInfo, indexGyroparam, mGyroCalRawParams, 0, 21);
-        parseCalibParamFromPacketGyro(mGyroCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
+        RetrieveKinematicCalibrationParametersFromPacket(mGyroCalRawParams, (byte)PacketTypeShimmer3.GYRO_CALIBRATION_RESPONSE);
 
         // Magnetometer Calibration Configuration
         byte[] mMagCalRawParams = new byte[21];
         Buffer.BlockCopy(byteArrayInfo, indexMagparam, mMagCalRawParams, 0, 21);
-        parseCalibParamFromPacketMag(mMagCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
+        RetrieveKinematicCalibrationParametersFromPacket(mMagCalRawParams, (byte)PacketTypeShimmer3.MAG_CALIBRATION_RESPONSE);
 
         // Analog Accel Calibration Configuration
         byte[] mAccelCalRawParams = new byte[21];
         Buffer.BlockCopy(byteArrayInfo, indexLNaccelparam, mAccelCalRawParams, 0, 21);
-        parseCalibParamFromPacketAccelAnalog(mAccelCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
-
+        RetrieveKinematicCalibrationParametersFromPacket(mAccelCalRawParams, (byte)PacketTypeShimmer3.LNACCEL_CALIBRATION_RESPONSE);
+        /*
         byte[] pressureCalRawParams = new byte[24];
         Buffer.BlockCopy(byteArrayInfo, indexTempPres, pressureCalRawParams, 0, 22);
         if (isSupportedBmp280())
@@ -447,32 +439,106 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
 
         // NOTE: same memory caveat as Java
         initializeAlgorithms();
-
-        if (signalIdArray != null && getHardwareVersion() == HW_ID.SHIMMER_3R)
+        */
+        if (signalIdArray != null && HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
         {
-            interpretDataPacketFormat(mNChannels, signalIdArray);
-            setup();
+            CompatibilityCode = 9;
+            TimeStampPacketByteSize = 3;
+            InterpretDataPacketFormat(NumberofChannels, signalIdArray);
         }
         else
         {
             interpretdatapacketformat();
         }
 
-        if (ENABLE_ON_THE_FLY_GYRO_CALIB)
-        {
-            double samplingRate = getSamplingRateShimmer();
-            if (getFirmwareIdentifier() == FW_ID.STROKARE)
-            {
-                samplingRate = 51.2;
-            }
-            enableOnTheFlyGyroCal(true, (int)samplingRate, 1.2);
-        }
-        */
+        
     }
 
+        public ObjectCluster ReadPacketMsg()
+        {
+            int fullPacketSize;
+
+            // indicates when there will be an offset value
+            bool timeSync = false;
+
+            fullPacketSize = PacketSize;
+
+            byte[] newPacket = new byte[fullPacketSize];
+
+            if (ReadFromLog(newPacket) != 0)
+            {
+                mSampleCount++;
+
+                // Java: super.buildMsg(newPacket, COMMUNICATION_TYPE.SD, timeSync, -1);
+                ObjectCluster ojc = base.BuildMsg(newPacket.ToList());
+
+                if (mTrackBytesRead == FileSize)
+                {
+                    EndOfFile = true;
+                }
+
+                return ojc;
+            }
+            else
+            {
+                EndOfFile = true;
+
+                if (getBytesAvailable() == 0)
+                {
+                    Console.Write("EOF");
+                    return null;
+                }
+
+                // TODO: Should this really throw an exception?
+                throw new Exception("Not enough bytes to form a new packet");
+            }
+        }
+
+        private void ParseEnabledDerivedSensorsForMaps(byte[] byteArrayInfo)
+        {
+            byte[] mEnabledSensorsByteArray = new byte[5];
+                // 3-7 Byte = Sensors
+            Array.Copy(byteArrayInfo, 3, mEnabledSensorsByteArray, 0, 5);
+
+            long a = (long)mEnabledSensorsByteArray[0] & 0xFF;
+            long b = ((long)mEnabledSensorsByteArray[1] & 0xFF) << 8;
+            long c = ((long)mEnabledSensorsByteArray[2] & 0xFF) << 16;
+            long d = ((long)mEnabledSensorsByteArray[3] & 0xFF) << 24;
+            long e = ((long)mEnabledSensorsByteArray[4] & 0xFF) << 32;
+
+            EnabledSensors = a + b + c + d + e;
+
+            // Derived sensors (3 bytes)
+            DerivedSensors =
+                ((long)(byteArrayInfo[40] & 0xFF)) +
+                (((long)(byteArrayInfo[41] & 0xFF)) << 8) +
+                (((long)(byteArrayInfo[42] & 0xFF)) << 16);
+
+            // Optional extra derived sensors (8 bytes total)
+            //if (mShimmerVerObject.IsSupportedEightByteDerivedSensors())
+            //{
+            DerivedSensors |= ((long)(byteArrayInfo[217] & 0xFF)) << (8 * 3);
+            DerivedSensors |= ((long)(byteArrayInfo[218] & 0xFF)) << (8 * 4);
+            DerivedSensors |= ((long)(byteArrayInfo[219] & 0xFF)) << (8 * 5);
+            DerivedSensors |= ((long)(byteArrayInfo[220] & 0xFF)) << (8 * 6);
+            DerivedSensors |= ((long)(byteArrayInfo[221] & 0xFF)) << (8 * 7);
+            //}
+
+        }
+
+        protected long getBytesAvailable() 
+        {
+                if (!_bin.CanSeek) return 0; // or throw
+                return _bin.Length - _bin.Position;
+        }
 
 
-    protected override bool IsConnectionOpen()
+        private void interpretdatapacketformat()
+        {
+            
+        }
+
+        protected override bool IsConnectionOpen()
         {
             throw new NotImplementedException();
         }
