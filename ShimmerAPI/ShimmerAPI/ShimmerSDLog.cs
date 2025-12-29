@@ -13,6 +13,58 @@ namespace ShimmerAPI
 
     public class ShimmerSDLog : ShimmerLogAndStream
     {
+
+        public static class SDLogHeader
+        {
+            // 0..31 fit in int, but note: anything at bit 31 is safer as long.
+            public const int ACCEL_LN = 1 << 7;
+            public const int GYRO = 1 << 6;
+            public const int MAG = 1 << 5;
+            public const int EXG1_24BIT = 1 << 4;
+            public const int EXG2_24BIT = 1 << 3;
+            public const int GSR = 1 << 2;
+            public const int EXT_EXP_A7 = 1 << 1;
+            public const int EXT_EXP_A6 = 1 << 0;
+
+            public const int BRIDGE_AMP = 1 << 15;
+            public const int ECG_TO_HR_FW = 1 << 14;
+            public const int BATTERY = 1 << 13;
+            public const int ACCEL_WR = 1 << 12;
+            public const int EXT_EXP_A15 = 1 << 11;
+            public const int INT_EXP_A1 = 1 << 10;
+            public const int INT_EXP_A12 = 1 << 9;
+            public const int INT_EXP_A13 = 1 << 8;
+
+            // These are still within 0..31, so int is OK
+            public const int INT_EXP_A14 = 1 << 23;
+            public const int ACCEL_MPU = 1 << 22;
+            public const int MAG_MPU = 1 << 21;
+            public const int EXG1_16BIT = 1 << 20;
+            public const int EXG2_16BIT = 1 << 19;
+            public const int BMPX80 = 1 << 18;
+            public const int MPL_TEMPERATURE = 1 << 17;
+            // bit 16 unused in your list
+
+            // Use long for anything that could overflow an int or that you may OR into a long mask.
+            // In Java you cast for 1<<31 because int would overflow; same idea in C#.
+            public const long MPL_QUAT_6DOF = 1L << 31;
+
+            public const int MPL_QUAT_9DOF = 1 << 30;
+            public const int MPL_EULER_6DOF = 1 << 29;
+            public const int MPL_EULER_9DOF = 1 << 28;
+            public const int MPL_HEADING = 1 << 27;
+            public const int MPL_PEDOMETER = 1 << 26;
+            public const int MPL_TAP = 1 << 25;
+            public const int MPL_MOTION_ORIENT = 1 << 24;
+
+            public const long GYRO_MPU_MPL = 1L << 39;
+            public const long ACCEL_MPU_MPL = 1L << 38;
+            public const long MAG_MPU_MPL = 1L << 37;
+            public const long SD_SENSOR_MPL_QUAT_6DOF_RAW = 1L << 36;
+
+            // 1<<35, 1<<34, 1<<33, 1<<32 unused
+        }
+
         private string _absoluteFilePath;
         private string _sdFileNumber;
         private long FileSize;
@@ -448,7 +500,7 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
         }
         else
         {
-            interpretdatapacketformat();
+            InterpretDataPacketFormat();
         }
 
         
@@ -496,15 +548,15 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
 
         private void ParseEnabledDerivedSensorsForMaps(byte[] byteArrayInfo)
         {
-            byte[] mEnabledSensorsByteArray = new byte[5];
+            byte[] enabledSensorsByteArray = new byte[5];
                 // 3-7 Byte = Sensors
-            Array.Copy(byteArrayInfo, 3, mEnabledSensorsByteArray, 0, 5);
+            Array.Copy(byteArrayInfo, 3, enabledSensorsByteArray, 0, 5);
 
-            long a = (long)mEnabledSensorsByteArray[0] & 0xFF;
-            long b = ((long)mEnabledSensorsByteArray[1] & 0xFF) << 8;
-            long c = ((long)mEnabledSensorsByteArray[2] & 0xFF) << 16;
-            long d = ((long)mEnabledSensorsByteArray[3] & 0xFF) << 24;
-            long e = ((long)mEnabledSensorsByteArray[4] & 0xFF) << 32;
+            long a = (long)enabledSensorsByteArray[0] & 0xFF;
+            long b = ((long)enabledSensorsByteArray[1] & 0xFF) << 8;
+            long c = ((long)enabledSensorsByteArray[2] & 0xFF) << 16;
+            long d = ((long)enabledSensorsByteArray[3] & 0xFF) << 24;
+            long e = ((long)enabledSensorsByteArray[4] & 0xFF) << 32;
 
             EnabledSensors = a + b + c + d + e;
 
@@ -532,11 +584,347 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
                 return _bin.Length - _bin.Position;
         }
 
-
-        private void interpretdatapacketformat()
+        private void InterpretDataPacketFormat()
         {
-            
+            NumberofChannels = 1;
+            PacketSize = 3;
+
+            string[] signalNameArray = new string[MAX_NUMBER_OF_SIGNALS];
+            string[] signalDataTypeArray = new string[MAX_NUMBER_OF_SIGNALS];
+
+            int i = 0;
+
+
+            // Timestamp
+            signalNameArray[i] = ShimmerConfiguration.SignalNames.TIMESTAMP;
+            signalDataTypeArray[i] = "u24";
+
+            // Shimmer3R branch
+           
+            if (HardwareVersion == (int)ShimmerVersion.SHIMMER3)
+            {
+                // Shimmer3 / others branch
+
+                if ((EnabledSensors & SDLogHeader.ACCEL_LN) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 6;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_X;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Y;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.LOW_NOISE_ACCELEROMETER_Z;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.BATTERY) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.V_SENSE_BATT;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                // ADC channels
+                if ((EnabledSensors & SDLogHeader.EXT_EXP_A7) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A7;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.EXT_EXP_A6) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A6;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.EXT_EXP_A15) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXTERNAL_ADC_A15;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.INT_EXP_A12) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A12;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.INT_EXP_A13) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A13;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.INT_EXP_A14) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A14;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                // Bridge amp high + low
+                if ((EnabledSensors & SDLogHeader.BRIDGE_AMP) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_HIGH;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.BRIDGE_AMP) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.BRIGE_AMPLIFIER_LOW;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                // GSR
+                if ((EnabledSensors & SDLogHeader.GSR) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GSR;
+
+                    signalDataTypeArray[i + 1] = "u16";
+                    i++;
+                }
+
+                // A1
+                if ((EnabledSensors & SDLogHeader.INT_EXP_A1) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.INTERNAL_ADC_A1;
+                    signalDataTypeArray[i + 1] = "u12";
+                    i++;
+                }
+
+                // Gyro
+                if ((EnabledSensors & SDLogHeader.GYRO) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 6;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_X;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Y;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.GYROSCOPE_Z;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+                }
+
+                // ACCEL_WR
+                if ((EnabledSensors & SDLogHeader.ACCEL_WR) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 6;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_X;
+                    signalDataTypeArray[i + 1] = "i16";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Y;
+                    signalDataTypeArray[i + 1] = "i16";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.WIDE_RANGE_ACCELEROMETER_Z;
+                    signalDataTypeArray[i + 1] = "i16";
+                    i++;
+                }
+
+                // MAG
+                if ((EnabledSensors & SDLogHeader.MAG) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 6;
+
+                    if (isShimmer3withUpdatedSensors())
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
+                        signalDataTypeArray[i + 1] = "i16";
+                        i++;
+
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
+                        signalDataTypeArray[i + 1] = "i16";
+                        i++;
+
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
+                        signalDataTypeArray[i + 1] = "i16";
+                        i++;
+                    }
+                    else
+                    {
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
+                        signalDataTypeArray[i + 1] = "i16r";
+                        i++;
+
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
+                        signalDataTypeArray[i + 1] = "i16r";
+                        i++;
+
+                        signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
+                        signalDataTypeArray[i + 1] = "i16r";
+                        i++;
+                    }
+                }
+
+                // BMP180/280 temperature
+                if ((EnabledSensors & SDLogHeader.BMPX80) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 2;
+
+                    string signalName = Shimmer3Configuration.SignalNames.TEMPERATURE;
+                    signalNameArray[i + 1] = signalName;
+                    signalDataTypeArray[i + 1] = "u16r";
+                    i++;
+                }
+
+                // BMP180/280 pressure
+                if ((EnabledSensors & SDLogHeader.BMPX80) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 3;
+
+                    string signalName = Shimmer3Configuration.SignalNames.PRESSURE;
+                    signalNameArray[i + 1] = signalName;
+                    signalDataTypeArray[i + 1] = "u24r";
+                    i++;
+                }
+
+                // EXG 24-bit / 16-bit blocks (same as Java)
+                if ((EnabledSensors & SDLogHeader.EXG1_24BIT) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 7;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_STATUS;
+                    signalDataTypeArray[i + 1] = "u8";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH1;
+                    signalDataTypeArray[i + 1] = "i24r";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH2;
+                    signalDataTypeArray[i + 1] = "i24r";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.EXG2_24BIT) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 7;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_STATUS;
+                    signalDataTypeArray[i + 1] = "u8";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH1;
+                    signalDataTypeArray[i + 1] = "i24r";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH2;
+                    signalDataTypeArray[i + 1] = "i24r";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.EXG1_16BIT) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 5;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_STATUS;
+                    signalDataTypeArray[i + 1] = "u8";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH1_16BIT;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG1_CH2_16BIT;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.EXG2_16BIT) > 0)
+                {
+                    NumberofChannels += 3;
+                    PacketSize += 5;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_STATUS;
+                    signalDataTypeArray[i + 1] = "u8";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH1_16BIT;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+
+                    signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.EXG2_CH2_16BIT;
+                    signalDataTypeArray[i + 1] = "i16r";
+                    i++;
+                }
+
+                if ((EnabledSensors & SDLogHeader.ECG_TO_HR_FW) > 0)
+                {
+                    NumberofChannels += 1;
+                    PacketSize += 1;
+
+                    signalNameArray[i + 1] = "Heart Rate_FW";
+                    signalDataTypeArray[i + 1] = "u8";
+                    i++;
+                }
+            }
+
+            SignalNameArray = signalNameArray;
+            SignalDataTypeArray = signalDataTypeArray;
+
         }
+
 
         protected override bool IsConnectionOpen()
         {

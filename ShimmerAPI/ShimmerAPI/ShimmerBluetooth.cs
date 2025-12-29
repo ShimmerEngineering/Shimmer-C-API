@@ -151,8 +151,8 @@ namespace ShimmerAPI
 
 
         List<double> HRMovingAVGWindow = new List<double>(4);
-        String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
-        String[] SignalDataTypeArray = new String[MAX_NUMBER_OF_SIGNALS];
+        protected String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
+        protected String[] SignalDataTypeArray = new String[MAX_NUMBER_OF_SIGNALS];
         protected int PacketSize = 2; // Time stamp
         protected long EnabledSensors;
         protected long DerivedSensors;
