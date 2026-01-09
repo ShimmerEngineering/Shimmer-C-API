@@ -401,15 +401,31 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
         byte[] mAccelCalRawParams = new byte[21];
         Buffer.BlockCopy(byteArrayInfo, indexLNaccelparam, mAccelCalRawParams, 0, 21);
         RetrieveKinematicCalibrationParametersFromPacket(mAccelCalRawParams, (byte)PacketTypeShimmer3.LNACCEL_CALIBRATION_RESPONSE);
-        /*
+        
         byte[] pressureCalRawParams = new byte[24];
         Buffer.BlockCopy(byteArrayInfo, indexTempPres, pressureCalRawParams, 0, 22);
-        if (isSupportedBmp280())
+        if (isShimmer3withUpdatedSensors())
         {
             Buffer.BlockCopy(byteArrayInfo, 222, pressureCalRawParams, 22, 2);
         }
-        retrievePressureCalibrationParametersFromPacket(pressureCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
 
+        if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+        {
+                CalculateBMP390PressureCalibrationCoefficientsResponse(pressureCalRawParams);
+        }
+        else
+        {
+            if (isShimmer3withUpdatedSensors())
+            {
+                CalculateBMP280PressureCalibrationCoefficientsResponse(pressureCalRawParams);
+            }
+            else
+            {
+                CalculateBMP180PressureCalibrationCoefficientsResponse(pressureCalRawParams);
+            }
+        }
+                
+        /*
         if (isLegacySdLog())
         {
             long temp =
