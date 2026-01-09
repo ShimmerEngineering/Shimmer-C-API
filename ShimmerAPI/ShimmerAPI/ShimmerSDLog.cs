@@ -212,6 +212,12 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
         SamplingRate = (32768 / rawSamplingRate);
 
         ParseEnabledDerivedSensorsForMaps(byteArrayInfo);
+
+        ExpansionBoardId = byteArrayInfo[214];
+        ExpansionBoardRev = byteArrayInfo[215];
+        ExpansionBoardRevSpecial = byteArrayInfo[216];
+
+
         if (HardwareVersion == (int) ShimmerVersion.SHIMMER3R)
         {
             SetAccelSamplingRate((byteArrayInfo[8] >> 4) & 0x0F);
@@ -798,32 +804,32 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
                     NumberofChannels += 3;
                     PacketSize += 6;
 
-                    if (isShimmer3withUpdatedSensors())
+                    if (!isShimmer3withUpdatedSensors())
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
-                        signalDataTypeArray[i + 1] = "i16";
+                        signalDataTypeArray[i + 1] = "i16*";
                         i++;
 
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
-                        signalDataTypeArray[i + 1] = "i16";
+                        signalDataTypeArray[i + 1] = "i16*";
                         i++;
 
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
-                        signalDataTypeArray[i + 1] = "i16";
+                        signalDataTypeArray[i + 1] = "i16*";
                         i++;
                     }
                     else
                     {
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_X;
-                        signalDataTypeArray[i + 1] = "i16r";
+                        signalDataTypeArray[i + 1] = "i16";
                         i++;
 
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Y;
-                        signalDataTypeArray[i + 1] = "i16r";
+                        signalDataTypeArray[i + 1] = "i16";
                         i++;
 
                         signalNameArray[i + 1] = Shimmer3Configuration.SignalNames.MAGNETOMETER_Z;
-                        signalDataTypeArray[i + 1] = "i16r";
+                        signalDataTypeArray[i + 1] = "i16";
                         i++;
                     }
                 }
