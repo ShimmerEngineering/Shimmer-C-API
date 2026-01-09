@@ -430,91 +430,104 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
                 CalculateBMP180PressureCalibrationCoefficientsResponse(pressureCalRawParams);
             }
         }
-                
-        /*
-        if (isLegacySdLog())
-        {
-            long temp =
-                ((long)byteArrayInfo[177] << 24) |
-                ((long)byteArrayInfo[176] << 16) |
-                ((long)byteArrayInfo[175] << 8) |
-                ((long)byteArrayInfo[174]);
-            // TODO review this, should initial timestamp be temp instead of 0?
-            setInitialTimeStampTicksSd(0);
+
+        if (HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+        {   
+            //alt accel, alt mag
+            byte[] mAltAccelCalRawParams = new byte[21];
+            Buffer.BlockCopy(byteArrayInfo, indexAltAccel, mAltAccelCalRawParams, 0, 21);
+            RetrieveKinematicCalibrationParametersFromPacket(mAltAccelCalRawParams, (byte)PacketTypeShimmer3.ALT_ACCEL_CALIBRATION_RESPONSE);
+
+            byte[] mAltMagRawParams = new byte[21];
+            Buffer.BlockCopy(byteArrayInfo, indexAltMag, mAltMagRawParams, 0, 21);
+            RetrieveKinematicCalibrationParametersFromPacket(mAltMagRawParams, (byte)PacketTypeShimmer3.ALT_MAG_CALIBRATION_RESPONSE);
+
         }
-        else
-        {
-            if (mShimmerVerObject.isSupportedMpl() &&
-                (getFirmwareIdentifier() == FW_ID.SDLOG &&
-                 getFirmwareVersionMajor() == 0 &&
-                 getFirmwareVersionMinor() <= 12 &&
-                 getFirmwareVersionInternal() <= 3))
-            {
-                if (mSensorMpu9x50 != null)
+
+                /*
+                if (isLegacySdLog())
                 {
-                    byte[] bufferCalibrationParameters = new byte[21];
-
-                    Buffer.BlockCopy(byteArrayInfo, 182, bufferCalibrationParameters, 0, 21);
-                    mSensorMpu9x50.setCalibParamMPLAccel(bufferCalibrationParameters);
-
-                    bufferCalibrationParameters = new byte[21];
-                    Buffer.BlockCopy(byteArrayInfo, 203, bufferCalibrationParameters, 0, 21);
-                    mSensorMpu9x50.setCalibParamMPLMag(bufferCalibrationParameters);
-
-                    bufferCalibrationParameters = new byte[21];
-                    Buffer.BlockCopy(byteArrayInfo, 224, bufferCalibrationParameters, 0, 21);
-                    mSensorMpu9x50.setCalibParamMPLGyro(bufferCalibrationParameters);
+                    long temp =
+                        ((long)byteArrayInfo[177] << 24) |
+                        ((long)byteArrayInfo[176] << 16) |
+                        ((long)byteArrayInfo[175] << 8) |
+                        ((long)byteArrayInfo[174]);
+                    // TODO review this, should initial timestamp be temp instead of 0?
+                    setInitialTimeStampTicksSd(0);
                 }
-            }
-            else
-            {
-                if (isThisVerCompatibleWith(FW_ID.SDLOG, 0, 12, 4) ||
-                    isThisVerCompatibleWith(FW_ID.LOGANDSTREAM, 0, 6, 13))
+                else
                 {
-                    getCurrentCalibDetailsAccelWr().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 182));
-                    getCurrentCalibDetailsGyro().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 190));
-                    getCurrentCalibDetailsMag().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 198));
-                    getCurrentCalibDetailsAccelLn().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 206));
+                    if (mShimmerVerObject.isSupportedMpl() &&
+                        (getFirmwareIdentifier() == FW_ID.SDLOG &&
+                         getFirmwareVersionMajor() == 0 &&
+                         getFirmwareVersionMinor() <= 12 &&
+                         getFirmwareVersionInternal() <= 3))
+                    {
+                        if (mSensorMpu9x50 != null)
+                        {
+                            byte[] bufferCalibrationParameters = new byte[21];
+
+                            Buffer.BlockCopy(byteArrayInfo, 182, bufferCalibrationParameters, 0, 21);
+                            mSensorMpu9x50.setCalibParamMPLAccel(bufferCalibrationParameters);
+
+                            bufferCalibrationParameters = new byte[21];
+                            Buffer.BlockCopy(byteArrayInfo, 203, bufferCalibrationParameters, 0, 21);
+                            mSensorMpu9x50.setCalibParamMPLMag(bufferCalibrationParameters);
+
+                            bufferCalibrationParameters = new byte[21];
+                            Buffer.BlockCopy(byteArrayInfo, 224, bufferCalibrationParameters, 0, 21);
+                            mSensorMpu9x50.setCalibParamMPLGyro(bufferCalibrationParameters);
+                        }
+                    }
+                    else
+                    {
+                        if (isThisVerCompatibleWith(FW_ID.SDLOG, 0, 12, 4) ||
+                            isThisVerCompatibleWith(FW_ID.LOGANDSTREAM, 0, 6, 13))
+                        {
+                            getCurrentCalibDetailsAccelWr().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 182));
+                            getCurrentCalibDetailsGyro().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 190));
+                            getCurrentCalibDetailsMag().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 198));
+                            getCurrentCalibDetailsAccelLn().setCalibTimeMs(parseCalibTimeKinematic(byteArrayInfo, 206));
+                        }
+                    }
+
+                    // Initial timestamp (5 bytes mixed order: 251 then 255..252)
+                    long tempTs =
+                        ((long)byteArrayInfo[251] << 32) |
+                        ((long)byteArrayInfo[255] << 24) |
+                        ((long)byteArrayInfo[254] << 16) |
+                        ((long)byteArrayInfo[253] << 8) |
+                        ((long)byteArrayInfo[252]);
+                    setInitialTimeStampTicksSd(tempTs);
+
+                    // start of 3R code
+                    if (getHardwareVersion() == HW_ID.SHIMMER_3R)
+                    {
+                        byte[] mAltAccelCalRawParams = new byte[21];
+                        Buffer.BlockCopy(byteArrayInfo, indexAltAccel, mAltAccelCalRawParams, 0, 21);
+                        getCurrentCalibDetailsAccelAlt(mAltAccelCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
+
+                        byte[] mAltMagCalRawParams = new byte[21];
+                        Buffer.BlockCopy(byteArrayInfo, indexAltMag, mAltMagCalRawParams, 0, 21);
+                        getCurrentCalibDetailsMagWr(mAltMagCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
+                    }
                 }
-            }
 
-            // Initial timestamp (5 bytes mixed order: 251 then 255..252)
-            long tempTs =
-                ((long)byteArrayInfo[251] << 32) |
-                ((long)byteArrayInfo[255] << 24) |
-                ((long)byteArrayInfo[254] << 16) |
-                ((long)byteArrayInfo[253] << 8) |
-                ((long)byteArrayInfo[252]);
-            setInitialTimeStampTicksSd(tempTs);
+                if (getFirmwareIdentifier() == FW_ID.GQ_802154)
+                {
+                    // Session number from SD header
+                    mDbSessionNumber = (byteArrayInfo[249] << 8) | byteArrayInfo[250];
+                }
+                else if (getFirmwareIdentifier() == FW_ID.STROKARE)
+                {
+                    // Session number based on SD Session Number
+                    mDbSessionNumber = int.Parse(mSdSessionNumber, CultureInfo.InvariantCulture);
+                }
 
-            // start of 3R code
-            if (getHardwareVersion() == HW_ID.SHIMMER_3R)
-            {
-                byte[] mAltAccelCalRawParams = new byte[21];
-                Buffer.BlockCopy(byteArrayInfo, indexAltAccel, mAltAccelCalRawParams, 0, 21);
-                getCurrentCalibDetailsAccelAlt(mAltAccelCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
-
-                byte[] mAltMagCalRawParams = new byte[21];
-                Buffer.BlockCopy(byteArrayInfo, indexAltMag, mAltMagCalRawParams, 0, 21);
-                getCurrentCalibDetailsMagWr(mAltMagCalRawParams, CALIB_READ_SOURCE.SD_HEADER);
-            }
-        }
-
-        if (getFirmwareIdentifier() == FW_ID.GQ_802154)
-        {
-            // Session number from SD header
-            mDbSessionNumber = (byteArrayInfo[249] << 8) | byteArrayInfo[250];
-        }
-        else if (getFirmwareIdentifier() == FW_ID.STROKARE)
-        {
-            // Session number based on SD Session Number
-            mDbSessionNumber = int.Parse(mSdSessionNumber, CultureInfo.InvariantCulture);
-        }
-
-        // NOTE: same memory caveat as Java
-        initializeAlgorithms();
-        */
-        if (signalIdArray != null && HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
+                // NOTE: same memory caveat as Java
+                initializeAlgorithms();
+                */
+                if (signalIdArray != null && HardwareVersion == (int)ShimmerVersion.SHIMMER3R)
         {
             CompatibilityCode = 9;
             TimeStampPacketByteSize = 3;
