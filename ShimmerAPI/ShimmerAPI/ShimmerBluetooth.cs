@@ -148,7 +148,7 @@ namespace ShimmerAPI
         protected int ExpansionBoardRevSpecial;
         protected double BatteryVoltage;
         protected int ChargingStatus;
-
+        protected virtual bool ShouldAddSystemTimestamp => true;
 
         List<double> HRMovingAVGWindow = new List<double>(4);
         protected String[] SignalNameArray = new String[MAX_NUMBER_OF_SIGNALS];
@@ -3705,6 +3705,7 @@ namespace ShimmerAPI
         /// </summary>
         /// <param name="address"></param>
         public abstract void SetShimmerAddress(String address);
+
         protected virtual ObjectCluster BuildMsg(List<byte> packet)
         {
 
@@ -3724,7 +3725,10 @@ namespace ShimmerAPI
                 FirstSystemTimestamp = false;
             }
             double shimmerPCTimeStamp = FirstSystemTimeStampValue + calibratedTS;
-            objectCluster.Add(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliSeconds, shimmerPCTimeStamp);
+            if (ShouldAddSystemTimestamp)
+            {
+                objectCluster.Add(ShimmerConfiguration.SignalNames.SYSTEM_TIMESTAMP, ShimmerConfiguration.SignalFormats.CAL, ShimmerConfiguration.SignalUnits.MilliSeconds, shimmerPCTimeStamp);
+            }
 
             double[] accelerometer = new double[3];
             double[] gyroscope = new double[3];

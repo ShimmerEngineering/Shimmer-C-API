@@ -78,6 +78,7 @@ namespace ShimmerAPI
         private string MacAddress = "";
         private long mSampleCount = 0;
         public Boolean EndOfFile = false;
+        protected override bool ShouldAddSystemTimestamp => false;
         public ShimmerSDLog(string filePath)
         {
             _absoluteFilePath = filePath;
