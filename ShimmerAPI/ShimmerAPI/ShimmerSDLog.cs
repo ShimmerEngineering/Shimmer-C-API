@@ -989,7 +989,7 @@ public void ProcessSDLogHeader(byte[] byteArrayInfo)
 
         protected override void WriteBytes(byte[] b, int index, int length)
         {
-            throw new NotImplementedException();
+            //This logic is not required, but is called due to the battery check part of buildmsg
         }
 
         protected override int ReadByte()
