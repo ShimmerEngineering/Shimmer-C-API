@@ -828,7 +828,7 @@ namespace ShimmerAPI
 
         private void checkEnabledSensors()
         {
-            int enabledSensors = PConfiguration.PControlForm.ShimmerDevice.GetEnabledSensors();
+            long enabledSensors = PConfiguration.PControlForm.ShimmerDevice.GetEnabledSensors();
             int shimmerVersion = PConfiguration.PControlForm.ShimmerDevice.GetShimmerVersion();
             if (shimmerVersion != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3
                 && shimmerVersion != (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
@@ -4136,7 +4136,7 @@ namespace ShimmerAPI
             checkBoxSensor21.Enabled = false;
             checkBoxSensor22.Visible = false;
             checkBoxSensor22.Enabled = false;
-            int enabledSensors = PConfiguration.EnabledSensorsUI;
+            long enabledSensors = PConfiguration.EnabledSensorsUI;
             if (IsDefaultExgTestSignalConfigurationEnabled(reg1, reg2) && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_16BIT) > 0) && (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_16BIT) > 0)) || (((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG1_24BIT) > 0) && ((enabledSensors & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0))))
             {
                 checkBoxSensor17.Checked = true;
