@@ -365,6 +365,12 @@ namespace BLE.Client.ViewModels
                 if (_Accel2Enabled == value)
                     return;
 
+                if (_Accel2Enabled && _StepCountEnabled)
+                {
+                    RaisePropertyChanged();
+                    return;
+                }
+
                 _Accel2Enabled = value;
                 RaisePropertyChanged();
             }
@@ -380,7 +386,34 @@ namespace BLE.Client.ViewModels
                 if (_GyroEnabled == value)
                     return;
 
+                if(_GyroEnabled && _StepCountEnabled)
+                {
+                    RaisePropertyChanged();
+                    return;
+                }
+
                 _GyroEnabled = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        bool _StepCountEnabled;
+        public bool StepCount
+        {
+            get => _StepCountEnabled;
+
+            set
+            {
+                if (_StepCountEnabled == value)
+                    return;
+
+                if (!_Accel2Enabled || !_GyroEnabled)
+                {
+                    RaisePropertyChanged();
+                    return;
+                }
+
+                _StepCountEnabled = value;
                 RaisePropertyChanged();
             }
         }
@@ -2467,6 +2500,7 @@ namespace BLE.Client.ViewModels
                     SensorAccel = ((SensorLIS2DW12)VerisenseBLEDevice.GetSensor(SensorLIS2DW12.SensorName)).IsAccelEnabled();
                     SensorAccel2 = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsAccelEnabled();
                     SensorGyro = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsGyroEnabled();
+                    StepCount = ((SensorLSM6DS3)VerisenseBLEDevice.GetSensor(SensorLSM6DS3.SensorName)).IsStepCountEnabled();
                     if (((shimmer.Sensors.SensorGSR)VerisenseBLEDevice.GetSensor(shimmer.Sensors.SensorGSR.SensorName)).GetOversamplingRate() != null)
                     {
                         SelectedGSROversamplingRate = ((shimmer.Sensors.SensorGSR)VerisenseBLEDevice.GetSensor(shimmer.Sensors.SensorGSR.SensorName)).GetOversamplingRate().GetDisplayName();
@@ -2928,6 +2962,14 @@ namespace BLE.Client.ViewModels
             else
             {
                 ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetGyroEnabled(false);
+            }
+            if (StepCount)
+            {
+                ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetStepCountEnabled(true);
+            }
+            else
+            {
+                ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetStepCountEnabled(false);
             }
             ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetAccelRange(a2range);
             ((SensorLSM6DS3)clone.GetSensor(SensorLSM6DS3.SensorName)).SetSamplingRate(a2gyrorate);

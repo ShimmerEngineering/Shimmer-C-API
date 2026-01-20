@@ -19,6 +19,8 @@ namespace shimmer
         public static Guid ServiceID = Guid.Parse("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
         public static Guid TxID = Guid.Parse("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
         public static Guid RxID = Guid.Parse("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
+        public static Guid RSCServiceID = Guid.Parse("00001814-0000-1000-8000-00805f9b34fb");
+        public static Guid RSCMeasurementID = Guid.Parse("00002a53-0000-1000-8000-00805f9b34fb");
         public static long RealmDBSizeLimitInMB = 500;
         public static readonly long MinIntervalRealmDBSizeLimitInMB = 86400000;
         //public static bool CompactDB = RealmService.CompactAndMigrateDatabase(); //first DB operation when you open the app

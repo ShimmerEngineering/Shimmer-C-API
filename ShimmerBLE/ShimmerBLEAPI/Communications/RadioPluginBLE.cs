@@ -25,6 +25,9 @@ namespace shimmer.Communications
         ICharacteristic UartRX { get; set; }
         ICharacteristic UartTX { get; set; }
         IService ServiceTXRX { get; set; }
+        IService ServiceRSC { get; set; }
+        ICharacteristic RSCMeasure { get; set; }
+
         ConnectivityState StateOfConnectivity = ConnectivityState.Unknown;
 
         /// <summary>
@@ -84,7 +87,17 @@ namespace shimmer.Communications
 
                     AdvanceLog(nameof(RadioPluginBLE), "Connect ASM Hash", ConnectedASM.GetHashCode(), Asm_uuid.ToString());
                     await Task.Delay(500);
-                    System.Console.WriteLine("Getting Service");
+                    System.Console.WriteLine("Getting Services");
+
+                    ServiceRSC = await ConnectedASM.GetServiceAsync(App.RSCServiceID);
+
+                    if (ServiceRSC != null)
+                    {
+                        RSCMeasure = await ServiceRSC.GetCharacteristicAsync(App.RSCMeasurementID);
+                        RSCMeasure.ValueUpdated += RSCMeasurement_ValueUpdated;
+                        await RSCMeasure.StartUpdatesAsync();
+                    }
+
                     ServiceTXRX = await ConnectedASM.GetServiceAsync(App.ServiceID);
 
                     if (ServiceTXRX != null)
@@ -96,7 +109,7 @@ namespace shimmer.Communications
                         System.Console.WriteLine("Getting RX Characteristics Completed");
                         UartRX.ValueUpdated += UartRX_ValueUpdated;
                         await UartRX.StartUpdatesAsync();
-
+                       
                         AdvanceLog(nameof(RadioPluginBLE), "GetKnownDevice", "Success", Asm_uuid.ToString());
                         //StateChange(ShimmerDeviceBluetoothState.Connected);
                         localTask.TrySetResult(true);
@@ -201,6 +214,12 @@ namespace shimmer.Communications
                     UartRX.Service.Dispose();
                     UartRX = null;
                 }
+                if (RSCMeasure != null)
+                {
+                    RSCMeasure.ValueUpdated -= RSCMeasurement_ValueUpdated;
+                    RSCMeasure.Service.Dispose();
+                    RSCMeasure = null;
+                }
                 if (UartTX != null)
                 {
                     UartTX.Service.Dispose();
@@ -210,6 +229,12 @@ namespace shimmer.Communications
                 {
                     ServiceTXRX.Dispose();
                     ServiceTXRX = null;
+                }
+
+                if (ServiceRSC != null)
+                {
+                    ServiceRSC.Dispose();
+                    ServiceRSC = null;
                 }
 
                 //ResponseBuffer = null;
@@ -289,6 +314,14 @@ namespace shimmer.Communications
             }
         }
 
+        private void RSCMeasurement_ValueUpdated(object sender, Plugin.BLE.Abstractions.EventArgs.CharacteristicUpdatedEventArgs e)
+        {
+            if (CommunicationEvent != null)
+            {
+                CommunicationEvent.Invoke(null, new ByteLevelCommunicationEvent { Bytes = e.Characteristic.Value, Event = Communications.ByteLevelCommunicationEvent.CommEvent.NewSteps });
+            }
+        }
+
         private bool disposedValue = false;
         /// <summary>
         /// Disconnect and Dispose Veriense BLE Device
@@ -307,6 +340,12 @@ namespace shimmer.Communications
                         {
                             UartRX.ValueUpdated -= UartRX_ValueUpdated;
                             UartRX = null;
+                        }
+
+                        if (RSCMeasure != null)
+                        {
+                            RSCMeasure.ValueUpdated -= RSCMeasurement_ValueUpdated;
+                            RSCMeasure = null;
                         }
 
                         UartTX = null;
