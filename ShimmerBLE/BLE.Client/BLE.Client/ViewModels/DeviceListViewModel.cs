@@ -41,6 +41,7 @@ using Newtonsoft.Json;
 using ShimmerAdvanceBLEAPI;
 using ShimmerBLEAPI.Communications;
 using shimmer.DTO;
+using Acr.Collections;
 
 namespace BLE.Client.ViewModels
 {
@@ -131,6 +132,7 @@ namespace BLE.Client.ViewModels
         public MvxCommand ConnectWithoutInitializeCommand => new MvxCommand(() => Connect(false));
 
         public ObservableCollection<DeviceListItemViewModel> Devices { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
+        public ObservableCollection<DeviceListItemViewModel> ListOfScannedDevicesTemp { get; set; } = new ObservableCollection<DeviceListItemViewModel>();
         public ObservableCollection<VerisenseSerialDevice> SerialDevices { get; set; } = new ObservableCollection<VerisenseSerialDevice>();
         public bool IsRefreshing => (Adapter != null) ? Adapter.IsScanning : false;
         public bool IsStateOn => _bluetoothLe.IsOn;
@@ -1890,7 +1892,10 @@ namespace BLE.Client.ViewModels
                 }
                 else
                 {
-                    Devices.Add(new DeviceListItemViewModel(device));
+                    if(IsScanPairAndConnectEnabled)
+                    {
+                        Devices.Add(new DeviceListItemViewModel(device));
+                    }
                 }
             });
         }
@@ -2406,6 +2411,25 @@ namespace BLE.Client.ViewModels
 
                 ShimmerDeviceBluetoothState previousState = CurrentState;
                 CurrentState = VerisenseBLEDevice.GetVerisenseBLEState();
+
+                if (previousState.Equals(ShimmerDeviceBluetoothState.Connecting)
+                && CurrentState.Equals(ShimmerDeviceBluetoothState.Connected))
+                {
+                    IsScanPairAndConnectEnabled = false;
+                    foreach (DeviceListItemViewModel device in Devices)
+                    {
+                        ListOfScannedDevicesTemp.Add(device);
+                    }
+                    Devices.Clear();
+                    foreach (DeviceListItemViewModel device in ListOfScannedDevicesTemp)
+                    {
+                        if (device.Id.Equals(VerisenseBLEDevice.Asm_uuid) && Devices.IsEmpty())
+                        {
+                            Devices.Add(device);
+                        }
+                    }
+                }
+                
                 if ((previousState.Equals(ShimmerDeviceBluetoothState.StreamingLoggedData) || previousState.Equals(ShimmerDeviceBluetoothState.Streaming))
                 && CurrentState.Equals(ShimmerDeviceBluetoothState.Disconnected)) //if it went from a streaming state to disconnect, we want to remember what the previous state was so can execute it upon reconnect
                 {
@@ -2418,6 +2442,10 @@ namespace BLE.Client.ViewModels
                     ReconnectTimer = new System.Threading.Timer(Reconnect, null, 5000, Timeout.Infinite);
                 }
 
+                if (VerisenseBLEDevice.GetVerisenseBLEState().Equals(ShimmerDeviceBluetoothState.Disconnected))
+                {
+                    IsScanPairAndConnectEnabled = true;
+                }
                 DisconnectPressed = false;
             }
             else if (e.CurrentEvent == VerisenseBLEEvent.SyncLoggedDataNewPayload)
@@ -3348,6 +3376,19 @@ namespace BLE.Client.ViewModels
                 }
             }
             get { return deviceState; }
+        }
+        bool isScanPairAndConnectEnabled = true;
+        public bool IsScanPairAndConnectEnabled
+        {
+            protected set
+            {
+                if (isScanPairAndConnectEnabled != value)
+                {
+                    isScanPairAndConnectEnabled = value;
+                    RaisePropertyChanged();
+                }
+            }
+            get { return isScanPairAndConnectEnabled; }
         }
         public void OnCompleted()
         {
