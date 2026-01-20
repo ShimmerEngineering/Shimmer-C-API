@@ -254,5 +254,42 @@ namespace SpeedTestExample
         {
             testRadio.Disconnect();
         }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            if (radioBLE != null)
+            {
+                radioBLE.RadioStatusChanged -= RadioStateChanged;
+            }
+            radioBLE = new BLE32FeetRadio(textBox4.Text, BLE32FeetRadio.DeviceType.Verisense);
+            radioBLE.RadioStatusChanged += RadioStateChanged;
+            if (BLE32FeetSpeedTestProtocol != null)
+            {
+                BLE32FeetSpeedTestProtocol.ResultUpdate -= ResultUpdated;
+            }
+            BLE32FeetSpeedTestProtocol = new SpeedTestProtocol(radioBLE);
+            BLE32FeetSpeedTestProtocol.ResultUpdate += ResultUpdated;
+            BLE32FeetSpeedTestProtocol.Connect();
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            BLE32FeetSpeedTestProtocol.StartTestSignal();
+        }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            BLE32FeetSpeedTestProtocol.StopTestSignal();
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            BLE32FeetSpeedTestProtocol.Disconnect();
+        }
     }
 }
