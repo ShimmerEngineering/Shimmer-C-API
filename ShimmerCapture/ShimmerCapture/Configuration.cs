@@ -13,7 +13,7 @@ namespace ShimmerAPI
     {
         public byte[] ExgReg1UI= {0,0,0,0,0,0,0,0,0,0};
         public byte[] ExgReg2UI = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        public int EnabledSensorsUI = 0;
+        public long EnabledSensorsUI = 0;
         public Control PControlForm;
         protected internal Boolean ExgTabOpened = false;
         
@@ -48,7 +48,7 @@ namespace ShimmerAPI
             else
             {
                 //Only enable ExG config if Shimmer3 and BtStream > 0.2.8 and if ExG sensors are enabled
-                int enabledSensors = PControlForm.ShimmerDevice.GetEnabledSensors();
+                long enabledSensors = PControlForm.ShimmerDevice.GetEnabledSensors();
 
                 if (PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R
                     || PControlForm.ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)

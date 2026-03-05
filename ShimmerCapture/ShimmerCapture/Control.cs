@@ -1667,7 +1667,7 @@ namespace ShimmerAPI
                                     && (ShimmerDevice.GetEnabledSensors() & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)))
             {
 
-                if ((ShimmerDevice.GetState() == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING) && (ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3) && (ShimmerDevice.IsDefaultECGConfigurationEnabled()) && (((ShimmerDevice.GetEXG1RegisterByte(1) & 0x40) != 0) && ((ShimmerDevice.GetEXG2RegisterByte(1) & 0x40) != 0)))
+                if ((ShimmerDevice.GetState() == (int)ShimmerBluetooth.SHIMMER_STATE_STREAMING) && (ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) && (ShimmerDevice.IsDefaultECGConfigurationEnabled()) && (((ShimmerDevice.GetEXG1RegisterByte(1) & 0x40) != 0) && ((ShimmerDevice.GetEXG2RegisterByte(1) & 0x40) != 0)))
                 {
                     return true;
                 }
@@ -1837,7 +1837,8 @@ namespace ShimmerAPI
                     }
 
                     //ExG filtering
-                    if (ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                    if (ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3
+                        || ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                     {
                         if (EnableHPF_0_05HZ || EnableHPF_0_5HZ || EnableHPF_5HZ)
                         {
@@ -2441,7 +2442,8 @@ namespace ShimmerAPI
                     {
                         //ECG-HR Conversion
                         int index = -1;
-                        if (ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3)
+                        if (ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 ||
+                            ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R)
                         {
                             index = objectCluster.GetIndex(ECGSignalName, ShimmerConfiguration.SignalFormats.RAW);
                         }
@@ -2476,7 +2478,7 @@ namespace ShimmerAPI
                         && (ShimmerDevice.GetEnabledSensors() & (int)ShimmerBluetooth.SensorBitmapShimmer3.SENSOR_EXG2_24BIT) > 0)))
                     {
 
-                        if ((ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3) && (ShimmerDevice.IsDefaultECGConfigurationEnabled()) && (((ShimmerDevice.GetEXG1RegisterByte(1) & 0x40) != 0) && ((ShimmerDevice.GetEXG2RegisterByte(1) & 0x40) != 0)))
+                        if ((ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3 || ShimmerDevice.GetShimmerVersion() == (int)ShimmerBluetooth.ShimmerVersion.SHIMMER3R) && (ShimmerDevice.IsDefaultECGConfigurationEnabled()) && (((ShimmerDevice.GetEXG1RegisterByte(1) & 0x40) != 0) && ((ShimmerDevice.GetEXG2RegisterByte(1) & 0x40) != 0)))
                         {
                             try
                             {

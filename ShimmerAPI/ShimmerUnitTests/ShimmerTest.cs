@@ -237,22 +237,22 @@ namespace ShimmerBluetoothTests
 
             CalculateBMP390PressureCalibrationCoefficientsResponse(pressureResoResTest);
 
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParT1, 7071488);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParT2, 0.00001786649227142334);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParT3, -0.000000000000024868995751603507);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP1, -0.0086259841918945312);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP2, -0.000020215287804603577);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP3, 0.0000000013969838619232178);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP4, 0.0000000000072759576141834259);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP5, 151184);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP6, 380.375);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP7, 0.01171875);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP8, -0.00018310546875);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP9, 0.000000000013848477919964353);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP10, 0.000000000000024868995751603507);
-            Assert.AreEqual(Bmp3QuantizedCalibData.ParP11, -0.00000000000000000029815559743351372);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParT1, 7071488);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParT2, 0.00001786649227142334);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParT3, -0.000000000000024868995751603507);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP1, -0.0086259841918945312);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP2, -0.000020215287804603577);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP3, 0.0000000013969838619232178);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP4, 0.0000000000072759576141834259);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP5, 151184);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP6, 380.375);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP7, 0.01171875);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP8, -0.00018310546875);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP9, 0.000000000013848477919964353);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP10, 0.000000000000024868995751603507);
+            Assert.AreEqual(Bmp3QuantizedCalibData_ParP11, -0.00000000000000000029815559743351372);
 
-            Bmp3QuantizedCalibData.TLin = 23.17016986780799;
+            Bmp3QuantizedCalibData_TLin = 23.17016986780799;
             
             //byte[] sensorData = { 0x00, 0x0D, 0x64, 0x00, 0xBA, 0x7F };
             byte[] sensorDataP = { 0x00, 0x0D, 0x64};
@@ -266,7 +266,7 @@ namespace ShimmerBluetoothTests
             Assert.AreEqual(uncalibResultT[0], 8370688);
             double[] bmpX80caldata = new double[2];
             bmpX80caldata = CalibratePressure390SensorData(uncalibResultP[0], uncalibResultT[0]);
-            Bmp3QuantizedCalibData.TLin = bmpX80caldata[1];
+            Bmp3QuantizedCalibData_TLin = bmpX80caldata[1];
 
             //Assert.AreEqual(resultP, 100911.8245324826);
             //Assert.AreEqual(resultT, 23.170169867807999);
@@ -281,7 +281,7 @@ namespace ShimmerBluetoothTests
             long[] uncalibResultT2 = ProgrammerUtilities.ParseData(sensorDataT2, sensorDataType);
             double[] bmpX80caldata2 = new double[2];
             bmpX80caldata2 = CalibratePressure390SensorData(uncalibResultP2[0], uncalibResultT2[0]);
-            Bmp3QuantizedCalibData.TLin = bmpX80caldata2[1];
+            Bmp3QuantizedCalibData_TLin = bmpX80caldata2[1];
 
             //Assert.AreEqual(resultP2, 100912.81758676282);
             //Assert.AreEqual(resultT2, 23.26587201654911);

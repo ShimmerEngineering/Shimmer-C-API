@@ -20,6 +20,11 @@ namespace ShimmerAPI
             MSG_ERROR = 2,
         }
         
+        public ShimmerLogAndStream()
+        {
+
+        }
+
         public ShimmerLogAndStream(String devID)
             : base(devID)
         {
@@ -249,7 +254,7 @@ namespace ShimmerAPI
         private string SdDir = "";
         private string experimentid = null;
         public string RadioVersion = "";
-        private long configtime = 0;
+        protected long configtime = 0;
         public byte[] storedConfig = new byte[118];
 
         // btsd changes
