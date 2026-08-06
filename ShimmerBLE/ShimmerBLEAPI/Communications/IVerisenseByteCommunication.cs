@@ -35,7 +35,8 @@ namespace shimmer.Communications
         public enum CommEvent
         {
             Disconnected = 1,
-            NewBytes = 2
+            NewBytes = 2,
+            NewSteps = 3
         }
     }
 }

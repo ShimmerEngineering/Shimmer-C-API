@@ -23,7 +23,8 @@ namespace shimmer.Models
             RequestResponse = 5,
             WriteResponse = 6,
             RequestResponseFail  = 7,
-            DataStreamCRCFail = 8
+            DataStreamCRCFail = 8,
+            NewStepsData = 9
         }
     }
 
