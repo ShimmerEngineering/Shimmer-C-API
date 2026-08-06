@@ -7,12 +7,26 @@ namespace ShimmerAPI.Radios
 {
     public abstract class AbstractRadio
     {
+        public enum DeviceType
+        {
+            Shimmer3BLE,
+            Shimmer3R,
+            Verisense
+        }
         public enum RadioStatus
         {
             Connected,
             Disconnected,
             Connecting
         }
+
+        protected DeviceType deviceType;
+
+        public DeviceType getDeviceType()
+        {
+            return deviceType;
+        }
+            
 
         protected RadioStatus CurrentRadioStatus = RadioStatus.Disconnected;
 

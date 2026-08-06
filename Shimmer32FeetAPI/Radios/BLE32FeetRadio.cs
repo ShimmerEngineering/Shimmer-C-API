@@ -14,19 +14,11 @@ namespace Shimmer32FeetAPI.Radios
 {
     public class BLE32FeetRadio : AbstractRadio
     {
-        public enum DeviceType
-        {
-            Shimmer3BLE,
-            Shimmer3R
-        }
-
         public BLE32FeetRadio(string macAddress, DeviceType devType)
         {
             MacAddress = macAddress;
             deviceType = devType;
         }
-
-        DeviceType deviceType;
 
         private BluetoothDevice bluetoothDevice { get; set; }
         private GattService ServiceTXRX { get; set; }
@@ -61,6 +53,12 @@ namespace Shimmer32FeetAPI.Radios
                     RxID = BluetoothUuid.FromGuid(new Guid("65333333-A115-11E2-9E9A-0800200CA101"));
                     TxID = BluetoothUuid.FromGuid(new Guid("65333333-A115-11E2-9E9A-0800200CA102"));
                     ServiceID = BluetoothUuid.FromGuid(new Guid("65333333-A115-11E2-9E9A-0800200CA100"));
+                }
+                else if (deviceType.Equals(DeviceType.Verisense))
+                {
+                    RxID = Guid.Parse("6E400003-B5A3-F393-E0A9-E50E24DCCA9E");
+                    TxID = Guid.Parse("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
+                    ServiceID = Guid.Parse("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
                 }
                 ServiceTXRX = bluetoothDevice.Gatt.GetPrimaryServiceAsync(ServiceID).GetAwaiter().GetResult();
                 if (ServiceTXRX != null)
