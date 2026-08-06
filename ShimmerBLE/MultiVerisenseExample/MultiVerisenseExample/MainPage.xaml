@@ -31,14 +31,14 @@
                                 <CheckBox IsChecked="{Binding IsSelected}"></CheckBox>
                                 <Label Text="{Binding Uuid, StringFormat='{0}'}" FontSize="Micro" />
                                 <Label Text="{Binding IsPaired}" Margin="50, 0, 0, 0" FontSize="Micro" />
-                            </StackLayout>
+                                </StackLayout>
                             <StackLayout Orientation="Horizontal">
                                 <Label Text="{Binding Status}" TextColor="Blue" FontSize="Micro"/>
                                 <Label Text="{Binding TransferSpeed}" TextColor="Blue" FontSize="Micro"/>
                                 <Label Text="{Binding PayloadIndex}" TextColor="Blue" FontSize="Micro"/>
                             </StackLayout>
                             <Label Text="{Binding BinFilePath}" TextColor="Blue" FontSize="Micro"/>
-                        </StackLayout>
+                            </StackLayout>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -51,7 +51,9 @@
                     <Button Clicked="stopStreamingButton_Clicked" x:Name="stopStreamingButton" WidthRequest="150" HeightRequest="60" Text="Stop Streaming"></Button>
                     <Button Clicked="disconnectDevicesButton_Clicked" x:Name="disconnectDevicesButton" WidthRequest="150" HeightRequest="60" Text="Disconnect Devices"></Button>
                     <Button Clicked="syncDevicesButton_Clicked" x:Name="syncDevicesButton" WidthRequest="100" HeightRequest="60" Text="Sync Devices"></Button>
-                </StackLayout>
+                        <Button Clicked="startSpeedTestButton_Clicked" x:Name="startSpeedTestButton" WidthRequest="150" HeightRequest="60" Text="Start Speed Test"></Button>
+                        <Button Clicked="stopSpeedTestButton_Clicked" x:Name="stopSpeedTestButton" WidthRequest="150" HeightRequest="60" Text="Stop Speed Test"></Button>
+                    </StackLayout>
             </ScrollView>
         </Grid>
         <ScrollView>
